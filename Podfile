@@ -8,8 +8,8 @@ target 'iOS_HeckYeahTV' do
   use_frameworks!
 
   # Pods for iOS_HeckYeahTV
-#  platform :ios, '18.0'
-#  pod 'MobileVLCKit'
+  platform :ios, '18.0'
+  pod 'MobileVLCKit'
 
 #  target 'iOS_HeckYeahTVTests' do
 #    inherit! :search_paths
@@ -26,8 +26,8 @@ target 'tvOS_HeckYeahTV' do
   use_frameworks!
 
   # Pods for tvOS_HeckYeahTV
-#  platform :tvos, '18.0'
-#  pod 'TVVLCKit'
+  platform :tvos, '18.0'
+  pod 'TVVLCKit'
 #  target 'tvOS_HeckYeahTVTests' do
 #    inherit! :search_paths
 #    # Pods for testing

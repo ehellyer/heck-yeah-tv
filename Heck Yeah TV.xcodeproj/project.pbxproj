@@ -234,6 +234,7 @@
 				EBE03BB32E53D421006B7747 /* Sources */,
 				EBE03BB42E53D421006B7747 /* Frameworks */,
 				EBE03BB52E53D421006B7747 /* Resources */,
+				0F13C7D648D782C01BBF6195 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -300,6 +301,7 @@
 				EBE03C132E53D8DE006B7747 /* Sources */,
 				EBE03C142E53D8DE006B7747 /* Frameworks */,
 				EBE03C152E53D8DE006B7747 /* Resources */,
+				13D9E8A4082A0071276ADB5D /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -456,6 +458,40 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		0F13C7D648D782C01BBF6195 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-iOS_HeckYeahTV/Pods-iOS_HeckYeahTV-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-iOS_HeckYeahTV/Pods-iOS_HeckYeahTV-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-iOS_HeckYeahTV/Pods-iOS_HeckYeahTV-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		13D9E8A4082A0071276ADB5D /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-tvOS_HeckYeahTV/Pods-tvOS_HeckYeahTV-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-tvOS_HeckYeahTV/Pods-tvOS_HeckYeahTV-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-tvOS_HeckYeahTV/Pods-tvOS_HeckYeahTV-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		77DEDF4426CED6C7F389E63F /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
