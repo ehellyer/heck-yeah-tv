@@ -16,12 +16,9 @@ struct Heck_Yeah_TVApp: App {
     @State private var iptvController: IPTVController = IPTVController()
     @State private var startupTask: Task<Void, Never>? = nil
     
-    
-    
     var body: some Scene {
         WindowGroup {
             ZStack() {
-                BackgroundView()
                 PlatformRootView(isReady: $isReady)
                     .task {
                         startBootstrap()
@@ -51,8 +48,3 @@ struct Heck_Yeah_TVApp: App {
         }
     }
 }
-
-//#Preview() {
-//    
-//        
-//}

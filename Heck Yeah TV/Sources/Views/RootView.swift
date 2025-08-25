@@ -9,24 +9,20 @@ import SwiftUI
 
 struct RootView: View {
     
-    @State private var autoplay: Bool
     @State private var hidePlayer: Bool
     
-    init(autoplay: Bool, hidePlayer: Bool = false) {
-        self.autoplay = autoplay
+    init(hidePlayer: Bool = false) {
         self.hidePlayer = hidePlayer
     }
     
     var body: some View {
         ZStack {
-            Color.blue.edgesIgnoringSafeArea(.all)
             
-            if !hidePlayer {
-                VLCPlayerWrapperView(url: "https://cvtv.cvalley.net/hls/KQFXFOX/KQFXFOX.m3u8",
-                                     autoplay: autoplay)
-                    .edgesIgnoringSafeArea(.all)
-            } else {
+            if hidePlayer {
                 BackgroundView()
+            } else {
+                Color.black.ignoresSafeArea(.all)
+                VLCPlayerWrapperView()
                     .edgesIgnoringSafeArea(.all)
             }
         }
@@ -34,5 +30,5 @@ struct RootView: View {
 }
 
 #Preview {
-    RootView(autoplay: false, hidePlayer: true)
+    RootView(hidePlayer: true)
 }

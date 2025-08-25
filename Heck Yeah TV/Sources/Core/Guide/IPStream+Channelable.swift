@@ -10,7 +10,7 @@ import Foundation
 extension IPStream: Channelable {
     var idHint: String { channelId }
     var titleHint: String { title }
-    var numberHint: String? { nil }
+    var numberHint: String? { channelId }
     var urlHint: URL { url }
     var isHDHint: Bool { (quality ?? "").contains("720") || (quality ?? "").contains("1080") }
     var hasDRMHint: Bool { false }

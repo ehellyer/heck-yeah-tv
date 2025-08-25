@@ -11,21 +11,25 @@ struct PlatformRootView: View {
     @Binding var isReady: Bool
     
     var body: some View {
-        BootGate(isReady: $isReady) {
+        BootGateView(isReady: $isReady) {
 #if os(iOS)
             NavigationStack {
-                RootView(autoplay: true)
+                RootView()
             }
 #elseif os(tvOS)
-            RootView(autoplay: true)
+            RootView()
                 .focusEffectDisabled(true)
                 .ignoresSafeArea()
 #elseif os(macOS)
-            RootView(autoplay: true)
+            RootView()
                 .frame(minWidth: 900, minHeight: 507)
 #else
-            RootView(autoplay: true)
+            RootView()
 #endif
         }
     }
+}
+
+#Preview {
+    PlatformRootView(isReady: .constant(true))
 }

@@ -9,22 +9,23 @@ import Foundation
 
 struct GuideBuilder {
     
-    static func build(streams: [IPStream], tunerChannels: [Channel]) -> [GuideChannel] {
+    static func build(streams: [IPStream],
+                      tunerChannels: [Channel]) -> [GuideChannel] {
         
-        var map: [String: GuideChannel] = [:]
+        var guideChannels: [String: GuideChannel] = [:]
         
         for c in tunerChannels {
             let gc = GuideChannel(c, source: .homeRunTuner)
-            map[gc.id] = gc
+            guideChannels[gc.id] = gc
         }
         
         for s in streams {
             let gc = GuideChannel(s, source: .ipStream)
             // If an entry exists with same id (same URL/normalized key), keep existing (tuner)
-            if map[gc.id] == nil { map[gc.id] = gc }
+            if guideChannels[gc.id] == nil { guideChannels[gc.id] = gc }
         }
         
-        return map.values.sorted(by: { lhs, rhs in
+        return guideChannels.values.sorted(by: { lhs, rhs in
             return lhs.title.localizedCaseInsensitiveCompare(rhs.title) == .orderedAscending
         })
     }

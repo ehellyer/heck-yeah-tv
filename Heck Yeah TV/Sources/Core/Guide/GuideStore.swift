@@ -9,34 +9,36 @@ import SwiftUI
 
 @MainActor
 final class GuideStore: ObservableObject {
-    @Published private(set) var channels: [GuideChannel] = []
-    @Published var favoriteIds: Set<String> = []
-    @Published var showFavoritesOnly = false
     
+    @Published private(set) var channels: [GuideChannel] = []
     @Published private(set) var selectedId: String?
     @Published private(set) var lastPlayedId: String?
+
+    @Published var favoriteIds: [String] = []
+    @Published var showFavoritesOnly = false
     
-    // Simple persistence keys
-    private let favoritesKey = "guide.favorites"
-    private let lastKey = "guide.last"
-    
-    init() {
+    init(streams: [IPStream], tuner: [Channel]) {
         loadPersistence()
+        load(streams: streams, tuner: tuner)
     }
     
-    func load(streams: [IPStream], tuner: [Channel]) {
+    private func load(streams: [IPStream], tuner: [Channel]) {
         channels = GuideBuilder.build(streams: streams, tunerChannels: tuner)
         // Prune favorites that no longer exist
-        favoriteIds = favoriteIds.intersection(Set(channels.map(\.id)))
-        if let sid = selectedId, !channels.contains(where: { $0.id == sid }) { selectedId = nil }
-        if let lid = lastPlayedId, !channels.contains(where: { $0.id == lid }) { lastPlayedId = nil }
+        favoriteIds = Array(Set(favoriteIds).intersection(Set(channels.map(\.id))))
+        if let sid = selectedId, !channels.contains(where: { $0.id == sid }) {
+            selectedId = nil
+        }
+        if let lid = lastPlayedId, !channels.contains(where: { $0.id == lid }) {
+            lastPlayedId = nil
+        }
     }
     
     func toggleFavorite(_ channel: GuideChannel) {
         if favoriteIds.contains(channel.id) {
-            favoriteIds.remove(channel.id)
+            favoriteIds.removeAll(where: { $0 == channel.id })
         } else {
-            favoriteIds.insert(channel.id)
+            favoriteIds.append(channel.id)
         }
         saveFavorites()
     }
@@ -66,20 +68,18 @@ final class GuideStore: ObservableObject {
     func isFavorite(_ channel: GuideChannel) -> Bool {
         favoriteIds.contains(channel.id)
     }
-    
+
     private func loadPersistence() {
-        let d = UserDefaults.standard
-        if let data = d.array(forKey: favoritesKey) as? [String] {
-            favoriteIds = Set(data)
-        }
-        lastPlayedId = d.string(forKey: lastKey)
+        favoriteIds = UserDefaults.favorites
+        lastPlayedId = UserDefaults.lastPlayed
+        selectedId = lastPlayedId
     }
     
     private func saveFavorites() {
-        UserDefaults.standard.set(Array(favoriteIds), forKey: favoritesKey)
+        UserDefaults.favorites = favoriteIds
     }
     
     private func saveLast() {
-        UserDefaults.standard.set(lastPlayedId, forKey: lastKey)
+        UserDefaults.lastPlayed = lastPlayedId
     }
 }

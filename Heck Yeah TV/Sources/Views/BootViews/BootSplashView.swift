@@ -68,8 +68,7 @@ struct BootSplashView: View {
                     .foregroundStyle(LinearGradient(colors: [.white, .white],
                                                     startPoint: .top,
                                                     endPoint: .bottom))
-//                    .shadow(radius: 10, y: 4)
-                
+               
                 // Subline + activity
                 HStack(spacing: 8) {
                     Text(subtitle)
@@ -129,31 +128,6 @@ final class BootSoundPlayer: NSObject, @unchecked Sendable {
     }
 }
 
-// MARK: - Usage: gate your app while booting
-
-/// Example container that shows the splash until `isReady` is true.
-/// Use this to wrap your root content while async startup runs.
-public struct BootGate<Content: View>: View {
-    @Binding var isReady: Bool
-    let content: () -> Content
-    
-    public init(isReady: Binding<Bool>, @ViewBuilder content: @escaping () -> Content) {
-        self._isReady = isReady
-        self.content = content
-    }
-    
-    public var body: some View {
-        ZStack {
-            content().opacity(isReady ? 1 : 0)
-            if !isReady {
-                BootSplashView()
-                    .transition(.opacity.combined(with: .scale))
-            }
-        }
-        .animation(.easeInOut(duration: 0.35), value: isReady)
-    }
-}
-
 // MARK: - Previews
 
 #Preview("Splash – iOS") {
@@ -170,7 +144,7 @@ public struct BootGate<Content: View>: View {
     struct Demo: View {
         @State private var ready = false
         var body: some View {
-            BootGate(isReady: $ready) {
+            BootGateView(isReady: $ready) {
                 Text("Main App")
                     .font(.largeTitle)
                     .frame(maxWidth: .infinity, maxHeight: .infinity)

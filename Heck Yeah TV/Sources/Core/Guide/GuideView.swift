@@ -8,7 +8,11 @@
 import SwiftUI
 
 struct GuideView: View {
-    @StateObject var store = GuideStore()
+    @ObservedObject var store: GuideStore
+    
+    init(guideStore: GuideStore) {
+        store = guideStore
+    }
     
     var body: some View {
         NavigationView {
@@ -34,10 +38,7 @@ struct GuideView: View {
                     
                     Button("Play") {
                         store.select(channel)
-                        // kick off playback with channel.url
-                        // e.g., player.play(url: channel.url)
                     }
-                    
                 }
             }
             .navigationTitle("Guide")
@@ -57,17 +58,27 @@ struct GuideView: View {
                     .disabled(store.lastPlayedId == nil)
                 }
             }
-            .onAppear {
-                // Supply your arrays here
-                // store.load(streams: tvgStreams, tuner: tunerChannels)
-            }
-            
-            Text("Select a channel")
-                .foregroundStyle(.secondary)
         }
     }
 }
 
 #Preview() {
-    GuideView()
+    let channel = Channel(guideNumber: "abc",
+                          guideName: "ABC",
+                          videoCodec: nil,
+                          audioCodec: nil,
+                          hasDRM: true,
+                          isHD: true ,
+                          url: "https://abc.com")
+    let stream = IPStream(channelId: "fox",
+                          feedId: "fox",
+                          title: "FOX",
+                          url: "https://fox.com",
+                          referrer: nil,
+                          userAgent: nil,
+                          quality: "1080p")
+    
+    let guideStore = GuideStore(streams: [stream], tuner: [channel])
+
+    GuideView(guideStore: guideStore)
 }
