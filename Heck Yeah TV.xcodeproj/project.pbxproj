@@ -102,7 +102,7 @@
 				Sources/Views/BootViews/PulseRings.swift,
 				Sources/Views/PlatformRootView.swift,
 				Sources/Views/RootView.swift,
-				Sources/Views/VLCPlayerWrapperView.swift,
+				Sources/Views/VLCPlayerView.swift,
 			);
 			target = EBE03C162E53D8DE006B7747 /* tvOS_HeckYeahTV */;
 		};

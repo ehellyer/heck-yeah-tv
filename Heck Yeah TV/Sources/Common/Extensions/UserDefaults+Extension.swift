@@ -2,8 +2,8 @@
 //  UserDefaults+Extension.swift
 //  Heck Yeah TV
 //
-//  Created by Ed Hellyer on 6/4/23.
-//  Copyright © 2023 CoStar Group. All rights reserved.
+//  Created by Ed Hellyer on 8/23/25.
+//  Copyright © 2025 Hellyer Multimedia. All rights reserved.
 //
 
 import Foundation
@@ -37,23 +37,29 @@ extension UserDefaults {
     }
     
     /// Returns unique list of channels marked as favorites.
-    static var favorites: [String] {
+    static var favorites: [GuideChannel] {
         get {
-            return standard.stringArray(forKey: AppKeys.GuideStore.favoritesKey) ?? []
+            let data = standard.data(forKey: AppKeys.GuideStore.favoritesKey)
+            let _favorites = try? [GuideChannel].initialize(jsonData: data)
+            return _favorites ?? []
         }
         set {
             let uniqueFavs = Array(Set(newValue))
-            standard.set(uniqueFavs, forKey: AppKeys.GuideStore.favoritesKey)
+            let data = try? uniqueFavs.toJSONData()
+            standard.set(data, forKey: AppKeys.GuideStore.favoritesKey)
         }
     }
     
     /// Returns the last played channel.
-    static var lastPlayed: String? {
+    static var lastPlayed: GuideChannel? {
         get {
-            return standard.string(forKey: AppKeys.GuideStore.lastPlayedKey)
+            let data = standard.data(forKey: AppKeys.GuideStore.lastPlayedKey)
+            let _lastPlayed = try? GuideChannel.initialize(jsonData: data)
+            return _lastPlayed
         }
         set {
-            standard.set(newValue, forKey: AppKeys.GuideStore.lastPlayedKey)
+            let data = try? newValue?.toJSONData()
+            standard.set(data, forKey: AppKeys.GuideStore.lastPlayedKey)
         }
     }
 }

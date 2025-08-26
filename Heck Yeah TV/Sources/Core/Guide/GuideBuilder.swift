@@ -3,6 +3,7 @@
 //  Heck Yeah TV
 //
 //  Created by Ed Hellyer on 8/23/25.
+//  Copyright © 2025 Hellyer Multimedia. All rights reserved.
 //
 
 import Foundation
@@ -26,6 +27,9 @@ struct GuideBuilder {
         }
         
         return guideChannels.values.sorted(by: { lhs, rhs in
+            if let lhsNumber = lhs.number, let rhsNumber = rhs.number {
+                return lhsNumber.compare(rhsNumber, options: .numeric) == .orderedAscending
+            }
             return lhs.title.localizedCaseInsensitiveCompare(rhs.title) == .orderedAscending
         })
     }

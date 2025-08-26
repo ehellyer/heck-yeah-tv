@@ -13,7 +13,7 @@ import Hellfire
 struct IPStream: JSONSerializable {
     
     /// Channel Id (e.g., "France3.fr")
-    let channelId: String
+    let channelId: String?
     
     /// Feed Id if available; otherwise `nil` (e.g., "NordPasdeCalaisHD")
     let feedId: String?

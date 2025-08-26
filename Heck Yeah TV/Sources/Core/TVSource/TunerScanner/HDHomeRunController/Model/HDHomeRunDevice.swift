@@ -2,8 +2,8 @@
 //  HDHomeRunDevice.swift
 //  Heck Yeah TV
 //
-//  Created by Ed Hellyer on 11/30/23.
-//  Copyright © 2023 Hellyer Multimedia. All rights reserved.
+//  Created by Ed Hellyer on 8/23/25.
+//  Copyright © 2025 Hellyer Multimedia. All rights reserved.
 //
 
 import Foundation

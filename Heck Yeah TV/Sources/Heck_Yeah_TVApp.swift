@@ -3,7 +3,9 @@
 //  Heck Yeah TV
 //
 //  Created by Ed Hellyer on 8/18/25.
+//  Copyright © 2025 Hellyer Multimedia. All rights reserved.
 //
+
 
 import SwiftUI
 
@@ -11,6 +13,7 @@ import SwiftUI
 struct Heck_Yeah_TVApp: App {
     
     @Environment(\.scenePhase) private var scenePhase
+    @State private var guideStore = GuideStore(streams: [], tunerChannels: [])
     @State private var isReady = false
     @State private var hdHomeRunController = HDHomeRunTunerDiscoveryController()
     @State private var iptvController: IPTVController = IPTVController()
@@ -20,6 +23,7 @@ struct Heck_Yeah_TVApp: App {
         WindowGroup {
             ZStack() {
                 PlatformRootView(isReady: $isReady)
+                    .environment(guideStore)
                     .task {
                         startBootstrap()
                     }
@@ -43,6 +47,7 @@ struct Heck_Yeah_TVApp: App {
             }
             
             await MainActor.run {
+                self.guideStore.load(streams: iptvController.streams, tunerChannels: hdHomeRunController.channels)
                 isReady = true
             }
         }

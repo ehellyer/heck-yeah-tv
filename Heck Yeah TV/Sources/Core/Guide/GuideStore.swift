@@ -3,83 +3,95 @@
 //  Heck Yeah TV
 //
 //  Created by Ed Hellyer on 8/23/25.
+//  Copyright © 2025 Hellyer Multimedia. All rights reserved.
 //
 
 import SwiftUI
+import Observation
 
-@MainActor
-final class GuideStore: ObservableObject {
+@Observable
+final class GuideStore {
     
-    @Published private(set) var channels: [GuideChannel] = []
-    @Published private(set) var selectedId: String?
-    @Published private(set) var lastPlayedId: String?
-
-    @Published var favoriteIds: [String] = []
-    @Published var showFavoritesOnly = false
+    //MARK: - GuideStore lifecycle
     
-    init(streams: [IPStream], tuner: [Channel]) {
+    init(streams: [IPStream], tunerChannels: [Channel]) {
         loadPersistence()
-        load(streams: streams, tuner: tuner)
+        load(streams: streams, tunerChannels: tunerChannels)
     }
     
-    private func load(streams: [IPStream], tuner: [Channel]) {
-        channels = GuideBuilder.build(streams: streams, tunerChannels: tuner)
-        // Prune favorites that no longer exist
-        favoriteIds = Array(Set(favoriteIds).intersection(Set(channels.map(\.id))))
-        if let sid = selectedId, !channels.contains(where: { $0.id == sid }) {
-            selectedId = nil
+    //MARK: - Private API
+    
+    private var channels: [GuideChannel] = []
+    
+    private func loadPersistence() {
+        favorites = UserDefaults.favorites
+        lastPlayedChannel = UserDefaults.lastPlayed
+        selectedChannel = lastPlayedChannel
+    }
+    
+    private func saveFavorites() {
+        UserDefaults.favorites = favorites
+    }
+    
+    private func saveLast() {
+        UserDefaults.lastPlayed = lastPlayedChannel
+    }
+    
+    //MARK: - Internal API - Observable properties
+    
+    private(set) var selectedChannel: GuideChannel?
+    private(set) var lastPlayedChannel: GuideChannel?
+    var favorites: [GuideChannel] = []
+    var showFavoritesOnly = false
+    var visibleChannels: [GuideChannel] {
+        showFavoritesOnly ? channels.filter { favorites.contains($0) } : channels
+    }
+    
+    //MARK: - Internal API
+    
+    func load(streams: [IPStream], tunerChannels: [Channel]) {
+        channels = GuideBuilder.build(streams: streams, tunerChannels: tunerChannels)
+        
+        // Pruning if channel no longer exists.
+        favorites = Array(Set(favorites).intersection(Set(channels)))
+        if let _selectedChannel = selectedChannel, !channels.contains(where: { $0.id == _selectedChannel.id }) {
+            selectedChannel = nil
         }
-        if let lid = lastPlayedId, !channels.contains(where: { $0.id == lid }) {
-            lastPlayedId = nil
+        if let _lastPlayedChannel = lastPlayedChannel, !channels.contains(where: { $0.id == _lastPlayedChannel.id }) {
+            lastPlayedChannel = nil
         }
     }
     
     func toggleFavorite(_ channel: GuideChannel) {
-        if favoriteIds.contains(channel.id) {
-            favoriteIds.removeAll(where: { $0 == channel.id })
+        if favorites.contains(channel) {
+            favorites.removeAll(where: { $0 == channel })
         } else {
-            favoriteIds.append(channel.id)
+            favorites.append(channel)
         }
         saveFavorites()
     }
     
     func select(_ channel: GuideChannel) {
         // update last→selected
-        if selectedId != channel.id {
-            lastPlayedId = selectedId
-            selectedId = channel.id
+        if selectedChannel?.id != channel.id {
+            lastPlayedChannel = selectedChannel
+            selectedChannel = channel
             saveLast()
         }
     }
     
     func switchToLastChannel() {
-        guard let last = lastPlayedId, let current = selectedId, last != current else { return }
+        guard let last = lastPlayedChannel, let current = selectedChannel, last != current else { return }
         // swap
-        let temp = selectedId
-        selectedId = lastPlayedId
-        lastPlayedId = temp
+        let temp = selectedChannel
+        selectedChannel = lastPlayedChannel
+        lastPlayedChannel = temp
         saveLast()
     }
     
-    var visibleChannels: [GuideChannel] {
-        showFavoritesOnly ? channels.filter { favoriteIds.contains($0.id) } : channels
-    }
-    
     func isFavorite(_ channel: GuideChannel) -> Bool {
-        favoriteIds.contains(channel.id)
+        favorites.contains(channel)
     }
 
-    private func loadPersistence() {
-        favoriteIds = UserDefaults.favorites
-        lastPlayedId = UserDefaults.lastPlayed
-        selectedId = lastPlayedId
-    }
-    
-    private func saveFavorites() {
-        UserDefaults.favorites = favoriteIds
-    }
-    
-    private func saveLast() {
-        UserDefaults.lastPlayed = lastPlayedId
-    }
+
 }

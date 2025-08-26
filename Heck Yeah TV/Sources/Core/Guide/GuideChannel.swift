@@ -3,11 +3,13 @@
 //  Heck Yeah TV
 //
 //  Created by Ed Hellyer on 8/23/25.
+//  Copyright © 2025 Hellyer Multimedia. All rights reserved.
 //
 
 import Foundation
+import Hellfire
 
-struct GuideChannel: Identifiable, Hashable, Sendable {
+struct GuideChannel: Identifiable, Hashable, Sendable, JSONSerializable {
     
     let id: String
     let title: String

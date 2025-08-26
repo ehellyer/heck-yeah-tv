@@ -1,9 +1,11 @@
 //
-//  VLCPlayerWrapperView.swift
+//  VLCPlayerView.swift
 //  Heck Yeah TV
 //
 //  Created by Ed Hellyer on 8/19/25.
+//  Copyright © 2025 Hellyer Multimedia. All rights reserved.
 //
+
 
 import SwiftUI
 #if os(tvOS)
@@ -12,7 +14,14 @@ import TVVLCKit
 import MobileVLCKit
 #endif
 
-struct VLCPlayerWrapperView: UIViewRepresentable {
+struct VLCPlayerView: UIViewRepresentable {
+    
+    // Binding for selected channel
+    @Binding var channel: GuideChannel? {
+        didSet {
+            print("Channel changed to: \(channel?.title ?? "None")")
+        }
+    }
     
     /// Creates the custom instance that you use to communicate changes from
     /// your view to other parts of your SwiftUI interface.
@@ -29,8 +38,8 @@ struct VLCPlayerWrapperView: UIViewRepresentable {
     /// ``UIViewRepresentable/makeUIView(context:)`` method. The system provides
     /// your coordinator either directly or as part of a context structure when
     /// calling the other methods of your representable instance.
-    func makeCoordinator() -> VLCPlayerWrapperView.Coordinator {
-        return VLCPlayerWrapperView.Coordinator()
+    func makeCoordinator() -> VLCPlayerView.Coordinator {
+        return VLCPlayerView.Coordinator()
     }
     
     /// Creates the view object and configures its initial state.
@@ -67,7 +76,11 @@ struct VLCPlayerWrapperView: UIViewRepresentable {
     ///   - context: A context structure containing information about the current
     ///     state of the system.
     func updateUIView(_ uiView: UIView, context: Context) {
-
+        if let _channel = channel {
+            context.coordinator.play(channel: _channel)
+        } else {
+            context.coordinator.stop()
+        }
     }
     
     /// Cleans up the presented UIKit view (and coordinator) in anticipation of
@@ -87,35 +100,39 @@ struct VLCPlayerWrapperView: UIViewRepresentable {
     }
     
     final class Coordinator: NSObject {
+        
         private lazy var mediaPlayer = VLCMediaPlayer()
         
         func attach(to view: UIView) {
             mediaPlayer.drawable = view
         }
         
-        func play(channel: Channelable) {
-            mediaPlayer.media = VLCMedia(url: channel.urlHint)
+        func play(channel: GuideChannel) {
+            let media = VLCMedia(url: channel.url)
+            mediaPlayer.media = media
             mediaPlayer.play()
         }
         
         func seekForward() {
-            guard self.mediaPlayer.isSeekable else { return }
-            self.mediaPlayer.position = min(1.0, self.mediaPlayer.position * 1.01)
+            guard mediaPlayer.isSeekable else { return }
+            mediaPlayer.position = min(1.0, mediaPlayer.position * 1.01)
         }
         
         func seekBackward() {
-            guard self.mediaPlayer.isSeekable else { return }
-            self.mediaPlayer.position = max(0.0, self.mediaPlayer.position * -1.01)
+            guard mediaPlayer.isSeekable else { return }
+            mediaPlayer.position = max(0.0, mediaPlayer.position * -1.01)
         }
         
         func pause() {
-            guard self.mediaPlayer.canPause else { return }
-            self.mediaPlayer.pause()
+            guard mediaPlayer.canPause else { return }
+            mediaPlayer.pause()
         }
         
         func stop() {
-            guard self.mediaPlayer.isPlaying else { return }
-            self.mediaPlayer.stop()
+            if mediaPlayer.isPlaying {
+                mediaPlayer.stop()
+            }
+            mediaPlayer.media = nil
         }
         
         func dismantle() {

@@ -3,16 +3,37 @@
 //  Heck Yeah TV
 //
 //  Created by Ed Hellyer on 8/23/25.
+//  Copyright © 2025 Hellyer Multimedia. All rights reserved.
 //
 
 import SwiftUI
 
 struct GuideView: View {
-    @ObservedObject var store: GuideStore
     
-    init(guideStore: GuideStore) {
-        store = guideStore
-    }
+    @Environment(GuideStore.self) var store
+    
+//    var body: some View {
+//        NavigationView {
+//            List(store.visibleChannels) { ch in
+//                HStack {
+//                    Text(ch.title).lineLimit(1)
+//                    Spacer()
+//                    Button("Play") {
+//                        store.select(ch)
+//                    }
+//                }
+//            }
+//            .navigationTitle("Guide")
+//
+//            // Player pane reacts to selection automatically
+//            VLCPlayerView(channel: Binding(
+//                get: { store.selectedChannel },
+//                set: { _ in } // no-op; player drives no state back
+//            ))
+//            .ignoresSafeArea() // if you want edge-to-edge video
+//            .background(Color.black)
+//        }
+//    }
     
     var body: some View {
         NavigationView {
@@ -55,9 +76,21 @@ struct GuideView: View {
                     Button("Last") {
                         store.switchToLastChannel()
                     }
-                    .disabled(store.lastPlayedId == nil)
+                    .disabled(store.lastPlayedChannel == nil)
                 }
             }
+            
+            // Player pane reacts to selection automatically
+            VLCPlayerView(channel: Binding(
+                get: {
+                    store.selectedChannel
+                },
+                set: { _ in
+                    // no-op; player drives no state back
+                }
+            ))
+            .ignoresSafeArea()
+            .background(Color.black)
         }
     }
 }
@@ -78,7 +111,8 @@ struct GuideView: View {
                           userAgent: nil,
                           quality: "1080p")
     
-    let guideStore = GuideStore(streams: [stream], tuner: [channel])
-
-    GuideView(guideStore: guideStore)
+    let guideStore = GuideStore(streams: [stream], tunerChannels: [channel])
+    
+    GuideView()
+        .environment(guideStore)
 }

@@ -2,8 +2,8 @@
 //  String+Extension.swift
 //  Heck Yeah TV
 //
-//  Created by Ed Hellyer on 9/16/20.
-//  Copyright © 2020 Hellyer Multimedia. All rights reserved.
+//  Created by Ed Hellyer on 8/25/25.
+//  Copyright © 2025 Hellyer Multimedia. All rights reserved.
 //
 
 import Foundation

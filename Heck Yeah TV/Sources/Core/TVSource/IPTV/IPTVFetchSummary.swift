@@ -11,7 +11,9 @@ import Foundation
 // MARK: - Batch fetch summary
 
 struct IPTVFetchSummary {
-    enum Endpoint: String, CaseIterable, Hashable {
+    
+    enum Endpoint: String, Hashable {
+        
         case blocklists
         case categories
         case channels
@@ -43,12 +45,10 @@ struct IPTVFetchSummary {
         }
     }
     
-    var successes: [Endpoint: Int] = [:]          // item count per successful endpoint
-    var failures: [Endpoint: Error] = [:]         // endpoint → error
+    var successes: [Endpoint: Int] = [:]
+    var failures: [Endpoint: Error] = [:]
     var startedAt = Date()
     var finishedAt: Date = .distantPast
     var duration: TimeInterval { finishedAt.timeIntervalSince(startedAt) }
-    var isComplete: Bool { failures.isEmpty && successes.count == Endpoint.allCases.count }
-    
     var fetchList: [Endpoint] = [.streams, .channels]
 }

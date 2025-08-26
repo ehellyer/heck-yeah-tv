@@ -48,8 +48,8 @@ final class IPTVController {
         summary.startedAt = Date()
         
         let specs: [AnyLoadSpec] = [
-            LoadSpec(.channels, keyPath: \.channels),
-            LoadSpec(.streams, keyPath: \.streams)
+            LoadSpec(.streams, keyPath: \.streams),
+            LoadSpec(.channels, keyPath: \.channels)
         ]
         
         // Run everything concurrently; each task returns (endpoint, Result<count, error>)
