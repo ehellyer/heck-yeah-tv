@@ -52,6 +52,17 @@
                ReferencedContainer = "container:Heck Yeah TV.xcodeproj">
             </BuildableReference>
          </TestableReference>
+         <TestableReference
+            skipped = "NO"
+            parallelizable = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "EBE03C2C2E53D8DF006B7747"
+               BuildableName = "tvOS_HeckYeahTVUITests.xctest"
+               BlueprintName = "tvOS_HeckYeahTVUITests"
+               ReferencedContainer = "container:Heck Yeah TV.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
    </TestAction>
    <LaunchAction

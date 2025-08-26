@@ -1,0 +1,140 @@
+//
+//  VLCPlayerView.swift
+//  Heck Yeah TV
+//
+//  Created by Ed Hellyer on 8/19/25.
+//  Copyright © 2025 Hellyer Multimedia. All rights reserved.
+//
+
+
+import SwiftUI
+
+#if os(tvOS)
+import TVVLCKit
+#elseif os(macOS)
+import VLCKit
+import AppKit
+#else
+import MobileVLCKit
+import UIKit
+#endif
+
+// Cross-platform aliases
+#if os(macOS)
+typealias PlatformViewRepresentable = NSViewRepresentable
+typealias PlatformView = NSView
+#else
+typealias PlatformViewRepresentable = UIViewRepresentable
+typealias PlatformView = UIView
+#endif
+
+
+struct VLCPlayerView: PlatformViewRepresentable {
+    
+    // Binding for selected channel
+    @Binding var channel: GuideChannel?
+    
+    func makeCoordinator() -> VLCPlayerView.Coordinator {
+        return VLCPlayerView.Coordinator()
+    }
+    
+    // MARK: Platform specific ViewRepresentable hooks
+#if os(macOS)
+    
+    func makeNSView(context: Context) -> PlatformView {
+        makePlatformView(context: context)
+    }
+    
+    func updateNSView(_ nsView: PlatformView, context: Context) {
+        updatePlatformView(nsView, context: context)
+    }
+    
+    static func dismantleNSView(_ nsView: PlatformView, coordinator: Coordinator) {
+        coordinator.dismantle()
+    }
+    
+#else
+    
+    func makeUIView(context: Context) -> PlatformView {
+        makePlatformView(context: context)
+    }
+    
+    func updateUIView(_ uiView: PlatformView, context: Context) {
+        updatePlatformView(uiView, context: context)
+    }
+    
+    static func dismantleUIView(_ uiView: PlatformView, coordinator: Coordinator) {
+        coordinator.dismantle()
+    }
+    
+#endif
+    
+    //MARK: - Platform specific ViewRepresentable helpers
+    
+    private func makePlatformView(context: Context) -> PlatformView {
+#if os(macOS)
+        let view = PlatformView(frame: .zero)
+        view.wantsLayer = true
+        view.layer?.backgroundColor = NSColor.black.cgColor
+#else
+        
+        let view = PlatformView()
+        view.backgroundColor = .black
+#endif
+        context.coordinator.attach(to: view)
+        return view
+    }
+    
+    private func updatePlatformView(_ view: PlatformView, context: Context) {
+        if let _channel = channel {
+            context.coordinator.play(channel: _channel)
+        } else {
+            context.coordinator.stop()
+        }
+    }
+    
+    //MARK: - ViewRepresentable Coordinator
+    
+    final class Coordinator: NSObject {
+        
+        private lazy var mediaPlayer = VLCMediaPlayer()
+        
+        func attach(to view: PlatformView) {
+            mediaPlayer.drawable = view
+        }
+        
+        func play(channel: GuideChannel) {
+            let media = VLCMedia(url: channel.url)
+            // Buffer 500ms before playing the stream.
+            media.addOptions(["network-caching": 500])
+            mediaPlayer.media = media
+            mediaPlayer.play()
+        }
+        
+        func seekForward() {
+            guard mediaPlayer.isSeekable else { return }
+            mediaPlayer.position = min(1.0, mediaPlayer.position * 1.01)
+        }
+        
+        func seekBackward() {
+            guard mediaPlayer.isSeekable else { return }
+            mediaPlayer.position = max(0.0, mediaPlayer.position * -1.01)
+        }
+        
+        func pause() {
+            guard mediaPlayer.canPause else { return }
+            mediaPlayer.pause()
+        }
+        
+        func stop() {
+            if mediaPlayer.isPlaying {
+                mediaPlayer.stop()
+            }
+            mediaPlayer.media = nil
+        }
+        
+        func dismantle() {
+            mediaPlayer.drawable = nil
+        }
+    }
+}

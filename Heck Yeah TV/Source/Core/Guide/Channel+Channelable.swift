@@ -9,7 +9,7 @@
 import Foundation
 
 extension Channel: Channelable {
-    var idHint: String { guideNumber + "::" + guideName }
+    var idHint: String { String.concat(guideNumber, guideName, separator: "::") }
     var titleHint: String { guideName }
     var numberHint: String? { guideNumber }
     var urlHint: URL { url }

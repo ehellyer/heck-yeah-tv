@@ -15,19 +15,15 @@ final class GuideStore {
     //MARK: - GuideStore lifecycle
     
     init(streams: [IPStream], tunerChannels: [Channel]) {
-        loadPersistence()
+        favorites = UserDefaults.favorites
+        lastPlayedChannel = UserDefaults.lastPlayed
+        selectedChannel = lastPlayedChannel
         load(streams: streams, tunerChannels: tunerChannels)
     }
     
     //MARK: - Private API
     
     private var channels: [GuideChannel] = []
-    
-    private func loadPersistence() {
-        favorites = UserDefaults.favorites
-        lastPlayedChannel = UserDefaults.lastPlayed
-        selectedChannel = lastPlayedChannel
-    }
     
     private func saveFavorites() {
         UserDefaults.favorites = favorites
@@ -39,16 +35,25 @@ final class GuideStore {
     
     //MARK: - Internal API - Observable properties
     
-    private(set) var selectedChannel: GuideChannel?
     private(set) var lastPlayedChannel: GuideChannel?
-    var favorites: [GuideChannel] = []
+    private(set) var favorites: [GuideChannel] = []
     var showFavoritesOnly = false
+    var isGuideVisible: Bool = true
     var visibleChannels: [GuideChannel] {
         showFavoritesOnly ? channels.filter { favorites.contains($0) } : channels
     }
     
     //MARK: - Internal API
-    
+
+    var selectedChannel: GuideChannel? {
+        didSet {
+            if selectedChannel?.id != lastPlayedChannel?.id {
+                lastPlayedChannel = selectedChannel
+                saveLast()
+            }
+        }
+    }
+
     func load(streams: [IPStream], tunerChannels: [Channel]) {
         channels = GuideBuilder.build(streams: streams, tunerChannels: tunerChannels)
         
@@ -69,15 +74,6 @@ final class GuideStore {
             favorites.append(channel)
         }
         saveFavorites()
-    }
-    
-    func select(_ channel: GuideChannel) {
-        // update last→selected
-        if selectedChannel?.id != channel.id {
-            lastPlayedChannel = selectedChannel
-            selectedChannel = channel
-            saveLast()
-        }
     }
     
     func switchToLastChannel() {

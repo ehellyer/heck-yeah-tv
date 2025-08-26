@@ -3,6 +3,7 @@
 //  Heck Yeah TVUITests
 //
 //  Created by Ed Hellyer on 8/18/25.
+//  Copyright © 2025 Hellyer Multimedia. All rights reserved.
 //
 
 import XCTest

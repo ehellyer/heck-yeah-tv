@@ -31,6 +31,7 @@ struct LoadSpec<T: JSONSerializable>: AnyLoadSpec {
     func load(into controller: IPTVController) async throws -> Int {
         let items: [T] = try await controller.fetchList(url: url)
         controller[keyPath: keyPath] = items
+        //self.endpoint.write(&controller, items)
         return items.count
     }
 }
