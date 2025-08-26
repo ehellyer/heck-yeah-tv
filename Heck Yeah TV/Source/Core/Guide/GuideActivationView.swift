@@ -27,23 +27,20 @@ private struct ReactivationGestures: ViewModifier {
     
     func body(content: Content) -> some View {
 #if os(tvOS)
-        // tvOS: no DragGesture; tap is fine. Remote swipes handled via .onMoveCommand at container.
-        content.highPriorityGesture(TapGesture().onEnded { show() })
+        content
+            //.highPriorityGesture(TapGesture().onEnded { show() })
+            .focusable(true)                 // must be in focus system
+            //.onAppear { hasFocus = true }    // claim focus when overlay is hidden
+            .onMoveCommand { _ in show() }   // remote swipe
+            //.onSelect { show() }      // remote click
         
 #elseif os(macOS)
-        // macOS: hover or click to reveal
         content
-            .onHover { _ in show() }
             .highPriorityGesture(TapGesture().onEnded { show() })
         
 #else
-        // iOS (and Mac Catalyst): tap or drag anywhere to reveal
         content
             .highPriorityGesture(TapGesture().onEnded { show() })
-            .simultaneousGesture(
-                DragGesture(minimumDistance: 1)
-                    .onChanged { _ in show() }
-            )
 #endif
     }
 }

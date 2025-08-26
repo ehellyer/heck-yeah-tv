@@ -12,75 +12,117 @@ struct GuideView: View {
     
     @Environment(GuideStore.self) var guideStore
     
+#if os(tvOS)
+    @FocusState private var focusedChannel: GuideChannel?
+#endif
+    
     var body: some View {
-        VStack(spacing: 0) {
-            List(guideStore.visibleChannels) { channel in
-                HStack {
-                    VStack(alignment: .leading, spacing: 2) {
-                        
-                        HStack {
-                            Button {
-                                guideStore.selectedChannel = channel
-                                withAnimation(.easeOut(duration: 0.25)) {
-                                    guideStore.isGuideVisible = false
+        ScrollViewReader { proxy in
+            VStack(spacing: 0) {
+                List(guideStore.visibleChannels) { channel in
+                    HStack {
+                        VStack(alignment: .leading, spacing: 2) {
+                            
+                            HStack {
+                                Button {
+                                    guideStore.selectedChannel = channel
+                                    withAnimation(.easeOut(duration: 0.25)) {
+                                        guideStore.isGuideVisible = false
+                                    }
+                                } label: {
+                                    Text(channel.title)
+                                        .font(.headline)
+                                        .lineLimit(1)
                                 }
-                            } label: {
-                                Text(channel.title)
-                                    .font(.headline)
-                                    .lineLimit(1)
+                                Spacer()
+                                if guideStore.selectedChannel == channel {
+                                    Image(systemName: "play.circle.fill")
+                                }
                             }
-                            Spacer()
-                            if guideStore.selectedChannel == channel {
-                                Image(systemName: "play.circle.fill")
-                            }
-                        }
-                        
-                        
-                        HStack(spacing: 8) {
-                            if let n = channel.number {
-                                Text(n).font(.caption).foregroundStyle(.secondary)
-                            }
-                            if channel.isHD {
-                                Text("HD")
-                                    .font(.caption2)
-                                    .padding(.horizontal, 4)
-                                    .padding(.vertical, 2)
-                                    .overlay(RoundedRectangle(cornerRadius: 4)
-                                        .stroke(.secondary.opacity(0.4)))
-                            }
-                            if channel.hasDRM {
-                                Text("DRM")
-                                    .font(.caption2)
-                                    .padding(.horizontal, 4)
-                                    .padding(.vertical, 2)
-                                    .overlay(RoundedRectangle(cornerRadius: 4)
-                                        .stroke(.secondary.opacity(0.4)))
+                            
+                            
+                            HStack(spacing: 8) {
+                                if let n = channel.number {
+                                    Text(n).font(.caption).foregroundStyle(.secondary)
+                                }
+                                if channel.isHD {
+                                    Text("HD")
+                                        .font(.caption2)
+                                        .padding(.horizontal, 4)
+                                        .padding(.vertical, 2)
+                                        .overlay(RoundedRectangle(cornerRadius: 4)
+                                            .stroke(.secondary.opacity(0.4)))
+                                }
+                                if channel.hasDRM {
+                                    Text("DRM")
+                                        .font(.caption2)
+                                        .padding(.horizontal, 4)
+                                        .padding(.vertical, 2)
+                                        .overlay(RoundedRectangle(cornerRadius: 4)
+                                            .stroke(.secondary.opacity(0.4)))
+                                }
                             }
                         }
+                        Spacer()
+                        Button {
+                            guideStore.toggleFavorite(channel)
+                        } label: {
+                            Image(systemName: guideStore.isFavorite(channel) ? "star.fill" : "star")
+                        }
+                        .buttonStyle(.borderless)
                     }
-                    Spacer()
-                    Button {
-                        guideStore.toggleFavorite(channel)
-                    } label: {
-                        Image(systemName: guideStore.isFavorite(channel) ? "star.fill" : "star")
+                    .contentShape(Rectangle())
+                    .onTapGesture {
+                        guideStore.selectedChannel = channel
+                        withAnimation(.easeOut(duration: 0.25)) {
+                            guideStore.isGuideVisible = false
+                        }
                     }
-                    .buttonStyle(.borderless)
+                    .listRowBackground(
+                        (guideStore.selectedChannel == channel ? Color.blue.opacity(0.2) : Color.clear)
+                    )
                 }
-                .contentShape(Rectangle())
-                .onTapGesture {
-                    guideStore.selectedChannel = channel
-                    withAnimation(.easeOut(duration: 0.25)) {
-                        guideStore.isGuideVisible = false
-                    }
+            }
+#if os(tvOS)
+            .padding(50)
+#endif
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+            .background(overlayMaterial)
+            
+            // 1) When the guide appears, scroll to the selected item
+            
+
+            
+            .onChange(of: guideStore.isGuideVisible) { oldValue, newValue in
+                guard newValue, let id = guideStore.selectedChannel else { return }
+                // Defer one turn so List has layout before we scroll.
+                DispatchQueue.main.async {
+                    withAnimation(.easeInOut) { proxy.scrollTo(id, anchor: .center) }
                 }
-                .listRowBackground(
-                    (guideStore.selectedChannel == channel ? Color.blue.opacity(0.2) : Color.clear)
-                )
+#if os(tvOS)
+                focusedChannel = id
+#endif
+            }
+            
+            // 2) Also keep it centered when selection changes while visible
+            .onChange(of: guideStore.selectedChannel) { _, id in
+                guard guideStore.isGuideVisible, let id else { return }
+                withAnimation(.easeInOut) { proxy.scrollTo(id, anchor: .center) }
+#if os(tvOS)
+                focusedChannel = id
+#endif
+            }
+            
+            // 3) Initial mount (e.g., app launch with a preselected channel)
+            .task {
+                if let id = guideStore.selectedChannel {
+                    proxy.scrollTo(id, anchor: .center)
+#if os(tvOS)
+                    focusedChannel = id
+#endif
+                }
             }
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
-        .background(overlayMaterial)
-
     }
     
     @ViewBuilder private var overlayMaterial: some View {

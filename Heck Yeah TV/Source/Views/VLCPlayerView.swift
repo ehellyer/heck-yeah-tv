@@ -108,6 +108,7 @@ struct VLCPlayerView: PlatformViewRepresentable {
             // Buffer 500ms before playing the stream.
             media.addOptions(["network-caching": 500])
             mediaPlayer.media = media
+            mediaPlayer.delegate = self
             mediaPlayer.play()
         }
         
@@ -136,5 +137,30 @@ struct VLCPlayerView: PlatformViewRepresentable {
         func dismantle() {
             mediaPlayer.drawable = nil
         }
+    }
+}
+
+//MARK: - VLCMediaPlayerDelegate protocol
+
+extension VLCPlayerView.Coordinator: VLCMediaPlayerDelegate {
+    
+    func mediaPlayerStateChanged(_ aNotification: Notification) {
+        
+    }
+    
+    func mediaPlayerTimeChanged(_ aNotification: Notification) {
+        
+    }
+    
+    func mediaPlayerTitleChanged(_ aNotification: Notification) {
+        
+    }
+    
+    func mediaPlayerChapterChanged(_ aNotification: Notification) {
+        
+    }
+    
+    func mediaPlayerSnapshot(_ aNotification: Notification) {
+        
     }
 }
