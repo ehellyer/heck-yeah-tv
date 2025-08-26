@@ -12,28 +12,7 @@ struct GuideView: View {
     
     @Environment(GuideStore.self) var store
     
-//    var body: some View {
-//        NavigationView {
-//            List(store.visibleChannels) { ch in
-//                HStack {
-//                    Text(ch.title).lineLimit(1)
-//                    Spacer()
-//                    Button("Play") {
-//                        store.select(ch)
-//                    }
-//                }
-//            }
-//            .navigationTitle("Guide")
-//
-//            // Player pane reacts to selection automatically
-//            VLCPlayerView(channel: Binding(
-//                get: { store.selectedChannel },
-//                set: { _ in } // no-op; player drives no state back
-//            ))
-//            .ignoresSafeArea() // if you want edge-to-edge video
-//            .background(Color.black)
-//        }
-//    }
+    @State private var selectedChannel: GuideChannel?
     
     var body: some View {
         NavigationView {
@@ -56,11 +35,15 @@ struct GuideView: View {
                         Image(systemName: store.isFavorite(channel) ? "star.fill" : "star")
                     }
                     .buttonStyle(.borderless)
-                    
-                    Button("Play") {
-                        store.select(channel)
-                    }
                 }
+                .contentShape(Rectangle())
+                .onTapGesture {
+                    store.select(channel)
+                    selectedChannel = channel
+                }
+                .listRowBackground(
+                    (selectedChannel == channel ? Color.blue.opacity(0.2) : Color.white)
+                )
             }
             .navigationTitle("Guide")
             .toolbar {
@@ -96,20 +79,20 @@ struct GuideView: View {
 }
 
 #Preview() {
-    let channel = Channel(guideNumber: "abc",
-                          guideName: "ABC",
-                          videoCodec: nil,
-                          audioCodec: nil,
-                          hasDRM: true,
+    let channel = Channel(guideNumber: "8.1",
+                          guideName: "WRIC-TV",
+                          videoCodec: "MPEG2",
+                          audioCodec: "AC3",
+                          hasDRM: false,
                           isHD: true ,
-                          url: "https://abc.com")
-    let stream = IPStream(channelId: "fox",
-                          feedId: "fox",
-                          title: "FOX",
-                          url: "https://fox.com",
+                          url: "http://192.168.50.250:5004/auto/v8.1")
+    let stream = IPStream(channelId:  "PlutoTVTrueCrime.us",
+                          feedId: "Austria",
+                          title: "Pluto TV True Crime",
+                          url:"http://cfd-v4-service-channel-stitcher-use1-1.prd.pluto.tv/stitch/hls/channel/615333098185f00008715a56/master.m3u8?appName=web&appVersion=unknown&clientTime=0&deviceDNT=0&deviceId=1b2049e1-4b81-11ef-a8ac-e146e4e7be02&deviceMake=Chrome&deviceModel=web&deviceType=web&deviceVersion=unknown&includeExtendedEvents=false&serverSideAds=false&sid=03c264ad-dc34-4e0b-b96f-6cfb4c0f6b37",
                           referrer: nil,
                           userAgent: nil,
-                          quality: "1080p")
+                          quality: nil)
     
     let guideStore = GuideStore(streams: [stream], tunerChannels: [channel])
     

@@ -109,6 +109,8 @@ struct VLCPlayerView: UIViewRepresentable {
         
         func play(channel: GuideChannel) {
             let media = VLCMedia(url: channel.url)
+            // Buffer 500ms before playing the stream.
+            media.addOptions(["network-caching": 500])
             mediaPlayer.media = media
             mediaPlayer.play()
         }

@@ -6,12 +6,9 @@
 //  Copyright © 2025 Hellyer Multimedia. All rights reserved.
 //
 
-
 import SwiftUI
 
 struct BackgroundView: View {
-    
-    @State private var textSize = CGSize(width: 200, height: 100)
     
     var body: some View {
         ZStack {

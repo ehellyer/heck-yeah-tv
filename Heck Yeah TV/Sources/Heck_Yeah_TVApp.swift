@@ -13,7 +13,9 @@ import SwiftUI
 struct Heck_Yeah_TVApp: App {
     
     @Environment(\.scenePhase) private var scenePhase
+    
     @State private var guideStore = GuideStore(streams: [], tunerChannels: [])
+    
     @State private var isReady = false
     @State private var hdHomeRunController = HDHomeRunTunerDiscoveryController()
     @State private var iptvController: IPTVController = IPTVController()
