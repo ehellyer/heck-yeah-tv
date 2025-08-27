@@ -34,36 +34,34 @@ struct GuideView: View {
                                         .font(.headline)
                                         .lineLimit(1)
                                 }
-                                Spacer()
-                                if guideStore.selectedChannel == channel {
-                                    Image(systemName: "play.circle.fill")
-                                }
                             }
                             
-                            
-                            HStack(spacing: 8) {
+                            HStack(spacing: 15) {
                                 if let n = channel.number {
                                     Text(n).font(.caption).foregroundStyle(.secondary)
                                 }
                                 if channel.isHD {
                                     Text("HD")
                                         .font(.caption2)
-                                        .padding(.horizontal, 4)
+                                        .padding(.horizontal, 8)
                                         .padding(.vertical, 2)
                                         .overlay(RoundedRectangle(cornerRadius: 4)
-                                            .stroke(.secondary.opacity(0.4)))
+                                            .stroke())
                                 }
                                 if channel.hasDRM {
                                     Text("DRM")
                                         .font(.caption2)
-                                        .padding(.horizontal, 4)
+                                        .padding(.horizontal, 8)
                                         .padding(.vertical, 2)
                                         .overlay(RoundedRectangle(cornerRadius: 4)
-                                            .stroke(.secondary.opacity(0.4)))
+                                            .stroke())
                                 }
                             }
                         }
                         Spacer()
+                        if guideStore.selectedChannel == channel {
+                            Image(systemName: "play.circle.fill")
+                        }
                         Button {
                             guideStore.toggleFavorite(channel)
                         } label: {
@@ -141,7 +139,7 @@ struct GuideView: View {
                           guideName: "WRIC-TV",
                           videoCodec: "MPEG2",
                           audioCodec: "AC3",
-                          hasDRM: false,
+                          hasDRM: true,
                           isHD: true ,
                           url: "http://192.168.50.250:5004/auto/v8.1")
     let stream = IPStream(channelId:  "PlutoTVTrueCrime.us",

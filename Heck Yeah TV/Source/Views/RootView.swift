@@ -10,7 +10,14 @@ import SwiftUI
 
 struct RootView: View {
     
+    @Environment(\.scenePhase) private var _scenePhase
     @Environment(GuideStore.self) private var guideStore
+    
+    private var scenePhase: Binding<ScenePhase> {
+        Binding(get: { _scenePhase },
+                set: { _ in }
+        )
+    }
     
     // Build a binding to your VLCPlayerView's `channel: GuideChannel?`
     private var channelBinding: Binding<GuideChannel?> {
@@ -24,7 +31,7 @@ struct RootView: View {
         ZStack {
             
             ZStack {
-                VLCPlayerView(channel: channelBinding)
+                VLCPlayerView(channel: channelBinding, screenPhase: scenePhase)
 #if !os(macOS)
                     .ignoresSafeArea()
 #endif
@@ -40,13 +47,19 @@ struct RootView: View {
             
 #if os(tvOS)
             // tvOS: any move command (remote swipe) re-shows the guide
-            .onMoveCommand { _ in withAnimation { guideStore.isGuideVisible = true } }
+            .onMoveCommand { _ in
+                withAnimation {
+                    guideStore.isGuideVisible = true
+                }
+            }
 #endif
             
 #if os(macOS)
             // macOS: arrow keys re-show the guide
             .background( MacArrowKeyCatcher {
-                withAnimation { guideStore.isGuideVisible = true }
+                withAnimation {
+                    guideStore.isGuideVisible = true
+                }
             })
 #endif
         }

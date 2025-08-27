@@ -33,9 +33,11 @@ struct VLCPlayerView: PlatformViewRepresentable {
     
     // Binding for selected channel
     @Binding var channel: GuideChannel?
+    @Binding var screenPhase: ScenePhase
+    
     
     func makeCoordinator() -> VLCPlayerView.Coordinator {
-        return VLCPlayerView.Coordinator()
+        return VLCPlayerView.Coordinator(scenePhase: screenPhase)
     }
     
     // MARK: Platform specific ViewRepresentable hooks
@@ -86,9 +88,11 @@ struct VLCPlayerView: PlatformViewRepresentable {
     }
     
     private func updatePlatformView(_ view: PlatformView, context: Context) {
-        if let _channel = channel {
-            context.coordinator.play(channel: _channel)
-        } else {
+        if screenPhase == .active, let channel {
+            context.coordinator.play(channel: channel)
+        }
+        
+        if screenPhase != .active {
             context.coordinator.stop()
         }
     }
@@ -98,12 +102,21 @@ struct VLCPlayerView: PlatformViewRepresentable {
     final class Coordinator: NSObject {
         
         private lazy var mediaPlayer = VLCMediaPlayer()
+        private var scenePhase: ScenePhase
+        
+        init(scenePhase: ScenePhase) {
+            self.scenePhase = scenePhase
+        }
         
         func attach(to view: PlatformView) {
             mediaPlayer.drawable = view
         }
         
         func play(channel: GuideChannel) {
+            //If we are requesting to play the same channel and the player is currently playing, do nothing and return early.
+            guard not(channel.url == mediaPlayer.media?.url && mediaPlayer.isPlaying) else {
+                return
+            }
             let media = VLCMedia(url: channel.url)
             // Buffer 500ms before playing the stream.
             media.addOptions(["network-caching": 500])
@@ -130,8 +143,8 @@ struct VLCPlayerView: PlatformViewRepresentable {
         func stop() {
             if mediaPlayer.isPlaying {
                 mediaPlayer.stop()
+                mediaPlayer.media = nil
             }
-            mediaPlayer.media = nil
         }
         
         func dismantle() {

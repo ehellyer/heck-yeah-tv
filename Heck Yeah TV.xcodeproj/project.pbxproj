@@ -117,6 +117,7 @@
 				Source/Core/TVSource/TunerScanner/HDHomeRunController/Model/Channel.swift,
 				Source/Core/TVSource/TunerScanner/HDHomeRunController/Model/HDHomeRunDevice.swift,
 				Source/Core/TVSource/TunerScanner/HDHomeRunController/Model/HDHomeRunTuner.swift,
+				Source/Core/Utilities/AppUtil.swift,
 				Source/Heck_Yeah_TVApp.swift,
 				Source/Views/BackgroundView.swift,
 				Source/Views/BootViews/BootGateView.swift,
@@ -174,6 +175,7 @@
 				Source/Core/TVSource/TunerScanner/HDHomeRunController/Model/Channel.swift,
 				Source/Core/TVSource/TunerScanner/HDHomeRunController/Model/HDHomeRunDevice.swift,
 				Source/Core/TVSource/TunerScanner/HDHomeRunController/Model/HDHomeRunTuner.swift,
+				Source/Core/Utilities/AppUtil.swift,
 				Source/Heck_Yeah_TVApp.swift,
 				Source/Views/BackgroundView.swift,
 				Source/Views/BootViews/BootGateView.swift,
@@ -1176,8 +1178,7 @@
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1210,8 +1211,7 @@
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
