@@ -42,7 +42,7 @@ struct GuideSubTitleView: View {
 }
 
 #Preview() {
-    let channel = GuideChannel(Channel(guideNumber: "8.1",
+    let channel = GuideChannel(HDHomeRunChannel(guideNumber: "8.1",
                                        guideName: "WRIC-TV",
                                        videoCodec: "MPEG2",
                                        audioCodec: "AC3",

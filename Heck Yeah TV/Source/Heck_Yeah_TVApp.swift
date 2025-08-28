@@ -17,7 +17,7 @@ struct Heck_Yeah_TVApp: App {
     @State private var guideStore = GuideStore(streams: [], tunerChannels: [])
     
     @State private var isReady = false
-    @State private var hdHomeRunController = HDHomeRunTunerDiscoveryController()
+    @State private var hdHomeRunController = HDHomeRunDiscoveryController()
     @State private var iptvController: IPTVController = IPTVController()
     @State private var startupTask: Task<Void, Never>? = nil
     
@@ -41,9 +41,10 @@ struct Heck_Yeah_TVApp: App {
     private func startBootstrap() {
         startupTask?.cancel()
         startupTask = Task {
+            var summary = FetchSummary()
             do {
-                let _ = try await hdHomeRunController.bootStrapTunerChannelDiscovery()
-                let _ = await iptvController.fetchAll()
+                let hdHomeRunSummary = try await hdHomeRunController.bootStrapTunerChannelDiscovery()
+                let iptvSummary = await iptvController.fetchAll()
             } catch {
                 print(error)
             }

@@ -1,5 +1,5 @@
 //
-//  Channel.swift
+//  HDHomeRunChannel.swift
 //  Heck Yeah TV
 //
 //  Created by Ed Hellyer on 8/23/25.
@@ -9,10 +9,10 @@
 import Foundation
 import Hellfire
 
-/// Channel - Returned as an array when asking for the tuners channel list.
+/// HDHomeRunChannel - Returned as an array when asking for the tuners channel list.
 ///
-/// e.g. [http://192.168.50.224/lineup.json](http://192.168.50.224/lineup.json) -> [Channel]
-struct Channel: JSONSerializable, Equatable {
+/// e.g. [http://192.168.50.250/lineup.json](http://192.168.50.250/lineup.json) -> [Channel]
+struct HDHomeRunChannel: JSONSerializable, Equatable {
     
     let guideNumber: String
     let guideName: String
@@ -23,7 +23,7 @@ struct Channel: JSONSerializable, Equatable {
     let url: URL
 }
 
-extension Channel {
+extension HDHomeRunChannel {
     
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
@@ -48,7 +48,7 @@ extension Channel {
     }
 }
 
-extension Channel {
+extension HDHomeRunChannel {
     
     enum CodingKeys: String, CodingKey {
         case guideNumber = "GuideNumber"

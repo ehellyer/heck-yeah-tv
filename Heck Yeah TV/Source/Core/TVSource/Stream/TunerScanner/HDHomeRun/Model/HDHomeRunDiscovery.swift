@@ -1,5 +1,5 @@
 //
-//  HDHomeRunDevice.swift
+//  HDHomeRunDiscovery.swift
 //  Heck Yeah TV
 //
 //  Created by Ed Hellyer on 8/23/25.
@@ -9,10 +9,10 @@
 import Foundation
 import Hellfire
 
-/// HDHomeRunDevice - Local network scan for and HDHomeRun tuner servers.  Returned as an array of `HDHomeRunDevice`.
+/// HDHomeRunDiscovery - Local network scan for HDHomeRun tuner servers (e.g The little black box with one or more tuners inside).  Returned as an array of `HDHomeRunDiscovery`.
 ///
-/// e.g. [https://api.hdhomerun.com/discover](https://api.hdhomerun.com/discover) -> [HDHomeRunDevice]
-struct HDHomeRunDevice: JSONSerializable, Equatable  {
+/// e.g. [https://api.hdhomerun.com/discover](https://api.hdhomerun.com/discover) -> [HDHomeRunDiscovery]
+struct HDHomeRunDiscovery: JSONSerializable, Equatable  {
     
     var deviceId: String
     var localIP: String
@@ -21,7 +21,7 @@ struct HDHomeRunDevice: JSONSerializable, Equatable  {
     var lineupURL: URL
 }
 
-extension HDHomeRunDevice {
+extension HDHomeRunDiscovery {
     
     enum CodingKeys: String, CodingKey {
         case deviceId = "DeviceID"

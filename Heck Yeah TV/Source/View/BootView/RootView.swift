@@ -70,7 +70,7 @@ struct RootView: View {
 
 
 #Preview {
-    let channel = Channel(guideNumber: "8.1",
+    let channel = HDHomeRunChannel(guideNumber: "8.1",
                           guideName: "WRIC-TV",
                           videoCodec: "MPEG2",
                           audioCodec: "AC3",

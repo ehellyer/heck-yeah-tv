@@ -41,11 +41,9 @@ final class IPTVController {
         return jsonObject
     }
     
-    /// Fetches all endpoints concurrently and returns a summary of successes/failures.
-    /// Does not throw; failed endpoints are recorded in `FetchSummary.failures`.
-    func fetchAll() async -> IPTVFetchSummary {
-        var summary = IPTVFetchSummary()
-        summary.startedAt = Date()
+    func fetchAll() async -> FetchSummary {
+        var source = StreamSource()
+        source.summary.startedAt = Date()
         
         let specs: [AnyLoadSpec] = [
             LoadSpec(.streams, keyPath: \.streams),
@@ -53,15 +51,18 @@ final class IPTVController {
         ]
         
         // Run everything concurrently; each task returns (endpoint, Result<count, error>)
-        await withTaskGroup(of: (IPTVFetchSummary.Endpoint, Result<Int, Error>).self) { group in
+        await withTaskGroup(of: (URL, Result<Int, Error>).self) { group in
             for spec in specs {
                 group.addTask { [weak self] in
-                    guard let self else { return (spec.endpoint, .failure(CancellationError())) }
+                    guard let self else {
+                        return (spec.endpoint.url, .failure(CancellationError()))
+                    }
+                    
                     do {
                         let count = try await spec.load(into: self)
-                        return (spec.endpoint, .success(count))
+                        return (spec.endpoint.url, .success(count))
                     } catch {
-                        return (spec.endpoint, .failure(error))
+                        return (spec.endpoint.url, .failure(error))
                     }
                 }
             }
@@ -70,14 +71,40 @@ final class IPTVController {
             for await (endpoint, result) in group {
                 switch result {
                     case .success(let count):
-                        summary.successes[endpoint] = count
+                        source.summary.successes[endpoint] = count
                     case .failure(let error):
-                        summary.failures[endpoint] = error
+                        source.summary.failures[endpoint] = error
                 }
             }
         }
         
-        summary.finishedAt = Date()
-        return summary
+        source.summary.finishedAt = Date()
+        return source.summary
+    }
+}
+
+protocol AnyLoadSpec {
+    var endpoint: StreamSource.Endpoint { get }
+    func load(into controller: IPTVController) async throws -> Int
+}
+
+struct LoadSpec<T: JSONSerializable>: AnyLoadSpec {
+    
+    init(_ endpoint: StreamSource.Endpoint, keyPath: ReferenceWritableKeyPath<IPTVController, [T]>) {
+        self.endpoint = endpoint
+        self.url = endpoint.url
+        self.keyPath = keyPath
+    }
+    
+    private let url: URL
+    private let keyPath: ReferenceWritableKeyPath<IPTVController, [T]>
+    
+    let endpoint: StreamSource.Endpoint
+    
+    /// Fetches, assigns to the controller property, and returns the number of items loaded.
+    func load(into controller: IPTVController) async throws -> Int {
+        let items: [T] = try await controller.fetchList(url: url)
+        controller[keyPath: keyPath] = items
+        return items.count
     }
 }

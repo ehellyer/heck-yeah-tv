@@ -8,7 +8,7 @@
 
 import Foundation
 
-extension Channel: Channelable {
+extension HDHomeRunChannel: Channelable {
     var idHint: String { UUID().uuidString }
     var sortHint: String { String.concat(guideNumber, guideName, separator: "::") }
     var titleHint: String { guideName }

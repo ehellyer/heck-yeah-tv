@@ -11,7 +11,7 @@ import Foundation
 struct GuideBuilder {
     
     static func build(streams: [IPStream],
-                      tunerChannels: [Channel]) -> [GuideChannel] {
+                      tunerChannels: [HDHomeRunChannel]) -> [GuideChannel] {
         
         var guideChannels: [String: GuideChannel] = [:]
         

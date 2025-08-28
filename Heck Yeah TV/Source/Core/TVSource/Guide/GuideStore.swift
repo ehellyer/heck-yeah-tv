@@ -14,7 +14,7 @@ final class GuideStore {
     
     //MARK: - GuideStore lifecycle
     
-    init(streams: [IPStream], tunerChannels: [Channel]) {
+    init(streams: [IPStream], tunerChannels: [HDHomeRunChannel]) {
         favorites = UserDefaults.favorites
         lastPlayedChannel = UserDefaults.lastPlayed
         selectedChannel = lastPlayedChannel
@@ -54,7 +54,7 @@ final class GuideStore {
         }
     }
 
-    func load(streams: [IPStream], tunerChannels: [Channel]) {
+    func load(streams: [IPStream], tunerChannels: [HDHomeRunChannel]) {
         channels = GuideBuilder.build(streams: streams, tunerChannels: tunerChannels)
         
         // Pruning if channel no longer exists.
