@@ -12,25 +12,23 @@ import Hellfire
 struct GuideChannel: Identifiable, Hashable, Sendable, JSONSerializable {
     
     let id: String
+    let sortHint: String
     let title: String
     let number: String?
     let url: URL
-    let isHD: Bool
+    let quality: Quality
     let hasDRM: Bool
     let source: ChannelSource
     
-    init(_ item: Channelable, source: ChannelSource) {
+    init(_ item: Channelable, channelSource: ChannelSource) {
         
-        id = Self.normalizeIdentity(url: item.urlHint)
+        id = item.idHint
+        sortHint = item.sortHint
         title = item.titleHint
         number = item.numberHint
         url = item.urlHint
-        isHD = item.isHDHint
+        quality = item.qualityHint
         hasDRM = item.hasDRMHint
-        self.source = source
-    }
-    
-    private static func normalizeIdentity(url: URL) -> String {
-        return "u:\(url.host ?? "h")\(url.path)"
+        source = channelSource
     }
 }

@@ -9,10 +9,11 @@
 import Foundation
 
 extension Channel: Channelable {
-    var idHint: String { String.concat(guideNumber, guideName, separator: "::") }
+    var idHint: String { UUID().uuidString }
+    var sortHint: String { String.concat(guideNumber, guideName, separator: "::") }
     var titleHint: String { guideName }
     var numberHint: String? { guideNumber }
     var urlHint: URL { url }
-    var isHDHint: Bool { isHD }
+    var qualityHint: Quality { (isHD ? .hd : .unknown) }
     var hasDRMHint: Bool { hasDRM }
 }

@@ -38,7 +38,7 @@ struct RootView: View {
                 
                 if guideStore.isGuideVisible {
                     GuideView()
-                        .transition(.move(edge: .top).combined(with: .opacity))
+                        //.transition(.move(edge: .top).combined(with: .opacity))
                         .zIndex(1)
                 } else {
                     GuideActivationView()

@@ -13,7 +13,7 @@ struct GuideView: View {
     @Environment(GuideStore.self) var guideStore
     
 #if os(tvOS)
-    @FocusState private var focusedChannel: GuideChannel?
+    @FocusState private var focusedChannel: String?
 #endif
     
     var body: some View {
@@ -33,30 +33,11 @@ struct GuideView: View {
                                     Text(channel.title)
                                         .font(.headline)
                                         .lineLimit(1)
+                                        
                                 }
+                                .id(channel.id)
                             }
-                            
-                            HStack(spacing: 15) {
-                                if let n = channel.number {
-                                    Text(n).font(.caption).foregroundStyle(.secondary)
-                                }
-                                if channel.isHD {
-                                    Text("HD")
-                                        .font(.caption2)
-                                        .padding(.horizontal, 8)
-                                        .padding(.vertical, 2)
-                                        .overlay(RoundedRectangle(cornerRadius: 4)
-                                            .stroke())
-                                }
-                                if channel.hasDRM {
-                                    Text("DRM")
-                                        .font(.caption2)
-                                        .padding(.horizontal, 8)
-                                        .padding(.vertical, 2)
-                                        .overlay(RoundedRectangle(cornerRadius: 4)
-                                            .stroke())
-                                }
-                            }
+                            GuideSubTitleView(channel: channel)
                         }
                         Spacer()
                         if guideStore.selectedChannel == channel {
@@ -69,7 +50,7 @@ struct GuideView: View {
                         }
                         .buttonStyle(.borderless)
                     }
-                    .contentShape(Rectangle())
+                    //.contentShape(Rectangle())
                     .onTapGesture {
                         guideStore.selectedChannel = channel
                         withAnimation(.easeOut(duration: 0.25)) {
@@ -88,14 +69,13 @@ struct GuideView: View {
             .background(overlayMaterial)
             
             // 1) When the guide appears, scroll to the selected item
-            
-
-            
-            .onChange(of: guideStore.isGuideVisible) { oldValue, newValue in
-                guard newValue, let id = guideStore.selectedChannel else { return }
+            .onChange(of: guideStore.isGuideVisible) { _, _ in
+                guard guideStore.isGuideVisible, let id = guideStore.selectedChannel?.id else { return }
                 // Defer one turn so List has layout before we scroll.
                 DispatchQueue.main.async {
-                    withAnimation(.easeInOut) { proxy.scrollTo(id, anchor: .center) }
+                    withAnimation(.easeInOut) {
+                        proxy.scrollTo(id, anchor: .center)
+                    }
                 }
 #if os(tvOS)
                 focusedChannel = id
@@ -103,9 +83,11 @@ struct GuideView: View {
             }
             
             // 2) Also keep it centered when selection changes while visible
-            .onChange(of: guideStore.selectedChannel) { _, id in
-                guard guideStore.isGuideVisible, let id else { return }
-                withAnimation(.easeInOut) { proxy.scrollTo(id, anchor: .center) }
+            .onChange(of: guideStore.selectedChannel) { _, _ in
+                guard guideStore.isGuideVisible, let id = guideStore.selectedChannel?.id else { return }
+                withAnimation(.easeInOut) {
+                    proxy.scrollTo(id, anchor: .center)
+                }
 #if os(tvOS)
                 focusedChannel = id
 #endif
@@ -113,7 +95,7 @@ struct GuideView: View {
             
             // 3) Initial mount (e.g., app launch with a preselected channel)
             .task {
-                if let id = guideStore.selectedChannel {
+                if let id = guideStore.selectedChannel?.id {
                     proxy.scrollTo(id, anchor: .center)
 #if os(tvOS)
                     focusedChannel = id
@@ -148,7 +130,7 @@ struct GuideView: View {
                           url:"http://cfd-v4-service-channel-stitcher-use1-1.prd.pluto.tv/stitch/hls/channel/615333098185f00008715a56/master.m3u8?appName=web&appVersion=unknown&clientTime=0&deviceDNT=0&deviceId=1b2049e1-4b81-11ef-a8ac-e146e4e7be02&deviceMake=Chrome&deviceModel=web&deviceType=web&deviceVersion=unknown&includeExtendedEvents=false&serverSideAds=false&sid=03c264ad-dc34-4e0b-b96f-6cfb4c0f6b37",
                           referrer: nil,
                           userAgent: nil,
-                          quality: nil)
+                          quality: "2160p")
     
     let guideStore = GuideStore(streams: [stream], tunerChannels: [channel])
     

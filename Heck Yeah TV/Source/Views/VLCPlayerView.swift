@@ -35,9 +35,8 @@ struct VLCPlayerView: PlatformViewRepresentable {
     @Binding var channel: GuideChannel?
     @Binding var screenPhase: ScenePhase
     
-    
     func makeCoordinator() -> VLCPlayerView.Coordinator {
-        return VLCPlayerView.Coordinator(scenePhase: screenPhase)
+        return VLCPlayerView.Coordinator()
     }
     
     // MARK: Platform specific ViewRepresentable hooks
@@ -102,12 +101,7 @@ struct VLCPlayerView: PlatformViewRepresentable {
     final class Coordinator: NSObject {
         
         private lazy var mediaPlayer = VLCMediaPlayer()
-        private var scenePhase: ScenePhase
-        
-        init(scenePhase: ScenePhase) {
-            self.scenePhase = scenePhase
-        }
-        
+                
         func attach(to view: PlatformView) {
             mediaPlayer.drawable = view
         }
