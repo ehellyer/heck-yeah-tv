@@ -42,11 +42,14 @@ struct Heck_Yeah_TVApp: App {
         startupTask?.cancel()
         startupTask = Task {
             var summary = FetchSummary()
-            do {
-                let hdHomeRunSummary = try await hdHomeRunController.bootStrapTunerChannelDiscovery()
-                let iptvSummary = await iptvController.fetchAll()
-            } catch {
-                print(error)
+            let hdHomeRunSummary = await hdHomeRunController.bootStrapTunerChannelDiscovery()
+            let iptvSummary = await iptvController.fetchAll()
+            summary.mergeSummary(hdHomeRunSummary)
+            summary.mergeSummary(iptvSummary)
+
+            // Will be logged later for collection, analysis and diagnostics.
+            if summary.failures.count > 0 {
+                print("Failed to bootstrap: \(summary.failures)")
             }
             
             await MainActor.run {

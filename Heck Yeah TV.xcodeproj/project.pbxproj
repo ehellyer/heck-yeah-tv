@@ -205,11 +205,15 @@
 		};
 		EBE03BC72E53D423006B7747 /* Heck Yeah TVTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+			);
 			path = "Heck Yeah TVTests";
 			sourceTree = "<group>";
 		};
 		EBE03BD12E53D423006B7747 /* Heck Yeah TVUITests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+			);
 			path = "Heck Yeah TVUITests";
 			sourceTree = "<group>";
 		};
@@ -581,7 +585,7 @@
 			mainGroup = EBE03BAE2E53D421006B7747;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				EBE03C052E53D665006B7747 /* XCLocalSwiftPackageReference "../SwiftPackages/HellfireSwiftPackage" */,
+				EBE03C052E53D665006B7747 /* XCLocalSwiftPackageReference "HellfireSwiftPackage" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = EBE03BB82E53D421006B7747 /* Products */;
@@ -698,13 +702,9 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-iOS_HeckYeahTV/Pods-iOS_HeckYeahTV-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
-			inputPaths = (
-			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-iOS_HeckYeahTV/Pods-iOS_HeckYeahTV-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -719,13 +719,9 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-tvOS_HeckYeahTV/Pods-tvOS_HeckYeahTV-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
-			inputPaths = (
-			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-tvOS_HeckYeahTV/Pods-tvOS_HeckYeahTV-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -740,13 +736,9 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-macOS_HeckYeahTV/Pods-macOS_HeckYeahTV-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
-			inputPaths = (
-			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-macOS_HeckYeahTV/Pods-macOS_HeckYeahTV-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -1540,7 +1532,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		EBE03C052E53D665006B7747 /* XCLocalSwiftPackageReference "../SwiftPackages/HellfireSwiftPackage" */ = {
+		EBE03C052E53D665006B7747 /* XCLocalSwiftPackageReference "HellfireSwiftPackage" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = ../SwiftPackages/HellfireSwiftPackage;
 		};
@@ -1549,7 +1541,7 @@
 /* Begin XCSwiftPackageProductDependency section */
 		EB2C2E1A2E5E2293005CE685 /* Hellfire */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = EBE03C052E53D665006B7747 /* XCLocalSwiftPackageReference "../SwiftPackages/HellfireSwiftPackage" */;
+			package = EBE03C052E53D665006B7747 /* XCLocalSwiftPackageReference "HellfireSwiftPackage" */;
 			productName = Hellfire;
 		};
 		EBE03C062E53D665006B7747 /* Hellfire */ = {
@@ -1558,7 +1550,7 @@
 		};
 		EBE03C822E53E5DC006B7747 /* Hellfire */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = EBE03C052E53D665006B7747 /* XCLocalSwiftPackageReference "../SwiftPackages/HellfireSwiftPackage" */;
+			package = EBE03C052E53D665006B7747 /* XCLocalSwiftPackageReference "HellfireSwiftPackage" */;
 			productName = Hellfire;
 		};
 /* End XCSwiftPackageProductDependency section */
