@@ -61,5 +61,4 @@ struct AppKeys {
         static let channelList = "GuideStore.channelList"
         static let authTokenKey = "GuideStore.authTokenKey"
     }
-
 }

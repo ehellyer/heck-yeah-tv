@@ -1,0 +1,101 @@
+//
+//  HDHomeRunDiscoveryController.swift
+//  Heck Yeah TV
+//
+//  Created by Ed Hellyer on 8/23/25.
+//  Copyright © 2025 Hellyer Multimedia. All rights reserved.
+//
+
+import Foundation
+import Hellfire
+
+/// HDHomeRunDiscoveryController
+///
+/// e.g. [https://api.hdhomerun.com/discover](https://api.hdhomerun.com/discover)
+@MainActor
+final class HDHomeRunDiscoveryController {
+    
+    //MARK: - Private API
+    
+    private var sessionInterface = SessionInterface.sharedInstance
+    private var defaultHeaders: [HTTPHeader] = [HTTPHeader.defaultUserAgent,
+                                                HTTPHeader(name: "Accept-Encoding", value: "application/json"),
+                                                HTTPHeader(name: "connection", value: "close") // keep-alive off
+    ]
+    
+    private func deviceDiscovery() async -> FetchSummary {
+        var summary = FetchSummary()
+        let hdHomeRunDiscoveryURL = HDHomeRunKeys.Tuner.hdHomeRunDiscoveryURL
+        let request = NetworkRequest(url: hdHomeRunDiscoveryURL,
+                                     method: .get,
+                                     headers: self.defaultHeaders)
+        do {
+            let response = try await self.sessionInterface.execute(request)
+            self.discoveredDevices = try [HDHomeRunDiscovery].initialize(jsonData: response.body)
+            summary.successes[hdHomeRunDiscoveryURL] = discoveredDevices.count
+        } catch {
+            summary.failures[hdHomeRunDiscoveryURL] = error
+        }
+       
+        summary.finishedAt = Date()
+        return summary
+    }
+
+    private func deviceDetails() async -> FetchSummary {
+        var summary = FetchSummary()
+
+        var tunerDevices: [HDHomeRunDevice] = []
+        for device in discoveredDevices {
+            let deviceURL = device.discoverURL
+            let request = NetworkRequest(url: deviceURL,
+                                         method: .get,
+                                         headers: self.defaultHeaders)
+            do {
+                let response = try await self.sessionInterface.execute(request)
+                let tuner = try HDHomeRunDevice.initialize(jsonData: response.body)
+                tunerDevices.append(tuner)
+                summary.successes[deviceURL] = 1
+            } catch {
+                summary.failures[deviceURL] = error
+            }
+        }
+        self.devices = tunerDevices
+        
+        summary.finishedAt = Date()
+        return summary
+    }
+    
+    private func channelLineUp(_ tunerServerDevice: HDHomeRunDevice) async -> FetchSummary {
+        var summary = FetchSummary()
+        let request = NetworkRequest(url: tunerServerDevice.lineupURL,
+                                     method: .get,
+                                     headers: self.defaultHeaders)
+        do {
+            let response = try await self.sessionInterface.execute(request)
+            self.channels = try [HDHomeRunChannel].initialize(jsonData: response.body)
+            summary.successes[tunerServerDevice.lineupURL] = channels.count
+        } catch {
+            summary.failures[tunerServerDevice.lineupURL] = error
+        }
+        
+        summary.finishedAt = Date()
+        return summary
+    }
+    
+    //MARK: - Internal API
+    
+    var discoveredDevices: [HDHomeRunDiscovery] = []
+    var devices: [HDHomeRunDevice] = []
+    var channels: [HDHomeRunChannel] = []
+    
+    func bootStrapTunerChannelDiscovery() async -> FetchSummary {
+        let summary = await deviceDiscovery()
+        if discoveredDevices.count > 0 {
+            summary.mergeSummary(await deviceDetails())
+        }
+        if let tuner = devices.first {
+            summary.mergeSummary(await self.channelLineUp(tuner))
+        }
+        return summary
+    }
+}

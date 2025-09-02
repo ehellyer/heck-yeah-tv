@@ -85,49 +85,60 @@
 		EB2C2E192E5E2238005CE685 /* Exceptions for "Heck Yeah TV" folder in "macOS_HeckYeahTV" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				Source/Common/AppConstants/AppConstants.swift,
 				Source/Common/AppConstants/AppKeys.swift,
 				"Source/Common/Extensions/String+Extension.swift",
 				"Source/Common/Extensions/UserDefaults+Extension.swift",
-				"Source/Core/TVSource/Adapters/Channel+Channelable.swift",
-				Source/Core/TVSource/Adapters/Channelable.swift,
-				Source/Core/TVSource/Adapters/ChannelSource.swift,
-				Source/Core/TVSource/Adapters/GuideBuilder.swift,
-				Source/Core/TVSource/Adapters/GuideChannel.swift,
-				"Source/Core/TVSource/Adapters/IPStream+Channelable.swift",
-				Source/Core/TVSource/Guide/GuideActivationView.swift,
-				Source/Core/TVSource/Guide/GuideStore.swift,
-				Source/Core/TVSource/Guide/GuideSubTitleView.swift,
-				Source/Core/TVSource/Guide/GuideView.swift,
-				Source/Core/TVSource/Stream/FetchSummary.swift,
-				Source/Core/TVSource/Stream/IPTV/IPTVController.swift,
-				Source/Core/TVSource/Stream/IPTV/Model/IPBlocklist.swift,
-				Source/Core/TVSource/Stream/IPTV/Model/IPCategory.swift,
-				Source/Core/TVSource/Stream/IPTV/Model/IPChannel.swift,
-				Source/Core/TVSource/Stream/IPTV/Model/IPFeed.swift,
-				Source/Core/TVSource/Stream/IPTV/Model/IPGuide.swift,
-				Source/Core/TVSource/Stream/IPTV/Model/IPLogo.swift,
-				Source/Core/TVSource/Stream/IPTV/Model/IPStream.swift,
-				Source/Core/TVSource/Stream/IPTV/Model/Territory/Country.swift,
-				Source/Core/TVSource/Stream/IPTV/Model/Territory/Language.swift,
-				Source/Core/TVSource/Stream/IPTV/Model/Territory/Region.swift,
-				Source/Core/TVSource/Stream/IPTV/Model/Territory/Subdivision.swift,
-				Source/Core/TVSource/Stream/IPTV/Model/Territory/Timezone.swift,
-				Source/Core/TVSource/Stream/IPTV/StreamSource.swift,
-				Source/Core/TVSource/Stream/TunerScanner/HDHomeRun/HDHomeRunDiscoveryController.swift,
-				Source/Core/TVSource/Stream/TunerScanner/HDHomeRun/Model/HDHomeRunChannel.swift,
-				Source/Core/TVSource/Stream/TunerScanner/HDHomeRun/Model/HDHomeRunDevice.swift,
-				Source/Core/TVSource/Stream/TunerScanner/HDHomeRun/Model/HDHomeRunDiscovery.swift,
-				Source/Core/Utilities/AppUtil.swift,
-				Source/Heck_Yeah_TVApp.swift,
-				Source/View/BootView/BackgroundView.swift,
-				Source/View/BootView/BootGateView.swift,
-				Source/View/BootView/BootSplashView.swift,
-				Source/View/BootView/MacArrowKeyCatcher.swift,
-				Source/View/BootView/PlatformRootView.swift,
-				Source/View/BootView/PulseRings.swift,
-				Source/View/BootView/RootView.swift,
-				Source/View/MediaPlayerView/VLCPlayerView.swift,
+				Source/Common/Utilities/AppUtil.swift,
+				Source/Core/App/Heck_Yeah_TVApp.swift,
+				"Source/Core/Data/Adapters/Channel+Channelable.swift",
+				Source/Core/Data/Adapters/Channelable.swift,
+				Source/Core/Data/Adapters/ChannelSource.swift,
+				Source/Core/Data/Adapters/GuideBuilder.swift,
+				Source/Core/Data/Adapters/GuideChannel.swift,
+				"Source/Core/Data/Adapters/IPStream+Channelable.swift",
+				Source/Core/Data/Services/HDHomeRun/HDHomeRunDiscoveryController.swift,
+				Source/Core/Data/Services/IPTV/IPTVController.swift,
+				Source/Core/Domain/Models/Country.swift,
+				Source/Core/Domain/Models/FetchSummary.swift,
+				Source/Core/Domain/Models/HDHomeRunChannel.swift,
+				Source/Core/Domain/Models/HDHomeRunDevice.swift,
+				Source/Core/Domain/Models/HDHomeRunDiscovery.swift,
+				Source/Core/Domain/Models/IPBlocklist.swift,
+				Source/Core/Domain/Models/IPCategory.swift,
+				Source/Core/Domain/Models/IPChannel.swift,
+				Source/Core/Domain/Models/IPFeed.swift,
+				Source/Core/Domain/Models/IPGuide.swift,
+				Source/Core/Domain/Models/IPLogo.swift,
+				Source/Core/Domain/Models/IPStream.swift,
+				Source/Core/Domain/Models/Language.swift,
+				Source/Core/Domain/Models/Region.swift,
+				Source/Core/Domain/Models/StreamSource.swift,
+				Source/Core/Domain/Models/Subdivision.swift,
+				Source/Core/Domain/Models/Timezone.swift,
+				Source/Core/Domain/Stores/GuideStore.swift,
+				Source/Core/Features/Main/BootGateView.swift,
+				Source/Core/Features/Main/BootSplashView.swift,
+				Source/Core/Features/Main/MacArrowKeyCatcher.swift,
+				Source/Core/Features/Main/PlatformRootView.swift,
+				Source/Core/Features/Main/PulseRings.swift,
+				Source/Core/Features/Main/RootView.swift,
+				Source/Core/Features/MediaPlayerView/VLCPlayerView.swift,
+				Source/Core/Features/Navigation/AppNavigationShell.swift,
+				Source/Core/Features/Navigation/ChannelsView.swift,
+				Source/Core/Features/Navigation/ContentPlaceholder.swift,
+				Source/Core/Features/Navigation/LastChannelView.swift,
+				Source/Core/Features/Navigation/RecentsView.swift,
+				Source/Core/Features/Navigation/SearchView.swift,
+				Source/Core/Features/Navigation/SettingsView.swift,
+				Source/Core/Features/Navigation/SidebarNavigation.swift,
+				Source/Core/Features/Navigation/TabBarNavigation.swift,
+				Source/Core/Features/Navigation/TVTabViewNavigation.swift,
+				Source/Core/Features/OverlayView/GuideActivationView.swift,
+				Source/Core/Features/OverlayView/GuideSubTitleView.swift,
+				Source/Core/Features/OverlayView/GuideView.swift,
+				Source/Core/Features/OverlayView/TabSection.swift,
+				Source/SupportingFiles/Assets.xcassets,
+				"Source/SupportingFiles/Sounds/soft-startup-sound.mp3",
 			);
 			target = EB2C2DB62E5E203A005CE685 /* macOS_HeckYeahTV */;
 		};
@@ -143,50 +154,60 @@
 		EBE03C6D2E53E493006B7747 /* Exceptions for "Heck Yeah TV" folder in "tvOS_HeckYeahTV" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				Assets.xcassets,
-				Source/Common/AppConstants/AppConstants.swift,
 				Source/Common/AppConstants/AppKeys.swift,
 				"Source/Common/Extensions/String+Extension.swift",
 				"Source/Common/Extensions/UserDefaults+Extension.swift",
-				"Source/Core/TVSource/Adapters/Channel+Channelable.swift",
-				Source/Core/TVSource/Adapters/Channelable.swift,
-				Source/Core/TVSource/Adapters/ChannelSource.swift,
-				Source/Core/TVSource/Adapters/GuideBuilder.swift,
-				Source/Core/TVSource/Adapters/GuideChannel.swift,
-				"Source/Core/TVSource/Adapters/IPStream+Channelable.swift",
-				Source/Core/TVSource/Guide/GuideActivationView.swift,
-				Source/Core/TVSource/Guide/GuideStore.swift,
-				Source/Core/TVSource/Guide/GuideSubTitleView.swift,
-				Source/Core/TVSource/Guide/GuideView.swift,
-				Source/Core/TVSource/Stream/FetchSummary.swift,
-				Source/Core/TVSource/Stream/IPTV/IPTVController.swift,
-				Source/Core/TVSource/Stream/IPTV/Model/IPBlocklist.swift,
-				Source/Core/TVSource/Stream/IPTV/Model/IPCategory.swift,
-				Source/Core/TVSource/Stream/IPTV/Model/IPChannel.swift,
-				Source/Core/TVSource/Stream/IPTV/Model/IPFeed.swift,
-				Source/Core/TVSource/Stream/IPTV/Model/IPGuide.swift,
-				Source/Core/TVSource/Stream/IPTV/Model/IPLogo.swift,
-				Source/Core/TVSource/Stream/IPTV/Model/IPStream.swift,
-				Source/Core/TVSource/Stream/IPTV/Model/Territory/Country.swift,
-				Source/Core/TVSource/Stream/IPTV/Model/Territory/Language.swift,
-				Source/Core/TVSource/Stream/IPTV/Model/Territory/Region.swift,
-				Source/Core/TVSource/Stream/IPTV/Model/Territory/Subdivision.swift,
-				Source/Core/TVSource/Stream/IPTV/Model/Territory/Timezone.swift,
-				Source/Core/TVSource/Stream/IPTV/StreamSource.swift,
-				Source/Core/TVSource/Stream/TunerScanner/HDHomeRun/HDHomeRunDiscoveryController.swift,
-				Source/Core/TVSource/Stream/TunerScanner/HDHomeRun/Model/HDHomeRunChannel.swift,
-				Source/Core/TVSource/Stream/TunerScanner/HDHomeRun/Model/HDHomeRunDevice.swift,
-				Source/Core/TVSource/Stream/TunerScanner/HDHomeRun/Model/HDHomeRunDiscovery.swift,
-				Source/Core/Utilities/AppUtil.swift,
-				Source/Heck_Yeah_TVApp.swift,
-				Source/View/BootView/BackgroundView.swift,
-				Source/View/BootView/BootGateView.swift,
-				Source/View/BootView/BootSplashView.swift,
-				Source/View/BootView/MacArrowKeyCatcher.swift,
-				Source/View/BootView/PlatformRootView.swift,
-				Source/View/BootView/PulseRings.swift,
-				Source/View/BootView/RootView.swift,
-				Source/View/MediaPlayerView/VLCPlayerView.swift,
+				Source/Common/Utilities/AppUtil.swift,
+				Source/Core/App/Heck_Yeah_TVApp.swift,
+				"Source/Core/Data/Adapters/Channel+Channelable.swift",
+				Source/Core/Data/Adapters/Channelable.swift,
+				Source/Core/Data/Adapters/ChannelSource.swift,
+				Source/Core/Data/Adapters/GuideBuilder.swift,
+				Source/Core/Data/Adapters/GuideChannel.swift,
+				"Source/Core/Data/Adapters/IPStream+Channelable.swift",
+				Source/Core/Data/Services/HDHomeRun/HDHomeRunDiscoveryController.swift,
+				Source/Core/Data/Services/IPTV/IPTVController.swift,
+				Source/Core/Domain/Models/Country.swift,
+				Source/Core/Domain/Models/FetchSummary.swift,
+				Source/Core/Domain/Models/HDHomeRunChannel.swift,
+				Source/Core/Domain/Models/HDHomeRunDevice.swift,
+				Source/Core/Domain/Models/HDHomeRunDiscovery.swift,
+				Source/Core/Domain/Models/IPBlocklist.swift,
+				Source/Core/Domain/Models/IPCategory.swift,
+				Source/Core/Domain/Models/IPChannel.swift,
+				Source/Core/Domain/Models/IPFeed.swift,
+				Source/Core/Domain/Models/IPGuide.swift,
+				Source/Core/Domain/Models/IPLogo.swift,
+				Source/Core/Domain/Models/IPStream.swift,
+				Source/Core/Domain/Models/Language.swift,
+				Source/Core/Domain/Models/Region.swift,
+				Source/Core/Domain/Models/StreamSource.swift,
+				Source/Core/Domain/Models/Subdivision.swift,
+				Source/Core/Domain/Models/Timezone.swift,
+				Source/Core/Domain/Stores/GuideStore.swift,
+				Source/Core/Features/Main/BootGateView.swift,
+				Source/Core/Features/Main/BootSplashView.swift,
+				Source/Core/Features/Main/MacArrowKeyCatcher.swift,
+				Source/Core/Features/Main/PlatformRootView.swift,
+				Source/Core/Features/Main/PulseRings.swift,
+				Source/Core/Features/Main/RootView.swift,
+				Source/Core/Features/MediaPlayerView/VLCPlayerView.swift,
+				Source/Core/Features/Navigation/AppNavigationShell.swift,
+				Source/Core/Features/Navigation/ChannelsView.swift,
+				Source/Core/Features/Navigation/ContentPlaceholder.swift,
+				Source/Core/Features/Navigation/LastChannelView.swift,
+				Source/Core/Features/Navigation/RecentsView.swift,
+				Source/Core/Features/Navigation/SearchView.swift,
+				Source/Core/Features/Navigation/SettingsView.swift,
+				Source/Core/Features/Navigation/SidebarNavigation.swift,
+				Source/Core/Features/Navigation/TabBarNavigation.swift,
+				Source/Core/Features/Navigation/TVTabViewNavigation.swift,
+				Source/Core/Features/OverlayView/GuideActivationView.swift,
+				Source/Core/Features/OverlayView/GuideSubTitleView.swift,
+				Source/Core/Features/OverlayView/GuideView.swift,
+				Source/Core/Features/OverlayView/TabSection.swift,
+				Source/SupportingFiles/Assets.xcassets,
+				"Source/SupportingFiles/Sounds/soft-startup-sound.mp3",
 			);
 			target = EBE03C162E53D8DE006B7747 /* tvOS_HeckYeahTV */;
 		};
@@ -205,15 +226,11 @@
 		};
 		EBE03BC72E53D423006B7747 /* Heck Yeah TVTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-			);
 			path = "Heck Yeah TVTests";
 			sourceTree = "<group>";
 		};
 		EBE03BD12E53D423006B7747 /* Heck Yeah TVUITests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-			);
 			path = "Heck Yeah TVUITests";
 			sourceTree = "<group>";
 		};
@@ -585,7 +602,7 @@
 			mainGroup = EBE03BAE2E53D421006B7747;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				EBE03C052E53D665006B7747 /* XCLocalSwiftPackageReference "HellfireSwiftPackage" */,
+				EBE03C052E53D665006B7747 /* XCLocalSwiftPackageReference "../SwiftPackages/HellfireSwiftPackage" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = EBE03BB82E53D421006B7747 /* Products */;
@@ -702,9 +719,13 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-iOS_HeckYeahTV/Pods-iOS_HeckYeahTV-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
+			inputPaths = (
+			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-iOS_HeckYeahTV/Pods-iOS_HeckYeahTV-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -719,9 +740,13 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-tvOS_HeckYeahTV/Pods-tvOS_HeckYeahTV-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
+			inputPaths = (
+			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-tvOS_HeckYeahTV/Pods-tvOS_HeckYeahTV-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -736,9 +761,13 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-macOS_HeckYeahTV/Pods-macOS_HeckYeahTV-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
+			inputPaths = (
+			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-macOS_HeckYeahTV/Pods-macOS_HeckYeahTV-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -901,6 +930,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = 84CS8BE5EQ;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
@@ -935,6 +965,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = 84CS8BE5EQ;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
@@ -965,6 +996,7 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = 84CS8BE5EQ;
 				GENERATE_INFOPLIST_FILE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 15.5;
@@ -984,6 +1016,7 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = 84CS8BE5EQ;
 				GENERATE_INFOPLIST_FILE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 15.5;
@@ -1002,6 +1035,7 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = 84CS8BE5EQ;
 				GENERATE_INFOPLIST_FILE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 15.5;
@@ -1020,6 +1054,7 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = 84CS8BE5EQ;
 				GENERATE_INFOPLIST_FILE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 15.5;
@@ -1321,7 +1356,7 @@
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 3;
-				TVOS_DEPLOYMENT_TARGET = 17.6;
+				TVOS_DEPLOYMENT_TARGET = 18.0;
 			};
 			name = Debug;
 		};
@@ -1354,7 +1389,7 @@
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 3;
-				TVOS_DEPLOYMENT_TARGET = 17.6;
+				TVOS_DEPLOYMENT_TARGET = 18.0;
 			};
 			name = Release;
 		};
@@ -1532,7 +1567,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		EBE03C052E53D665006B7747 /* XCLocalSwiftPackageReference "HellfireSwiftPackage" */ = {
+		EBE03C052E53D665006B7747 /* XCLocalSwiftPackageReference "../SwiftPackages/HellfireSwiftPackage" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = ../SwiftPackages/HellfireSwiftPackage;
 		};
@@ -1541,7 +1576,7 @@
 /* Begin XCSwiftPackageProductDependency section */
 		EB2C2E1A2E5E2293005CE685 /* Hellfire */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = EBE03C052E53D665006B7747 /* XCLocalSwiftPackageReference "HellfireSwiftPackage" */;
+			package = EBE03C052E53D665006B7747 /* XCLocalSwiftPackageReference "../SwiftPackages/HellfireSwiftPackage" */;
 			productName = Hellfire;
 		};
 		EBE03C062E53D665006B7747 /* Hellfire */ = {
@@ -1550,7 +1585,7 @@
 		};
 		EBE03C822E53E5DC006B7747 /* Hellfire */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = EBE03C052E53D665006B7747 /* XCLocalSwiftPackageReference "HellfireSwiftPackage" */;
+			package = EBE03C052E53D665006B7747 /* XCLocalSwiftPackageReference "../SwiftPackages/HellfireSwiftPackage" */;
 			productName = Hellfire;
 		};
 /* End XCSwiftPackageProductDependency section */

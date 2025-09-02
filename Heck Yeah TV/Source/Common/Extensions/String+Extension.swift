@@ -7,9 +7,33 @@
 //
 
 import Foundation
+import CryptoKit
+
 
 extension String {
+
+    /// Stable SHA-256 of two strings, order-sensitive (A+B != B+A).
+    /// - Parameters:
+    ///   - a: Input 1
+    ///   - b: Input 2
+    /// - Returns: A repeatable string result based on the two inputs.
+    static func stableHashHex(_ a: String, _ b: String) -> String {
+        let aData = Data(a.utf8)
+        let bData = Data(b.utf8)
         
+        // Build length-prefixed payload: [lenA][a][lenB][b]
+        var payload = Data()
+        var lenA = UInt32(aData.count).bigEndian
+        var lenB = UInt32(bData.count).bigEndian
+        withUnsafeBytes(of: &lenA) { payload.append(contentsOf: $0) }
+        payload.append(aData)
+        withUnsafeBytes(of: &lenB) { payload.append(contentsOf: $0) }
+        payload.append(bData)
+        
+        let digest = SHA256.hash(data: payload)
+        return digest.map { String(format: "%02x", $0) }.joined()
+    }
+    
     /// Generates a random string of length.
     /// - Parameter length: The length of string to be generated.
     /// - Returns: A new string of the specified length with random characters consisting of [a-z][A-Z][0-9]
