@@ -33,7 +33,7 @@ struct VLCPlayerView: PlatformViewRepresentable {
     
     // Binding for selected channel
     @Binding var channel: GuideChannel?
-    @Binding var screenPhase: ScenePhase
+    @Environment(\.scenePhase) private var scenePhase
     
     func makeCoordinator() -> VLCPlayerView.Coordinator {
         return VLCPlayerView.Coordinator()
@@ -87,11 +87,11 @@ struct VLCPlayerView: PlatformViewRepresentable {
     }
     
     private func updatePlatformView(_ view: PlatformView, context: Context) {
-        if screenPhase == .active, let channel {
+        if scenePhase == .active, let channel {
             context.coordinator.play(channel: channel)
         }
         
-        if screenPhase != .active {
+        if scenePhase != .active {
             context.coordinator.stop()
         }
     }
@@ -100,32 +100,36 @@ struct VLCPlayerView: PlatformViewRepresentable {
     
     final class Coordinator: NSObject {
         
-        private lazy var mediaPlayer = VLCMediaPlayer()
+        private lazy var mediaPlayer = {
+            let _player = VLCMediaPlayer()
+            _player.delegate = self
+            return _player
+        }()
                 
         func attach(to view: PlatformView) {
             mediaPlayer.drawable = view
         }
         
         func play(channel: GuideChannel) {
-            //If we are requesting to play the same channel and the player is currently playing, do nothing and return early.
+            //If we are requesting to play the same url and the player is currently playing, do nothing and return early.
             guard not(channel.url == mediaPlayer.media?.url && mediaPlayer.isPlaying) else {
                 return
             }
             let media = VLCMedia(url: channel.url)
-            // Buffer 500ms before playing the stream.
             media.addOptions(["network-caching": 500])
             mediaPlayer.media = media
-            mediaPlayer.delegate = self
             mediaPlayer.play()
         }
         
         func seekForward() {
             guard mediaPlayer.isSeekable else { return }
+            //TODO: Rudimentary seek implementation, needs updating to support large variances in content lengths.
             mediaPlayer.position = min(1.0, mediaPlayer.position * 1.01)
         }
         
         func seekBackward() {
             guard mediaPlayer.isSeekable else { return }
+            //TODO: Rudimentary seek implementation, needs updating to support large variances in content lengths.
             mediaPlayer.position = max(0.0, mediaPlayer.position * -1.01)
         }
         
@@ -152,22 +156,22 @@ struct VLCPlayerView: PlatformViewRepresentable {
 extension VLCPlayerView.Coordinator: VLCMediaPlayerDelegate {
     
     func mediaPlayerStateChanged(_ aNotification: Notification) {
-        
+        //Not yet implemented
     }
     
     func mediaPlayerTimeChanged(_ aNotification: Notification) {
-        
+        //Not yet implemented
     }
     
     func mediaPlayerTitleChanged(_ aNotification: Notification) {
-        
+        //Not yet implemented
     }
     
     func mediaPlayerChapterChanged(_ aNotification: Notification) {
-        
+        //Not yet implemented
     }
     
     func mediaPlayerSnapshot(_ aNotification: Notification) {
-        
+        //Not yet implemented
     }
 }

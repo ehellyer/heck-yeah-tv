@@ -10,14 +10,8 @@ import SwiftUI
 
 struct RootView: View {
     
-    @Environment(\.scenePhase) private var _scenePhase
+    @State private var selectedTab: TabSection = .last
     @Environment(GuideStore.self) private var guideStore
-    
-    private var scenePhase: Binding<ScenePhase> {
-        Binding(get: { _scenePhase },
-                set: { _ in }
-        )
-    }
     
     // Build a binding to your VLCPlayerView's `channel: GuideChannel?`
     private var channelBinding: Binding<GuideChannel?> {
@@ -31,14 +25,11 @@ struct RootView: View {
         ZStack {
             
             ZStack {
-                VLCPlayerView(channel: channelBinding, screenPhase: scenePhase)
-#if !os(macOS)
+                VLCPlayerView(channel: channelBinding)
                     .ignoresSafeArea()
-#endif
                 
-                if guideStore.isGuideVisible {
-                    GuideView()
-                    //AppNavigationShell()
+                if guideStore.isGuideVisible {  
+                    NavigationRootView(selectedTab: $selectedTab)
                         .transition(.move(edge: .top).combined(with: .opacity))
                         .zIndex(1)
                 } else {

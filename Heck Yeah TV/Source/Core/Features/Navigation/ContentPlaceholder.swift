@@ -22,7 +22,7 @@ struct ContentPlaceholder: View {
                     Image(systemName: symbol).font(.system(size: 48))
                     Text(title).font(.largeTitle.bold())
                 }
-                Text("Replace this with your real \(title) screen.")
+                Text("For Development Only: Replace this with your real \(title) screen.")
                     .foregroundStyle(.secondary)
             }
             
@@ -30,7 +30,7 @@ struct ContentPlaceholder: View {
             VStack(spacing: 12) {
                 Image(systemName: symbol).font(.system(size: 48))
                 Text(title).font(.largeTitle.bold())
-                Text("Replace this with your real \(title) screen.")
+                Text("For Development Only: Replace this with your real \(title) screen.")
                     .foregroundStyle(.secondary)
             }
             #endif

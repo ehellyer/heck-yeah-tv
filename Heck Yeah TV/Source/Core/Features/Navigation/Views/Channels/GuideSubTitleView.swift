@@ -17,23 +17,23 @@ struct GuideSubTitleView: View {
     }
     
     var body: some View {
-        HStack(spacing: 10) {
+        HStack(spacing: 8) {
             if let n = channel.number {
                 Text(n).font(.caption).foregroundStyle(.secondary)
             }
-            if channel.quality.name != nil {
-                Text(channel.quality.name!)
+            if let quality = channel.quality.name {
+                Text(quality)
                     .font(.caption2)
-                    .padding(.horizontal, 4)
-                    .padding(.vertical, 1)
+                    .padding(.horizontal, 2)
+                    .padding(.vertical, 0)
                     .overlay(RoundedRectangle(cornerRadius: 3)
                         .stroke())
             }
             if channel.hasDRM {
                 Text("DRM")
                     .font(.caption2)
-                    .padding(.horizontal, 4)
-                    .padding(.vertical, 1)
+                    .padding(.horizontal, 2)
+                    .padding(.vertical, 0)
                     .overlay(RoundedRectangle(cornerRadius: 3)
                         .stroke())
             }
@@ -52,4 +52,5 @@ struct GuideSubTitleView: View {
                                channelSource: .homeRunTuner)
     
     GuideSubTitleView(channel: channel)
+        .background(Color.gray.opacity(0.5))
 }
