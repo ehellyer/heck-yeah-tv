@@ -18,42 +18,71 @@ final class GuideStore {
         favorites = UserDefaults.favorites
         lastPlayedChannel = UserDefaults.lastPlayed
         selectedChannel = lastPlayedChannel
+        if selectedChannel != nil {
+            isPlaying = true
+        }
     }
     
     init(streams: [IPStream], tunerChannels: [HDHomeRunChannel]) {
         favorites = UserDefaults.favorites
         lastPlayedChannel = UserDefaults.lastPlayed
         selectedChannel = lastPlayedChannel
+        if selectedChannel != nil {
+            isPlaying = true
+        }
         load(streams: streams, tunerChannels: tunerChannels)
     }
     
     //MARK: - Private API
     
     private var _selectedChannelBakStore: GuideChannel?
-    private var channels: [GuideChannel] = []
+    @ObservationIgnored private var channels: [GuideChannel] = []
+    private var favorites: [GuideChannel] = []
     
     //MARK: - Internal API - Observable properties
+
+    var isPlaying: Bool = false
+    var isGuideVisible: Bool = false
     
     private(set) var lastPlayedChannel: GuideChannel? {
         get {
-            UserDefaults.lastPlayed
+            access(keyPath: \.lastPlayedChannel)
+            return UserDefaults.lastPlayed
         }
         set {
-            UserDefaults.lastPlayed = newValue
+            withMutation(keyPath: \.lastPlayedChannel) {
+                UserDefaults.lastPlayed = newValue
+            }
         }
     }
-    private(set) var favorites: [GuideChannel] = []
-    var showFavoritesOnly = false
-    var isGuideVisible: Bool = false
+    
+    var showFavoritesOnly: Bool {
+        get {
+            access(keyPath: \.showFavoritesOnly)
+            return UserDefaults.showFavorites
+        }
+        set {
+            withMutation(keyPath: \.showFavoritesOnly) {
+                UserDefaults.showFavorites = newValue
+            }
+        }
+    }
+    
     var visibleChannels: [GuideChannel] {
-        showFavoritesOnly ? channels.filter { favorites.contains($0) } : channels
+        return showFavoritesOnly ? channels.filter { favorites.contains($0) } : channels
     }
     
     //MARK: - Internal API
 
+    var selectedChannelIndex: Int? {
+        guard let selectedChannel = selectedChannel else { return nil }
+        return visibleChannels.firstIndex(of: selectedChannel)
+    }
+    
     var selectedChannel: GuideChannel? {
         
         get {
+            access(keyPath: \.selectedChannel)
             return _selectedChannelBakStore
         }
         set {
@@ -74,7 +103,7 @@ final class GuideStore {
     func load(streams: [IPStream], tunerChannels: [HDHomeRunChannel]) {
         channels = GuideBuilder.build(streams: streams, tunerChannels: tunerChannels)
         
-        // Pruning if channel no longer exists.
+        // Pruning favorites, selected channel and last played channel: If channel no longer exists.
         favorites = Array(Set(favorites).intersection(Set(channels)))
         if let _selectedChannel = selectedChannel, !channels.contains(where: { $0.id == _selectedChannel.id }) {
             selectedChannel = nil

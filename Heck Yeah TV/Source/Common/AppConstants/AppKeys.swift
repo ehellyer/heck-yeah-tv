@@ -56,6 +56,7 @@ struct AppKeys {
     }
     
     struct GuideStore {
+        static let showFavoritesKey = "GuideStore.showFavoritesKey"
         static let favoritesKey = "GuideStore.favorites"
         static let lastPlayedKey = "GuideStore.last"
         static let channelList = "GuideStore.channelList"

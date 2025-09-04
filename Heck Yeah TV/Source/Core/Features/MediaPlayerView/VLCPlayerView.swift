@@ -11,7 +11,7 @@ import SwiftUI
 
 #if os(tvOS)
 import TVVLCKit
-#elseif os(macOS)
+#elseif os(macOS) 
 import VLCKit
 import AppKit
 #else
@@ -32,7 +32,8 @@ typealias PlatformView = UIView
 struct VLCPlayerView: PlatformViewRepresentable {
     
     // Binding for selected channel
-    @Binding var channel: GuideChannel?
+    @Binding var isPlaying: Bool
+    @Binding var selectedChannel: GuideChannel?
     @Environment(\.scenePhase) private var scenePhase
     
     func makeCoordinator() -> VLCPlayerView.Coordinator {
@@ -87,12 +88,15 @@ struct VLCPlayerView: PlatformViewRepresentable {
     }
     
     private func updatePlatformView(_ view: PlatformView, context: Context) {
-        if scenePhase == .active, let channel {
-            context.coordinator.play(channel: channel)
-        }
         
         if scenePhase != .active {
             context.coordinator.stop()
+        }
+        
+        if not(isPlaying) {
+            context.coordinator.pause()
+        } else if isPlaying, scenePhase == .active, let channel = selectedChannel {
+            context.coordinator.play(channel: channel)
         }
     }
     
@@ -100,7 +104,7 @@ struct VLCPlayerView: PlatformViewRepresentable {
     
     final class Coordinator: NSObject {
         
-        private lazy var mediaPlayer = {
+        lazy var mediaPlayer = {
             let _player = VLCMediaPlayer()
             _player.delegate = self
             return _player

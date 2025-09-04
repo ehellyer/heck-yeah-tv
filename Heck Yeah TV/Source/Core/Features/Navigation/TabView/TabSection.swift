@@ -9,14 +9,29 @@
 import SwiftUI
 
 enum TabSection: String, CaseIterable, Identifiable {
-    case last
-    case recents
-    case channels
-    case search
-    case settings
     
+    /// Last Channel
+    case last
+    
+    /// Recently viewed
+    case recents
+    
+    /// All channels (with on screen toggle for favorites only)
+    case channels
+    
+    /// Search channels by name, category, country.
+    case search
+    
+    /// Settings and things
+    case settings
+}
+
+extension TabSection {
+    
+    /// Identifiable id
     var id: String { rawValue }
     
+    /// Tab name title string
     var title: String {
         switch self {
             case .last: return "Last"
@@ -27,13 +42,14 @@ enum TabSection: String, CaseIterable, Identifiable {
         }
     }
     
+    /// Tab name icon.
     var systemImage: String {
         switch self {
-            case .last: return "arrow.uturn.left.circle.fill"   // "Last Channel"
-            case .recents: return "clock.fill"                 // "Recently viewed"
-            case .channels: return "list.bullet.rectangle.fill"// "All channels"
-            case .search: return "magnifyingglass"             // "Search"
-            case .settings: return "gearshape.fill"            // "Settings"
+            case .last: return "arrow.uturn.left.circle.fill"
+            case .recents: return "clock.fill"
+            case .channels: return "list.bullet.rectangle.fill"
+            case .search: return "magnifyingglass"
+            case .settings: return "gearshape.fill"
         }
     }
 }

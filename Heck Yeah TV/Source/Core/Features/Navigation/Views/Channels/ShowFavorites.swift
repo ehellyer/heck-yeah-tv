@@ -10,26 +10,20 @@ import SwiftUI
 
 struct ShowFavorites: View {
     
-    @Environment(GuideStore.self) var guideStore
-    
-    private var isOn: Binding<Bool> {
-        Binding(
-            get: { guideStore.showFavoritesOnly },
-            set: { guideStore.showFavoritesOnly = $0 }
-        )
-    }
-    
+    @Binding var showFavoritesOnly: Bool
+
     var body: some View {
         HStack {
             Text("Favorites")
-                .font(.title)
+                .font(.title2)
             Button {
-                guideStore.showFavoritesOnly.toggle()
+                showFavoritesOnly.toggle()
             } label: {
-                let isFavorite = guideStore.showFavoritesOnly
-                Label(isFavorite ? "On" : "Off",
-                      systemImage: isFavorite ? "star.fill" : "star")
-                .foregroundStyle(isFavorite ? .yellow : .primary)
+               
+                Label(showFavoritesOnly ? "On" : "Off",
+                      systemImage: showFavoritesOnly ? "star.fill" : "star")
+                .font(.caption)
+                .foregroundStyle(showFavoritesOnly ? .yellow : .primary)
             }
             
             Spacer()
@@ -37,6 +31,6 @@ struct ShowFavorites: View {
     }
 }
 
-#Preview {
-    ShowFavorites().environment(GuideStore())
-}
+//#Preview {
+//    ShowFavorites(showFavoritesOnly: true)
+//}

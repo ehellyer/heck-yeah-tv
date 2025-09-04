@@ -8,9 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		483F6B111781DCB2AAB8EA48 /* Pods_tvOS_HeckYeahTV.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E589179213073D8CB516EAE /* Pods_tvOS_HeckYeahTV.framework */; };
-		8560E9F81C7536D11F0B8EAB /* Pods_macOS_HeckYeahTV.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 35897EE2B3E94DAF0E2D7858 /* Pods_macOS_HeckYeahTV.framework */; };
 		A70B739F4ADE7A0311642D9D /* Pods_iOS_HeckYeahTV.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 28D09A551F11AFAC0F7FA422 /* Pods_iOS_HeckYeahTV.framework */; };
 		EB2C2E1B2E5E2293005CE685 /* Hellfire in Frameworks */ = {isa = PBXBuildFile; productRef = EB2C2E1A2E5E2293005CE685 /* Hellfire */; };
+		EB96B2ED2E68CEBE00060C3B /* Pods_macOS_HeckYeahTV.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 35897EE2B3E94DAF0E2D7858 /* Pods_macOS_HeckYeahTV.framework */; };
+		EB96B2EE2E68CEBE00060C3B /* Pods_macOS_HeckYeahTV.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 35897EE2B3E94DAF0E2D7858 /* Pods_macOS_HeckYeahTV.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		EBE03C072E53D665006B7747 /* Hellfire in Frameworks */ = {isa = PBXBuildFile; productRef = EBE03C062E53D665006B7747 /* Hellfire */; };
 		EBE03C832E53E5DC006B7747 /* Hellfire in Frameworks */ = {isa = PBXBuildFile; productRef = EBE03C822E53E5DC006B7747 /* Hellfire */; };
 /* End PBXBuildFile section */
@@ -59,6 +60,20 @@
 			remoteInfo = "Heck Yeah TV";
 		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		EB96B2EF2E68CEBE00060C3B /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				EB96B2EE2E68CEBE00060C3B /* Pods_macOS_HeckYeahTV.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		041B0E4284C5A34ED0896BCC /* Pods-iOS_HeckYeahTV.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-iOS_HeckYeahTV.release.xcconfig"; path = "Target Support Files/Pods-iOS_HeckYeahTV/Pods-iOS_HeckYeahTV.release.xcconfig"; sourceTree = "<group>"; };
@@ -120,15 +135,19 @@
 				Source/Core/Features/Main/BootSplashView.swift,
 				Source/Core/Features/Main/MacArrowKeyCatcher.swift,
 				Source/Core/Features/Main/PlatformRootView.swift,
+				Source/Core/Features/Main/PlaybackBadge.swift,
 				Source/Core/Features/Main/PulseRings.swift,
 				Source/Core/Features/Main/RootView.swift,
 				Source/Core/Features/MediaPlayerView/VLCPlayerView.swift,
 				Source/Core/Features/Navigation/ContentPlaceholder.swift,
+				Source/Core/Features/Navigation/TabView/NavigationActivationView.swift,
 				Source/Core/Features/Navigation/TabView/NavigationIOSView.swift,
 				Source/Core/Features/Navigation/TabView/NavigationMacView.swift,
 				Source/Core/Features/Navigation/TabView/NavigationRootView.swift,
 				Source/Core/Features/Navigation/TabView/NavigationTVView.swift,
 				Source/Core/Features/Navigation/TabView/TabSection.swift,
+				Source/Core/Features/Navigation/Views/Channels/FocusTarget.swift,
+				Source/Core/Features/Navigation/Views/Channels/GuideRow.swift,
 				Source/Core/Features/Navigation/Views/Channels/GuideSubTitleView.swift,
 				Source/Core/Features/Navigation/Views/Channels/GuideView.swift,
 				Source/Core/Features/Navigation/Views/Channels/ShowFavorites.swift,
@@ -136,7 +155,6 @@
 				Source/Core/Features/Navigation/Views/Recents/RecentsView.swift,
 				Source/Core/Features/Navigation/Views/Search/SearchView.swift,
 				Source/Core/Features/Navigation/Views/Settings/SettingsView.swift,
-				Source/Core/Features/OverlayView/GuideActivationView.swift,
 				Source/SupportingFiles/Assets.xcassets,
 				"Source/SupportingFiles/Sounds/soft-startup-sound.mp3",
 			);
@@ -189,15 +207,19 @@
 				Source/Core/Features/Main/BootSplashView.swift,
 				Source/Core/Features/Main/MacArrowKeyCatcher.swift,
 				Source/Core/Features/Main/PlatformRootView.swift,
+				Source/Core/Features/Main/PlaybackBadge.swift,
 				Source/Core/Features/Main/PulseRings.swift,
 				Source/Core/Features/Main/RootView.swift,
 				Source/Core/Features/MediaPlayerView/VLCPlayerView.swift,
 				Source/Core/Features/Navigation/ContentPlaceholder.swift,
+				Source/Core/Features/Navigation/TabView/NavigationActivationView.swift,
 				Source/Core/Features/Navigation/TabView/NavigationIOSView.swift,
 				Source/Core/Features/Navigation/TabView/NavigationMacView.swift,
 				Source/Core/Features/Navigation/TabView/NavigationRootView.swift,
 				Source/Core/Features/Navigation/TabView/NavigationTVView.swift,
 				Source/Core/Features/Navigation/TabView/TabSection.swift,
+				Source/Core/Features/Navigation/Views/Channels/FocusTarget.swift,
+				Source/Core/Features/Navigation/Views/Channels/GuideRow.swift,
 				Source/Core/Features/Navigation/Views/Channels/GuideSubTitleView.swift,
 				Source/Core/Features/Navigation/Views/Channels/GuideView.swift,
 				Source/Core/Features/Navigation/Views/Channels/ShowFavorites.swift,
@@ -205,7 +227,6 @@
 				Source/Core/Features/Navigation/Views/Recents/RecentsView.swift,
 				Source/Core/Features/Navigation/Views/Search/SearchView.swift,
 				Source/Core/Features/Navigation/Views/Settings/SettingsView.swift,
-				Source/Core/Features/OverlayView/GuideActivationView.swift,
 				Source/SupportingFiles/Assets.xcassets,
 				"Source/SupportingFiles/Sounds/soft-startup-sound.mp3",
 			);
@@ -241,8 +262,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EB96B2ED2E68CEBE00060C3B /* Pods_macOS_HeckYeahTV.framework in Frameworks */,
 				EB2C2E1B2E5E2293005CE685 /* Hellfire in Frameworks */,
-				8560E9F81C7536D11F0B8EAB /* Pods_macOS_HeckYeahTV.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -372,6 +393,7 @@
 				EB2C2DB42E5E203A005CE685 /* Frameworks */,
 				EB2C2DB52E5E203A005CE685 /* Resources */,
 				3544117D0CB20F50D8E5E54D /* [CP] Embed Pods Frameworks */,
+				EB96B2EF2E68CEBE00060C3B /* Embed Frameworks */,
 			);
 			buildRules = (
 			);

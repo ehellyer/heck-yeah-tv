@@ -36,6 +36,16 @@ extension UserDefaults {
         }
     }
     
+    /// Gets or sets a boolean in UserDefaults.standard to indicate if only favorited channels should be shown in the guide.
+    static var showFavorites: Bool {
+        get {
+            standard.bool(forKey: AppKeys.GuideStore.showFavoritesKey)
+        }
+        set {
+            standard.set(newValue, forKey: AppKeys.GuideStore.showFavoritesKey)
+        }
+    }
+    
     /// Returns unique list of channels marked as favorites.
     static var favorites: [GuideChannel] {
         get {

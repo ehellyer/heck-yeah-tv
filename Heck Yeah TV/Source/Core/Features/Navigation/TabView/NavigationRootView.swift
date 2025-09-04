@@ -65,6 +65,8 @@ struct NavigationRootView: View {
         }
     }
     
+
+    
     @ViewBuilder
     private func contentView(for tab: TabSection) -> some View {
         switch tab {

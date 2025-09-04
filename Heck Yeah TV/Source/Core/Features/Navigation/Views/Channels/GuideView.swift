@@ -8,95 +8,67 @@
 
 import SwiftUI
 
-struct FocusKey: Identifiable, Hashable {
-    let id: String
-    let col: Int
-}
-
 struct GuideView: View {
     
-    let rowHPad: CGFloat = 20
-    let corner: CGFloat = 14
+    private let corner: CGFloat = 14
     
     @Environment(GuideStore.self) var guideStore
-
-    @FocusState private var focusedChannel: FocusKey?
+    @FocusState private var focus: FocusTarget?
     @State private var preferredCol: Int = 0
+    private var showFavoritesOnly: Binding<Bool> {
+        Binding(
+            get: { guideStore.showFavoritesOnly },
+            set: { guideStore.showFavoritesOnly = $0 }
+        )
+    }
     
     var body: some View {
         VStack {
-            ShowFavorites()
+            ShowFavorites(showFavoritesOnly: showFavoritesOnly)
             
             ScrollViewReader { proxy in
                 ScrollView {
                     LazyVStack(alignment: .leading, spacing: 8) {
-                        ForEach(guideStore.visibleChannels) { channel in
-                            HStack {
-                                Button {
-                                    guideStore.selectedChannel = channel
-                                    withAnimation(.easeOut(duration: 0.25)) { guideStore.isGuideVisible = false }
-                                } label: {
-                                    VStack(alignment: .leading, spacing: 2) {
-                                        Text(channel.title)
-                                            .font(.headline)
-                                            .lineLimit(1)
-                                            .truncationMode(.tail)
-                                            .frame(width: 420, alignment: .leading)
-                                        GuideSubTitleView(channel: channel)
+                        ForEach(Array(guideStore.visibleChannels.enumerated()), id: \.element.id) { index, channel in
+                            GuideRow(channel: channel, row: index, focus: $focus)
+                                .defaultFocus($focus, FocusTarget.guide(row: index, col: preferredCol))
+                                .background {
+                                    if guideStore.selectedChannel == channel {
+                                        RoundedRectangle(cornerRadius: corner, style: .continuous)
+                                            .fill(Color.mainAppGreen.opacity(0.22))
+                                            .overlay(
+                                                RoundedRectangle(cornerRadius: corner, style: .continuous)
+                                                    .stroke(Color.mainAppGreen.opacity(0.22), lineWidth: 1)
+                                            )
                                     }
                                 }
-                                .focused($focusedChannel,
-                                         equals: FocusKey(id: channel.id,
-                                                          col: 0))
-#if os(iOS) || os(macOS)
-                                .foregroundStyle(Color.white)
-#endif
-                                Spacer()
-                                
-                                Button {
-                                    guideStore.toggleFavorite(channel)
-                                } label: {
-                                    Image(systemName: guideStore.isFavorite(channel) ? "star.fill" : "star")
-                                        .renderingMode(.template)
-                                }
-                                .focused($focusedChannel,
-                                         equals: FocusKey(id: channel.id,
-                                                          col: 1))
-                                .tint(guideStore.isFavorite(channel) ? Color.yellow : Color.white)
-                            }
-                            .padding(.vertical, 6)
-                            .padding(.horizontal, rowHPad)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-#if os(tvOS)
-                            .focusSection()
-                            .defaultFocus($focusedChannel, FocusKey(id: channel.id,
-                                                                    col: preferredCol))
-#endif
-                            .background {
-                                if guideStore.selectedChannel == channel {
-                                    RoundedRectangle(cornerRadius: corner, style: .continuous)
-                                        .fill(Color.mainAppGreen.opacity(0.22))
-                                        .overlay(
-                                            RoundedRectangle(cornerRadius: corner, style: .continuous)
-                                                .stroke(Color.mainAppGreen.opacity(0.22), lineWidth: 1)
-                                        )
-                                }
-                            }
+
+                    
                         }
                     }
+                    .focusSection()
+//#if os(tvOS)
+
+//#endif
+                    .padding(.leading, 0)
+                    .padding(.trailing, 60)
                 }
-                .onChange(of: focusedChannel) { _, newValue in
-                    preferredCol = newValue?.col ?? preferredCol
+                
+                // ScrollView handler of change of focus.
+                .onChange(of: focus) {
+                    guard let focus, case let FocusTarget.guide(_, col) = focus else { return }
+                    preferredCol = col
                 }
                 
                 //Initial scroll, then focus (next runloop)
                 .task {
-                    if let id = guideStore.selectedChannel?.id ?? guideStore.visibleChannels.first?.id {
+                    
+                    if let id = guideStore.selectedChannelIndex {
                         withAnimation(.easeOut) {
                             proxy.scrollTo(id, anchor: .center)
                         }
                         DispatchQueue.main.async {
-                            focusedChannel = FocusKey(id: id, col: preferredCol)
+                            focus = FocusTarget.guide(row: id, col: preferredCol)
                         }
                     }
                 }
@@ -104,15 +76,17 @@ struct GuideView: View {
 #if os(tvOS)
             .background(Color.clear)
 #else
-            .background(Color.black.opacity(0.35))
+            //.background(Color.black.opacity(0.35))
 #endif
-            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+            //.frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
             
         }
+        
+
     }
 }
 
-#Preview() {
+#Preview {
     let channel = HDHomeRunChannel(guideNumber: "8.1",
                                    guideName: "WRIC-TV",
                                    videoCodec: "MPEG2",

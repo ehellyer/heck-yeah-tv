@@ -10,42 +10,87 @@ import SwiftUI
 
 struct RootView: View {
     
+    @State private var fadeTask: Task<Void, Never>?
+    @State private var showPlayToast = false
     @State private var selectedTab: TabSection = .last
     @Environment(GuideStore.self) private var guideStore
     
-    // Build a binding to your VLCPlayerView's `channel: GuideChannel?`
+    // Binding parts of GuideStore to VLCPlayerView: PlatformViewRepresentable
     private var channelBinding: Binding<GuideChannel?> {
         Binding(
             get: { guideStore.selectedChannel },
             set: { guideStore.selectedChannel = $0 }
         )
     }
+    private var isPlayingBinding: Binding<Bool> {
+        Binding(
+            get: { guideStore.isPlaying },
+            set: { guideStore.isPlaying = $0 }
+        )
+    }
+    
     
     var body: some View {
-        ZStack {
+        ZStack(alignment: .bottomLeading) {
             
-            ZStack {
-                VLCPlayerView(channel: channelBinding)
-                    .ignoresSafeArea()
-                
-                if guideStore.isGuideVisible {  
-                    NavigationRootView(selectedTab: $selectedTab)
-                        .transition(.move(edge: .top).combined(with: .opacity))
-                        .zIndex(1)
-                } else {
-                    GuideActivationView()
-                }
+            VLCPlayerView(isPlaying: isPlayingBinding, selectedChannel: channelBinding)
+                .ignoresSafeArea()
+            
+            if guideStore.isGuideVisible {
+                NavigationRootView(selectedTab: $selectedTab)
+                    .transition(.opacity)
+                    .zIndex(1)
+            } else {
+                NavigationActivationView()
             }
             
-#if os(macOS)
-            // macOS: arrow keys re-show the guide
-            .background( MacArrowKeyCatcher {
-                withAnimation {
-                    guideStore.isGuideVisible = true
-                }
-            })
-#endif
+            // Persistent “Paused” badge when not playing
+            if guideStore.isPlaying == false {
+                PlaybackBadge(text: "Paused", systemName: "pause.fill")
+                    .transition(.opacity)
+                    .padding(.leading, 24)
+                    .padding(.bottom, 24)
+            }
+            if guideStore.isPlaying && showPlayToast {
+                PlaybackBadge(text: "Play", systemName: "play.fill")
+                    .padding(.leading, 24)
+                    .padding(.bottom, 24)
+            }
         }
+
+        .onChange(of: guideStore.isPlaying, { oldValue, newValue in
+            fadeTask?.cancel()
+            fadeTask = nil
+            
+            if newValue == false {
+                showPlayToast = false
+            } else {
+                fadeTask = Task { @MainActor in
+                    showPlayToast = true
+                    do {
+                        try await Task.sleep(nanoseconds: 2_000_000_000) //2 Seconds
+                        try Task.checkCancellation()
+                        showPlayToast = false
+                    } catch {
+                        // Task Cancelled - no op.
+                    }
+                }
+            }
+        })
+        
+        // VLCPlayerView global handler for play/pause
+        .onPlayPauseCommand {
+            guideStore.isPlaying.toggle()
+        }
+        
+#if os(macOS)
+        // macOS: arrow keys re-show the guide
+        .background( MacArrowKeyCatcher {
+            withAnimation {
+                guideStore.isGuideVisible = true
+            }
+        })
+#endif
     }
 }
 
@@ -54,12 +99,12 @@ struct RootView: View {
 
 #Preview {
     let channel = HDHomeRunChannel(guideNumber: "8.1",
-                          guideName: "WRIC-TV",
-                          videoCodec: "MPEG2",
-                          audioCodec: "AC3",
-                          hasDRM: false,
-                          isHD: true ,
-                          url: "http://192.168.50.250:5004/auto/v8.1")
+                                   guideName: "WRIC-TV",
+                                   videoCodec: "MPEG2",
+                                   audioCodec: "AC3",
+                                   hasDRM: false,
+                                   isHD: true ,
+                                   url: "http://192.168.50.250:5004/auto/v8.1")
     
     let stream = IPStream(channelId:  "PlutoTVTrueCrime.us",
                           feedId: "Austria",
