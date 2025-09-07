@@ -16,7 +16,7 @@ struct GuideChannel: Identifiable, Hashable, Sendable, JSONSerializable {
     let title: String
     let number: String?
     let url: URL
-    let quality: Quality
+    let quality: StreamQuality
     let hasDRM: Bool
     let source: ChannelSource
     

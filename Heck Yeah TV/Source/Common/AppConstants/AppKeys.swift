@@ -60,6 +60,7 @@ struct AppKeys {
         static let favoritesKey = "GuideStore.favorites"
         static let lastPlayedKey = "GuideStore.last"
         static let channelList = "GuideStore.channelList"
+        static let lastTabSelected = "GuideStore.lastTabSelected"
         static let authTokenKey = "GuideStore.authTokenKey"
     }
 }

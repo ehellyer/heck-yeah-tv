@@ -14,7 +14,7 @@ final class IPTVController {
     
     private var sessionInterface = SessionInterface.sharedInstance
         
-    ///MARK: - Internal API - Fetch stuff
+    ///MARK: - Internal API - Fetch IPTV Sources
     
     var blocklists: [IPBlocklist] = []
     var categories: [IPCategory] = []
@@ -29,12 +29,17 @@ final class IPTVController {
     var subdivisions: [Subdivision] = []
     var timezones: [Timezone] = []
 
+    /// Result of network and country filters and a join between Channels and Streams.
+    var filteredChannels: [IPChannel] = []
+    
     func fetchList<T: JSONSerializable>(url: URL) async throws -> T {
+        // keep-alive off for initial connection. Example: Underlying layer 3/2 changes while app is running, e.g. VPN was on, then turned off or vice versa.
         let request = NetworkRequest(url: url,
                                      method: .get,
+                                     timeoutInterval: 10.0,
                                      headers: [HTTPHeader.defaultUserAgent,
                                                HTTPHeader(name: "Accept-Encoding", value: "application/json"),
-                                               HTTPHeader(name: "connection", value: "close")]) // keep-alive off
+                                               HTTPHeader(name: "connection", value: "close")]) // keep-alive off for initial connection.  e.g. VPN was on, then turned off while app was running.
         
         let response = try await self.sessionInterface.execute(request)
         let jsonObject = try T.initialize(jsonData: response.body)
@@ -77,6 +82,8 @@ final class IPTVController {
                 }
             }
         }
+        
+        
         
         source.summary.finishedAt = Date()
         return source.summary

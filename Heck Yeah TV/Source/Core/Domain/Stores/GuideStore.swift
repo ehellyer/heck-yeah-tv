@@ -43,6 +43,17 @@ final class GuideStore {
 
     var isPlaying: Bool = false
     var isGuideVisible: Bool = false
+    var selectedTab: TabSection {
+        get {
+            access(keyPath: \.selectedTab)
+            return UserDefaults.lastTabSelected ?? .last
+        }
+        set {
+            withMutation(keyPath: \.selectedTab) {
+                UserDefaults.lastTabSelected = newValue
+            }
+        }
+    }
     
     private(set) var lastPlayedChannel: GuideChannel? {
         get {
@@ -75,7 +86,7 @@ final class GuideStore {
     //MARK: - Internal API
 
     var selectedChannelIndex: Int? {
-        guard let selectedChannel = selectedChannel else { return nil }
+        guard let selectedChannel = _selectedChannelBakStore else { return nil }
         return visibleChannels.firstIndex(of: selectedChannel)
     }
     
@@ -90,12 +101,8 @@ final class GuideStore {
                 // Tell the Observation system this property is mutating:
                 withMutation(keyPath: \.selectedChannel) {
                     _selectedChannelBakStore = newValue
+                    lastPlayedChannel = newValue
                 }
-            }
-            
-            //Handle my side effect (Because I can't use didSet in an @Observable class).
-            if newValue != lastPlayedChannel {
-                lastPlayedChannel = newValue
             }
         }
     }

@@ -7,8 +7,9 @@
 //
 
 import SwiftUI
+import Hellfire
 
-enum TabSection: String, CaseIterable, Identifiable {
+enum TabSection: String, CaseIterable, Identifiable, JSONSerializable {
     
     /// Last Channel
     case last

@@ -72,4 +72,18 @@ extension UserDefaults {
             standard.set(data, forKey: AppKeys.GuideStore.lastPlayedKey)
         }
     }
+    
+    static var lastTabSelected: TabSection? {
+        get {
+            let data = standard.data(forKey: AppKeys.GuideStore.lastTabSelected)
+            let _lastTab = try? TabSection.initialize(jsonData: data)
+            return _lastTab
+        }
+        set {
+            let data = try? newValue?.toJSONData()
+            standard.set(data, forKey: AppKeys.GuideStore.lastTabSelected)
+        }
+    }
+    
+    
 }

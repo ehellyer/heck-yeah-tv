@@ -17,7 +17,7 @@ struct PlaybackBadge: View {
             Image(systemName: systemName)
                 .imageScale(.medium)
             Text(text)
-                .font(.headline) // readable at TV distance
+                .font(.headline) 
                 .minimumScaleFactor(0.8)
         }
         .padding(.horizontal, 14)
@@ -31,10 +31,15 @@ struct PlaybackBadge: View {
                         .strokeBorder(.white.opacity(0.15))
                 )
         )
+        
         .shadow(radius: 8, y: 4)
     }
 }
 
-#Preview {
+#Preview("Play") {
     PlaybackBadge(text: "Play", systemName: "play.fill")
+}
+
+#Preview("Pause") {
+    PlaybackBadge(text: "Pause", systemName: "pause.fill")
 }

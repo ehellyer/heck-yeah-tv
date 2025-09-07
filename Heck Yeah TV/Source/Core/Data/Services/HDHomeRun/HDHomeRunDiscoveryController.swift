@@ -18,9 +18,10 @@ final class HDHomeRunDiscoveryController {
     //MARK: - Private API
     
     private var sessionInterface = SessionInterface.sharedInstance
+    // keep-alive off for initial connection. Example: Underlying layer 3/2 changes while app is running, e.g. VPN was on, then turned off or vice versa.
     private var defaultHeaders: [HTTPHeader] = [HTTPHeader.defaultUserAgent,
                                                 HTTPHeader(name: "Accept-Encoding", value: "application/json"),
-                                                HTTPHeader(name: "connection", value: "close") // keep-alive off
+                                                HTTPHeader(name: "connection", value: "close")
     ]
     
     private func deviceDiscovery() async -> FetchSummary {
@@ -28,6 +29,7 @@ final class HDHomeRunDiscoveryController {
         let hdHomeRunDiscoveryURL = HDHomeRunKeys.Tuner.hdHomeRunDiscoveryURL
         let request = NetworkRequest(url: hdHomeRunDiscoveryURL,
                                      method: .get,
+                                     timeoutInterval: 10.0,
                                      headers: self.defaultHeaders)
         do {
             let response = try await self.sessionInterface.execute(request)
@@ -49,6 +51,7 @@ final class HDHomeRunDiscoveryController {
             let deviceURL = device.discoverURL
             let request = NetworkRequest(url: deviceURL,
                                          method: .get,
+                                         timeoutInterval: 10.0,
                                          headers: self.defaultHeaders)
             do {
                 let response = try await self.sessionInterface.execute(request)
@@ -69,6 +72,7 @@ final class HDHomeRunDiscoveryController {
         var summary = FetchSummary()
         let request = NetworkRequest(url: tunerServerDevice.lineupURL,
                                      method: .get,
+                                     timeoutInterval: 10.0,
                                      headers: self.defaultHeaders)
         do {
             let response = try await self.sessionInterface.execute(request)

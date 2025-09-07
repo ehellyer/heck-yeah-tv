@@ -14,7 +14,7 @@ extension IPStream: Channelable {
     var titleHint: String { title }
     var numberHint: String? { channelId }
     var urlHint: URL { url }
-    var qualityHint: Quality {
+    var qualityHint: StreamQuality {
         guard let quality else {
             return .unknown
         }

@@ -28,7 +28,7 @@ typealias PlatformViewRepresentable = UIViewRepresentable
 typealias PlatformView = UIView
 #endif
 
-
+@MainActor
 struct VLCPlayerView: PlatformViewRepresentable {
     
     // Binding for selected channel
@@ -102,11 +102,12 @@ struct VLCPlayerView: PlatformViewRepresentable {
     
     //MARK: - ViewRepresentable Coordinator
     
+    @MainActor
     final class Coordinator: NSObject {
         
         lazy var mediaPlayer = {
             let _player = VLCMediaPlayer()
-            _player.delegate = self
+            //_player.delegate = self
             return _player
         }()
                 
@@ -115,26 +116,51 @@ struct VLCPlayerView: PlatformViewRepresentable {
         }
         
         func play(channel: GuideChannel) {
-            //If we are requesting to play the same url and the player is currently playing, do nothing and return early.
-            guard not(channel.url == mediaPlayer.media?.url && mediaPlayer.isPlaying) else {
+            
+            if channel.url != mediaPlayer.media?.url {
+                mediaPlayer.stop()
+                //https://wiki.videolan.org/VLC_command-line_help/
+//                let options: [String] = [
+//                    "--no-video-title-show",
+//                    "--avcodec-hw=any",             // prefer hardware decode when possible
+//                    "--drop-late-frames",           // reduce CPU spikes under load
+//                    "--skip-frames",                // allow frame skipping under pressure
+//                    "--deinterlace=auto",           // try without deinterlace first (0, 1, auto)
+//                    "--network-caching=1000",        // 1s; adjust for your latency vs CPU tradeoff
+//                    "--live-caching=1000",
+//                    "--no-lua"
+//                ]
+                
+                let media = VLCMedia(url: channel.url)
+                
+                media.addOptions(["--network-caching": 1000,             // 1s; adjust for your latency vs CPU tradeoff
+                                  "--live-caching": 1000,
+                                  "--no-lua": 1,
+                                  "--no-video-title-show": 1,
+                                  "--avcodec-hw": "any",                  // prefer hardware decode when possible
+                                  "--drop-late-frames": 1,                // reduce CPU spikes under load
+                                  "--skip-frames": 1,                     // allow frame skipping under pressure
+                                  "--deinterlace": 0                      // try without deinterlace first
+                                 ])
+                mediaPlayer.media = media
+            }
+            
+            //If the player is currently playing, do nothing and return early.
+            guard not(mediaPlayer.isPlaying) else {
                 return
             }
-            let media = VLCMedia(url: channel.url)
-            media.addOptions(["network-caching": 500])
-            mediaPlayer.media = media
+            
             mediaPlayer.play()
         }
         
         func seekForward() {
             guard mediaPlayer.isSeekable else { return }
-            //TODO: Rudimentary seek implementation, needs updating to support large variances in content lengths.
-            mediaPlayer.position = min(1.0, mediaPlayer.position * 1.01)
+            mediaPlayer.jumpForward(2)
         }
         
         func seekBackward() {
             guard mediaPlayer.isSeekable else { return }
-            //TODO: Rudimentary seek implementation, needs updating to support large variances in content lengths.
-            mediaPlayer.position = max(0.0, mediaPlayer.position * -1.01)
+            mediaPlayer.jumpBackward(2)
         }
         
         func pause() {
@@ -145,8 +171,8 @@ struct VLCPlayerView: PlatformViewRepresentable {
         func stop() {
             if mediaPlayer.isPlaying {
                 mediaPlayer.stop()
-                mediaPlayer.media = nil
             }
+            mediaPlayer.media = nil
         }
         
         func dismantle() {
@@ -159,23 +185,23 @@ struct VLCPlayerView: PlatformViewRepresentable {
 
 extension VLCPlayerView.Coordinator: VLCMediaPlayerDelegate {
     
-    func mediaPlayerStateChanged(_ aNotification: Notification) {
+    nonisolated func mediaPlayerStateChanged(_ aNotification: Notification) {
         //Not yet implemented
     }
     
-    func mediaPlayerTimeChanged(_ aNotification: Notification) {
+    nonisolated func mediaPlayerTimeChanged(_ aNotification: Notification) {
         //Not yet implemented
     }
     
-    func mediaPlayerTitleChanged(_ aNotification: Notification) {
+    nonisolated func mediaPlayerTitleChanged(_ aNotification: Notification) {
         //Not yet implemented
     }
     
-    func mediaPlayerChapterChanged(_ aNotification: Notification) {
+    nonisolated func mediaPlayerChapterChanged(_ aNotification: Notification) {
         //Not yet implemented
     }
     
-    func mediaPlayerSnapshot(_ aNotification: Notification) {
+    nonisolated func mediaPlayerSnapshot(_ aNotification: Notification) {
         //Not yet implemented
     }
 }

@@ -53,4 +53,5 @@ struct GuideSubTitleView: View {
     
     GuideSubTitleView(channel: channel)
         .background(Color.gray.opacity(0.5))
+        .padding(.leading, 24)
 }

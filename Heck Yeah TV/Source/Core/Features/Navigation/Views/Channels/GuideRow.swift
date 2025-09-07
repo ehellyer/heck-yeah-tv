@@ -9,16 +9,14 @@
 import SwiftUI
 
 struct GuideRow: View {
-    let rowHPad: CGFloat = 20
+    let rowVPad: CGFloat = 6
+    let rowHPad: CGFloat = 15
     let corner: CGFloat = 14
     
     @State var channel: GuideChannel
     @State var row: Int
     @Environment(GuideStore.self) var guideStore
-
-#if os(tvOS)
     @FocusState.Binding var focus: FocusTarget?
-#endif
     @State private var preferredCol: Int = 0
     
     var body: some View {
@@ -33,7 +31,7 @@ struct GuideRow: View {
                         .font(.headline)
                         .lineLimit(1)
                         .truncationMode(.tail)
-                        .frame(width: 420, alignment: .leading)
+                        .frame(width: 300, alignment: .leading)
                     GuideSubTitleView(channel: channel)
                 }
             }
@@ -51,12 +49,12 @@ struct GuideRow: View {
 #if os(tvOS)
             .focused($focus, equals: FocusTarget.guide(row: row, col: 1))
 #endif
-            .padding(.horizontal, 4)
-            
-            .tint(guideStore.isFavorite(channel) ? Color.yellow : Color.white)
+            .tint(guideStore.isFavorite(channel) ? Color.yellow : Color.white)            
         }
-        .padding(.vertical, 6)
-        .padding(.horizontal, rowHPad)
-        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(.vertical, rowVPad)
+        .padding(.leading, rowHPad)
+        .padding(.trailing, rowHPad)
+        
+        .tag(row)
     }
 }

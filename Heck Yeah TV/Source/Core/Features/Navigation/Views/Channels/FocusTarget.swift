@@ -14,3 +14,16 @@ enum FocusTarget: Hashable {
     case favoritesToggle
     case guide(row: Int, col: Int)
 }
+
+extension FocusTarget: CustomDebugStringConvertible {
+    var debugDescription: String {
+        switch self {
+            case .tab(let section):
+                return "Tab(\(section))"
+            case .favoritesToggle:
+                return "FavoritesToggle"
+            case .guide(row: let row, col: let col):
+                return "Guide(\(row),\(col))"
+        }
+    }
+}

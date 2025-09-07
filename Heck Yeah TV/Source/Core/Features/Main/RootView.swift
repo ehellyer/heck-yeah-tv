@@ -12,32 +12,36 @@ struct RootView: View {
     
     @State private var fadeTask: Task<Void, Never>?
     @State private var showPlayToast = false
-    @State private var selectedTab: TabSection = .last
     @Environment(GuideStore.self) private var guideStore
     
     // Binding parts of GuideStore to VLCPlayerView: PlatformViewRepresentable
-    private var channelBinding: Binding<GuideChannel?> {
+    private var channel: Binding<GuideChannel?> {
         Binding(
             get: { guideStore.selectedChannel },
             set: { guideStore.selectedChannel = $0 }
         )
     }
-    private var isPlayingBinding: Binding<Bool> {
+    private var isPlaying: Binding<Bool> {
         Binding(
             get: { guideStore.isPlaying },
             set: { guideStore.isPlaying = $0 }
         )
     }
-    
+    private var selectedTab: Binding<TabSection> {
+        Binding(
+            get: { guideStore.selectedTab },
+            set: { guideStore.selectedTab = $0 }
+        )
+    }
     
     var body: some View {
         ZStack(alignment: .bottomLeading) {
             
-            VLCPlayerView(isPlaying: isPlayingBinding, selectedChannel: channelBinding)
+            VLCPlayerView(isPlaying: isPlaying, selectedChannel: channel)
                 .ignoresSafeArea()
             
             if guideStore.isGuideVisible {
-                NavigationRootView(selectedTab: $selectedTab)
+                AppContainerView(selectedTab: selectedTab)
                     .transition(.opacity)
                     .zIndex(1)
             } else {
@@ -48,13 +52,13 @@ struct RootView: View {
             if guideStore.isPlaying == false {
                 PlaybackBadge(text: "Paused", systemName: "pause.fill")
                     .transition(.opacity)
-                    .padding(.leading, 24)
-                    .padding(.bottom, 24)
+                    .padding(.leading, 50)
+                    .padding(.bottom, 50)
             }
             if guideStore.isPlaying && showPlayToast {
                 PlaybackBadge(text: "Play", systemName: "play.fill")
-                    .padding(.leading, 24)
-                    .padding(.bottom, 24)
+                    .padding(.leading, 50)
+                    .padding(.bottom, 50)
             }
         }
 
@@ -77,12 +81,12 @@ struct RootView: View {
                 }
             }
         })
-        
+#if os(tvOS)
         // VLCPlayerView global handler for play/pause
         .onPlayPauseCommand {
             guideStore.isPlaying.toggle()
         }
-        
+#endif
 #if os(macOS)
         // macOS: arrow keys re-show the guide
         .background( MacArrowKeyCatcher {

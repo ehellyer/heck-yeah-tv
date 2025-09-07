@@ -11,6 +11,7 @@ import SwiftUI
 struct ShowFavorites: View {
     
     @Binding var showFavoritesOnly: Bool
+    @FocusState.Binding var focus: FocusTarget?
 
     var body: some View {
         HStack {
@@ -25,12 +26,35 @@ struct ShowFavorites: View {
                 .font(.caption)
                 .foregroundStyle(showFavoritesOnly ? .yellow : .primary)
             }
-            
+#if os(tvOS)
+            .focused($focus, equals: FocusTarget.favoritesToggle)            
+#endif
             Spacer()
         }
+        .background(Color.black.opacity(0.01))
     }
 }
-
-//#Preview {
-//    ShowFavorites(showFavoritesOnly: true)
+//
+//#if !os(tvOS)
+//#Preview("On (constant)") {
+//    ShowFavorites(showFavoritesOnly: .constant(true))
+//        .padding()
 //}
+//
+//#Preview("Off (constant)") {
+//    ShowFavorites(showFavoritesOnly: .constant(false))
+//        .padding()
+//}
+//
+//#Preview("Interactive") {
+//    ShowFavoritesPreview()
+//}
+//
+//private struct ShowFavoritesPreview: View {
+//    @State private var show = true
+//    var body: some View {
+//        ShowFavorites(showFavoritesOnly: $show)
+//            .padding()
+//    }
+//}
+//#endif
