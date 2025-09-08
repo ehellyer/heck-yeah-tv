@@ -1,5 +1,5 @@
 //
-//  AppContainerView.swift
+//  TabContainerView.swift
 //  Heck Yeah TV
 //
 //  Created by Ed Hellyer on 8/30/25.
@@ -25,11 +25,13 @@ private struct BackgroundView: View {
     }
 }
 
-struct AppContainerView: View {
+struct TabContainerView: View {
     
     @Environment(GuideStore.self) var guideStore
     @Binding var selectedTab: TabSection
     @FocusState private var focus: FocusTarget?
+    @State private var preferredCol: Int = 0
+    
     private var showFavoritesOnly: Binding<Bool> {
         Binding(
             get: { guideStore.showFavoritesOnly },
@@ -46,6 +48,7 @@ struct AppContainerView: View {
                 Tab(TabSection.last.title,
                     systemImage: TabSection.last.systemImage,
                     value: TabSection.last) {
+                    
                     LastChannelView()
                         .background(Color.black.opacity(0.01))
                 }
@@ -53,6 +56,7 @@ struct AppContainerView: View {
                 Tab(TabSection.recents.title,
                     systemImage: TabSection.recents.systemImage,
                     value: TabSection.recents) {
+                    
                     RecentsView()
                         .background(Color.black.opacity(0.01))
                 }
@@ -60,20 +64,12 @@ struct AppContainerView: View {
                 Tab(TabSection.channels.title,
                     systemImage: TabSection.channels.systemImage,
                     value: TabSection.channels) {
+                    
                     VStack {
                         ShowFavorites(showFavoritesOnly: showFavoritesOnly, focus: $focus)
-#if !os(iOS)
-                            .onMoveCommand { direction in
-                                favoritesOnMoveCommand(direction)
-                            }
-#endif
-                        GuideView(focus: $focus)
+
+                        GuideView(focus: $focus, preferredCol: $preferredCol)                            
                             .background(Color.black.opacity(0.01))
-#if !os(iOS)
-                            .onMoveCommand { direction in
-                                guideViewOnMoveCommand(direction)
-                            }
-#endif
                     }
                     .background(Color.clear, ignoresSafeAreaEdges: .all)
                 }
@@ -81,29 +77,44 @@ struct AppContainerView: View {
                 Tab(TabSection.search.title,
                     systemImage: TabSection.search.systemImage,
                     value: TabSection.search) {
+                    
                     SearchView()
                 }
                 
                 Tab(TabSection.settings.title,
                     systemImage: TabSection.settings.systemImage,
                     value: TabSection.settings) {
+                    
                     SettingsView()
                 }
             }
             .padding(10)
             
-//            .onAppear {
-//                let appearance = UITabBarAppearance()
-//                appearance.configureWithTransparentBackground()
-//                appearance.backgroundColor = .clear
-//                UITabBar.appearance().standardAppearance = appearance
-//                UITabBar.appearance().scrollEdgeAppearance = appearance
-//                
-//            }
+            //            .onAppear {
+            //                let appearance = UITabBarAppearance()
+            //                appearance.configureWithTransparentBackground()
+            //                appearance.backgroundColor = .clear
+            //                UITabBar.appearance().standardAppearance = appearance
+            //                UITabBar.appearance().scrollEdgeAppearance = appearance
+            //
+            //            }
         }
         
-        //Dismiss without changing state.
+        .onMoveCommand { direction in
+            handleOnMoveCommand(direction)
+        }
+        
+        .task {
+            guard selectedTab == .channels else { return }
+            try? await Task.sleep(nanoseconds: 20_000_000)
+            let row = guideStore.selectedChannelIndex ?? 0
+            withAnimation(.easeOut(duration: 0.15)) {
+                focus = .guide(row: row, col: preferredCol)
+            }
+        }
+        
 #if !os(iOS)
+        // Support for dismissing the tabview by tapping menu on Siri remote for tvOS and esc key on keyboard for Mac.
         .onExitCommand {
             withAnimation(.easeOut(duration: 0.25)) {
                 guideStore.isGuideVisible = false
@@ -111,54 +122,44 @@ struct AppContainerView: View {
         }
 #endif
     }
-
-#if !os(iOS)
-    private func favoritesOnMoveCommand(_ direction: MoveCommandDirection) {
-        print("Favorites swipe >>> Focus \(focus?.debugDescription ?? "unknown"), Direction: \(direction)")
-        
-        switch (focus, direction) {
-            case (.favoritesToggle, .right), (.favoritesToggle, .left):
-                withAnimation {
-                    focus = .guide(row:1, col: 1)
-                }
-            case (.favoritesToggle, .down):
-                // from Favorites <DOWN> to guide
-                withAnimation {
-                    focus = .guide(row: 0, col: 0)
-                }
-            case (.favoritesToggle, .up):
-                // from favorites <UP> to channels tab
-                withAnimation {
-                    focus = .tab(.channels)
-                }
-            default:
-                break
-        }
-    }
     
-    private func guideViewOnMoveCommand(_ direction: MoveCommandDirection) {
-        print("Guide swipe >>> Focus \(focus?.debugDescription ?? "unknown"), Direction: \(direction)")
+#if !os(iOS)
+    
+    private func handleOnMoveCommand(_ direction: MoveCommandDirection) {
+        print(">>> Move detected: FocusTarget: \(focus?.debugDescription ?? "unknown"), Direction: \(direction)")
         
         switch (focus, direction) {
                 
+            case (.favoritesToggle, .right), (.favoritesToggle, .left):
+                // from Favorites to guide when either <LEFT> or <RIGHT> on favorites toggle.
+                let rowId = guideStore.selectedChannelIndex ?? 0
+                focus = .guide(row:rowId, col: preferredCol)
+                
+            case (.favoritesToggle, .down):
+                // from Favorites <DOWN> to guide
+                focus = .guide(row: 0, col: preferredCol)
+                print("Focus set to: \(focus?.debugDescription ?? "unknown") <<<")
+            case (.favoritesToggle, .up):
+                // from favorites <UP> to channels tab
+                focus = .tab(.channels)
+                print("Focus set to: \(focus?.debugDescription ?? "unknown") <<<")
             case (.guide(_, let col), .left):
                 // from guide channel col <LEFT> to favorites
                 if col == 0 {
-                    withAnimation {
-                        focus = .favoritesToggle
-                    }
+                    focus = .favoritesToggle
+                    print("Focus set to: \(focus?.debugDescription ?? "unknown") <<<")
                 }
             case (.guide(let row, _), .up):
                 // from guide at row 0, <UP> to favorites
                 if row == 0 {
-                    withAnimation {
-                        focus = .favoritesToggle
-                    }
+                    focus = .favoritesToggle
+                    print("Focus set to: \(focus?.debugDescription ?? "unknown") <<<")
                 }
                 
             default:
                 break
         }
+        print("Focus set to: \(focus?.debugDescription ?? "unknown") <<<")
     }
 #endif
 }
@@ -185,7 +186,7 @@ struct AppContainerView: View {
 //    let guideStore = GuideStore(streams: [stream], tunerChannels: [channel])
 //
 //
-//    AppContainerView(selectedTab: .constant(.channels))
+//    TabContainerView(selectedTab: .constant(.channels))
 //        .environment(guideStore)
 //}
 //

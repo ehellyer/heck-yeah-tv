@@ -27,7 +27,7 @@ struct ShowFavorites: View {
                 .foregroundStyle(showFavoritesOnly ? .yellow : .primary)
             }
 #if os(tvOS)
-            .focused($focus, equals: FocusTarget.favoritesToggle)            
+            .focused($focus, equals: FocusTarget.favoritesToggle)
 #endif
             Spacer()
         }

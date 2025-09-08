@@ -41,11 +41,11 @@ struct RootView: View {
                 .ignoresSafeArea()
             
             if guideStore.isGuideVisible {
-                AppContainerView(selectedTab: selectedTab)
+                TabContainerView(selectedTab: selectedTab)
                     .transition(.opacity)
                     .zIndex(1)
             } else {
-                NavigationActivationView()
+                TabActivationView()
             }
             
             // Persistent “Paused” badge when not playing

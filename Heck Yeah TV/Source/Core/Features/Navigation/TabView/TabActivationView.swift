@@ -1,5 +1,5 @@
 //
-//  NavigationActivationView.swift
+//  TabActivationView.swift
 //  Heck Yeah TV
 //
 //  Created by Ed Hellyer on 8/26/25.
@@ -8,7 +8,7 @@
 
 import SwiftUI
 
-struct NavigationActivationView: View {
+struct TabActivationView: View {
     @Environment(GuideStore.self) private var guideStore
     
     var body: some View {

@@ -54,7 +54,19 @@ struct GuideRow: View {
         .padding(.vertical, rowVPad)
         .padding(.leading, rowHPad)
         .padding(.trailing, rowHPad)
+        .background {
+            Color.clear
+            if guideStore.selectedChannel == channel {
+                RoundedRectangle(cornerRadius: corner, style: .continuous)
+                    .fill(Color.mainAppGreen.opacity(0.22))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: corner, style: .continuous)
+                            .stroke(Color.mainAppGreen.opacity(0.22), lineWidth: 1)
+                    )
+            }
+        }
         
         .tag(row)
+        .id(row)
     }
 }

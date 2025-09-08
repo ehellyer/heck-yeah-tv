@@ -14,7 +14,7 @@ struct GuideView: View {
     
     @Environment(GuideStore.self) var guideStore
     @FocusState.Binding var focus: FocusTarget?
-    @State private var preferredCol: Int = 0
+    @Binding var preferredCol: Int 
     private var showFavoritesOnly: Binding<Bool> {
         Binding(
             get: { guideStore.showFavoritesOnly },
@@ -28,52 +28,36 @@ struct GuideView: View {
                 LazyVStack(alignment: .leading, spacing: 8) {
                     ForEach(Array(guideStore.visibleChannels.enumerated()), id: \.element.id) { index, channel in
                         GuideRow(channel: channel, row: index, focus: $focus)
-                            .background {
-                                Color.clear
-                                if guideStore.selectedChannel == channel {
-                                    RoundedRectangle(cornerRadius: corner, style: .continuous)
-                                        .fill(Color.mainAppGreen.opacity(0.22))
-                                        .overlay(
-                                            RoundedRectangle(cornerRadius: corner, style: .continuous)
-                                                .stroke(Color.mainAppGreen.opacity(0.22), lineWidth: 1)
-                                        )
-                                }
-                            }
                     }
                 }
                 .background(Color.clear)
                 .padding(0)
             }
+            
             .background(Color.clear)
             
             // ScrollView handler of change of focus.
             .onChange(of: focus) {
-                guard let focus, case let FocusTarget.guide(_, col) = focus else { return }
+                guard let focus, case let FocusTarget.guide(rowId, col) = focus else { return }
                 preferredCol = col
+                withAnimation(.easeOut) {
+                    proxy.scrollTo(rowId, anchor: .center)
+                }
             }
             
             .onAppear {
-                
                 if let rowId = guideStore.selectedChannelIndex {
                     withAnimation(.easeOut) {
                         proxy.scrollTo(rowId, anchor: .center)
-#if os(tvOS)
-                        focus = FocusTarget.guide(row: rowId, col: preferredCol)
-#endif
                     }
                 }
             }
             
             //Initial scroll, then focus (next runloop)
             .task {
-                
                 if let rowId = guideStore.selectedChannelIndex {
                     withAnimation(.easeOut) {
                         proxy.scrollTo(rowId, anchor: .center)
-#if os(tvOS)
-                        focus = FocusTarget.guide(row: rowId, col: preferredCol)
-#endif
-
                     }
                 }
             }
@@ -87,6 +71,7 @@ struct GuideView: View {
 
 
 struct Preview_Guide: View {
+    @State var preferredCol: Int = 0
     @FocusState var focus: FocusTarget?
     @State var channel = HDHomeRunChannel(guideNumber: "8.1",
                                           guideName: "WRIC-TV",
@@ -107,7 +92,7 @@ struct Preview_Guide: View {
     
     var body: some View {
         let guideStore = GuideStore(streams: [stream], tunerChannels: [channel])
-        return GuideView(focus: $focus).environment(guideStore)
+        return GuideView(focus: $focus, preferredCol: $preferredCol).environment(guideStore)
     }
 }
 

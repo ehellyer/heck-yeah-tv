@@ -83,7 +83,21 @@ final class IPTVController {
             }
         }
         
+        let channelFilters = ChannelFilters(
+            countries: ["US", "UK"],
+            categoriesAnyOf: ["auto", "science", "movies", "documentary"],
+            networks: nil,                 // optional
+            ownersAnyOf: nil   // optional
+        )
         
+//        let pairs = joinStreamsWithChannels(
+//            streams: streams,
+//            channels: channels,
+//            filters: channelFilters
+//        )
+        
+        let playable = filteredStreams(streams: streams, channels: channels, filters: channelFilters)
+        streams = playable
         
         source.summary.finishedAt = Date()
         return source.summary

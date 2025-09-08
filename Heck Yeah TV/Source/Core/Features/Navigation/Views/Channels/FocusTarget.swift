@@ -23,7 +23,7 @@ extension FocusTarget: CustomDebugStringConvertible {
             case .favoritesToggle:
                 return "FavoritesToggle"
             case .guide(row: let row, col: let col):
-                return "Guide(\(row),\(col))"
+                return "Guide(row:\(row), col:\(col))"
         }
     }
 }
