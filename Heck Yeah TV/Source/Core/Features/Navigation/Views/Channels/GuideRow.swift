@@ -17,7 +17,6 @@ struct GuideRow: View {
     @State var row: Int
     @Environment(GuideStore.self) var guideStore
     @FocusState.Binding var focus: FocusTarget?
-    @State private var preferredCol: Int = 0
     
     var body: some View {
         HStack {
@@ -65,8 +64,5 @@ struct GuideRow: View {
                     )
             }
         }
-        
-        .tag(row)
-        .id(row)
     }
 }

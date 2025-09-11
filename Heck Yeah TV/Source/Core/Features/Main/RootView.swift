@@ -27,25 +27,20 @@ struct RootView: View {
             set: { guideStore.isPlaying = $0 }
         )
     }
-    private var selectedTab: Binding<TabSection> {
-        Binding(
-            get: { guideStore.selectedTab },
-            set: { guideStore.selectedTab = $0 }
-        )
-    }
     
     var body: some View {
         ZStack(alignment: .bottomLeading) {
             
             VLCPlayerView(isPlaying: isPlaying, selectedChannel: channel)
-                .ignoresSafeArea()
+                .ignoresSafeArea(.all)
             
             if guideStore.isGuideVisible {
-                TabContainerView(selectedTab: selectedTab)
+                TabContainerView()
                     .transition(.opacity)
-                    .zIndex(1)
+                    .ignoresSafeArea(.all)
             } else {
                 TabActivationView()
+                    .ignoresSafeArea(.all)
             }
             
             // Persistent “Paused” badge when not playing

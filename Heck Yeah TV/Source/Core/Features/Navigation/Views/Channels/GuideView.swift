@@ -14,18 +14,12 @@ struct GuideView: View {
     
     @Environment(GuideStore.self) var guideStore
     @FocusState.Binding var focus: FocusTarget?
-    @Binding var preferredCol: Int 
-    private var showFavoritesOnly: Binding<Bool> {
-        Binding(
-            get: { guideStore.showFavoritesOnly },
-            set: { guideStore.showFavoritesOnly = $0 }
-        )
-    }
     
     var body: some View {
         ScrollViewReader { proxy in
             ScrollView {
                 LazyVStack(alignment: .leading, spacing: 8) {
+                    
                     ForEach(Array(guideStore.visibleChannels.enumerated()), id: \.element.id) { index, channel in
                         GuideRow(channel: channel, row: index, focus: $focus)
                     }
@@ -35,16 +29,6 @@ struct GuideView: View {
             }
             
             .background(Color.clear)
-            
-            // ScrollView handler of change of focus.
-            .onChange(of: focus) {
-                guard let focus, case let FocusTarget.guide(rowId, col) = focus else { return }
-                preferredCol = col
-                withAnimation(.easeOut) {
-                    proxy.scrollTo(rowId, anchor: .center)
-                }
-            }
-            
             .onAppear {
                 if let rowId = guideStore.selectedChannelIndex {
                     withAnimation(.easeOut) {
@@ -52,26 +36,15 @@ struct GuideView: View {
                     }
                 }
             }
-            
-            //Initial scroll, then focus (next runloop)
-            .task {
-                if let rowId = guideStore.selectedChannelIndex {
-                    withAnimation(.easeOut) {
-                        proxy.scrollTo(rowId, anchor: .center)
-                    }
-                }
-            }
-            
         }
+
         .background(Color.clear)
     }
-        
 }
 
 
-
 struct Preview_Guide: View {
-    @State var preferredCol: Int = 0
+    
     @FocusState var focus: FocusTarget?
     @State var channel = HDHomeRunChannel(guideNumber: "8.1",
                                           guideName: "WRIC-TV",
@@ -88,14 +61,13 @@ struct Preview_Guide: View {
                                  userAgent: nil,
                                  quality: "2160p")
     
-    
-    
     var body: some View {
         let guideStore = GuideStore(streams: [stream], tunerChannels: [channel])
-        return GuideView(focus: $focus, preferredCol: $preferredCol).environment(guideStore)
+        return GuideView(focus: $focus).environment(guideStore)
     }
 }
 
 #Preview {
     Preview_Guide()
+        .ignoresSafeArea(.all)
 }

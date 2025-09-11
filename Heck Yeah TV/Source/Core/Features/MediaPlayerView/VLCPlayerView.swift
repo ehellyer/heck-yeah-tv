@@ -107,7 +107,7 @@ struct VLCPlayerView: PlatformViewRepresentable {
         
         lazy var mediaPlayer = {
             let _player = VLCMediaPlayer()
-            //_player.delegate = self
+            _player.delegate = nil//self
             return _player
         }()
                 
