@@ -8,10 +8,14 @@
 
 import SwiftUI
 
+private struct FocusHub: View {
+    var body: some View { Color.clear.frame(width: 1, height: 1) }
+}
+
 struct ChannelsContainer: View {
     
     @Environment(GuideStore.self) var guideStore
-    @FocusState private var focus: FocusTarget?
+    @FocusState var focus: FocusTarget?
     
     private var showFavoritesOnly: Binding<Bool> {
         Binding(
@@ -24,72 +28,28 @@ struct ChannelsContainer: View {
         )
     }
     
+    private var initialFocusTarget: FocusTarget {
+        if let id = guideStore.selectedChannel?.id {
+            return .guide(channelId: id, col: 0)
+        } else {
+            return .favoritesToggle
+        }
+    }
+    
     var body: some View {
         
-        VStack {
+        VStack(alignment: .leading, spacing: 5) {
             ShowFavorites(showFavoritesOnly: showFavoritesOnly, focus: $focus)
             GuideView(focus: $focus)
         }
-
-#if !os(iOS)
-        .onMoveCommand { direction in
-            handleOnMoveCommand(direction)
-        }
-#endif
-        .task {
-            try? await Task.sleep(nanoseconds: 20_000_000) // 0.2 sec
-            withAnimation(.easeOut(duration: 0.15)) {
-                let row = guideStore.selectedChannelIndex ?? 0
-                focus = .guide(row: row, col: 0)
-            }
-        }
-    }
-    
-#if !os(iOS)
-    
-    private func handleOnMoveCommand(_ direction: MoveCommandDirection) {
-        print(">>> Move detected: FocusTarget: \(focus?.debugDescription ?? "unknown"), Direction: \(direction)")
-        
-//        switch (focus, direction) {
-//                
-//            case (.favoritesToggle, .right), (.favoritesToggle, .left):
-//                // from Favorites to guide when either <LEFT> or <RIGHT> on favorites toggle.
-//                //withAnimation {
-//                let rowId = guideStore.selectedChannelIndex ?? 0
-//                focus = .guide(row: rowId, col: 0)
-//                //}
-//            case (.favoritesToggle, .down):
-//                // from Favorites <DOWN> to guide
-//                withAnimation {
-//                    focus = .guide(row: 0, col: 0)
-//                }
-//                //            case (.favoritesToggle, .up):
-//                //                // from favorites <UP> to channels tab
-//                //                withAnimation {
-//                //                    focus = .tab(.channels)
-//                //                }
-//            case (.guide(_, let col), .left):
-//                // from guide channel col <LEFT> to favorites
-//                withAnimation {
-//                    if col == 0 {
-//                        focus = .favoritesToggle
-//                    }
-//                }
-//                //            case (.guide(let row, _), .up):
-//                //                // from guide at row 0, <UP> to favorites
-//                //                withAnimation {
-//                //                    if row == 0 {
-//                //                        focus = .favoritesToggle
-//                //                    }
-//                //                }
-//                
-//            default:
-//                break
+//        .defaultFocus($focus, initialFocusTarget)
+//        .onAppear {
+//            // Also set programmatically in case tvOS ignores defaultFocus due to async population
+//            if case .none = focus {
+//                focus = initialFocusTarget
+//            }
 //        }
-        
-        print("Focus set to: \(focus?.debugDescription ?? "unknown") <<<")
     }
-#endif
 }
 
 #Preview {
@@ -107,7 +67,6 @@ struct ChannelsContainer: View {
                           referrer: nil,
                           userAgent: nil,
                           quality: "2160p")
-    
     
     let guideStore = GuideStore(streams: [stream], tunerChannels: [channel])
     

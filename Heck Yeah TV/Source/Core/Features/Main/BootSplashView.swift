@@ -74,7 +74,7 @@ struct BootSplashView: View {
         .onAppear {
             playBootChimeIfNeeded()
         }
-        .focusEffectDisabled(true)
+        
     }
     
     private func playBootChimeIfNeeded() {

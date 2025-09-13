@@ -18,7 +18,7 @@ private struct BackgroundView: View {
             .allowsHitTesting(false)
             .accessibilityHidden(true)
 #if os(tvOS)
-            .focusable(false)
+//            .focusable(false)
 #endif
     }
 }
@@ -27,6 +27,8 @@ struct TabContainerView: View {
     
     @Environment(GuideStore.self) var guideStore
     @State private var preferredCol: Int = 0
+    @FocusState private var focus: FocusTarget?
+    @State private var lastGuideFocusedTarget: FocusTarget?
     
     private var selectedTab: Binding<TabSection> {
         Binding(
@@ -37,6 +39,19 @@ struct TabContainerView: View {
                 guideStore.selectedTab = $0
             }
         )
+    }
+    
+    private var guideFocusTarget: FocusTarget? {
+        if let lastFocus = lastGuideFocusedTarget {
+            return lastFocus
+        }
+        
+        if let first = guideStore.visibleChannels.first?.id {
+            let target = FocusTarget.guide(channelId: first, col: 0)
+            return target
+        }
+        
+        return nil
     }
     
     var body: some View {
@@ -77,17 +92,69 @@ struct TabContainerView: View {
                 }
             }
         }
-        
+        .onChange(of: focus) {
+            DispatchQueue.main.async {
+                print("<<< Focus onChange: \(self.focus?.debugDescription ?? "unknown")")
+            }
+        }
+       
         
 #if !os(iOS)
-        // Support for dismissing the tabview by tapping menu on Siri remote for tvOS and esc key on keyboard for Mac.
+        // Support for dismissing the tabview by tapping menu on Siri remote for tvOS or esc key on keyboard.
         .onExitCommand {
             withAnimation(.easeOut(duration: 0.25)) {
                 guideStore.isGuideVisible = false
             }
         }
 #endif
+        
+#if !os(iOS)
+        .onMoveCommand { direction in
+            handleOnMoveCommand(direction)
+        }
+#endif
+
     }
+    
+#if !os(iOS)
+    
+    private func handleOnMoveCommand(_ direction: MoveCommandDirection) {
+        print(">>> Move detected: FocusTarget: \(self.focus?.debugDescription ?? "unknown"), Direction: \(direction)")
+        
+        switch (self.focus, direction) {
+                
+            case (.guide(let id, _), .up):
+                if guideStore.visibleChannels.first?.id == id {
+                    lastGuideFocusedTarget = focus
+                    withAnimation {
+                        focus = .favoritesToggle
+                    }
+                }
+                
+            case (.none, .left),
+                (.none, .right),
+                (.favoritesToggle, .right),
+                (.favoritesToggle, .left),
+                (.favoritesToggle, .down):
+                
+                // from Favorites to guide when either <LEFT> or <RIGHT> on favorites toggle.
+                withAnimation {
+                    focus = guideFocusTarget
+                }
+                
+            case (.guide(_, let col), .left):
+                // from guide channel col <LEFT> to favorites
+                if col == 0 {
+                    lastGuideFocusedTarget = focus
+                    withAnimation {
+                        focus = .favoritesToggle
+                    }
+                }
+            default:
+                break
+        }
+    }
+#endif
 }
 
 // MARK: - Previews

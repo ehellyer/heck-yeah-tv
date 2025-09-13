@@ -84,8 +84,8 @@ final class IPTVController {
         }
         
         let channelFilters = ChannelFilters(
-            countries: ["US", "UK"],
-            categoriesAnyOf: ["auto", "science", "movies", "documentary"],
+            countries: nil, // ["US", "UK"],
+            categoriesAnyOf: nil, // ["auto", "science", "movies", "documentary", "news", "education"],
             networks: nil,                 // optional
             ownersAnyOf: nil   // optional
         )

@@ -20,7 +20,6 @@ struct PlatformRootView: View {
             }
 #elseif os(tvOS)
             RootView()
-                .focusEffectDisabled(true)
                 .ignoresSafeArea()
 #elseif os(macOS)
             RootView()

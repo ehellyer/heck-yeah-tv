@@ -20,18 +20,14 @@ struct ShowFavorites: View {
             Button {
                 showFavoritesOnly.toggle()
             } label: {
-               
                 Label(showFavoritesOnly ? "On" : "Off",
                       systemImage: showFavoritesOnly ? "star.fill" : "star")
                 .font(.caption)
-                .foregroundStyle(showFavoritesOnly ? .yellow : .primary)
+                .foregroundStyle(.yellow)
             }
-#if os(tvOS)
             .focused($focus, equals: FocusTarget.favoritesToggle)
-#endif
             Spacer()
         }
-        .background(Color.black.opacity(0.01))
     }
 }
 //

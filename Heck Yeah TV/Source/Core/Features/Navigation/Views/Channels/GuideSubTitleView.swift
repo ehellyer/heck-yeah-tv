@@ -19,23 +19,29 @@ struct GuideSubTitleView: View {
     var body: some View {
         HStack(spacing: 8) {
             if let n = channel.number {
-                Text(n).font(.caption).foregroundStyle(.secondary)
+                Text(n)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .lineLimit(1)
+                    .truncationMode(.tail)
             }
             if let quality = channel.quality.name {
                 Text(quality)
                     .font(.caption2)
+                    .lineLimit(1)
+                    .truncationMode(.tail)
                     .padding(.horizontal, 2)
                     .padding(.vertical, 0)
-                    .overlay(RoundedRectangle(cornerRadius: 3)
-                        .stroke())
+                    .overlay(RoundedRectangle(cornerRadius: 3).stroke())
             }
             if channel.hasDRM {
                 Text("DRM")
                     .font(.caption2)
+                    .lineLimit(1)
+                    .truncationMode(.tail)
                     .padding(.horizontal, 2)
                     .padding(.vertical, 0)
-                    .overlay(RoundedRectangle(cornerRadius: 3)
-                        .stroke())
+                    .overlay(RoundedRectangle(cornerRadius: 3).stroke())
             }
         }
     }

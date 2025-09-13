@@ -14,12 +14,12 @@ struct GuideRow: View {
     let corner: CGFloat = 14
     
     @State var channel: GuideChannel
-    @State var row: Int
     @Environment(GuideStore.self) var guideStore
     @FocusState.Binding var focus: FocusTarget?
     
     var body: some View {
         HStack {
+            
             Button {
                 guideStore.selectedChannel = channel
                 guideStore.isPlaying = true
@@ -30,29 +30,26 @@ struct GuideRow: View {
                         .font(.headline)
                         .lineLimit(1)
                         .truncationMode(.tail)
-                        .frame(width: 300, alignment: .leading)
+                        
                     GuideSubTitleView(channel: channel)
                 }
+                .frame(width: 400, alignment: .leading)
             }
-#if os(tvOS)
-            .focused($focus, equals: FocusTarget.guide(row: row, col: 0))
-#endif
+            .focused($focus, equals: FocusTarget.guide(channelId: channel.id, col: 0))
+            
             Spacer()
             
             Button {
                 guideStore.toggleFavorite(channel)
             } label: {
                 Image(systemName: guideStore.isFavorite(channel) ? "star.fill" : "star")
-                    .renderingMode(.template)
+                    .foregroundStyle(Color.yellow)
             }
-#if os(tvOS)
-            .focused($focus, equals: FocusTarget.guide(row: row, col: 1))
-#endif
-            .tint(guideStore.isFavorite(channel) ? Color.yellow : Color.white)            
+            .focused($focus, equals: FocusTarget.guide(channelId: channel.id, col: 1))
+            
         }
         .padding(.vertical, rowVPad)
-        .padding(.leading, rowHPad)
-        .padding(.trailing, rowHPad)
+        .padding(.horizontal, rowHPad)
         .background {
             Color.clear
             if guideStore.selectedChannel == channel {
