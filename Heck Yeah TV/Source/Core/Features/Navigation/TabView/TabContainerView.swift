@@ -65,6 +65,7 @@ struct TabContainerView: View {
                     systemImage: TabSection.last.systemImage,
                     value: TabSection.last) {
                     LastChannelView()
+                        .focused($focus, equals: FocusTarget.tab(tabSection: .last))
                 }
                 
                 Tab(TabSection.recents.title,
@@ -76,7 +77,7 @@ struct TabContainerView: View {
                 Tab(TabSection.channels.title,
                     systemImage: TabSection.channels.systemImage,
                     value: TabSection.channels) {
-                    ChannelsContainer()
+                    ChannelsContainer(focus: $focus)
                 }
                 
                 Tab(TabSection.search.title,
@@ -131,9 +132,7 @@ struct TabContainerView: View {
                     }
                 }
                 
-            case (.none, .left),
-                (.none, .right),
-                (.favoritesToggle, .right),
+            case (.favoritesToggle, .right),
                 (.favoritesToggle, .left),
                 (.favoritesToggle, .down):
                 

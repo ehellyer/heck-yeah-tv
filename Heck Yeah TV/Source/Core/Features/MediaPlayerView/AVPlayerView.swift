@@ -21,10 +21,7 @@ struct AssetInfo {
 enum PlayerPrepError: Error { case unplayable }
 
 /// Preloads metadata; returns both the info and a ready-to-use player.
-func preparePlayer(
-    url: URL,
-    headers: [String:String] = [:]
-) async throws -> (info: AssetInfo, player: AVPlayer) {
+func preparePlayer(url: URL, headers: [String:String] = [:]) async throws -> (info: AssetInfo, player: AVPlayer) {
     
     // Custom HTTP headers:
     let opts = headers.isEmpty ? nil : ["AVURLAssetHTTPHeaderFieldsKey": headers]

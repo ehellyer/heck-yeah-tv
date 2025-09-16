@@ -13,19 +13,8 @@ import SwiftUI
 import TVVLCKit
 #elseif os(macOS) 
 import VLCKit
-import AppKit
 #else
 import MobileVLCKit
-import UIKit
-#endif
-
-// Cross-platform aliases
-#if os(macOS)
-typealias PlatformViewRepresentable = NSViewRepresentable
-typealias PlatformView = NSView
-#else
-typealias PlatformViewRepresentable = UIViewRepresentable
-typealias PlatformView = UIView
 #endif
 
 @MainActor
@@ -40,9 +29,9 @@ struct VLCPlayerView: PlatformViewRepresentable {
         return VLCPlayerView.Coordinator()
     }
     
-    // MARK: Platform specific ViewRepresentable hooks
+    // MARK: UIViewRepresentable overrides
+
 #if os(macOS)
-    
     func makeNSView(context: Context) -> PlatformView {
         makePlatformView(context: context)
     }
@@ -50,45 +39,29 @@ struct VLCPlayerView: PlatformViewRepresentable {
     func updateNSView(_ nsView: PlatformView, context: Context) {
         updatePlatformView(nsView, context: context)
     }
-    
-    static func dismantleNSView(_ nsView: PlatformView, coordinator: Coordinator) {
-        coordinator.dismantle()
-    }
-    
 #else
-    
     func makeUIView(context: Context) -> PlatformView {
         makePlatformView(context: context)
     }
     
-    func updateUIView(_ uiView: PlatformView, context: Context) {
-        updatePlatformView(uiView, context: context)
+    func updateUIView(_ view: PlatformView, context: Context) {
+        updatePlatformView(view, context: context)
     }
+#endif
     
-    static func dismantleUIView(_ uiView: PlatformView, coordinator: Coordinator) {
+    static func dismantleUIView(_ view: PlatformView, coordinator: Coordinator) {
         coordinator.dismantle()
     }
-    
-#endif
     
     //MARK: - Platform specific ViewRepresentable helpers
     
     private func makePlatformView(context: Context) -> PlatformView {
-#if os(macOS)
-        let view = PlatformView(frame: .zero)
-        view.wantsLayer = true
-        view.layer?.backgroundColor = NSColor.black.cgColor
-#else
-        
-        let view = PlatformView()
-        view.backgroundColor = .black
-#endif
-        context.coordinator.attach(to: view)
-        return view
+        print("makePlatformView(context:)")
+        return context.coordinator.platformView
     }
     
     private func updatePlatformView(_ view: PlatformView, context: Context) {
-        
+        print("updatePlatformView(_ view:, context:)")
         if scenePhase != .active {
             context.coordinator.stop()
         }
@@ -107,40 +80,37 @@ struct VLCPlayerView: PlatformViewRepresentable {
         
         lazy var mediaPlayer = {
             let _player = VLCMediaPlayer()
-            _player.delegate = nil//self
+            _player.drawable = self.platformView
+            _player.delegate = nil
             return _player
         }()
-                
-        func attach(to view: PlatformView) {
-            mediaPlayer.drawable = view
-        }
+        
+        lazy var platformView: PlatformView = {
+            let view = PlatformView()
+#if os(macOS)
+            view.wantsLayer = true
+            view.layer?.backgroundColor = NSColor.black.cgColor
+#else
+            view.backgroundColor = .black
+#endif
+            return view
+        }()
         
         func play(channel: GuideChannel) {
             
             if channel.url != mediaPlayer.media?.url {
                 mediaPlayer.stop()
-                //https://wiki.videolan.org/VLC_command-line_help/
-//                let options: [String] = [
-//                    "--no-video-title-show",
-//                    "--avcodec-hw=any",             // prefer hardware decode when possible
-//                    "--drop-late-frames",           // reduce CPU spikes under load
-//                    "--skip-frames",                // allow frame skipping under pressure
-//                    "--deinterlace=auto",           // try without deinterlace first (0, 1, auto)
-//                    "--network-caching=1000",        // 1s; adjust for your latency vs CPU tradeoff
-//                    "--live-caching=1000",
-//                    "--no-lua"
-//                ]
-                
+
                 let media = VLCMedia(url: channel.url)
-                
-                media.addOptions(["--network-caching": 1000,             // 1s; adjust for your latency vs CPU tradeoff
-                                  "--live-caching": 1000,
-                                  "--no-lua": 1,
-                                  "--no-video-title-show": 1,
-                                  "--avcodec-hw": "any",                  // prefer hardware decode when possible
-                                  "--drop-late-frames": 1,                // reduce CPU spikes under load
-                                  "--skip-frames": 1,                     // allow frame skipping under pressure
-                                  "--deinterlace": 0                      // try without deinterlace first
+                //https://wiki.videolan.org/VLC_command-line_help/
+                media.addOptions(["network-caching": 1000,              // 1s; adjust for your latency vs CPU tradeoff
+                                  "live-caching": 1000,
+                                  "no-lua": true,
+                                  "no-video-title-show": true,
+                                  "avcodec-hw": "any",                  // prefer hardware decode when possible
+                                  "drop-late-frames": true,             // reduce CPU spikes under load
+                                  "skip-frames": true,                  // allow frame skipping under pressure
+                                  "deinterlace": false
                                  ])
                 mediaPlayer.media = media
             }

@@ -32,6 +32,7 @@ struct RootView: View {
         ZStack(alignment: .bottomLeading) {
             
             VLCPlayerView(isPlaying: isPlaying, selectedChannel: channel)
+            //TimeShiftPlayerView(isPlaying: isPlaying, selectedChannel: channel)
                 .ignoresSafeArea(.all)
             
             if guideStore.isGuideVisible {

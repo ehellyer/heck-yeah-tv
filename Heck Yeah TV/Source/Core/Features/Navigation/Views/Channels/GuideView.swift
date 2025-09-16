@@ -14,7 +14,16 @@ struct GuideView: View {
     
     @Environment(GuideStore.self) var guideStore
     @FocusState.Binding var focus: FocusTarget?
-        
+    @State private var onAppearTask: Task<Void, Never>? = nil
+    
+    private var onAppearTarget: FocusTarget {
+        if let channelId = guideStore.selectedChannel?.id {
+            return .guide(channelId: channelId, col: 0)
+        } else {
+            return .favoritesToggle
+        }
+    }
+    
     var body: some View {
         ScrollViewReader { proxy in
             
@@ -29,32 +38,40 @@ struct GuideView: View {
                 
             }
             .background(Color.clear)
-//            .onAppear {
-//                if let channelId = guideStore.selectedChannel?.id {
-//                    Task { @MainActor in
-//                        withAnimation(.easeOut) {
-//                            proxy.scrollTo(channelId, anchor: .center)
-//                        }
-//                        
-//                        try? await Task.sleep(nanoseconds: 20_000_000) // 0.2 sec
-//                        withAnimation(.easeOut(duration: 0.15)) {
-//                            if let channelId = guideStore.selectedChannel?.id {
-//                                focus = .guide(channelId: channelId, col: 0)
-//                            } else {
-//                                focus = .favoritesToggle
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-//            
-//            .onChange(of: focus) { _, new in
-//                if case let .guide(id, _) = new {
-//                    withAnimation(.easeOut) {
-//                        proxy.scrollTo(id, anchor: .center)
-//                    }
-//                }
-//            }
+            .onAppear {
+                if let channelId = guideStore.selectedChannel?.id {
+                    onAppearTask = Task { @MainActor in
+                        withAnimation(.easeOut) {
+                            proxy.scrollTo(channelId, anchor: .center)
+                        }
+                        
+                        do {
+                            try await Task.sleep(nanoseconds: 500_000_000) // 0.5 sec
+                            try Task.checkCancellation( )
+                            withAnimation(.easeOut) {
+                                guideStore.selectedTab = TabSection.channels
+                                focus = onAppearTarget
+                            }
+                        } catch {
+                            // Task Cancelled - no op.
+                            print("Guide View onAppear focus set task cancelled.")
+                        }
+                    }
+                }
+            }
+            .onChange(of: guideStore.selectedTab) { _, new in
+                if new != TabSection.channels {
+                    onAppearTask?.cancel()
+                }
+            }
+            
+            .onChange(of: focus) { _, new in
+                if case let .guide(id, _) = new {
+                    withAnimation(.easeOut) {
+                        proxy.scrollTo(id, anchor: .center)
+                    }
+                }
+            }
         }
         
         .background(Color.clear)
