@@ -28,7 +28,7 @@ struct GuideView: View {
         ScrollViewReader { proxy in
             
             ScrollView {
-                LazyVStack(alignment: .leading, spacing: 8) {
+                LazyVStack(alignment: .leading, spacing: 5) {
                     ForEach(guideStore.visibleChannels) { channel in
                         GuideRow(channel: channel, focus: $focus)
                             .id(channel.id)
@@ -78,32 +78,39 @@ struct GuideView: View {
     }
 }
 
+#if DEBUG && targetEnvironment(simulator)
+private struct PreviewGuideView: View {
+    
+    @FocusState var focus: FocusTarget?
+    @State private var guideStore = GuideStore()
+    @State private var channel = HDHomeRunChannel(guideNumber: "8.1",
+                                                  guideName: "WRIC-TV",
+                                                  videoCodec: "MPEG2",
+                                                  audioCodec: "AC3",
+                                                  hasDRM: true,
+                                                  isHD: true ,
+                                                  url: "http://192.168.50.250:5004/auto/v8.1")
+    @State private var stream = IPStream(channelId:  "PlutoTVTrueCrime.us",
+                                         feedId: "Austria",
+                                         title: "Pluto TV True Crime",
+                                         url:"https://amg00793-amg00793c5-firetv-us-4068.playouts.now.amagi.tv/playlist.m3u8",
+                                         referrer: nil,
+                                         userAgent: nil,
+                                         quality: "2160p")
+    
+    var body: some View {
+        VStack {
+            GuideView(focus: $focus).environment(guideStore)
+        }
+        .task {
+            // This block runs when the view appears
+            await guideStore.load(streams: [stream], tunerChannels: [channel])
+        }
+    }
+}
 
-//struct Preview_Guide: View {
-//
-//    @FocusState var focus: FocusTarget?
-//    @State var channel = HDHomeRunChannel(guideNumber: "8.1",
-//                                          guideName: "WRIC-TV",
-//                                          videoCodec: "MPEG2",
-//                                          audioCodec: "AC3",
-//                                          hasDRM: true,
-//                                          isHD: true ,
-//                                          url: "http://192.168.50.250:5004/auto/v8.1")
-//    @State var stream = IPStream(channelId:  "PlutoTVTrueCrime.us",
-//                                 feedId: "Austria",
-//                                 title: "Pluto TV True Crime",
-//                                 url:"https://amg00793-amg00793c5-firetv-us-4068.playouts.now.amagi.tv/playlist.m3u8",
-//                                 referrer: nil,
-//                                 userAgent: nil,
-//                                 quality: "2160p")
-//
-//    var body: some View {
-//        let guideStore = GuideStore(streams: [stream], tunerChannels: [channel])
-//        return GuideView(focus: $focus).environment(guideStore)
-//    }
-//}
-//
-//#Preview {
-//    Preview_Guide()
-//        .ignoresSafeArea(.all)
-//}
+#Preview {
+    PreviewGuideView()
+        .ignoresSafeArea(.all)
+}
+#endif // DEBUG && targetEnvironment(simulator)

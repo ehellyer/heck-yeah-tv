@@ -13,12 +13,12 @@ import SwiftUI
 private struct BackgroundView: View {
     
     var body: some View {
-        Color.black.opacity(0.5)
+        Color.black.opacity(0.55)
             .ignoresSafeArea()
             .allowsHitTesting(false)
             .accessibilityHidden(true)
 #if os(tvOS)
-//            .focusable(false)
+            .focusable(false)
 #endif
     }
 }
@@ -56,18 +56,14 @@ struct TabContainerView: View {
     
     var body: some View {
         
+        
+        
         ZStack {
             
             BackgroundView()
+            
             TabView(selection: selectedTab) {
-                
-                Tab(TabSection.last.title,
-                    systemImage: TabSection.last.systemImage,
-                    value: TabSection.last) {
-                    LastChannelView()
-                        .focused($focus, equals: FocusTarget.tab(tabSection: .last))
-                }
-                
+               
                 Tab(TabSection.recents.title,
                     systemImage: TabSection.recents.systemImage,
                     value: TabSection.recents) {
@@ -79,7 +75,7 @@ struct TabContainerView: View {
                     value: TabSection.channels) {
                     ChannelsContainer(focus: $focus)
                 }
-                
+
                 Tab(TabSection.search.title,
                     systemImage: TabSection.search.systemImage,
                     value: TabSection.search) {
@@ -92,7 +88,10 @@ struct TabContainerView: View {
                     SettingsView()
                 }
             }
+            .padding()
+            .background(Color.clear)
         }
+
         .onChange(of: focus) {
             DispatchQueue.main.async {
                 print("<<< Focus onChange: \(self.focus?.debugDescription ?? "unknown")")
@@ -107,7 +106,7 @@ struct TabContainerView: View {
                 guideStore.isGuideVisible = false
             }
         }
-#endif
+#endif // !os(iOS)
         
 #if !os(iOS)
         .onMoveCommand { direction in
@@ -153,32 +152,46 @@ struct TabContainerView: View {
                 break
         }
     }
-#endif
+#endif // !os(iOS)
 }
 
 // MARK: - Previews
 
-#Preview() {
-
-    let channel = HDHomeRunChannel(guideNumber: "8.1",
-                                   guideName: "WRIC-TV",
-                                   videoCodec: "MPEG2",
-                                   audioCodec: "AC3",
-                                   hasDRM: true,
-                                   isHD: true ,
-                                   url: "http://192.168.50.250:5004/auto/v8.1")
-    let stream = IPStream(channelId:  "PlutoTVTrueCrime.us",
-                          feedId: "Austria",
-                          title: "Pluto TV True Crime",
-                          url:"http://cfd-v4-service-channel-stitcher-use1-1.prd.pluto.tv/stitch/hls/channel/615333098185f00008715a56/master.m3u8?appName=web&appVersion=unknown&clientTime=0&deviceDNT=0&deviceId=1b2049e1-4b81-11ef-a8ac-e146e4e7be02&deviceMake=Chrome&deviceModel=web&deviceType=web&deviceVersion=unknown&includeExtendedEvents=false&serverSideAds=false&sid=03c264ad-dc34-4e0b-b96f-6cfb4c0f6b37",
-                          referrer: nil,
-                          userAgent: nil,
-                          quality: "2160p")
+#if DEBUG && targetEnvironment(simulator)
+private struct PreviewTabContainerView: View {
     
-    let guideStore = GuideStore(streams: [stream], tunerChannels: [channel])
+    @FocusState var focus: FocusTarget?
+    @State private var guideStore = GuideStore()
+    @State private var channel = HDHomeRunChannel(guideNumber: "8.1",
+                                                  guideName: "WRIC-TV",
+                                                  videoCodec: "MPEG2",
+                                                  audioCodec: "AC3",
+                                                  hasDRM: true,
+                                                  isHD: true ,
+                                                  url: "http://192.168.50.250:5004/auto/v8.1")
+    @State private var stream = IPStream(channelId:  "PlutoTVTrueCrime.us",
+                                         feedId: "Austria",
+                                         title: "Pluto TV True Crime",
+                                         url:"https://amg00793-amg00793c5-firetv-us-4068.playouts.now.amagi.tv/playlist.m3u8",
+                                         referrer: nil,
+                                         userAgent: nil,
+                                         quality: "2160p")
     
-    TabContainerView()
-        .environment(guideStore)
-        .ignoresSafeArea(.all)
+    var body: some View {
+        VStack {
+            TabContainerView()
+                .environment(guideStore)
+                .ignoresSafeArea(.all)
+        }
+        .task {
+            // This block runs when the view appears
+            await guideStore.load(streams: [stream], tunerChannels: [channel])
+        }
+    }
 }
 
+#Preview {
+    PreviewTabContainerView()
+        .ignoresSafeArea(.all)
+}
+#endif // DEBUG && targetEnvironment(simulator)

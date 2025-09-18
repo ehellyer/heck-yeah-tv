@@ -54,7 +54,7 @@ struct BootSplashView: View {
                                   design: .rounded))
                     .foregroundStyle(Color.mainAppGreen)
                     .multilineTextAlignment(.center)
-
+                
                 HStack(spacing: 10) {
                     Text(subtitle)
                         .font(.title3.weight(.semibold))
@@ -94,8 +94,7 @@ final class BootSoundPlayer: NSObject, @unchecked Sendable {
         guard let url = Bundle.main.url(forResource: resource, withExtension: ext) else {
             return
         }
-        
-#if os(iOS) || os(tvOS) || os(visionOS)
+#if !os(macOS)
         let session = AVAudioSession.sharedInstance()
         try? session.setCategory(.ambient, mode: .default, options: [.duckOthers])
         try? session.setActive(true, options: [])
@@ -118,7 +117,7 @@ final class BootSoundPlayer: NSObject, @unchecked Sendable {
     BootSplashView()
 }
 
-#Preview("Gateed splash (simulated)") {
+#Preview("Gated splash (simulated)") {
     struct Demo: View {
         @State private var ready = false
         var body: some View {

@@ -9,15 +9,16 @@
 import SwiftUI
 
 struct PlaybackBadge: View {
-    let text: String
-    let systemName: String
     
+    @State var isPlaying: Bool
+        
     var body: some View {
+        
         HStack(spacing: 8) {
-            Image(systemName: systemName)
+            Image(systemName: isPlaying ? "play.fill" : "pause.fill")
                 .imageScale(.medium)
-            Text(text)
-                .font(.headline) 
+            Text(isPlaying ? "Play" : "Paused")
+                .font(.headline)
                 .minimumScaleFactor(0.8)
         }
         .padding(.horizontal, 14)
@@ -33,13 +34,16 @@ struct PlaybackBadge: View {
         )
         
         .shadow(radius: 8, y: 4)
+#if os(tvOS)
+        .focusable(false)
+#endif
     }
 }
 
 #Preview("Play") {
-    PlaybackBadge(text: "Play", systemName: "play.fill")
+    PlaybackBadge(isPlaying: true)
 }
 
 #Preview("Pause") {
-    PlaybackBadge(text: "Pause", systemName: "pause.fill")
+    PlaybackBadge(isPlaying: false)
 }

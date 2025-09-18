@@ -8,32 +8,26 @@
 
 import SwiftUI
 
-struct BootGateView<Content: View>: View {
+struct BootGateView<T: View>: View {
+    
     @Binding var isReady: Bool
     @State var minimumDelayElapsed: Bool = false
-    let content: () -> Content
-    
-    init(isReady: Binding<Bool>, @ViewBuilder content: @escaping () -> Content) {
-        _isReady = isReady
-        self.content = content
-    }
-    
+    let mainAppContent: () -> T
+
     var body: some View {
         ZStack {
-           
             if isReady && minimumDelayElapsed {
-                content()
+                self.mainAppContent()
             } else {
                 BootSplashView()
-                    .transition(.opacity.combined(with: .scale))
+                    .transition(.opacity.combined(with: .blurReplace).combined(with: .scale))
             }
         }
         .animation(.easeInOut(duration: 0.35), value: (isReady && minimumDelayElapsed))
-        .onAppear() {
-            let delayInSeconds: Double = 4.5
-            DispatchQueue.main.asyncAfter(deadline: .now() + delayInSeconds) {
-                minimumDelayElapsed = true
-            }
+        .task {
+            try? await Task.sleep(nanoseconds: 4_500_000_000)
+            minimumDelayElapsed = true
+            print("minimumDelayElapsed is true.  Channel fetch complete? \(isReady ? "yes" : "no")")
         }
     }
 }

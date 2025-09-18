@@ -95,4 +95,5 @@ struct PulsingRings: View {
 
 #Preview() {
     PulsingRings()
+        .ignoresSafeArea()
 }

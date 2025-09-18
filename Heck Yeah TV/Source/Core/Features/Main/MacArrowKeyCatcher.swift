@@ -44,4 +44,4 @@ struct MacArrowKeyCatcher: NSViewRepresentable {
         }
     }
 }
-#endif
+#endif // os(macOS)

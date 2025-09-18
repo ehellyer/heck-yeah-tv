@@ -11,10 +11,7 @@ import Hellfire
 
 enum TabSection: String, CaseIterable, Identifiable, JSONSerializable {
     
-    /// Last Channel
-    case last
-    
-    /// Recently viewed
+    /// Last recently viewed channels (probably max of 10)
     case recents
     
     /// All channels (with on screen toggle for favorites only)
@@ -35,7 +32,6 @@ extension TabSection {
     /// Tab name title string
     var title: String {
         switch self {
-            case .last: return "Last"
             case .recents: return "Recents"
             case .channels: return "Channels"
             case .search: return "Search"
@@ -46,7 +42,6 @@ extension TabSection {
     /// Tab name icon.
     var systemImage: String {
         switch self {
-            case .last: return "arrow.uturn.left.circle.fill"
             case .recents: return "clock.fill"
             case .channels: return "list.bullet.rectangle.fill"
             case .search: return "magnifyingglass"

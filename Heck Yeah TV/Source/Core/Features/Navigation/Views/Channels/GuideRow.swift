@@ -23,7 +23,9 @@ struct GuideRow: View {
             Button {
                 guideStore.selectedChannel = channel
                 guideStore.isPlaying = true
-                withAnimation(.easeOut(duration: 0.25)) { guideStore.isGuideVisible = false }
+                withAnimation(.easeOut(duration: 0.25)) {
+                    guideStore.isGuideVisible = false
+                }
             } label: {
                 VStack(alignment: .leading, spacing: 2) {
                     Text(channel.title)
@@ -33,7 +35,8 @@ struct GuideRow: View {
                         
                     GuideSubTitleView(channel: channel)
                 }
-                .frame(width: 400, alignment: .leading)
+                .frame(width: 320, alignment: .leading)
+                .padding(20)
             }
             .focused($focus, equals: FocusTarget.guide(channelId: channel.id, col: 0))
             
@@ -44,6 +47,9 @@ struct GuideRow: View {
             } label: {
                 Image(systemName: guideStore.isFavorite(channel) ? "star.fill" : "star")
                     .foregroundStyle(Color.yellow)
+                    .padding(.horizontal, 20)
+                    .padding(.vertical, 35)
+                    .scaleEffect(1.5)
             }
             .focused($focus, equals: FocusTarget.guide(channelId: channel.id, col: 1))
             
@@ -51,7 +57,7 @@ struct GuideRow: View {
         .padding(.vertical, rowVPad)
         .padding(.horizontal, rowHPad)
         .background {
-            Color.clear
+  
             if guideStore.selectedChannel == channel {
                 RoundedRectangle(cornerRadius: corner, style: .continuous)
                     .fill(Color.mainAppGreen.opacity(0.22))
@@ -60,6 +66,14 @@ struct GuideRow: View {
                             .stroke(Color.mainAppGreen.opacity(0.22), lineWidth: 1)
                     )
             }
+//            else {
+//                RoundedRectangle(cornerRadius: corner, style: .continuous)
+//                    .fill(Color.white.opacity(0.22))
+//                    .overlay(
+//                        RoundedRectangle(cornerRadius: corner, style: .continuous)
+//                            .stroke(Color.white.opacity(0.50), lineWidth: 1)
+//                    )
+//            }
         }
     }
 }

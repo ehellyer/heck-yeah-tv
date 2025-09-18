@@ -8,10 +8,6 @@
 
 import SwiftUI
 
-private struct FocusHub: View {
-    var body: some View { Color.clear.frame(width: 1, height: 1) }
-}
-
 struct ChannelsContainer: View {
     
     @Environment(GuideStore.self) var guideStore
@@ -38,17 +34,10 @@ struct ChannelsContainer: View {
     
     var body: some View {
         
-        VStack(alignment: .leading, spacing: 5) {
+        VStack(alignment: .leading, spacing: 10) {
             ShowFavorites(showFavoritesOnly: showFavoritesOnly, focus: $focus)
             GuideView(focus: $focus)
         }
-//        .defaultFocus($focus, initialFocusTarget)
-//        .onAppear {
-//            // Also set programmatically in case tvOS ignores defaultFocus due to async population
-//            if case .none = focus {
-//                focus = initialFocusTarget
-//            }
-//        }
     }
 }
 

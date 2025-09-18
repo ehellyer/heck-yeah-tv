@@ -15,27 +15,19 @@ struct TabActivationView: View {
         Color.clear
             .contentShape(Rectangle())
             .ignoresSafeArea()
-            .modifier(ReactivationGestures {
-                withAnimation { guideStore.isGuideVisible = true }
-            })
-    }
-}
-
-// Platform-aware gesture modifier
-private struct ReactivationGestures: ViewModifier {
-    let show: () -> Void
-    
-    func body(content: Content) -> some View {
 #if os(tvOS)
-        content
             .focusable(true)
             .onTapGesture {
-                show()
+                withAnimation {
+                    guideStore.isGuideVisible = true
+                }
             }
 #else
-        content
-            .highPriorityGesture(TapGesture().onEnded { show() })
+            .highPriorityGesture(TapGesture().onEnded {
+                withAnimation {
+                    guideStore.isGuideVisible = true
+                }
+            })
 #endif
     }
 }
-

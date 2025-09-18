@@ -23,16 +23,6 @@ final class GuideStore {
         }
     }
     
-    init(streams: [IPStream], tunerChannels: [HDHomeRunChannel]) {
-        favorites = UserDefaults.favorites
-        lastPlayedChannel = UserDefaults.lastPlayed
-        selectedChannel = lastPlayedChannel
-        if selectedChannel != nil {
-            isPlaying = true
-        }
-        load(streams: streams, tunerChannels: tunerChannels)
-    }
-    
     //MARK: - Private API
     
     private var _selectedChannelBakStore: GuideChannel?
@@ -41,12 +31,12 @@ final class GuideStore {
     
     //MARK: - Internal API - Observable properties
 
-    var isPlaying: Bool = false
+    var isPlaying: Bool = true
     var isGuideVisible: Bool = false
     var selectedTab: TabSection {
         get {
             access(keyPath: \.selectedTab)
-            return UserDefaults.lastTabSelected ?? .last
+            return UserDefaults.lastTabSelected ?? TabSection.channels //Channels tab is default for new install.
         }
         set {
             withMutation(keyPath: \.selectedTab) {
@@ -107,7 +97,7 @@ final class GuideStore {
         }
     }
 
-    func load(streams: [IPStream], tunerChannels: [HDHomeRunChannel]) {
+    func load(streams: [IPStream], tunerChannels: [HDHomeRunChannel]) async {
         channels = GuideBuilder.build(streams: streams, tunerChannels: tunerChannels)
         
         // Pruning favorites, selected channel and last played channel: If channel no longer exists.

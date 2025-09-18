@@ -11,9 +11,9 @@ import SwiftUI
 
 #if os(tvOS)
 import TVVLCKit
-#elseif os(macOS) 
+#elseif os(macOS)
 import VLCKit
-#else
+#elseif os(iOS)
 import MobileVLCKit
 #endif
 

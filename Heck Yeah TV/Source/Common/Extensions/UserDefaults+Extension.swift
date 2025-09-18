@@ -11,32 +11,27 @@ import Hellfire
 
 extension UserDefaults {
     
-    fileprivate static var _appInstallIdentifier: String?
+    fileprivate static var __appInstallIdentifier: String?
     
+    /// Gets the unique app install identifier for this install.  This will change if the app is removed and re-installed.  Persisted into UserDefaults.standard.
     static var appInstallIdentifier: String {
         get {
-            // Try to get the identifier out of the singleton var _appInstallIdentifier in memory or off disk (UserDefaults).
-            guard let identifier = Self._appInstallIdentifier ?? standard.string(forKey: AppKeys.Application.appInstallIdentifierKey) else {
-                // If both above returned nil, then we need to generate a new identifier for this install instance.
+            if let memoryIdentifier = Self.__appInstallIdentifier {
+                return memoryIdentifier
+            } else if let persistedIdentifier = standard.string(forKey: AppKeys.Application.appInstallIdentifierKey) {
+                Self.__appInstallIdentifier = persistedIdentifier
+                return persistedIdentifier
+            } else {
+                // If both above returned nil, then generate a new identifier for this install instance and save.
                 let newIdentifier = "\(AppKeys.Application.appName)|\(AppKeys.Application.osName)|\(String.randomString(length: 10))"
-                Self.appInstallIdentifier = newIdentifier
+                standard.set(newIdentifier, forKey: AppKeys.Application.appInstallIdentifierKey)
+                Self.__appInstallIdentifier = newIdentifier
                 return newIdentifier
             }
-            
-            // Write to memory if needed so we are not hitting the disk every-time.
-            if Self._appInstallIdentifier == nil {
-                Self._appInstallIdentifier = identifier
-            }
-            
-            return identifier
-        }
-        set {
-            standard.set(newValue, forKey: AppKeys.Application.appInstallIdentifierKey)
-            Self._appInstallIdentifier = newValue
         }
     }
     
-    /// Gets or sets a boolean in UserDefaults.standard to indicate if only favorited channels should be shown in the guide.
+    /// Gets or sets a boolean to indicate if channels should be filtered by favorites, else all channels matching current filters will be shown.  Persisted into UserDefaults.standard.
     static var showFavorites: Bool {
         get {
             standard.bool(forKey: AppKeys.GuideStore.showFavoritesKey)
@@ -45,8 +40,8 @@ extension UserDefaults {
             standard.set(newValue, forKey: AppKeys.GuideStore.showFavoritesKey)
         }
     }
-    
-    /// Returns unique list of channels marked as favorites.
+
+    /// Gets or sets the unique list of channels marked as favorites.  Persisted into UserDefaults.standard.
     static var favorites: [GuideChannel] {
         get {
             let data = standard.data(forKey: AppKeys.GuideStore.favoritesKey)
@@ -60,7 +55,7 @@ extension UserDefaults {
         }
     }
     
-    /// Returns the last played channel.
+    /// Gets or sets the last played channel.  Persisted into UserDefaults.standard.
     static var lastPlayed: GuideChannel? {
         get {
             let data = standard.data(forKey: AppKeys.GuideStore.lastPlayedKey)
@@ -73,6 +68,7 @@ extension UserDefaults {
         }
     }
     
+    /// Gets or sets the last tab that was selected.  Persisted into UserDefaults.standard.
     static var lastTabSelected: TabSection? {
         get {
             let data = standard.data(forKey: AppKeys.GuideStore.lastTabSelected)
@@ -84,6 +80,4 @@ extension UserDefaults {
             standard.set(data, forKey: AppKeys.GuideStore.lastTabSelected)
         }
     }
-    
-    
 }
