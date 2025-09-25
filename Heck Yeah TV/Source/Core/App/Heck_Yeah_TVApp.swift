@@ -22,18 +22,18 @@ struct Heck_Yeah_TVApp: App {
     
     var body: some Scene {
         WindowGroup {
-            ZStack() {
-                RootView(isReady: $isReady)
-                    .environment(guideStore)
-            }
-            .task {
-                startBootstrap()
-            }
-            .onChange(of: scenePhase) { _, phase in
-                if phase != .active {
-                    startupTask?.cancel()
+            RootView(isReady: $isReady)
+                .ignoresSafeArea(edges: .all)
+                .background(Rectangle().fill(.red.opacity(0.2)))
+                .environment(guideStore)
+                .task {
+                    startBootstrap()
                 }
-            }
+                .onChange(of: scenePhase) { _, phase in
+                    if phase != .active {
+                        startupTask?.cancel()
+                    }
+                }
         }
     }
     
@@ -48,12 +48,12 @@ struct Heck_Yeah_TVApp: App {
             
             // TODO: Log summary for collection, analysis and diagnostics.
             if summary.failures.count > 0 {
-                print("Failed to bootstrap: \(summary.failures)")
+                print("ERROR: Failure in bootstrap data fetch: \(summary.failures)")
             }
             
             await self.guideStore.load(streams: iptvController.streams, tunerChannels: hdHomeRunController.channels)
             await MainActor.run {
-                // Signal channel fetch is completed, so the boot screen will hide and main app view will load.
+                // Update state variable that fetches are completed, so the boot screen will hide and main app view will load.
                 isReady = true
             }
         }

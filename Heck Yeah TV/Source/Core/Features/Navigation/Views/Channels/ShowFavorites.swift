@@ -13,26 +13,12 @@ struct ShowFavorites: View {
     @Binding var showFavoritesOnly: Bool
     @FocusState.Binding var focus: FocusTarget?
     
+    private var isFocused: Bool { focus == .favoritesToggle }
+    
     var body: some View {
         HStack {
-//            Text(showFavoritesOnly ? "Favorites" : "All Channels")
-//                .font(.title)
-//                .fontWeight(.bold)
-//            Spacer()
-//            Picker(selection: $showFavoritesOnly, label: Text("Picker"), content: {
-//                Text("All")
-//                    .tag(false)
-//                Text("Favorites")
-//                    .tag(true)
-//            })
-//            .padding(.vertical, 10)
-//            .labelsHidden()
-//            .pickerStyle(SegmentedPickerStyle())
-//            .fixedSize()
-//            .focused($focus, equals: FocusTarget.favoritesToggle)
-            
             Text("Favorites")
-                .font(.title)
+                .font(.title2)
                 .fontWeight(.bold)
             Button {
                 showFavoritesOnly.toggle()
@@ -40,14 +26,22 @@ struct ShowFavorites: View {
                 Label(showFavoritesOnly ? "On" : "Off",
                       systemImage: showFavoritesOnly ? "star.fill" : "star")
                 .font(.caption)
-                .foregroundStyle(.yellow)
+                .foregroundStyle(showFavoritesOnly ? .yellow : .white)
             }
+            .background(
+                Capsule()
+                    .fill(Color("guideBackgroundNoFocusColor"))
+                    .opacity(isFocused ? 0 : 1)     // <- keep view, just fade
+            )
+            .contentShape(Capsule())                // hit/focus area = padded capsule
             .focused($focus, equals: FocusTarget.favoritesToggle)
             Spacer()
+            Text("Focus: \(focus?.debugDescription ?? "nil")")
+                .font(.title2)
+                .fontWeight(.bold)
         }
     }
 }
-
 
 
 #Preview("On (constant)") {
@@ -63,5 +57,7 @@ private struct ShowFavoritesPreview: View {
     var body: some View {
         ShowFavorites(showFavoritesOnly: $show, focus: $focus)
             .padding()
+            .defaultFocus($focus, .favoritesToggle)
+            .onAppear { focus = .favoritesToggle }
     }
 }

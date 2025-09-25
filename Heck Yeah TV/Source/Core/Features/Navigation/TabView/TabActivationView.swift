@@ -10,24 +10,28 @@ import SwiftUI
 
 struct TabActivationView: View {
     @Environment(GuideStore.self) private var guideStore
-    
+
+
     var body: some View {
         Color.clear
-            .contentShape(Rectangle())
-            .ignoresSafeArea()
+
+            .frame(maxWidth: .infinity, maxHeight: .infinity) // fill parent
+            .ignoresSafeArea()                                // fill safe areas too
+            .accessibilityHidden(true)
 #if os(tvOS)
             .focusable(true)
+#endif
+            .contentShape(Rectangle())
             .onTapGesture {
+                print("Tap gesture received")
                 withAnimation {
                     guideStore.isGuideVisible = true
                 }
             }
-#else
-            .highPriorityGesture(TapGesture().onEnded {
-                withAnimation {
-                    guideStore.isGuideVisible = true
-                }
-            })
-#endif
     }
+}
+
+#Preview {
+    let guideStore = GuideStore()
+    TabActivationView().environment(guideStore)
 }

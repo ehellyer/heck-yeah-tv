@@ -74,8 +74,8 @@ struct PulsingRings: View {
                     let r = maxR * phase
                     let alpha = (1 - phase)
                     
-                    let rect = CGRect(x: size.width/2 - r,
-                                      y: size.height/2 - r,
+                    let rect = CGRect(x: (size.width * 0.6) - r,
+                                      y: (size.height * 0.6) - r,
                                       width: r * 20,
                                       height: r * 4)
                     

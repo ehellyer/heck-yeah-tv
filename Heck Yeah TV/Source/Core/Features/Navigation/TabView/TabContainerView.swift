@@ -8,26 +8,11 @@
 
 import SwiftUI
 
-// MARK: - Root Shell: picks the right container per platform
-
-private struct BackgroundView: View {
-    
-    var body: some View {
-        Color.black.opacity(0.55)
-            .ignoresSafeArea()
-            .allowsHitTesting(false)
-            .accessibilityHidden(true)
-#if os(tvOS)
-            .focusable(false)
-#endif
-    }
-}
-
 struct TabContainerView: View {
     
     @Environment(GuideStore.self) var guideStore
     @State private var preferredCol: Int = 0
-    @FocusState private var focus: FocusTarget?
+    @FocusState var focus: FocusTarget?
     @State private var lastGuideFocusedTarget: FocusTarget?
     
     private var selectedTab: Binding<TabSection> {
@@ -41,63 +26,49 @@ struct TabContainerView: View {
         )
     }
     
-    private var guideFocusTarget: FocusTarget? {
-        if let lastFocus = lastGuideFocusedTarget {
-            return lastFocus
-        }
-        
-        if let first = guideStore.visibleChannels.first?.id {
-            let target = FocusTarget.guide(channelId: first, col: 0)
-            return target
-        }
-        
-        return nil
-    }
-    
     var body: some View {
-        
-        
-        
-        ZStack {
+        TabView(selection: selectedTab) {
             
-            BackgroundView()
-            
-            TabView(selection: selectedTab) {
-               
-                Tab(TabSection.recents.title,
-                    systemImage: TabSection.recents.systemImage,
-                    value: TabSection.recents) {
-                    RecentsView()
-                }
-                
-                Tab(TabSection.channels.title,
-                    systemImage: TabSection.channels.systemImage,
-                    value: TabSection.channels) {
-                    ChannelsContainer(focus: $focus)
-                }
-
-                Tab(TabSection.search.title,
-                    systemImage: TabSection.search.systemImage,
-                    value: TabSection.search) {
-                    SearchView()
-                }
-                
-                Tab(TabSection.settings.title,
-                    systemImage: TabSection.settings.systemImage,
-                    value: TabSection.settings) {
-                    SettingsView()
-                }
+            Tab(TabSection.recents.title,
+                systemImage: TabSection.recents.systemImage,
+                value: TabSection.recents) {
+                RecentsView()
+//                    .focused($focus,
+//                             equals: FocusTarget.tab(tabSection: TabSection.recents))
             }
-            .padding()
-            .background(Color.clear)
+            
+            Tab(TabSection.channels.title,
+                systemImage: TabSection.channels.systemImage,
+                value: TabSection.channels) {
+                ChannelsContainer(focus: $focus)
+//                    .focused($focus,
+//                             equals: FocusTarget.tab(tabSection: TabSection.channels))
+            }
+            
+            Tab(TabSection.search.title,
+                systemImage: TabSection.search.systemImage,
+                value: TabSection.search) {
+                SearchView()
+//                    .focused($focus,
+//                             equals: FocusTarget.tab(tabSection: TabSection.search))
+            }
+            
+            Tab(TabSection.settings.title,
+                systemImage: TabSection.settings.systemImage,
+                value: TabSection.settings) {
+                SettingsView()
+//                    .focused($focus,
+//                             equals: FocusTarget.tab(tabSection: TabSection.settings))
+            }
         }
-
+        .padding()
+        .background(Color.clear)
+        
         .onChange(of: focus) {
             DispatchQueue.main.async {
                 print("<<< Focus onChange: \(self.focus?.debugDescription ?? "unknown")")
             }
         }
-       
         
 #if !os(iOS)
         // Support for dismissing the tabview by tapping menu on Siri remote for tvOS or esc key on keyboard.
@@ -113,16 +84,16 @@ struct TabContainerView: View {
             handleOnMoveCommand(direction)
         }
 #endif
-
+        
     }
     
 #if !os(iOS)
     
     private func handleOnMoveCommand(_ direction: MoveCommandDirection) {
-        print(">>> Move detected: FocusTarget: \(self.focus?.debugDescription ?? "unknown"), Direction: \(direction)")
+        print(">>> func handleOnMoveCommand(_ direction: \(direction)), FocusTarget: \(self.focus?.debugDescription ?? "unknown"), ")
         
         switch (self.focus, direction) {
-                
+
             case (.guide(let id, _), .up):
                 if guideStore.visibleChannels.first?.id == id {
                     lastGuideFocusedTarget = focus
@@ -130,19 +101,21 @@ struct TabContainerView: View {
                         focus = .favoritesToggle
                     }
                 }
-                
+
             case (.favoritesToggle, .right),
                 (.favoritesToggle, .left),
                 (.favoritesToggle, .down):
-                
+
                 // from Favorites to guide when either <LEFT> or <RIGHT> on favorites toggle.
                 withAnimation {
-                    focus = guideFocusTarget
+                    if let channelId = guideStore.visibleChannels.first?.id {
+                        focus = FocusTarget.guide(channelId: channelId, col: 1)
+                    }
                 }
-                
+
             case (.guide(_, let col), .left):
                 // from guide channel col <LEFT> to favorites
-                if col == 0 {
+                if col == 1 {
                     lastGuideFocusedTarget = focus
                     withAnimation {
                         focus = .favoritesToggle
@@ -160,7 +133,6 @@ struct TabContainerView: View {
 #if DEBUG && targetEnvironment(simulator)
 private struct PreviewTabContainerView: View {
     
-    @FocusState var focus: FocusTarget?
     @State private var guideStore = GuideStore()
     @State private var channel = HDHomeRunChannel(guideNumber: "8.1",
                                                   guideName: "WRIC-TV",

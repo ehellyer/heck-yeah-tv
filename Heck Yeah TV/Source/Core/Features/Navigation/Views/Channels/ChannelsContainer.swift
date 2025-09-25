@@ -36,7 +36,10 @@ struct ChannelsContainer: View {
         
         VStack(alignment: .leading, spacing: 10) {
             ShowFavorites(showFavoritesOnly: showFavoritesOnly, focus: $focus)
-            GuideView(focus: $focus)
+            //GuideView(focus: $focus)
+            if guideStore.isGuideVisible {
+                GuideViewRepresentable(focus: $focus)
+            }
         }
     }
 }

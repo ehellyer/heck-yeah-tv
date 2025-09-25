@@ -38,14 +38,14 @@ struct BootSplashView: View {
     
     var body: some View {
         ZStack {
-            LinearGradient(colors: [.mainAppGreen, .black], startPoint: .top, endPoint: .bottom)
+            LinearGradient(colors: [.mainAppGreen, .black, .mainAppGreen],
+                           startPoint: UnitPoint(x: 0, y: 0),
+                           endPoint: UnitPoint(x: 0.25, y: 1.7))
                 .ignoresSafeArea()
             
             PulsingRings()
                 .blendMode(.lighten)
-                .allowsHitTesting(false)
                 .ignoresSafeArea()
-            
             
             VStack(spacing: 16) {
                 Text(title)
@@ -63,7 +63,6 @@ struct BootSplashView: View {
                 .accessibilityElement(children: .combine)
                 .accessibilityLabel("\(title). \(subtitle)")
             }
-            
             .padding(.horizontal, 26)
             .padding(.vertical, 20)
             .background(.ultraThinMaterial)
@@ -71,10 +70,11 @@ struct BootSplashView: View {
             .shadow(radius: 16)
         }
         
+        .allowsHitTesting(false)
+        
         .onAppear {
             playBootChimeIfNeeded()
         }
-        
     }
     
     private func playBootChimeIfNeeded() {
