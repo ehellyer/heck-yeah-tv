@@ -36,9 +36,6 @@ struct ShowFavorites: View {
             .contentShape(Capsule())                // hit/focus area = padded capsule
             .focused($focus, equals: FocusTarget.favoritesToggle)
             Spacer()
-            Text("Focus: \(focus?.debugDescription ?? "nil")")
-                .font(.title2)
-                .fontWeight(.bold)
         }
     }
 }

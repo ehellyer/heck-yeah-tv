@@ -27,104 +27,130 @@ struct TabContainerView: View {
     }
     
     var body: some View {
-        TabView(selection: selectedTab) {
+        VStack(alignment: .leading, spacing: 0) {
+            Text("Focus: \(focus?.debugDescription ?? "nil")  Tab: \(selectedTab.wrappedValue.title)")
+                .fontWeight(.bold)
+                .background(Color(.gray))
             
-            Tab(TabSection.recents.title,
-                systemImage: TabSection.recents.systemImage,
-                value: TabSection.recents) {
-                RecentsView()
-//                    .focused($focus,
-//                             equals: FocusTarget.tab(tabSection: TabSection.recents))
+            TabView(selection: selectedTab) {
+                
+//                RecentsView()
+//                    .tabItem {
+//                        Label(TabSection.recents.title,
+//                              systemImage: TabSection.recents.systemImage)
+//                    }
+//                    .tag(TabSection.recents)
+//                    
+//                ChannelsContainer(focus: $focus)
+//                    .tabItem {
+//                        Label(TabSection.channels.title,
+//                              systemImage: TabSection.channels.systemImage)
+//                    }
+//                    .tag(TabSection.channels)
+//                
+//                SearchView()
+//                    .tabItem {
+//                        Label(TabSection.search.title,
+//                              systemImage: TabSection.search.systemImage)
+//                    }
+//                    .tag(TabSection.search)
+//                
+//                SettingsView()
+//                    .tabItem {
+//                        Label(TabSection.settings.title,
+//                              systemImage: TabSection.settings.systemImage)
+//                    }
+//                    .tag(TabSection.settings)
+
+                
+                Tab(TabSection.recents.title,
+                    systemImage: TabSection.recents.systemImage,
+                    value: TabSection.recents) {
+                    RecentsView()
+                }
+                
+                Tab(TabSection.channels.title,
+                    systemImage: TabSection.channels.systemImage,
+                    value: TabSection.channels) {
+                    ChannelsContainer(focus: $focus)
+                }
+                
+                Tab(TabSection.search.title,
+                    systemImage: TabSection.search.systemImage,
+                    value: TabSection.search) {
+                    SearchView()
+                }
+                
+                Tab(TabSection.settings.title,
+                    systemImage: TabSection.settings.systemImage,
+                    value: TabSection.settings) {
+                    SettingsView()
+                }
+            }
+            .padding()
+            .background(Color.clear)
+
+            .onChange(of: focus) {
+                DispatchQueue.main.async {
+                    print("<<< Focus onChange: \(self.focus?.debugDescription ?? "nil")")
+                }
             }
             
-            Tab(TabSection.channels.title,
-                systemImage: TabSection.channels.systemImage,
-                value: TabSection.channels) {
-                ChannelsContainer(focus: $focus)
-//                    .focused($focus,
-//                             equals: FocusTarget.tab(tabSection: TabSection.channels))
-            }
-            
-            Tab(TabSection.search.title,
-                systemImage: TabSection.search.systemImage,
-                value: TabSection.search) {
-                SearchView()
-//                    .focused($focus,
-//                             equals: FocusTarget.tab(tabSection: TabSection.search))
-            }
-            
-            Tab(TabSection.settings.title,
-                systemImage: TabSection.settings.systemImage,
-                value: TabSection.settings) {
-                SettingsView()
-//                    .focused($focus,
-//                             equals: FocusTarget.tab(tabSection: TabSection.settings))
-            }
-        }
-        .padding()
-        .background(Color.clear)
-        
-        .onChange(of: focus) {
-            DispatchQueue.main.async {
-                print("<<< Focus onChange: \(self.focus?.debugDescription ?? "unknown")")
-            }
-        }
-        
 #if !os(iOS)
-        // Support for dismissing the tabview by tapping menu on Siri remote for tvOS or esc key on keyboard.
-        .onExitCommand {
-            withAnimation(.easeOut(duration: 0.25)) {
-                guideStore.isGuideVisible = false
+            // Support for dismissing the tabview by tapping menu on Siri remote for tvOS or esc key on keyboard.
+            .onExitCommand {
+                withAnimation(.easeOut(duration: 0.25)) {
+                    guideStore.isGuideVisible = false
+                }
             }
-        }
 #endif // !os(iOS)
-        
+            
 #if !os(iOS)
-        .onMoveCommand { direction in
-            handleOnMoveCommand(direction)
-        }
+//            .onMoveCommand { direction in
+//                handleOnMoveCommand(direction)
+//            }
 #endif
-        
+        }
     }
     
 #if !os(iOS)
     
-    private func handleOnMoveCommand(_ direction: MoveCommandDirection) {
-        print(">>> func handleOnMoveCommand(_ direction: \(direction)), FocusTarget: \(self.focus?.debugDescription ?? "unknown"), ")
-        
-        switch (self.focus, direction) {
-
-            case (.guide(let id, _), .up):
-                if guideStore.visibleChannels.first?.id == id {
-                    lastGuideFocusedTarget = focus
-                    withAnimation {
-                        focus = .favoritesToggle
-                    }
-                }
-
-            case (.favoritesToggle, .right),
-                (.favoritesToggle, .left),
-                (.favoritesToggle, .down):
-
-                // from Favorites to guide when either <LEFT> or <RIGHT> on favorites toggle.
-                withAnimation {
-                    if let channelId = guideStore.visibleChannels.first?.id {
-                        focus = FocusTarget.guide(channelId: channelId, col: 1)
-                    }
-                }
-
-            case (.guide(_, let col), .left):
-                // from guide channel col <LEFT> to favorites
-                if col == 1 {
-                    lastGuideFocusedTarget = focus
-                    withAnimation {
-                        focus = .favoritesToggle
-                    }
-                }
-            default:
-                break
-        }
-    }
+//    private func handleOnMoveCommand(_ direction: MoveCommandDirection) {
+//        print(">>> func handleOnMoveCommand(_ direction: \(direction)), FocusTarget: \(self.focus?.debugDescription ?? "unknown"), ")
+//        
+//        switch (self.focus, direction) {
+//
+//            case (.guide(let id, _), .up):
+//                if guideStore.visibleChannels.first?.id == id {
+//                    lastGuideFocusedTarget = focus
+//                    withAnimation {
+//                        focus = .favoritesToggle
+//                    }
+//                }
+//
+//            case (.favoritesToggle, .right),
+//                (.favoritesToggle, .left),
+//                (.favoritesToggle, .down):
+//
+//                // from Favorites to guide when either <LEFT> or <RIGHT> on favorites toggle.
+//                withAnimation {
+//                    if let channelId = guideStore.visibleChannels.first?.id {
+//                        focus = FocusTarget.guide(channelId: channelId, col: 1)
+//                    }
+//                }
+//
+//            case (.guide(_, let col), .left):
+//                // from guide channel col <LEFT> to favorites
+//                if col == 1 {
+//                    lastGuideFocusedTarget = focus
+//                    withAnimation {
+//                        focus = .favoritesToggle
+//                    }
+//                }
+//            default:
+//                break
+//        }
+//    }
 #endif // !os(iOS)
 }
 

@@ -24,7 +24,6 @@ struct Heck_Yeah_TVApp: App {
         WindowGroup {
             RootView(isReady: $isReady)
                 .ignoresSafeArea(edges: .all)
-                .background(Rectangle().fill(.red.opacity(0.2)))
                 .environment(guideStore)
                 .task {
                     startBootstrap()

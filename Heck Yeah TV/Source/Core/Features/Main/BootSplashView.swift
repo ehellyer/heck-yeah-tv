@@ -63,11 +63,11 @@ struct BootSplashView: View {
                 .accessibilityElement(children: .combine)
                 .accessibilityLabel("\(title). \(subtitle)")
             }
-            .padding(.horizontal, 26)
-            .padding(.vertical, 20)
+            .padding(.horizontal, 36)
+            .padding(.vertical, 40)
             .background(.ultraThinMaterial)
-            .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
-            .shadow(radius: 16)
+            .clipShape(RoundedRectangle(cornerRadius: 50, style: .continuous))
+            .shadow(radius: 66)
         }
         
         .allowsHitTesting(false)
