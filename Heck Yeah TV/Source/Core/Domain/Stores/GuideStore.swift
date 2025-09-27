@@ -24,15 +24,17 @@ final class GuideStore {
         rootPath.append(component: appName)
         rootPath.append(component: "ChannelData")
         
-        path = rootPath.appendingPathComponent("ChannelList")
-        path.appendPathExtension("json")
         try? FileManager.default.createDirectory(atPath: rootPath.path, withIntermediateDirectories: true, attributes: nil)
         
-        let data = try? Data.init(contentsOf: path)
-        let channels: [GuideChannel] = (try? [GuideChannel].initialize(jsonData: data)) ?? []
-        self._channels = channels
-        self.favoriteChannelIds = self.channels.filter(\.isFavorite).map(\.id)
-        self._filteredChannels = self._channels.filter { self.favoriteChannelIds.contains($0.id) }
+        path = rootPath.appending(path: "ChannelList", directoryHint: .notDirectory)
+        path.appendPathExtension("json")
+        if FileManager.default.fileExists(atPath: path.path) {
+            let data = try? Data.init(contentsOf: path)
+            let channels: [GuideChannel] = (try? [GuideChannel].initialize(jsonData: data)) ?? []
+            self._channels = channels
+            self.favoriteChannelIds = self.channels.filter(\.isFavorite).map(\.id)
+            self._filteredChannels = self._channels.filter { self.favoriteChannelIds.contains($0.id) }
+        }
     }
         
     //MARK: - Private API
