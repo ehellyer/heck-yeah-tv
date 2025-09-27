@@ -21,7 +21,6 @@ struct VLCPlayerView: UnifiedPlatformRepresentable {
     
     //MARK: - Binding and State
     
-    @Binding var selectedChannel: GuideChannel?
     @Environment(\.scenePhase) private var scenePhase
     @Environment(GuideStore.self) private var guideStore
     
@@ -38,11 +37,14 @@ struct VLCPlayerView: UnifiedPlatformRepresentable {
     func updateView(_ view: PlatformView, context: Context) {
         if scenePhase != .active {
             context.coordinator.stop()
+            Task {
+                await guideStore.flushSavesNow()
+            }
         }
         
         if not(guideStore.isPlaying) {
             context.coordinator.pause()
-        } else if guideStore.isPlaying, scenePhase == .active, let channel = selectedChannel {
+        } else if guideStore.isPlaying, scenePhase == .active, let channel = guideStore.selectedChannel {
             context.coordinator.play(channel: channel)
         }
     }

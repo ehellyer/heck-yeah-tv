@@ -55,9 +55,6 @@ class FavoritesToggleView: PlatformView, FocusTargetView {
             self.becomeFocusedUsingAnimationCoordinator(in: context, with: coordinator)
         } else if (context.previouslyFocusedView === self) {
             self.resignFocusUsingAnimationCoordinator(in: context, with: coordinator)
-            if let channel {
-                delegate?.didLoseFocus(target: FocusTarget.guide(channelId: channel.id, col: 0))
-            }
         }
     }
     
@@ -121,18 +118,18 @@ class FavoritesToggleView: PlatformView, FocusTargetView {
     
     //MARK: - Internal API
     
-    weak var delegate: GuideFocusViewDelegate?
+    weak var delegate: GuideViewDelegate?
 
     func refreshView() {
         imageView.image = channelFavoriteImage()
-        imageView.tintColor = isFavorite ? .systemYellow : .white
+        imageView.tintColor = self.isFavorite ? .systemYellow : .white
         backgroundColor = (isSelectedChannel) ? PlatformColor(named: "selectedChannelColor") : PlatformColor(named: "guideBackgroundNoFocusColor")
     }
     
-    func configure(with channel: GuideChannel, isFavorite: Bool, isSelectedChannel: Bool) {
+    func configure(with channel: GuideChannel, isSelectedChannel: Bool) {
         self.isSelectedChannel = isSelectedChannel
         self.channel = channel
-        self.isFavorite = isFavorite
+        self.isFavorite = channel.isFavorite
         refreshView()
     }
 }

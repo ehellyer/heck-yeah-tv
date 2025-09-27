@@ -41,42 +41,42 @@ extension UserDefaults {
         }
     }
 
-    /// Gets or sets the unique list of channels marked as favorites.  Persisted into UserDefaults.standard.
-    static var favorites: [GuideChannel] {
+//    /// Gets or sets the available channel list.  Persisted into UserDefaults.standard.
+//    static var channels: [GuideChannel] {
+//        get {
+//            let data = standard.data(forKey: AppKeys.GuideStore.channelList)
+//            let _channels = try? [GuideChannel].initialize(jsonData: data)
+//            return _channels ?? []
+//        }
+//        set {
+//            let uniqueChannels = Array(Set(newValue))
+//            let data = try? uniqueChannels.toJSONData()
+//            standard.set(data, forKey: AppKeys.GuideStore.channelList)
+//        }
+//    }
+  
+    /// Gets or sets the recently played channel list, typically limited to 10 or so by the caller.  Persisted into UserDefaults.standard.
+    static var recentlyPlayed: [GuideChannel] {
         get {
-            let data = standard.data(forKey: AppKeys.GuideStore.favoritesKey)
-            let _favorites = try? [GuideChannel].initialize(jsonData: data)
-            return _favorites ?? []
+            let data = standard.data(forKey: AppKeys.GuideStore.recentlyPlayedKey)
+            let _recentlyPlayed = try? [GuideChannel].initialize(jsonData: data)
+            return _recentlyPlayed ?? []
         }
         set {
-            let uniqueFavs = Array(Set(newValue))
-            let data = try? uniqueFavs.toJSONData()
-            standard.set(data, forKey: AppKeys.GuideStore.favoritesKey)
-        }
-    }
-    
-    /// Gets or sets the last played channel.  Persisted into UserDefaults.standard.
-    static var lastPlayed: GuideChannel? {
-        get {
-            let data = standard.data(forKey: AppKeys.GuideStore.lastPlayedKey)
-            let _lastPlayed = try? GuideChannel.initialize(jsonData: data)
-            return _lastPlayed
-        }
-        set {
-            let data = try? newValue?.toJSONData()
-            standard.set(data, forKey: AppKeys.GuideStore.lastPlayedKey)
+            let data = try? newValue.toJSONData()
+            standard.set(data, forKey: AppKeys.GuideStore.recentlyPlayedKey)
         }
     }
     
     /// Gets or sets the last tab that was selected.  Persisted into UserDefaults.standard.
-    static var lastTabSelected: TabSection? {
+    static var lastTabSelected: TabSection {
         get {
             let data = standard.data(forKey: AppKeys.GuideStore.lastTabSelected)
             let _lastTab = try? TabSection.initialize(jsonData: data)
-            return _lastTab
+            return _lastTab ?? TabSection.channels //Channels tab is default for new install.
         }
         set {
-            let data = try? newValue?.toJSONData()
+            let data = try? newValue.toJSONData()
             standard.set(data, forKey: AppKeys.GuideStore.lastTabSelected)
         }
     }

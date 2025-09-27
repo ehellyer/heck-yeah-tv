@@ -26,14 +26,8 @@ struct ShowFavorites: View {
                 Label(showFavoritesOnly ? "On" : "Off",
                       systemImage: showFavoritesOnly ? "star.fill" : "star")
                 .font(.caption)
-                .foregroundStyle(showFavoritesOnly ? .yellow : .white)
+                .foregroundStyle(.yellow)
             }
-            .background(
-                Capsule()
-                    .fill(Color("guideBackgroundNoFocusColor"))
-                    .opacity(isFocused ? 0 : 1)     // <- keep view, just fade
-            )
-            .contentShape(Capsule())                // hit/focus area = padded capsule
             .focused($focus, equals: FocusTarget.favoritesToggle)
             Spacer()
         }

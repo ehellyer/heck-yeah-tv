@@ -20,8 +20,19 @@ struct GuideChannel: Identifiable, Hashable, Sendable, JSONSerializable {
     let quality: StreamQuality
     let hasDRM: Bool
     let source: ChannelSource
+    var isFavorite: Bool = false
+    var isPlaying: Bool = false
     
-    init(id: String, sortHint: String, title: String, number: String? = nil, url: URL, quality: StreamQuality, hasDRM: Bool, source: ChannelSource) {
+    init(id: String,
+         sortHint: String,
+         title: String,
+         number: String? = nil,
+         url: URL,
+         quality: StreamQuality,
+         hasDRM: Bool,
+         source: ChannelSource,
+         isFavorite: Bool,
+         isPlaying: Bool) {
         self.id = id
         self.sortHint = sortHint
         self.title = title
@@ -31,19 +42,22 @@ struct GuideChannel: Identifiable, Hashable, Sendable, JSONSerializable {
         self.quality = quality
         self.hasDRM = hasDRM
         self.source = source
+        self.isFavorite = isFavorite
+        self.isPlaying = isPlaying
     }
     
-    init(_ item: Channelable, channelSource: ChannelSource) {
-        
-        id = item.idHint
-        sortHint = item.sortHint
-        title = item.titleHint
-        number = item.numberHint
-        url = item.urlHint
-        logoURL = nil
-        quality = item.qualityHint
-        hasDRM = item.hasDRMHint
-        source = channelSource
+    init(_ item: Channelable, channelSource: ChannelSource, isFavorite: Bool, isPlaying: Bool) {
+        self.id = item.idHint
+        self.sortHint = item.sortHint
+        self.title = item.titleHint
+        self.number = item.numberHint
+        self.url = item.urlHint
+        self.logoURL = nil
+        self.quality = item.qualityHint
+        self.hasDRM = item.hasDRMHint
+        self.source = channelSource
+        self.isFavorite = isFavorite
+        self.isPlaying = isPlaying
     }
     
     static func mockGuideChannels() -> [GuideChannel] {
@@ -55,7 +69,9 @@ struct GuideChannel: Identifiable, Hashable, Sendable, JSONSerializable {
                          url: URL(string: "https://abc.com")!,
                          quality: StreamQuality.uhd8k,
                          hasDRM: false,
-                         source: ChannelSource.ipStream),
+                         source: ChannelSource.ipStream,
+                         isFavorite: false,
+                         isPlaying: false),
             GuideChannel(id: "2",
                          sortHint: "B",
                          title: "Sports Center",
@@ -63,7 +79,9 @@ struct GuideChannel: Identifiable, Hashable, Sendable, JSONSerializable {
                          url: URL(string: "https://abc.com")!,
                          quality: StreamQuality.sd,
                          hasDRM: false,
-                         source: ChannelSource.ipStream),
+                         source: ChannelSource.ipStream,
+                         isFavorite: false,
+                         isPlaying: false),
             GuideChannel(id: "3",
                          sortHint: "C",
                          title: "Movie Channel",
@@ -71,7 +89,9 @@ struct GuideChannel: Identifiable, Hashable, Sendable, JSONSerializable {
                          url: URL(string: "https://abc.com")!,
                          quality: StreamQuality.fhd,
                          hasDRM: false,
-                         source: ChannelSource.ipStream),
+                         source: ChannelSource.ipStream,
+                         isFavorite: false,
+                         isPlaying: false),
             GuideChannel(id: "4",
                          sortHint: "D",
                          title: "Discovery",
@@ -79,7 +99,9 @@ struct GuideChannel: Identifiable, Hashable, Sendable, JSONSerializable {
                          url: URL(string: "https://abc.com")!,
                          quality: StreamQuality.uhd4k,
                          hasDRM: false,
-                         source: ChannelSource.ipStream),
+                         source: ChannelSource.ipStream,
+                         isFavorite: false,
+                         isPlaying: false),
             GuideChannel(id: "5",
                          sortHint: "E",
                          title: "Top Gear",
@@ -87,7 +109,9 @@ struct GuideChannel: Identifiable, Hashable, Sendable, JSONSerializable {
                          url: URL(string: "https://abc.com")!,
                          quality: StreamQuality.uhd4k,
                          hasDRM: false,
-                         source: ChannelSource.ipStream),
+                         source: ChannelSource.ipStream,
+                         isFavorite: false,
+                         isPlaying: false),
             GuideChannel(id: "6",
                          sortHint: "F",
                          title: "Planet Earth",
@@ -95,7 +119,9 @@ struct GuideChannel: Identifiable, Hashable, Sendable, JSONSerializable {
                          url: URL(string: "https://abc.com")!,
                          quality: StreamQuality.uhd4k,
                          hasDRM: false,
-                         source: ChannelSource.ipStream)
+                         source: ChannelSource.ipStream,
+                         isFavorite: false,
+                         isPlaying: false)
         ]
     }
 }

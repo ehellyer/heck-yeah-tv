@@ -57,9 +57,6 @@ class ProgramView: PlatformView, FocusTargetView {
             self.becomeFocusedUsingAnimationCoordinator(in: context, with: coordinator)
         } else if (context.previouslyFocusedView === self) {
             self.resignFocusUsingAnimationCoordinator(in: context, with: coordinator)
-            if let channel {
-                delegate?.didLoseFocus(target: FocusTarget.guide(channelId: channel.id, col: 3))
-            }
         }
     }
 
@@ -135,7 +132,7 @@ class ProgramView: PlatformView, FocusTargetView {
     
     //MARK: - Internal API
     
-    weak var delegate: GuideFocusViewDelegate?
+    weak var delegate: GuideViewDelegate?
     
     func refreshView() {
         backgroundColor = (isSelectedChannel) ? PlatformColor(named: "selectedChannelColor") : PlatformColor(named: "guideBackgroundNoFocusColor")

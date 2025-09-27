@@ -29,7 +29,7 @@ struct GuideView: View {
             
             ScrollView (.vertical) {
                 LazyVStack(alignment: .leading, spacing: 5) {
-                    ForEach(guideStore.visibleChannels) { channel in
+                    ForEach(guideStore.channels) { channel in
                         GuideRow(channel: channel, focus: $focus)
                             .id(channel.id)
                     }

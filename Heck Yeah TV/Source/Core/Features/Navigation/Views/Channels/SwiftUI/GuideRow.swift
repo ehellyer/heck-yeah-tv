@@ -21,8 +21,7 @@ struct GuideRow: View {
         HStack {
             
             Button {
-                guideStore.selectedChannel = channel
-                guideStore.isPlaying = true
+                guideStore.setPlayingChannel(channel)
                 withAnimation(.easeOut(duration: 0.25)) {
                     guideStore.isGuideVisible = false
                 }
@@ -45,7 +44,7 @@ struct GuideRow: View {
             Button {
                 guideStore.toggleFavorite(channel)
             } label: {
-                Image(systemName: guideStore.isFavorite(channel) ? "star.fill" : "star")
+                Image(systemName: channel.isFavorite ? "star.fill" : "star")
                     .foregroundStyle(Color.yellow)
                     .padding(.horizontal, 20)
                     .padding(.vertical, 35)

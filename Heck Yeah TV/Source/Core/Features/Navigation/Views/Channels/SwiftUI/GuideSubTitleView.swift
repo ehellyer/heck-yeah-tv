@@ -55,7 +55,9 @@ struct GuideSubTitleView: View {
                                        hasDRM: true,
                                        isHD: true ,
                                        url: "http://192.168.50.250:5004/auto/v8.1"),
-                               channelSource: .homeRunTuner)
+                               channelSource: .homeRunTuner,
+                               isFavorite: false,
+                               isPlaying: true)
     
     GuideSubTitleView(channel: channel)
         .background(Color.gray.opacity(0.5))

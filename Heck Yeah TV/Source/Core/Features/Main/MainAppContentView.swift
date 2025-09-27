@@ -14,19 +14,11 @@ struct MainAppContentView: View {
     @State private var showPlayToast = false
     @Environment(GuideStore.self) private var guideStore
     
-    // Binding parts of GuideStore to VLCPlayerView: PlatformViewRepresentable
-    private var channel: Binding<GuideChannel?> {
-        Binding(
-            get: { guideStore.selectedChannel },
-            set: { guideStore.selectedChannel = $0 }
-        )
-    }
-    
     var body: some View {
         // Alignment required to layout the play/pause button in the bottom left corner.
         ZStack(alignment: .bottomLeading)  {
             
-            VLCPlayerView(selectedChannel: channel)
+            VLCPlayerView()
                 .zIndex(0)
                 .ignoresSafeArea(.all)
             

@@ -132,19 +132,19 @@ class GuideRowCell: PlatformTableViewCell {
     
     //MARK: - Internal API
 
-    weak var delegate: GuideFocusViewDelegate? {
+    weak var delegate: GuideViewDelegate? {
         didSet {
             self.channelNameView.delegate = self.delegate
             self.favoriteButtonView.delegate = self.delegate
         }
     }
 
-    func configure(with channel: GuideChannel, programs: [Program], isFavorite: Bool, isSelectedChannel: Bool) {
+    func configure(with channel: GuideChannel, programs: [Program], isSelectedChannel: Bool) {
         self.channel = channel
         self.programs = programs
         
         channelNameView.configure(with: channel, isSelectedChannel: isSelectedChannel)
-        favoriteButtonView.configure(with: channel, isFavorite: isFavorite, isSelectedChannel: isSelectedChannel)
+        favoriteButtonView.configure(with: channel, isSelectedChannel: isSelectedChannel)
         updateProgramsDisplay(with: channel, isSelectedChannel: isSelectedChannel)
     }
 }

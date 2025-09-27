@@ -11,9 +11,7 @@ import SwiftUI
 struct TabContainerView: View {
     
     @Environment(GuideStore.self) var guideStore
-    @State private var preferredCol: Int = 0
     @FocusState var focus: FocusTarget?
-    @State private var lastGuideFocusedTarget: FocusTarget?
     
     private var selectedTab: Binding<TabSection> {
         Binding(
@@ -28,40 +26,11 @@ struct TabContainerView: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            Text("Focus: \(focus?.debugDescription ?? "nil")  Tab: \(selectedTab.wrappedValue.title)")
+            Text("Focus: \(focus?.debugDescription ?? "nil") | Tab: \(selectedTab.wrappedValue.title) | selected channel: \(guideStore.selectedChannel?.title ?? "none") ")
                 .fontWeight(.bold)
                 .background(Color(.gray))
             
             TabView(selection: selectedTab) {
-                
-//                RecentsView()
-//                    .tabItem {
-//                        Label(TabSection.recents.title,
-//                              systemImage: TabSection.recents.systemImage)
-//                    }
-//                    .tag(TabSection.recents)
-//                    
-//                ChannelsContainer(focus: $focus)
-//                    .tabItem {
-//                        Label(TabSection.channels.title,
-//                              systemImage: TabSection.channels.systemImage)
-//                    }
-//                    .tag(TabSection.channels)
-//                
-//                SearchView()
-//                    .tabItem {
-//                        Label(TabSection.search.title,
-//                              systemImage: TabSection.search.systemImage)
-//                    }
-//                    .tag(TabSection.search)
-//                
-//                SettingsView()
-//                    .tabItem {
-//                        Label(TabSection.settings.title,
-//                              systemImage: TabSection.settings.systemImage)
-//                    }
-//                    .tag(TabSection.settings)
-
                 
                 Tab(TabSection.recents.title,
                     systemImage: TabSection.recents.systemImage,

@@ -12,24 +12,11 @@ import AppKit
 import UIKit
 #endif
 
+import Observation
+
 protocol GuideViewControllerDelegate: AnyObject {
-    
-    /// Ask delegate to set this channel as the selected channel.
-    func channelSelected(_ channel: GuideChannel) -> Void
-    
-    /// Ask delegate to toggle the isFavorite state of this channel.
-    func favoriteToggled(_ channel: GuideChannel) -> Void
-    
-    /// Ask delegate, is this channel a favorite channel?
-    func isFavoriteChannel(_ channel: GuideChannel) -> Bool
-    
-    /// Ask delegate, is this the selected channel?
-    func isSelectedChannel(_ channel: GuideChannel) -> Bool
-    
-    
-    func setFocused(target: FocusTarget)
-    
-    func removeFocused(target: FocusTarget)
+    /// Ask delegate to update the focus target to this target.
+    func setFocus(_ target: FocusTarget)
     
 }
 
@@ -43,8 +30,9 @@ class GuideViewController: PlatformViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.clipsToBounds = false
         setupTableView()
+        applySnapshot(animated: false)
+        trackStoreChanges()
     }
     
     //MARK: - Private API - Lazy binding vars
@@ -67,67 +55,75 @@ class GuideViewController: PlatformViewController {
     
     //MARK: - Private API
     
-    private var channels: [GuideChannel] = []
+    typealias Section = Int
+    
+    private lazy var dataSource = UITableViewDiffableDataSource<Section, GuideChannel>(tableView: self.tableView) { [weak self] tableView, indexPath, channel in
+        guard let self else { return UITableViewCell(style: .default, reuseIdentifier: "something_bad_happened")}
+        let guideRowCell = tableView.dequeueReusableCell(withIdentifier: GuideRowCell.identifier, for: indexPath) as! GuideRowCell
+        let isSelectedChannel: Bool = (self.guideStore?.selectedChannel == channel)
+        guideRowCell.configure(with: channel, programs: self.channelPrograms, isSelectedChannel: isSelectedChannel)
+        guideRowCell.delegate = self
+        return guideRowCell
+    }
+    
+    private var needsSnapshot = false
+    
     //TODO: Integrate program data into GuideChannel
     private var channelPrograms: [Program] = Program.mockPrograms()
     
     private func setupTableView() {
         tableView.register(GuideRowCell.self, forCellReuseIdentifier: GuideRowCell.identifier)
-        tableView.dataSource = self
+    }
+    
+    private func trackStoreChanges() {
+        withObservationTracking({ [weak self] in
+            // Access observed properties to establish dependencies
+            _ = self?.guideStore?.channels
+        }, onChange: {
+            DispatchQueue.main.async { [weak self] in
+                // Coalesce multiple mutations into one UI update
+                self?.scheduleSnapshot()
+                // Re-arm tracking for subsequent changes
+                self?.trackStoreChanges()
+            }
+        })
+    }
+    
+    private func scheduleSnapshot() {
+        guard not(needsSnapshot) else { return }
+        needsSnapshot = true
+        DispatchQueue.main.async { [weak self] in
+            self?.needsSnapshot = false
+            self?.applySnapshot(animated: false)
+        }
+    }
+    
+    private func applySnapshot(animated: Bool) {
+        var snap = NSDiffableDataSourceSnapshot<Section, GuideChannel>()
+        snap.appendSections([0])
+        snap.appendItems(guideStore?.channels ?? [], toSection: 0)
+        dataSource.apply(snap, animatingDifferences: animated)
     }
     
     //MARK: - Internal API - Updates
     
     weak var delegate: GuideViewControllerDelegate?
     
-    func updateView(channels: [GuideChannel], channelPrograms: [Program]) {
-        self.channels = channels
-        tableView.reloadData()
-    }
+    var guideStore: GuideStore?
 }
 
-//MARK: - UITableViewDataSource protocol
-extension GuideViewController: UITableViewDataSource {
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
-    }
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return channels.count
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
-        let row = indexPath.row
-        let guideRowCell = tableView.dequeueReusableCell(withIdentifier: GuideRowCell.identifier, for: indexPath) as! GuideRowCell
-      
-        let channel = channels[row]
-        let programs = channelPrograms
-        let isFavorite: Bool = delegate?.isFavoriteChannel(channel) ?? false
-        let isSelectedChannel: Bool = delegate?.isSelectedChannel(channel) ?? false
-        
-        guideRowCell.configure(with: channel, programs: programs, isFavorite: isFavorite, isSelectedChannel: isSelectedChannel)
-        guideRowCell.delegate = self
-        return guideRowCell
-    }
-}
+//MARK: - GuideViewDelegate protocol
 
-//MARK: - FocusViewDelegate protocol
-extension GuideViewController: GuideFocusViewDelegate {
+extension GuideViewController: GuideViewDelegate {
     func didBecomeFocused(target: FocusTarget) {
-        delegate?.setFocused(target: target)
-    }
-    
-    func didLoseFocus(target: FocusTarget) {
-        //Confirm if this is needed.
-        //delegate?.removeFocused(target: target)
+        delegate?.setFocus(target)
     }
     
     func selectChannel(_ channel: GuideChannel) {
-        self.delegate?.channelSelected(channel)
+        guideStore?.setPlayingChannel(channel)
     }
     
     func toggleFavoriteChannel(_ channel: GuideChannel) {
-        self.delegate?.favoriteToggled(channel)
+        guideStore?.toggleFavorite(channel)
     }
 }

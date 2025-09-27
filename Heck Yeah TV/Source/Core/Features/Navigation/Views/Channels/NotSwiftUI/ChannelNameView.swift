@@ -56,9 +56,6 @@ class ChannelNameView: PlatformView, FocusTargetView {
             self.becomeFocusedUsingAnimationCoordinator(in: context, with: coordinator)
         } else if (context.previouslyFocusedView === self) {
             self.resignFocusUsingAnimationCoordinator(in: context, with: coordinator)
-            if let channel {
-                delegate?.didLoseFocus(target: FocusTarget.guide(channelId: channel.id, col: 1))
-            }
         }
     }
     
@@ -152,7 +149,7 @@ class ChannelNameView: PlatformView, FocusTargetView {
     
     //MARK: - Internal API
     
-    weak var delegate: GuideFocusViewDelegate?
+    weak var delegate: GuideViewDelegate?
     
     func refreshView() {
         guard let channel else { return }

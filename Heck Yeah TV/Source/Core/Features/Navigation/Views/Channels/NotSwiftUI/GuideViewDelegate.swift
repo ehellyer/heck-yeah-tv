@@ -1,5 +1,5 @@
 //
-//  GuideFocusViewDelegate.swift
+//  GuideViewDelegate.swift
 //  Heck Yeah TV
 //
 //  Created by Ed Hellyer on 9/24/25.
@@ -14,13 +14,11 @@ import UIKit
 #endif
 
 @MainActor
-protocol GuideFocusViewDelegate: AnyObject {
+protocol GuideViewDelegate: AnyObject {
     
     func selectChannel(_ channel: GuideChannel)
     
     func toggleFavoriteChannel(_ channel: GuideChannel)
     
     func didBecomeFocused(target: FocusTarget)
-    
-    func didLoseFocus(target: FocusTarget)
 }
