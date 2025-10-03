@@ -1,5 +1,5 @@
 //
-//  GuideStore2.swift
+//  GuideStore.swift
 //  Heck Yeah TV
 //
 //  Created by Ed Hellyer on 9/27/25.
@@ -14,7 +14,7 @@ import SwiftUI
 typealias ChannelId = String
 
 @MainActor @Observable
-final class GuideStore2 {
+final class GuideStore {
     
     @MainActor
     init() {

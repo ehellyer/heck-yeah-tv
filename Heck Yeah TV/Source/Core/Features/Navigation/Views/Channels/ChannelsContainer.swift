@@ -10,7 +10,7 @@ import SwiftUI
 
 struct ChannelsContainer: View {
     
-    @Environment(GuideStore2.self) var guideStore
+    @Environment(GuideStore.self) var guideStore
     @FocusState.Binding var focus: FocusTarget?
     
 //    // Explicit internal initializer so this view can be constructed from outside this file.

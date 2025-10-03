@@ -22,7 +22,7 @@ struct VLCPlayerView: UnifiedPlatformRepresentable {
     //MARK: - Binding and State
     
     @Environment(\.scenePhase) private var scenePhase
-    @Environment(GuideStore2.self) private var guideStore
+    @Environment(GuideStore.self) private var guideStore
     
     //MARK: - UnifiedPlatformRepresentable overrides
 

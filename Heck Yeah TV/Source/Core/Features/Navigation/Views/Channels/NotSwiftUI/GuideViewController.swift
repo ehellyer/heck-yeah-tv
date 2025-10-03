@@ -114,7 +114,7 @@ class GuideViewController: PlatformViewController {
     
     weak var delegate: GuideViewControllerDelegate?
     
-    var guideStore: GuideStore2 = GuideStore2()
+    var guideStore: GuideStore = GuideStore()
 }
 
 //MARK: - GuideViewDelegate protocol

@@ -14,7 +14,7 @@ struct Heck_Yeah_TVApp: App {
     
     @Environment(\.scenePhase) private var scenePhase
     
-    @State private var guideStore = GuideStore2()
+    @State private var guideStore = GuideStore()
     @State private var isReady = false
     @State private var hdHomeRunController = HDHomeRunDiscoveryController()
     @State private var iptvController: IPTVController = IPTVController()

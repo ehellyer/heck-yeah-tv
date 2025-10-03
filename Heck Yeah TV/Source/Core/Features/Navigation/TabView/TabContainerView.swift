@@ -10,7 +10,7 @@ import SwiftUI
 
 struct TabContainerView: View {
     
-    @Environment(GuideStore2.self) var guideStore
+    @Environment(GuideStore.self) var guideStore
     @FocusState var focus: FocusTarget?
     
     private var selectedTab: Binding<TabSection> {
@@ -128,7 +128,7 @@ struct TabContainerView: View {
 #if DEBUG && targetEnvironment(simulator)
 private struct PreviewTabContainerView: View {
     
-    @State private var guideStore = GuideStore2()
+    @State private var guideStore = GuideStore()
     
     var body: some View {
         VStack {

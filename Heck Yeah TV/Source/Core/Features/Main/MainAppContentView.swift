@@ -12,7 +12,7 @@ struct MainAppContentView: View {
     
     @State private var fadeTask: Task<Void, Never>?
     @State private var showPlayToast = false
-    @Environment(GuideStore2.self) private var guideStore
+    @Environment(GuideStore.self) private var guideStore
     
     var body: some View {
         // Alignment required to layout the play/pause button in the bottom left corner.
