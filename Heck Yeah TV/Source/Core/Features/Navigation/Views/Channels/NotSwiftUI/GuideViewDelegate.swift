@@ -16,9 +16,9 @@ import UIKit
 @MainActor
 protocol GuideViewDelegate: AnyObject {
     
-    func selectChannel(_ channel: GuideChannel)
+    func selectChannel(_ channel: IPTVChannel)
     
-    func toggleFavoriteChannel(_ channel: GuideChannel)
+    func toggleFavoriteChannel(_ channel: IPTVChannel)
     
     func didBecomeFocused(target: FocusTarget)
 }

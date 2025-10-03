@@ -9,7 +9,7 @@
 import Foundation
 
 extension IPStream: Channelable {
-    var idHint: String { String.stableHashHex(url.absoluteString, title) }
+    var idHint: String { self.id }
     var sortHint: String { String.concat(title, channelId, separator: "::") }
     var titleHint: String { title }
     var numberHint: String? { channelId }
@@ -36,4 +36,5 @@ extension IPStream: Channelable {
         }
     }
     var hasDRMHint: Bool { false }
+    var sourceHint: ChannelSource { ChannelSource.ipStream }
 }

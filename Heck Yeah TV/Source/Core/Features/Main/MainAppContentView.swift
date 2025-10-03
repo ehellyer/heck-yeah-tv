@@ -12,7 +12,7 @@ struct MainAppContentView: View {
     
     @State private var fadeTask: Task<Void, Never>?
     @State private var showPlayToast = false
-    @Environment(GuideStore.self) private var guideStore
+    @Environment(GuideStore2.self) private var guideStore
     
     var body: some View {
         // Alignment required to layout the play/pause button in the bottom left corner.
@@ -21,6 +21,7 @@ struct MainAppContentView: View {
             VLCPlayerView()
                 .zIndex(0)
                 .ignoresSafeArea(.all)
+                .environment(guideStore)
             
             if guideStore.isPlaying == false {
                 PlaybackBadge(isPlaying: false)
@@ -39,7 +40,7 @@ struct MainAppContentView: View {
                 TabContainerView()
                     .zIndex(1)
                     .transition(.opacity)
-                    
+                    .environment(guideStore)
             } else {
                 TabActivationView()
                     .zIndex(1000)

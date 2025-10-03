@@ -144,7 +144,7 @@ class ChannelNameView: PlatformView, FocusTargetView {
     
     //MARK: - Private API
     
-    private var channel: GuideChannel?
+    private var channel: IPTVChannel?
     private var isSelectedChannel: Bool = false
     
     //MARK: - Internal API
@@ -161,8 +161,8 @@ class ChannelNameView: PlatformView, FocusTargetView {
         }
     }
     
-    func configure(with channel: GuideChannel, isSelectedChannel: Bool) {
-        self.isSelectedChannel = isSelectedChannel
+    func configure(with channel: IPTVChannel) {
+        self.isSelectedChannel = channel.isPlaying
         self.channel = channel
         backgroundColor = (isSelectedChannel) ? PlatformColor(named: "selectedChannelColor") : PlatformColor(named: "guideBackgroundNoFocusColor")
         refreshView()

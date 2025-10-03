@@ -12,7 +12,7 @@ import AppKit
 import UIKit
 #endif
 
-import Observation
+import SwiftData
 
 protocol GuideViewControllerDelegate: AnyObject {
     /// Ask delegate to update the focus target to this target.
@@ -30,6 +30,7 @@ class GuideViewController: PlatformViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         setupTableView()
         applySnapshot(animated: false)
         trackStoreChanges()
@@ -55,14 +56,18 @@ class GuideViewController: PlatformViewController {
     
     //MARK: - Private API
     
-    typealias Section = Int
+    typealias SectionModel = Int
     
-    private lazy var dataSource = UITableViewDiffableDataSource<Section, GuideChannel>(tableView: self.tableView) { [weak self] tableView, indexPath, channel in
-        guard let self else { return UITableViewCell(style: .default, reuseIdentifier: "something_bad_happened")}
+    private var section: SectionModel = 0
+    private lazy var viewContext = Persistence.shared.viewContext
+    private var didSaveObserver: Any?
+    
+    private lazy var dataSource = UITableViewDiffableDataSource<SectionModel, PersistentIdentifier>(tableView: self.tableView) { [weak self] tableView, indexPath, persistentIdentifier in
         let guideRowCell = tableView.dequeueReusableCell(withIdentifier: GuideRowCell.identifier, for: indexPath) as! GuideRowCell
-        let isSelectedChannel: Bool = (self.guideStore?.selectedChannel == channel)
-        guideRowCell.configure(with: channel, programs: self.channelPrograms, isSelectedChannel: isSelectedChannel)
-        guideRowCell.delegate = self
+        if let channel = self?.viewContext.model(for: persistentIdentifier) as? IPTVChannel {
+            guideRowCell.configure(with: channel, programs: self?.channelPrograms ?? [])
+            guideRowCell.delegate = self
+        }
         return guideRowCell
     }
     
@@ -76,9 +81,8 @@ class GuideViewController: PlatformViewController {
     }
     
     private func trackStoreChanges() {
-        withObservationTracking({ [weak self] in
-            // Access observed properties to establish dependencies
-            _ = self?.guideStore?.channels
+        withObservationTracking({ [weak self] in            
+            _ = try? self?.viewContext.fetch(FetchDescriptor<IPTVChannel>())
         }, onChange: {
             DispatchQueue.main.async { [weak self] in
                 // Coalesce multiple mutations into one UI update
@@ -98,10 +102,11 @@ class GuideViewController: PlatformViewController {
         }
     }
     
-    private func applySnapshot(animated: Bool) {
-        var snap = NSDiffableDataSourceSnapshot<Section, GuideChannel>()
-        snap.appendSections([0])
-        snap.appendItems(guideStore?.channels ?? [], toSection: 0)
+    func applySnapshot(animated: Bool) {
+        let channels: [PersistentIdentifier] = (try? guideStore.getAllChannels().map(\.persistentModelID)) ?? []
+        var snap = NSDiffableDataSourceSnapshot<SectionModel, PersistentIdentifier>()
+        snap.appendSections([section])
+        snap.appendItems(channels, toSection: section)
         dataSource.apply(snap, animatingDifferences: animated)
     }
     
@@ -109,21 +114,24 @@ class GuideViewController: PlatformViewController {
     
     weak var delegate: GuideViewControllerDelegate?
     
-    var guideStore: GuideStore?
+    var guideStore: GuideStore2 = GuideStore2()
 }
 
 //MARK: - GuideViewDelegate protocol
 
 extension GuideViewController: GuideViewDelegate {
+    @MainActor
     func didBecomeFocused(target: FocusTarget) {
         delegate?.setFocus(target)
     }
     
-    func selectChannel(_ channel: GuideChannel) {
-        guideStore?.setPlayingChannel(channel)
+    @MainActor
+    func selectChannel(_ channel: IPTVChannel) {
+        try? guideStore.setPlayingChannel(id: channel.id)
     }
     
-    func toggleFavoriteChannel(_ channel: GuideChannel) {
-        guideStore?.toggleFavorite(channel)
+    @MainActor
+    func toggleFavoriteChannel(_ channel: IPTVChannel) {
+        try? guideStore.toggleFavorite(id: channel.id)
     }
 }

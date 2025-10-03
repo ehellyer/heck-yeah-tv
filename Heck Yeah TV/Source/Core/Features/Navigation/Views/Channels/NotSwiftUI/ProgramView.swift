@@ -126,7 +126,7 @@ class ProgramView: PlatformView, FocusTargetView {
     
     //MARK: - Private API
 
-    private var channel: GuideChannel?
+    private var channel: IPTVChannel?
     private var isSelectedChannel: Bool = false
     private var program: Program?
     
@@ -141,9 +141,9 @@ class ProgramView: PlatformView, FocusTargetView {
         timeLabel.text = program.timeSlot
     }
     
-    func configure(with program: Program?, channel: GuideChannel, isSelectedChannel: Bool) {
+    func configure(with program: Program?, channel: IPTVChannel) {
         self.channel = channel
-        self.isSelectedChannel = isSelectedChannel
+        self.isSelectedChannel = channel.isPlaying
         self.program = program
         refreshView()
     }

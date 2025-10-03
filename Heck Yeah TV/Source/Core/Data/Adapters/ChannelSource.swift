@@ -9,7 +9,7 @@
 import Foundation
 import Hellfire
 
-enum ChannelSource: String, Hashable, Sendable, JSONSerializable {
+enum ChannelSource: String, Hashable, Sendable, JSONSerializable, Codable {
     case ipStream
     case homeRunTuner
 }

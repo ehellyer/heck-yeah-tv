@@ -47,9 +47,9 @@ class GuideRowCell: PlatformTableViewCell {
     
     static var identifier: String = "GuideRowCellIdentifier"
     
-    //MARK: - Private API - ViewModel, data source, props, whatever you want to call them today.
+    //MARK: - Private API - View Models
     
-    private var channel: GuideChannel?
+    private var channel: IPTVChannel?
     private var programs: [Program] = []
     
     //MARK: - Private API - Lazy view binding
@@ -117,7 +117,7 @@ class GuideRowCell: PlatformTableViewCell {
     
     //MARK: - Private API
     
-    private func updateProgramsDisplay(with channel: GuideChannel, isSelectedChannel: Bool) {
+    private func updateProgramsDisplay(with channel: IPTVChannel) {
         // Clear existing program views
         programsStackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
         
@@ -125,7 +125,7 @@ class GuideRowCell: PlatformTableViewCell {
         for program in programs {
             let programView = ProgramView()
             programView.delegate = self.delegate
-            programView.configure(with: program, channel: channel, isSelectedChannel: isSelectedChannel)
+            programView.configure(with: program, channel: channel)
             programsStackView.addArrangedSubview(programView)
         }
     }
@@ -139,12 +139,12 @@ class GuideRowCell: PlatformTableViewCell {
         }
     }
 
-    func configure(with channel: GuideChannel, programs: [Program], isSelectedChannel: Bool) {
+    func configure(with channel: IPTVChannel, programs: [Program]) {
         self.channel = channel
         self.programs = programs
         
-        channelNameView.configure(with: channel, isSelectedChannel: isSelectedChannel)
-        favoriteButtonView.configure(with: channel, isSelectedChannel: isSelectedChannel)
-        updateProgramsDisplay(with: channel, isSelectedChannel: isSelectedChannel)
+        channelNameView.configure(with: channel)
+        favoriteButtonView.configure(with: channel)
+        updateProgramsDisplay(with: channel)
     }
 }

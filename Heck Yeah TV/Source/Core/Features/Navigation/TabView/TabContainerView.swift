@@ -10,7 +10,7 @@ import SwiftUI
 
 struct TabContainerView: View {
     
-    @Environment(GuideStore.self) var guideStore
+    @Environment(GuideStore2.self) var guideStore
     @FocusState var focus: FocusTarget?
     
     private var selectedTab: Binding<TabSection> {
@@ -128,31 +128,13 @@ struct TabContainerView: View {
 #if DEBUG && targetEnvironment(simulator)
 private struct PreviewTabContainerView: View {
     
-    @State private var guideStore = GuideStore()
-    @State private var channel = HDHomeRunChannel(guideNumber: "8.1",
-                                                  guideName: "WRIC-TV",
-                                                  videoCodec: "MPEG2",
-                                                  audioCodec: "AC3",
-                                                  hasDRM: true,
-                                                  isHD: true ,
-                                                  url: "http://192.168.50.250:5004/auto/v8.1")
-    @State private var stream = IPStream(channelId:  "PlutoTVTrueCrime.us",
-                                         feedId: "Austria",
-                                         title: "Pluto TV True Crime",
-                                         url:"https://amg00793-amg00793c5-firetv-us-4068.playouts.now.amagi.tv/playlist.m3u8",
-                                         referrer: nil,
-                                         userAgent: nil,
-                                         quality: "2160p")
+    @State private var guideStore = GuideStore2()
     
     var body: some View {
         VStack {
             TabContainerView()
                 .environment(guideStore)
                 .ignoresSafeArea(.all)
-        }
-        .task {
-            // This block runs when the view appears
-            await guideStore.load(streams: [stream], tunerChannels: [channel])
         }
     }
 }

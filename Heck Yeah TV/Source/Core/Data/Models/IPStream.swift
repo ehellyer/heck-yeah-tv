@@ -12,6 +12,9 @@ import Hellfire
 /// Source: [https://iptv-org.github.io/api/streams.json](https://iptv-org.github.io/api/streams.json)
 struct IPStream: JSONSerializable {
     
+    /// Stable hash id generated on JSON decoding. See init below.
+    var id: String
+    
     /// Channel Id (e.g., "France3.fr")
     let channelId: String?
     
@@ -34,6 +37,7 @@ struct IPStream: JSONSerializable {
     let quality: String?
     
     private enum CodingKeys: String, CodingKey {
+        case id
         case channelId = "channel"
         case feedId = "feed"
         case title
@@ -41,5 +45,21 @@ struct IPStream: JSONSerializable {
         case referrer
         case userAgent = "user_agent"
         case quality
+    }
+}
+
+extension IPStream {
+    init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.channelId = try container.decodeIfPresent(String.self, forKey: .channelId)
+        self.feedId = try container.decodeIfPresent(String.self, forKey: .feedId)
+        let title = try container.decode(String.self, forKey: .title)
+        self.title = title
+        let url = try container.decode(URL.self, forKey: .url)
+        self.url = url
+        self.referrer = try container.decodeIfPresent(String.self, forKey: .referrer)
+        self.userAgent = try container.decodeIfPresent(String.self, forKey: .userAgent)
+        self.quality = try container.decodeIfPresent(String.self, forKey: .quality)
+        self.id = String.stableHashHex(url.absoluteString, title)
     }
 }

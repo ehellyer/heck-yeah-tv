@@ -7,19 +7,20 @@
 //
 
 import SwiftUI
+import SwiftData
 
 @MainActor
 struct GuideViewRepresentable: UnifiedPlatformControllerRepresentable {
     
     //MARK: - Bound State
+    @Query(sort: \IPTVChannel.sortHint, order: .forward)
+    private var channels: [IPTVChannel]
     
-    @Environment(GuideStore.self) private var guideStore
     @FocusState.Binding var focus: FocusTarget?
     
     //MARK: - PlatformViewRepresentable overrides
     
     func makeViewController(context: Context) -> PlatformViewController {
-        context.coordinator.guideControllerView.guideStore = guideStore
         return context.coordinator.guideControllerView
     }
     
@@ -45,6 +46,10 @@ struct GuideViewRepresentable: UnifiedPlatformControllerRepresentable {
             vc.delegate = self
             return vc
         }()
+        
+        func updateChannels(_ channels: [IPTVChannel]) {
+            guideControllerView.applySnapshot(animated: true)
+        }
         
         //MARK: - GuideViewControllerDelegate protocol
         func setFocus(_ target: FocusTarget) {

@@ -105,7 +105,7 @@ class FavoritesToggleView: PlatformView, FocusTargetView {
     
     //MARK: - Private API
 
-    private var channel: GuideChannel?
+    private var channel: IPTVChannel?
     private var isSelectedChannel: Bool = false
     private var isFavorite: Bool = false
     
@@ -126,8 +126,8 @@ class FavoritesToggleView: PlatformView, FocusTargetView {
         backgroundColor = (isSelectedChannel) ? PlatformColor(named: "selectedChannelColor") : PlatformColor(named: "guideBackgroundNoFocusColor")
     }
     
-    func configure(with channel: GuideChannel, isSelectedChannel: Bool) {
-        self.isSelectedChannel = isSelectedChannel
+    func configure(with channel: IPTVChannel) {
+        self.isSelectedChannel = channel.isPlaying
         self.channel = channel
         self.isFavorite = channel.isFavorite
         refreshView()

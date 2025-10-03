@@ -13,7 +13,7 @@ import Hellfire
 ///
 /// This enum is intentionally broad so sources with slightly different pixel dimensions
 /// can still map to a consistent user-facing quality label.
-enum StreamQuality: JSONSerializable {
+enum StreamQuality: JSONSerializable, Codable {
     
     static let streamQualityViewTagId: Int = 23456604455
     

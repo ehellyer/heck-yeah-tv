@@ -22,7 +22,7 @@ struct VLCPlayerView: UnifiedPlatformRepresentable {
     //MARK: - Binding and State
     
     @Environment(\.scenePhase) private var scenePhase
-    @Environment(GuideStore.self) private var guideStore
+    @Environment(GuideStore2.self) private var guideStore
     
     //MARK: - UnifiedPlatformRepresentable overrides
 
@@ -37,9 +37,6 @@ struct VLCPlayerView: UnifiedPlatformRepresentable {
     func updateView(_ view: PlatformView, context: Context) {
         if scenePhase != .active {
             context.coordinator.stop()
-            Task {
-                await guideStore.flushSavesNow()
-            }
         }
         
         if not(guideStore.isPlaying) {
@@ -77,7 +74,7 @@ struct VLCPlayerView: UnifiedPlatformRepresentable {
             return view
         }()
         
-        func play(channel: GuideChannel) {
+        func play(channel: IPTVChannel) {
             
             if channel.url != mediaPlayer.media?.url {
                 mediaPlayer.stop()

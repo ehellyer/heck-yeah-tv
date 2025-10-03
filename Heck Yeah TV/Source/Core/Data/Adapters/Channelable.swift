@@ -17,6 +17,7 @@ protocol Channelable {
     var urlHint: URL { get }
     var qualityHint: StreamQuality { get }
     var hasDRMHint: Bool { get }
+    var sourceHint: ChannelSource { get }
 }
 
 

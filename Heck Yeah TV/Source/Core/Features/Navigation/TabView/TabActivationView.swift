@@ -9,8 +9,7 @@
 import SwiftUI
 
 struct TabActivationView: View {
-    @Environment(GuideStore.self) private var guideStore
-
+    @Environment(GuideStore2.self) private var guideStore
 
     var body: some View {
         Color.clear
@@ -32,6 +31,6 @@ struct TabActivationView: View {
 }
 
 #Preview {
-    let guideStore = GuideStore()
+    let guideStore = GuideStore2()
     TabActivationView().environment(guideStore)
 }

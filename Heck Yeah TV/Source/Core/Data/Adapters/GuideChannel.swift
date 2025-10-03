@@ -11,7 +11,7 @@ import Hellfire
 
 struct GuideChannel: Identifiable, Hashable, Sendable, JSONSerializable {
 
-    let id: String
+    let id: ChannelId
     let sortHint: String
     let title: String
     let number: String?
@@ -23,7 +23,7 @@ struct GuideChannel: Identifiable, Hashable, Sendable, JSONSerializable {
     var isFavorite: Bool = false
     var isPlaying: Bool = false
     
-    init(id: String,
+    init(id: ChannelId,
          sortHint: String,
          title: String,
          number: String? = nil,
