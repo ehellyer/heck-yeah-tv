@@ -8,6 +8,7 @@
 
 
 import SwiftUI
+import SwiftData
 
 #if os(tvOS)
 import TVVLCKit
@@ -18,7 +19,7 @@ import MobileVLCKit
 #endif
 
 struct VLCPlayerView: UnifiedPlatformRepresentable {
-    
+
     //MARK: - Binding and State
     
     @Environment(\.scenePhase) private var scenePhase
@@ -27,7 +28,9 @@ struct VLCPlayerView: UnifiedPlatformRepresentable {
     //MARK: - UnifiedPlatformRepresentable overrides
 
     func makeCoordinator() -> VLCPlayerView.Coordinator {
-        return VLCPlayerView.Coordinator()
+        let coordinator = VLCPlayerView.Coordinator(guideStore: self.guideStore)
+        coordinator.registerObserver()
+        return coordinator
     }
     
     func makeView(context: Context) -> PlatformView {
@@ -38,12 +41,6 @@ struct VLCPlayerView: UnifiedPlatformRepresentable {
         if scenePhase != .active {
             context.coordinator.stop()
         }
-        
-        if not(guideStore.isPlaying) {
-            context.coordinator.pause()
-        } else if guideStore.isPlaying, scenePhase == .active, let channel = guideStore.selectedChannel {
-            context.coordinator.play(channel: channel)
-        }
     }
     
     static func dismantleView(_ view: PlatformView, coordinator: Coordinator) {
@@ -53,6 +50,12 @@ struct VLCPlayerView: UnifiedPlatformRepresentable {
     //MARK: - ViewRepresentable Coordinator
     
     final class Coordinator: NSObject {
+        
+        private var guideStore: GuideStore
+        
+        init(guideStore: GuideStore) {
+            self.guideStore = guideStore
+        }
         
         lazy var mediaPlayer = {
             let _player = VLCMediaPlayer()
@@ -73,6 +76,18 @@ struct VLCPlayerView: UnifiedPlatformRepresentable {
 #endif
             return view
         }()
+        
+        func registerObserver() {
+            NotificationCenter.default.addObserver(forName: ModelContext.didSave, object: nil, queue: .main) { notification in
+                    guard let modelContext = notification.object as? ModelContext else { return }
+                    
+                    if not(self.guideStore.isPlaying) {
+                        self.pause()
+                    } else if let channel = self.guideStore.selectedChannel {
+                        self.play(channel: channel)
+                    }
+            }
+        }
         
         func play(channel: IPTVChannel) {
             

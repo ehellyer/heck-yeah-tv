@@ -90,7 +90,7 @@ final class GuideStore {
     
     @MainActor
     func getAllChannels() throws -> [IPTVChannel] {
-        let descriptor = FetchDescriptor<IPTVChannel>()
+        let descriptor = FetchDescriptor<IPTVChannel>(sortBy: [SortDescriptor(\.sortHint, order: .forward)])
         let channels = try modelContext.fetch(descriptor)
         return channels
     }

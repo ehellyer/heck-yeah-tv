@@ -33,7 +33,7 @@ class GuideViewController: PlatformViewController {
         
         setupTableView()
         applySnapshot(animated: false)
-        trackStoreChanges()
+        registerObservers()
     }
     
     //MARK: - Private API - Lazy binding vars
@@ -71,8 +71,6 @@ class GuideViewController: PlatformViewController {
         return guideRowCell
     }
     
-    private var needsSnapshot = false
-    
     //TODO: Integrate program data into GuideChannel
     private var channelPrograms: [Program] = Program.mockPrograms()
     
@@ -80,25 +78,32 @@ class GuideViewController: PlatformViewController {
         tableView.register(GuideRowCell.self, forCellReuseIdentifier: GuideRowCell.identifier)
     }
     
-    private func trackStoreChanges() {
-        withObservationTracking({ [weak self] in            
-            _ = try? self?.viewContext.fetch(FetchDescriptor<IPTVChannel>())
-        }, onChange: {
-            DispatchQueue.main.async { [weak self] in
-                // Coalesce multiple mutations into one UI update
-                self?.scheduleSnapshot()
-                // Re-arm tracking for subsequent changes
-                self?.trackStoreChanges()
+    private func registerObservers() {
+        NotificationCenter.default.addObserver(forName: ModelContext.didSave, object: nil, queue: .main) { [weak self] notification in
+            DispatchQueue.main.async {
+                guard let self else { return }
+                
+                let changes = notification.sdChanges
+                
+                if !changes.inserted.isEmpty || !changes.deleted.isEmpty {
+                    // structural changes → rebuild snapshot
+                    self.applySnapshot(animated: true)
+                } else if !changes.updated.isEmpty {
+                    // content-only changes → reload those rows
+                    var snap = self.dataSource.snapshot()
+                    snap.reloadItems(Array(changes.updated))
+                    self.dataSource.apply(snap, animatingDifferences: false)
+                } else {
+                    // last-resort: ensure visible rows refresh even if payload is empty
+                    var snap = self.dataSource.snapshot()
+                    let visible = self.tableView.indexPathsForVisibleRows?
+                        .compactMap { self.dataSource.itemIdentifier(for: $0) } ?? []
+                    snap.reconfigureItems(visible)
+                    self.dataSource.apply(snap, animatingDifferences: true)
+                }
+                
+                self.applySnapshot(animated: true)
             }
-        })
-    }
-    
-    private func scheduleSnapshot() {
-        guard not(needsSnapshot) else { return }
-        needsSnapshot = true
-        DispatchQueue.main.async { [weak self] in
-            self?.needsSnapshot = false
-            self?.applySnapshot(animated: false)
         }
     }
     

@@ -13,11 +13,6 @@ struct ChannelsContainer: View {
     @Environment(GuideStore.self) var guideStore
     @FocusState.Binding var focus: FocusTarget?
     
-//    // Explicit internal initializer so this view can be constructed from outside this file.
-//    init(focus: FocusState<FocusTarget?>.Binding) {
-//        self._focus = focus
-//    }
-    
     private var showFavoritesOnly: Binding<Bool> {
         Binding(
             get: {
@@ -38,13 +33,9 @@ struct ChannelsContainer: View {
     }
     
     var body: some View {
-        
         VStack(alignment: .leading, spacing: 10) {
             ShowFavorites(showFavoritesOnly: showFavoritesOnly, focus: $focus)
-            //GuideView(focus: $focus)
-            if guideStore.isGuideVisible {
-                GuideViewRepresentable(focus: $focus)
-            }
+            GuideViewRepresentable(focus: $focus)
         }
     }
 }
