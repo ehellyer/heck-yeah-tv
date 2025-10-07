@@ -1,5 +1,5 @@
 //
-//  Persistence.swift
+//  DataPersistence.swift
 //  Heck Yeah TV
 //
 //  Created by Ed Hellyer on 9/30/25.
@@ -10,12 +10,20 @@ import Foundation
 import SwiftData
 
 @MainActor
-final class Persistence {
+final class DataPersistence {
 
     /// Private init due to shared singleton instance.
     private init() {
         do {
-            guard var _rootURL = FileManager.default.urls(for: FileManager.SearchPathDirectory.cachesDirectory,
+            
+#if os(tvOS)
+            //tvOS has restrictions on where we can write files to.
+            var searchPathDirectory: FileManager.SearchPathDirectory = .cachesDirectory
+#else
+            var searchPathDirectory: FileManager.SearchPathDirectory = .applicationSupportDirectory
+#endif
+            
+            guard var _rootURL = FileManager.default.urls(for: searchPathDirectory,
                                                           in: FileManager.SearchPathDomainMask.userDomainMask).first else {
                 fatalError("Failed to initialize persistence store: Could not get application support directory URL.")
             }
@@ -48,7 +56,7 @@ final class Persistence {
     }
 
     /// MainActor singleton instance.
-    static let shared = Persistence()
+    static let shared = DataPersistence()
 
     /// Model Container.
     let container: ModelContainer
@@ -61,13 +69,4 @@ final class Persistence {
     
     /// URL of the persistent store.
     let storeURL: URL
-    
-    /// Returns a new context for batch work in the model container
-    /// - Parameter autosave: A Boolean to enable or disable autosave on the context after mutation.  Autosave is disabled by default.
-    /// - Returns: A new instance of ModelContext base on the current container configuration.
-    func makeContext(autosave: Bool = false) -> ModelContext {
-        let ctx = ModelContext(container)
-        ctx.autosaveEnabled = autosave
-        return ctx
-    }
 }

@@ -7,26 +7,28 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct TabContainerView: View {
     
-    @Environment(GuideStore.self) var guideStore
     @FocusState var focus: FocusTarget?
+    
+    @Binding var appState: SharedAppState
     
     private var selectedTab: Binding<TabSection> {
         Binding(
             get: {
-                guideStore.selectedTab
+                appState.selectedTab
             },
             set: {
-                guideStore.selectedTab = $0
+                appState.selectedTab = $0
             }
         )
     }
     
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            Text("Focus: \(focus?.debugDescription ?? "nil") | Tab: \(selectedTab.wrappedValue.title) | selected channel: \(guideStore.selectedChannel?.title ?? "none") ")
+            Text("Focus: \(focus?.debugDescription ?? "nil") | Tab: \(selectedTab.wrappedValue.title)")
                 .fontWeight(.bold)
                 .background(Color(.gray))
             
@@ -69,7 +71,7 @@ struct TabContainerView: View {
             // Support for dismissing the tabview by tapping menu on Siri remote for tvOS or esc key on keyboard.
             .onExitCommand {
                 withAnimation(.easeOut(duration: 0.25)) {
-                    guideStore.isGuideVisible = false
+                    appState.isGuideVisible = false
                 }
             }
 #endif // !os(iOS)
@@ -127,13 +129,11 @@ struct TabContainerView: View {
 
 #if DEBUG && targetEnvironment(simulator)
 private struct PreviewTabContainerView: View {
-    
-    @State private var guideStore = GuideStore()
+    @State var appState = SharedAppState()
     
     var body: some View {
         VStack {
-            TabContainerView()
-                .environment(guideStore)
+            TabContainerView(appState: $appState)
                 .ignoresSafeArea(.all)
         }
     }

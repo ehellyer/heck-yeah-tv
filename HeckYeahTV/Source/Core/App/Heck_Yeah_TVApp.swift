@@ -13,16 +13,12 @@ import SwiftData
 struct Heck_Yeah_TVApp: App {
     
     @Environment(\.scenePhase) private var scenePhase
-    
-    @State private var guideStore = GuideStore()
-    @State private var isReady = false
-    @State private var hdHomeRunController = HDHomeRunDiscoveryController()
-    @State private var iptvController: IPTVController = IPTVController()
+    @State private var isBootComplete = false
     @State private var startupTask: Task<Void, Never>? = nil
     
     var body: some Scene {
         WindowGroup {
-            RootView(isReady: $isReady)
+            RootView(isBootComplete: $isBootComplete)
                 .ignoresSafeArea(edges: .all)
                 .task {
                     startBootstrap()
@@ -32,16 +28,19 @@ struct Heck_Yeah_TVApp: App {
                         startupTask?.cancel()
                     }
                 }
-                .environment(guideStore)
-                .modelContainer(Persistence.shared.container)
+                .modelContainer(DataPersistence.shared.container)
+                .modelContext(DataPersistence.shared.viewContext)
         }
-       
     }
     
     private func startBootstrap() {
         startupTask?.cancel()
         startupTask = Task {
+            
+            let hdHomeRunController = HDHomeRunDiscoveryController()
+            let iptvController: IPTVController = IPTVController()
             let summary = FetchSummary()
+            
             let hdHomeRunSummary = await hdHomeRunController.bootStrapTunerChannelDiscovery()
             let iptvSummary = await iptvController.fetchAll()
             summary.mergeSummary(hdHomeRunSummary)
@@ -52,14 +51,14 @@ struct Heck_Yeah_TVApp: App {
                 print("ERROR: Failure in bootstrap data fetch: \(summary.failures)")
             }
             
-            let importer = ChannelImporter(container: Persistence.shared.container)
+            let container = DataPersistence.shared.container
             Task.detached(priority: .userInitiated) {
+                let importer = ChannelImporter(container: container)
                 try await importer.importChannels(streams: iptvController.streams, tunerChannels: hdHomeRunController.channels)
                 
-                // No UI touching here. UI will re-fetch/react on main.
                 await MainActor.run {
                     // Update state variable that fetches are completed, so the boot screen will hide and main app view will load.
-                    isReady = true
+                    isBootComplete = true
                 }
             }
         }

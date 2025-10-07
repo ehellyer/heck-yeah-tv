@@ -10,31 +10,19 @@ import SwiftUI
 
 struct ChannelsContainer: View {
     
-    @Environment(GuideStore.self) var guideStore
     @FocusState.Binding var focus: FocusTarget?
     
-    private var showFavoritesOnly: Binding<Bool> {
-        Binding(
-            get: {
-                guideStore.showFavoritesOnly
-            },
-            set: {
-                guideStore.showFavoritesOnly = $0
-            }
-        )
-    }
-    
-    private var initialFocusTarget: FocusTarget {
-        if let id = guideStore.selectedChannel?.id {
-            return .guide(channelId: id, col: 0)
-        } else {
-            return .favoritesToggle
-        }
-    }
+//    private var initialFocusTarget: FocusTarget {
+//        if let id = guideStore.selectedChannel?.id {
+//            return .guide(channelId: id, col: 0)
+//        } else {
+//            return .favoritesToggle
+//        }
+//    }
     
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
-            ShowFavorites(showFavoritesOnly: showFavoritesOnly, focus: $focus)
+            ShowFavorites(focus: $focus)
             GuideViewRepresentable(focus: $focus)
         }
     }

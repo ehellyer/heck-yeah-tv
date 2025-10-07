@@ -100,5 +100,4 @@ extension FocusTargetView where Self: PlatformView {
             self.layer.transform = matrix
         }
     }
-
 }

@@ -13,15 +13,16 @@ import SwiftData
 struct GuideViewRepresentable: UnifiedPlatformControllerRepresentable {
     
     //MARK: - Bound State
-    @Query(sort: \IPTVChannel.sortHint, order: .forward)
-    private var channels: [IPTVChannel]
-    
     @FocusState.Binding var focus: FocusTarget?
+
+    
+//    @Query(sort: \IPTVChannel.sortHint, order: .forward)
+//    private var channels: [IPTVChannel]
     
     //MARK: - PlatformViewRepresentable overrides
     
     func makeViewController(context: Context) -> PlatformViewController {
-        return context.coordinator.guideControllerView
+        return context.coordinator.guideController
     }
     
     func updateViewController(_ viewController: PlatformViewController, context: Context) {
@@ -29,8 +30,8 @@ struct GuideViewRepresentable: UnifiedPlatformControllerRepresentable {
     }
     
     static func dismantleViewController(_ viewController: PlatformViewController, coordinator: Coordinator) {
-        coordinator.guideControllerView.delegate = nil
-        coordinator.guideControllerView.view.removeFromSuperview()
+        coordinator.guideController.delegate = nil
+        coordinator.guideController.view.removeFromSuperview()
     }
 
     func makeCoordinator() -> Coordinator {
@@ -40,21 +41,21 @@ struct GuideViewRepresentable: UnifiedPlatformControllerRepresentable {
     //MARK: - ViewControllerRepresentable Coordinator
     
     @MainActor
-    final class Coordinator: NSObject, @MainActor GuideViewControllerDelegate  {
-        lazy var guideControllerView: GuideViewController = {
+    final class Coordinator: NSObject {
+        
+        lazy var guideController: GuideViewController = {
             let vc = GuideViewController()
             vc.delegate = self
             return vc
         }()
-        
-        func updateChannels(_ channels: [IPTVChannel]) {
-            guideControllerView.applySnapshot(animated: true)
-        }
-        
-        //MARK: - GuideViewControllerDelegate protocol
-        func setFocus(_ target: FocusTarget) {
-            //TODO: EJH - Fix this.
-            //??? self.focus = target ???
-        }
+    }
+}
+
+extension GuideViewRepresentable.Coordinator: @MainActor GuideViewControllerDelegate {
+    
+    //MARK: - GuideViewControllerDelegate protocol
+    func setFocus(_ target: FocusTarget) {
+        //TODO: EJH - Fix this.
+        //??? self.focus = target ???
     }
 }

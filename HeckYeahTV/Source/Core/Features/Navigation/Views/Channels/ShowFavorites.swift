@@ -7,13 +7,14 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct ShowFavorites: View {
     
-    @Binding var showFavoritesOnly: Bool
     @FocusState.Binding var focus: FocusTarget?
-    
     private var isFocused: Bool { focus == .favoritesToggle }
+    
+    @State private var appState: SharedAppState = SharedAppState()
     
     var body: some View {
         HStack {
@@ -21,10 +22,10 @@ struct ShowFavorites: View {
                 .font(.title2)
                 .fontWeight(.bold)
             Button {
-                showFavoritesOnly.toggle()
+                appState.showFavoritesOnly.toggle()
             } label: {
-                Label(showFavoritesOnly ? "On" : "Off",
-                      systemImage: showFavoritesOnly ? "star.fill" : "star")
+                Label(appState.showFavoritesOnly ? "On" : "Off",
+                      systemImage: appState.showFavoritesOnly ? "star.fill" : "star")
                 .font(.caption)
                 .foregroundStyle(.yellow)
             }
@@ -36,17 +37,16 @@ struct ShowFavorites: View {
 
 
 #Preview("On (constant)") {
-    ShowFavoritesPreview(show: true)
+    ShowFavoritesPreview()
 }
 #Preview("Off (constant)") {
-    ShowFavoritesPreview(show: false)
+    ShowFavoritesPreview()
 }
 
 private struct ShowFavoritesPreview: View {
-    @State var show: Bool
     @FocusState private var focus: FocusTarget?
     var body: some View {
-        ShowFavorites(showFavoritesOnly: $show, focus: $focus)
+        ShowFavorites(focus: $focus)
             .padding()
             .defaultFocus($focus, .favoritesToggle)
             .onAppear { focus = .favoritesToggle }

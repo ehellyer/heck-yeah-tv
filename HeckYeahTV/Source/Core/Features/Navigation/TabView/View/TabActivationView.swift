@@ -7,10 +7,12 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct TabActivationView: View {
-    @Environment(GuideStore.self) private var guideStore
 
+    @Binding var appState: SharedAppState
+    
     var body: some View {
         Color.clear
 
@@ -24,13 +26,29 @@ struct TabActivationView: View {
             .onTapGesture {
                 print("Tap gesture received")
                 withAnimation {
-                    guideStore.isGuideVisible = true
+                    appState.isGuideVisible = true
                 }
             }
     }
 }
 
-#Preview {
-    let guideStore = GuideStore()
-    TabActivationView().environment(guideStore)
+#if DEBUG && targetEnvironment(simulator)
+private struct PreviewTabActivationView: View {
+    
+    @State var appState = SharedAppState()
+    
+    var body: some View {
+        VStack {
+            TabContainerView(appState: $appState)
+                .ignoresSafeArea(.all)
+        }
+    }
 }
+
+#Preview {
+    PreviewTabActivationView()
+        .ignoresSafeArea(.all)
+}
+#endif // DEBUG && targetEnvironment(simulator)
+
+

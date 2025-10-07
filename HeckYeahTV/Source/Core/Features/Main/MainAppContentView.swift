@@ -7,44 +7,42 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct MainAppContentView: View {
     
     @State private var fadeTask: Task<Void, Never>?
     @State private var showPlayToast = false
-    @Environment(GuideStore.self) private var guideStore
+    @State private var appState: SharedAppState = SharedAppState()
     
     var body: some View {
         // Alignment required to layout the play/pause button in the bottom left corner.
         ZStack(alignment: .bottomLeading)  {
             
-            VLCPlayerView()
+            VLCPlayerView(appState: $appState)
                 .zIndex(0)
                 .ignoresSafeArea(.all)
-                .environment(guideStore)
             
-            if guideStore.isPlaying == false {
+            if appState.isPlayerPaused {
                 PlaybackBadge(isPlaying: false)
                     .transition(.opacity)
                     .padding(.leading, 50)
                     .padding(.bottom, 50)
             }
             
-            if guideStore.isPlaying && showPlayToast {
+            if appState.isPlayerPaused == false && showPlayToast {
                 PlaybackBadge(isPlaying: true)
                     .padding(.leading, 50)
                     .padding(.bottom, 50)
             }
             
-            if guideStore.isGuideVisible {
-                TabContainerView()
+            if appState.isGuideVisible {
+                TabContainerView(appState: $appState)
                     .zIndex(1)
                     .transition(.opacity)
-                    .environment(guideStore)
             } else {
-                TabActivationView()
+                TabActivationView(appState: $appState)
                     .zIndex(1000)
-                    .environment(guideStore)
             }
         }
         
@@ -52,11 +50,11 @@ struct MainAppContentView: View {
         // VLCPlayerView global handler for play/pause
         .onPlayPauseCommand {
             print("Tap Play/Pause button")
-            guideStore.isPlaying.toggle()
+            appState.isPlayerPaused.toggle()
         }
 #endif // os(tvOS)
         
-        .onChange(of: guideStore.isPlaying, { oldValue, newValue in
+        .onChange(of: appState.isPlayerPaused, { oldValue, newValue in
             fadeTask?.cancel()
             fadeTask = nil
             

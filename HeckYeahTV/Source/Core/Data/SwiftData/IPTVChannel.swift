@@ -9,6 +9,8 @@
 import Foundation
 import SwiftData
 
+typealias ChannelId = String
+
 @Model final class IPTVChannel {
     #Index<IPTVChannel>([\.id], [\.sortHint, \.id])
 

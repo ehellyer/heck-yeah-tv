@@ -31,53 +31,46 @@ extension UserDefaults {
         }
     }
     
-    /// Gets or sets a boolean to indicate if channels should be filtered by favorites, else all channels matching current filters will be shown.  Persisted into UserDefaults.standard.
+    /// A boolean to indicate if channels should be filtered to show only channels indicated as favorites.  Persisted into UserDefaults.standard.
     static var showFavorites: Bool {
         get {
-            standard.bool(forKey: AppKeys.GuideStore.showFavoritesKey)
+            standard.bool(forKey: AppKeys.SharedAppState.showFavoritesKey)
         }
         set {
-            standard.set(newValue, forKey: AppKeys.GuideStore.showFavoritesKey)
-        }
-    }
-
-//    /// Gets or sets the available channel list.  Persisted into UserDefaults.standard.
-//    static var channels: [GuideChannel] {
-//        get {
-//            let data = standard.data(forKey: AppKeys.GuideStore.channelList)
-//            let _channels = try? [GuideChannel].initialize(jsonData: data)
-//            return _channels ?? []
-//        }
-//        set {
-//            let uniqueChannels = Array(Set(newValue))
-//            let data = try? uniqueChannels.toJSONData()
-//            standard.set(data, forKey: AppKeys.GuideStore.channelList)
-//        }
-//    }
-  
-    /// Gets or sets the recently played channel list, typically limited to 10 or so by the caller.  Persisted into UserDefaults.standard.
-    static var recentlyPlayed: [GuideChannel] {
-        get {
-            let data = standard.data(forKey: AppKeys.GuideStore.recentlyPlayedKey)
-            let _recentlyPlayed = try? [GuideChannel].initialize(jsonData: data)
-            return _recentlyPlayed ?? []
-        }
-        set {
-            let data = try? newValue.toJSONData()
-            standard.set(data, forKey: AppKeys.GuideStore.recentlyPlayedKey)
+            standard.set(newValue, forKey: AppKeys.SharedAppState.showFavoritesKey)
         }
     }
     
-    /// Gets or sets the last tab that was selected.  Persisted into UserDefaults.standard.
-    static var lastTabSelected: TabSection {
+    /// A boolean to indicate to SwiftUI if the Guide TabView should be displayed.
+    static var isGuideVisible: Bool {
         get {
-            let data = standard.data(forKey: AppKeys.GuideStore.lastTabSelected)
+            standard.bool(forKey: AppKeys.SharedAppState.isGuideVisible)
+        }
+        set {
+            standard.set(newValue, forKey: AppKeys.SharedAppState.isGuideVisible)
+        }
+    }
+    
+    /// A boolean to indicate if playback is in a paused state.  This is different from stopped.  Not all streams can be paused..  Persisted into UserDefaults.standard.
+    static var isPlayerPaused: Bool {
+        get {
+            standard.bool(forKey: AppKeys.SharedAppState.isPlayerPaused)
+        }
+        set {
+            standard.set(newValue, forKey: AppKeys.SharedAppState.isPlayerPaused)
+        }
+    }
+
+    /// Gets or sets the last tab that was selected.  Defaults to Channels tab for new installation.  Persisted into UserDefaults.standard.
+    static var selectedTab: TabSection {
+        get {
+            let data = standard.data(forKey: AppKeys.SharedAppState.selectedTab)
             let _lastTab = try? TabSection.initialize(jsonData: data)
             return _lastTab ?? TabSection.channels //Channels tab is default for new install.
         }
         set {
             let data = try? newValue.toJSONData()
-            standard.set(data, forKey: AppKeys.GuideStore.lastTabSelected)
+            standard.set(data, forKey: AppKeys.SharedAppState.selectedTab)
         }
     }
 }

@@ -121,7 +121,7 @@ final class BootSoundPlayer: NSObject, @unchecked Sendable {
     struct Demo: View {
         @State private var ready = false
         var body: some View {
-            BootGateView(isReady: $ready) {
+            BootGateView(isBootComplete: $ready) {
                 Text("Main App")
                     .font(.largeTitle)
                     .frame(maxWidth: .infinity, maxHeight: .infinity)

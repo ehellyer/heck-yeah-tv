@@ -59,11 +59,12 @@ class GuideViewController: PlatformViewController {
     typealias SectionModel = Int
     
     private var section: SectionModel = 0
-    private lazy var viewContext = Persistence.shared.viewContext
+    private lazy var viewContext = DataPersistence.shared.viewContext
     private var didSaveObserver: Any?
     
     private lazy var dataSource = UITableViewDiffableDataSource<SectionModel, PersistentIdentifier>(tableView: self.tableView) { [weak self] tableView, indexPath, persistentIdentifier in
         let guideRowCell = tableView.dequeueReusableCell(withIdentifier: GuideRowCell.identifier, for: indexPath) as! GuideRowCell
+        
         if let channel = self?.viewContext.model(for: persistentIdentifier) as? IPTVChannel {
             guideRowCell.configure(with: channel, programs: self?.channelPrograms ?? [])
             guideRowCell.delegate = self
@@ -83,7 +84,7 @@ class GuideViewController: PlatformViewController {
             DispatchQueue.main.async {
                 guard let self else { return }
                 
-                let changes = notification.sdChanges
+                let changes = notification.dataChanges
                 
                 if !changes.inserted.isEmpty || !changes.deleted.isEmpty {
                     // structural changes → rebuild snapshot
@@ -107,36 +108,69 @@ class GuideViewController: PlatformViewController {
         }
     }
     
+    func setPlayingChannel(id: String) throws {
+        /// There can only be one channel at a time playing, this code enforces that demand.
+        let isPlayingPredicate = #Predicate<IPTVChannel> { $0.isPlaying }
+        let isPlayingDescriptor = FetchDescriptor<IPTVChannel>(predicate: isPlayingPredicate)
+        let channels = try viewContext.fetch(isPlayingDescriptor)
+        
+        let targetChannelPredicate = #Predicate<IPTVChannel> { $0.id == id }
+        var targetChannelDescriptor = FetchDescriptor<IPTVChannel>(predicate: targetChannelPredicate)
+        targetChannelDescriptor.fetchLimit = 1
+        let targetChannel = try viewContext.fetch(targetChannelDescriptor).first
+        
+        for channel in channels {
+            channel.isPlaying = false
+        }
+        targetChannel?.isPlaying = true
+        
+        try viewContext.save()
+    }
+    
+    func toggleFavorite(id: String) throws {
+        let predicate = #Predicate<IPTVChannel> { $0.id == id }
+        var descriptor = FetchDescriptor<IPTVChannel>(predicate: predicate)
+        descriptor.fetchLimit = 1
+        if let channel = try viewContext.fetch(descriptor).first {
+            channel.isFavorite.toggle()
+            try viewContext.save()
+        }
+    }
+
+    func getAllChannels() throws -> [IPTVChannel] {
+        let descriptor = FetchDescriptor<IPTVChannel>(sortBy: [SortDescriptor(\.sortHint, order: .forward)])
+        let channels = try viewContext.fetch(descriptor)
+        return channels
+    }
+    
+    
+    //MARK: - Internal API - Updates
+    
+    weak var delegate: GuideViewControllerDelegate?
+    
     func applySnapshot(animated: Bool) {
-        let channels: [PersistentIdentifier] = (try? guideStore.getAllChannels().map(\.persistentModelID)) ?? []
+        let channels: [PersistentIdentifier] = (try? self.getAllChannels().map(\.persistentModelID)) ?? []
         var snap = NSDiffableDataSourceSnapshot<SectionModel, PersistentIdentifier>()
         snap.appendSections([section])
         snap.appendItems(channels, toSection: section)
         dataSource.apply(snap, animatingDifferences: animated)
     }
     
-    //MARK: - Internal API - Updates
-    
-    weak var delegate: GuideViewControllerDelegate?
-    
-    var guideStore: GuideStore = GuideStore()
 }
 
 //MARK: - GuideViewDelegate protocol
 
 extension GuideViewController: GuideViewDelegate {
-    @MainActor
+    
     func didBecomeFocused(target: FocusTarget) {
         delegate?.setFocus(target)
     }
     
-    @MainActor
     func selectChannel(_ channel: IPTVChannel) {
-        try? guideStore.setPlayingChannel(id: channel.id)
+        try? self.setPlayingChannel(id: channel.id)
     }
     
-    @MainActor
     func toggleFavoriteChannel(_ channel: IPTVChannel) {
-        try? guideStore.toggleFavorite(id: channel.id)
+        try? self.toggleFavorite(id: channel.id)
     }
 }

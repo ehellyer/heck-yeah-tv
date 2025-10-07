@@ -10,10 +10,10 @@
 import SwiftUI
 
 struct RootView: View {
-    @Binding var isReady: Bool
+    @Binding var isBootComplete: Bool
 
     var body: some View {
-        BootGateView(isReady: $isReady) {
+        BootGateView(isBootComplete: $isBootComplete) {
             MainAppContentView()
 #if os(macOS)
                 .frame(minWidth: 900, minHeight: 507)

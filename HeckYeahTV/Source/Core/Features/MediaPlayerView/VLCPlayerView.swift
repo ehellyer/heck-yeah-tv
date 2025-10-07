@@ -23,12 +23,12 @@ struct VLCPlayerView: UnifiedPlatformRepresentable {
     //MARK: - Binding and State
     
     @Environment(\.scenePhase) private var scenePhase
-    @Environment(GuideStore.self) private var guideStore
+    @Binding var appState: SharedAppState
     
     //MARK: - UnifiedPlatformRepresentable overrides
 
     func makeCoordinator() -> VLCPlayerView.Coordinator {
-        let coordinator = VLCPlayerView.Coordinator(guideStore: self.guideStore)
+        let coordinator = VLCPlayerView.Coordinator()
         coordinator.registerObserver()
         return coordinator
     }
@@ -41,6 +41,10 @@ struct VLCPlayerView: UnifiedPlatformRepresentable {
         if scenePhase != .active {
             context.coordinator.stop()
         }
+        
+        if appState.isPlayerPaused {
+            context.coordinator.pause()
+        }
     }
     
     static func dismantleView(_ view: PlatformView, coordinator: Coordinator) {
@@ -49,20 +53,25 @@ struct VLCPlayerView: UnifiedPlatformRepresentable {
     
     //MARK: - ViewRepresentable Coordinator
     
+    @MainActor
     final class Coordinator: NSObject {
         
-        private var guideStore: GuideStore
+        private lazy var viewContext = DataPersistence.shared.viewContext
         
-        init(guideStore: GuideStore) {
-            self.guideStore = guideStore
-        }
-        
-        lazy var mediaPlayer = {
+        private lazy var mediaPlayer = {
             let _player = VLCMediaPlayer()
             _player.drawable = self.platformView
             _player.delegate = nil
             return _player
         }()
+        
+        private func getPlayingChannel() throws -> IPTVChannel? {
+            let predicate = #Predicate<IPTVChannel> { $0.isPlaying }
+            var descriptor = FetchDescriptor<IPTVChannel>(predicate: predicate)
+            descriptor.fetchLimit = 1
+            let playingChannel = try viewContext.fetch(descriptor).first
+            return playingChannel
+        }
         
         lazy var platformView: PlatformView = {
             let view = PlatformUtils.createView()
@@ -78,23 +87,33 @@ struct VLCPlayerView: UnifiedPlatformRepresentable {
         }()
         
         func registerObserver() {
-            NotificationCenter.default.addObserver(forName: ModelContext.didSave, object: nil, queue: .main) { notification in
-                    guard let modelContext = notification.object as? ModelContext else { return }
+            NotificationCenter.default.addObserver(forName: ModelContext.didSave, object: nil, queue: .main) { [weak self] notification in
+                DispatchQueue.main.async {
                     
-                    if not(self.guideStore.isPlaying) {
-                        self.pause()
-                    } else if let channel = self.guideStore.selectedChannel {
-                        self.play(channel: channel)
+                    
+//                    if let url = self?.mediaPlayer.media?.url, let updatedStuff = notification.dataChanges.updated.first(where: { $0.isPlaying == true }) {
+//                        
+//                        if updatedStuff.updated.map( { $0.url }).contains(where: { $0 == self?.mediaPlayer.media?.url }) {
+//                            
+//                        }
+//                    }
+                    //self.pause()
+                    
+                    if let _channel = try? self?.getPlayingChannel() {
+                        self?.play(url: _channel.url)
+                    } else {
+                        self?.stop()
                     }
+                }
             }
         }
         
-        func play(channel: IPTVChannel) {
+        func play(url: URL) {
             
-            if channel.url != mediaPlayer.media?.url {
+            if url != mediaPlayer.media?.url {
                 mediaPlayer.stop()
 
-                let media = VLCMedia(url: channel.url)
+                let media = VLCMedia(url: url)
                 //https://wiki.videolan.org/VLC_command-line_help/
                 media.addOptions(["network-caching": 1000,              // 1s;
                                   "live-caching": 1000,
@@ -127,7 +146,7 @@ struct VLCPlayerView: UnifiedPlatformRepresentable {
         }
         
         func pause() {
-            guard mediaPlayer.canPause else { return }
+            guard mediaPlayer.canPause, mediaPlayer.isPlaying else { return }
             mediaPlayer.pause()
         }
         

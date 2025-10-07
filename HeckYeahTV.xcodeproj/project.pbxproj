@@ -83,13 +83,13 @@
 		99DD7EF0B671BCAE9438AFEC /* Pods-tvOS_HeckYeahTV.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-tvOS_HeckYeahTV.release.xcconfig"; path = "Target Support Files/Pods-tvOS_HeckYeahTV/Pods-tvOS_HeckYeahTV.release.xcconfig"; sourceTree = "<group>"; };
 		D26DFFAFE9DE104EB29DC823 /* Pods-tvOS_HeckYeahTV.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-tvOS_HeckYeahTV.debug.xcconfig"; path = "Target Support Files/Pods-tvOS_HeckYeahTV/Pods-tvOS_HeckYeahTV.debug.xcconfig"; sourceTree = "<group>"; };
 		E2DA9D815C94AE993025AF8C /* Pods-macOS_HeckYeahTV.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-macOS_HeckYeahTV.debug.xcconfig"; path = "Target Support Files/Pods-macOS_HeckYeahTV/Pods-macOS_HeckYeahTV.debug.xcconfig"; sourceTree = "<group>"; };
-		EB2C2DB72E5E203A005CE685 /* HeckYeahTV.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HeckYeahTV.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		EB2C2DB72E5E203A005CE685 /* Heck Yeah TV.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Heck Yeah TV.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		EB2C2DC42E5E203C005CE685 /* macOS_HeckYeahTVTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = macOS_HeckYeahTVTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		EB2C2DCE2E5E203C005CE685 /* macOS_HeckYeahTVUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = macOS_HeckYeahTVUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		EBE03BB72E53D421006B7747 /* HeckYeahTV.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HeckYeahTV.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		EBE03BB72E53D421006B7747 /* Heck Yeah TV.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Heck Yeah TV.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		EBE03BC42E53D423006B7747 /* iOS_HeckYeahTVTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = iOS_HeckYeahTVTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		EBE03BCE2E53D423006B7747 /* iOS_HeckYeahTVUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = iOS_HeckYeahTVUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		EBE03C172E53D8DE006B7747 /* HeckYeahTV.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HeckYeahTV.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		EBE03C172E53D8DE006B7747 /* Heck Yeah TV.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Heck Yeah TV.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		EBE03C232E53D8DF006B7747 /* tvOS_HeckYeahTVTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = tvOS_HeckYeahTVTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		EBE03C2D2E53D8DF006B7747 /* tvOS_HeckYeahTVUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = tvOS_HeckYeahTVUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -133,10 +133,9 @@
 				Source/Core/Data/Services/HDHomeRun/HDHomeRunDiscoveryController.swift,
 				Source/Core/Data/Services/IPTV/IPTVController.swift,
 				Source/Core/Data/SwiftData/ChannelImporter.swift,
-				Source/Core/Data/SwiftData/GuideStore.swift,
+				Source/Core/Data/SwiftData/DataPersistence.swift,
 				Source/Core/Data/SwiftData/IPTVChannel.swift,
-				Source/Core/Data/SwiftData/ModelContainerFactory.swift,
-				Source/Core/Data/SwiftData/Persistence.swift,
+				Source/Core/Data/SwiftData/SharedAppState.swift,
 				Source/Core/Features/Main/BootGateView.swift,
 				Source/Core/Features/Main/BootSplashView.swift,
 				Source/Core/Features/Main/MacArrowKeyCatcher.swift,
@@ -149,9 +148,9 @@
 				Source/Core/Features/Main/RootView.swift,
 				Source/Core/Features/MediaPlayerView/VLCPlayerView.swift,
 				Source/Core/Features/Navigation/ContentPlaceholder.swift,
-				Source/Core/Features/Navigation/TabView/TabActivationView.swift,
-				Source/Core/Features/Navigation/TabView/TabContainerView.swift,
-				Source/Core/Features/Navigation/TabView/TabSection.swift,
+				Source/Core/Features/Navigation/TabView/Enum/TabSection.swift,
+				Source/Core/Features/Navigation/TabView/View/TabActivationView.swift,
+				Source/Core/Features/Navigation/TabView/View/TabContainerView.swift,
 				Source/Core/Features/Navigation/Views/Channels/ChannelsContainer.swift,
 				Source/Core/Features/Navigation/Views/Channels/FocusTarget.swift,
 				Source/Core/Features/Navigation/Views/Channels/NotSwiftUI/ChannelNameView.swift,
@@ -163,7 +162,7 @@
 				Source/Core/Features/Navigation/Views/Channels/NotSwiftUI/HorizontalClipContainer.swift,
 				Source/Core/Features/Navigation/Views/Channels/NotSwiftUI/ProgramView.swift,
 				Source/Core/Features/Navigation/Views/Channels/NotSwiftUI/StreamQualityView.swift,
-				Source/Core/Features/Navigation/Views/Channels/NotSwiftUI/SwiftDataVersionShim.swift,
+				Source/Core/Features/Navigation/Views/Channels/NotSwiftUI/SwiftDataChangeTracking.swift,
 				Source/Core/Features/Navigation/Views/Channels/ShowFavorites.swift,
 				Source/Core/Features/Navigation/Views/Recents/RecentsView.swift,
 				Source/Core/Features/Navigation/Views/Search/SearchView.swift,
@@ -220,10 +219,9 @@
 				Source/Core/Data/Services/HDHomeRun/HDHomeRunDiscoveryController.swift,
 				Source/Core/Data/Services/IPTV/IPTVController.swift,
 				Source/Core/Data/SwiftData/ChannelImporter.swift,
-				Source/Core/Data/SwiftData/GuideStore.swift,
+				Source/Core/Data/SwiftData/DataPersistence.swift,
 				Source/Core/Data/SwiftData/IPTVChannel.swift,
-				Source/Core/Data/SwiftData/ModelContainerFactory.swift,
-				Source/Core/Data/SwiftData/Persistence.swift,
+				Source/Core/Data/SwiftData/SharedAppState.swift,
 				Source/Core/Features/Main/BootGateView.swift,
 				Source/Core/Features/Main/BootSplashView.swift,
 				Source/Core/Features/Main/MacArrowKeyCatcher.swift,
@@ -236,9 +234,9 @@
 				Source/Core/Features/Main/RootView.swift,
 				Source/Core/Features/MediaPlayerView/VLCPlayerView.swift,
 				Source/Core/Features/Navigation/ContentPlaceholder.swift,
-				Source/Core/Features/Navigation/TabView/TabActivationView.swift,
-				Source/Core/Features/Navigation/TabView/TabContainerView.swift,
-				Source/Core/Features/Navigation/TabView/TabSection.swift,
+				Source/Core/Features/Navigation/TabView/Enum/TabSection.swift,
+				Source/Core/Features/Navigation/TabView/View/TabActivationView.swift,
+				Source/Core/Features/Navigation/TabView/View/TabContainerView.swift,
 				Source/Core/Features/Navigation/Views/Channels/ChannelsContainer.swift,
 				Source/Core/Features/Navigation/Views/Channels/FocusTarget.swift,
 				Source/Core/Features/Navigation/Views/Channels/NotSwiftUI/ChannelNameView.swift,
@@ -250,7 +248,7 @@
 				Source/Core/Features/Navigation/Views/Channels/NotSwiftUI/HorizontalClipContainer.swift,
 				Source/Core/Features/Navigation/Views/Channels/NotSwiftUI/ProgramView.swift,
 				Source/Core/Features/Navigation/Views/Channels/NotSwiftUI/StreamQualityView.swift,
-				Source/Core/Features/Navigation/Views/Channels/NotSwiftUI/SwiftDataVersionShim.swift,
+				Source/Core/Features/Navigation/Views/Channels/NotSwiftUI/SwiftDataChangeTracking.swift,
 				Source/Core/Features/Navigation/Views/Channels/ShowFavorites.swift,
 				Source/Core/Features/Navigation/Views/Recents/RecentsView.swift,
 				Source/Core/Features/Navigation/Views/Search/SearchView.swift,
@@ -355,13 +353,13 @@
 		EBE03BB82E53D421006B7747 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				EBE03BB72E53D421006B7747 /* HeckYeahTV.app */,
+				EBE03BB72E53D421006B7747 /* Heck Yeah TV.app */,
 				EBE03BC42E53D423006B7747 /* iOS_HeckYeahTVTests.xctest */,
 				EBE03BCE2E53D423006B7747 /* iOS_HeckYeahTVUITests.xctest */,
-				EBE03C172E53D8DE006B7747 /* HeckYeahTV.app */,
+				EBE03C172E53D8DE006B7747 /* Heck Yeah TV.app */,
 				EBE03C232E53D8DF006B7747 /* tvOS_HeckYeahTVTests.xctest */,
 				EBE03C2D2E53D8DF006B7747 /* tvOS_HeckYeahTVUITests.xctest */,
-				EB2C2DB72E5E203A005CE685 /* HeckYeahTV.app */,
+				EB2C2DB72E5E203A005CE685 /* Heck Yeah TV.app */,
 				EB2C2DC42E5E203C005CE685 /* macOS_HeckYeahTVTests.xctest */,
 				EB2C2DCE2E5E203C005CE685 /* macOS_HeckYeahTVUITests.xctest */,
 			);
@@ -412,7 +410,7 @@
 				EB2C2E1A2E5E2293005CE685 /* Hellfire */,
 			);
 			productName = macOSHeckYeahTV;
-			productReference = EB2C2DB72E5E203A005CE685 /* HeckYeahTV.app */;
+			productReference = EB2C2DB72E5E203A005CE685 /* Heck Yeah TV.app */;
 			productType = "com.apple.product-type.application";
 		};
 		EB2C2DC32E5E203C005CE685 /* macOS_HeckYeahTVTests */ = {
@@ -471,7 +469,7 @@
 				EBE03C062E53D665006B7747 /* Hellfire */,
 			);
 			productName = "Heck Yeah TV";
-			productReference = EBE03BB72E53D421006B7747 /* HeckYeahTV.app */;
+			productReference = EBE03BB72E53D421006B7747 /* Heck Yeah TV.app */;
 			productType = "com.apple.product-type.application";
 		};
 		EBE03BC32E53D423006B7747 /* iOS_HeckYeahTVTests */ = {
@@ -533,7 +531,7 @@
 				EBE03C822E53E5DC006B7747 /* Hellfire */,
 			);
 			productName = "Heck Yeah TV";
-			productReference = EBE03C172E53D8DE006B7747 /* HeckYeahTV.app */;
+			productReference = EBE03C172E53D8DE006B7747 /* Heck Yeah TV.app */;
 			productType = "com.apple.product-type.application";
 		};
 		EBE03C222E53D8DF006B7747 /* tvOS_HeckYeahTVTests */ = {
@@ -718,6 +716,7 @@
 				"# This output is used by Xcode 'outputs' to avoid re-running this script phase.",
 				"echo \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"",
 				"",
+				"",
 			);
 			showEnvVarsInLog = 0;
 		};
@@ -733,6 +732,7 @@
 			shellPath = /bin/sh;
 			shellScript = (
 				"\"${PODS_ROOT}/Target Support Files/Pods-iOS_HeckYeahTV/Pods-iOS_HeckYeahTV-frameworks.sh\"",
+				"",
 				"",
 			);
 			showEnvVarsInLog = 0;
@@ -750,6 +750,7 @@
 			shellScript = (
 				"\"${PODS_ROOT}/Target Support Files/Pods-tvOS_HeckYeahTV/Pods-tvOS_HeckYeahTV-frameworks.sh\"",
 				"",
+				"",
 			);
 			showEnvVarsInLog = 0;
 		};
@@ -765,6 +766,7 @@
 			shellPath = /bin/sh;
 			shellScript = (
 				"\"${PODS_ROOT}/Target Support Files/Pods-macOS_HeckYeahTV/Pods-macOS_HeckYeahTV-frameworks.sh\"",
+				"",
 				"",
 			);
 			showEnvVarsInLog = 0;
@@ -790,6 +792,7 @@
 				"# This output is used by Xcode 'outputs' to avoid re-running this script phase.",
 				"echo \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"",
 				"",
+				"",
 			);
 			showEnvVarsInLog = 0;
 		};
@@ -813,6 +816,7 @@
 				"fi",
 				"# This output is used by Xcode 'outputs' to avoid re-running this script phase.",
 				"echo \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"",
+				"",
 				"",
 			);
 			showEnvVarsInLog = 0;
@@ -930,7 +934,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 15.5;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.hellyermultimedia.heckyeahtv.go;
-				PRODUCT_NAME = HeckYeahTV;
+				PRODUCT_NAME = "Heck Yeah TV";
 				REGISTER_APP_GROUPS = YES;
 				SDKROOT = macosx;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -968,7 +972,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 15.5;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.hellyermultimedia.heckyeahtv.go;
-				PRODUCT_NAME = HeckYeahTV;
+				PRODUCT_NAME = "Heck Yeah TV";
 				REGISTER_APP_GROUPS = YES;
 				SDKROOT = macosx;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -1209,7 +1213,7 @@
 				);
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.hellyermultimedia.heckyeahtv.go;
-				PRODUCT_NAME = HeckYeahTV;
+				PRODUCT_NAME = "Heck Yeah TV";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -1245,7 +1249,7 @@
 				);
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.hellyermultimedia.heckyeahtv.go;
-				PRODUCT_NAME = HeckYeahTV;
+				PRODUCT_NAME = "Heck Yeah TV";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -1352,7 +1356,7 @@
 				);
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.hellyermultimedia.heckyeahtv.go;
-				PRODUCT_NAME = HeckYeahTV;
+				PRODUCT_NAME = "Heck Yeah TV";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = appletvos;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -1388,7 +1392,7 @@
 				);
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.hellyermultimedia.heckyeahtv.go;
-				PRODUCT_NAME = HeckYeahTV;
+				PRODUCT_NAME = "Heck Yeah TV";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = appletvos;
 				SWIFT_EMIT_LOC_STRINGS = YES;
