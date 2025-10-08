@@ -6,7 +6,6 @@
 //  Copyright © 2025 Hellyer Multimedia. All rights reserved.
 //
 
-
 import SwiftUI
 import SwiftData
 
@@ -24,13 +23,14 @@ struct VLCPlayerView: UnifiedPlatformRepresentable {
     
     @Environment(\.scenePhase) private var scenePhase
     @Binding var appState: SharedAppState
+
+    // Selected channel to play (resolved to URL via SwiftData)
+    let selectedChannelId: ChannelId?
     
     //MARK: - UnifiedPlatformRepresentable overrides
 
     func makeCoordinator() -> VLCPlayerView.Coordinator {
-        let coordinator = VLCPlayerView.Coordinator()
-        coordinator.registerObserver()
-        return coordinator
+        VLCPlayerView.Coordinator()
     }
     
     func makeView(context: Context) -> PlatformView {
@@ -38,13 +38,15 @@ struct VLCPlayerView: UnifiedPlatformRepresentable {
     }
     
     func updateView(_ view: PlatformView, context: Context) {
+        // If app is not active, stop playback to release resources.
         if scenePhase != .active {
             context.coordinator.stop()
+            return
         }
         
-        if appState.isPlayerPaused {
-            context.coordinator.pause()
-        }
+        // Reconciles the selectedChannelId and player state intent to determine the actual player state.
+        context.coordinator.updatePlayState(channelId: selectedChannelId,
+                                            shouldPause: appState.isPlayerPaused)
     }
     
     static func dismantleView(_ view: PlatformView, coordinator: Coordinator) {
@@ -56,26 +58,33 @@ struct VLCPlayerView: UnifiedPlatformRepresentable {
     @MainActor
     final class Coordinator: NSObject {
         
+        //MARK: - Private API
+        
         private lazy var viewContext = DataPersistence.shared.viewContext
         
-        private lazy var mediaPlayer = {
+        private lazy var mediaPlayer: VLCMediaPlayer = {
             let _player = VLCMediaPlayer()
             _player.drawable = self.platformView
             _player.delegate = nil
             return _player
         }()
         
-        private func getPlayingChannel() throws -> IPTVChannel? {
-            let predicate = #Predicate<IPTVChannel> { $0.isPlaying }
+        private func resolveChannelURL(id: ChannelId) -> URL? {
+            let predicate = #Predicate<IPTVChannel> { $0.id == id }
             var descriptor = FetchDescriptor<IPTVChannel>(predicate: predicate)
             descriptor.fetchLimit = 1
-            let playingChannel = try viewContext.fetch(descriptor).first
-            return playingChannel
+            do {
+                return try viewContext.fetch(descriptor).first?.url
+            } catch {
+                return nil
+            }
         }
         
+        //MARK: - Internal API
+        
+        // Platform view that VLC renders into
         lazy var platformView: PlatformView = {
             let view = PlatformUtils.createView()
-
 #if os(macOS)
             view.wantsLayer = true
             view.layer?.backgroundColor = PlatformColor.black.cgColor
@@ -86,53 +95,70 @@ struct VLCPlayerView: UnifiedPlatformRepresentable {
             return view
         }()
         
-        func registerObserver() {
-            NotificationCenter.default.addObserver(forName: ModelContext.didSave, object: nil, queue: .main) { [weak self] notification in
-                DispatchQueue.main.async {
-                    
-                    
-//                    if let url = self?.mediaPlayer.media?.url, let updatedStuff = notification.dataChanges.updated.first(where: { $0.isPlaying == true }) {
-//                        
-//                        if updatedStuff.updated.map( { $0.url }).contains(where: { $0 == self?.mediaPlayer.media?.url }) {
-//                            
-//                        }
-//                    }
-                    //self.pause()
-                    
-                    if let _channel = try? self?.getPlayingChannel() {
-                        self?.play(url: _channel.url)
-                    } else {
-                        self?.stop()
-                    }
-                }
-            }
-        }
-        
-        func play(url: URL) {
-            
-            if url != mediaPlayer.media?.url {
-                mediaPlayer.stop()
+        //MARK: - Player controls
 
-                let media = VLCMedia(url: url)
-                //https://wiki.videolan.org/VLC_command-line_help/
-                media.addOptions(["network-caching": 1000,              // 1s;
-                                  "live-caching": 1000,
-                                  "no-lua": true,
-                                  "no-video-title-show": true,
-                                  "avcodec-hw": "any",                  // prefer hardware decode when possible
-                                  "drop-late-frames": true,             // reduce CPU spikes under load
-                                  "skip-frames": true,                  // allow frame skipping under pressure
-                                  "deinterlace": false
-                                 ])
-                mediaPlayer.media = media
-            }
+        
+        /// Essentially the play() function but takes parameters to determine the current player state based on channel selection and intent.
+        /// - Parameters:
+        ///   - channelId: (Optional) The identifier of the channel to play.
+        ///   - shouldPause: Intent of the user to pause/resume an active playing stream.
+        func updatePlayState(channelId: ChannelId?, shouldPause: Bool) {
             
-            //If the player is currently playing, do nothing and return early.
-            guard not(mediaPlayer.isPlaying) else {
+            // Resolve desired channel URL from channelId
+            let channelURL: URL? = {
+                guard let channelId else { return nil }
+                return self.resolveChannelURL(id: channelId)
+            }()
+            
+            // If there is no channel URL, stop and clear media.
+            guard let channelURL else {
+                stop()
                 return
             }
             
-            mediaPlayer.play()
+            let currentURL = mediaPlayer.media?.url
+            let isCurrentlyPlaying = mediaPlayer.isPlaying
+            
+            // If URL changed, prepare new media and start/hold based on pause intent.
+            if currentURL != channelURL {
+                // Always stop before switching media.
+                if isCurrentlyPlaying {
+                    mediaPlayer.stop()
+                }
+                
+                let media = VLCMedia(url: channelURL)
+                // https://wiki.videolan.org/VLC_command-line_help/
+                media.addOptions([
+                    "network-caching": 1000,            // Network resource caching in milliseconds.
+                    "no-lua": true,                     // Disable all lua plugins.
+                    "no-video-title-show": true,        // Do not show media title on video.
+                    "avcodec-hw": "any",                // Prefer hardware decode when possible. (reduce CPU)
+                    "drop-late-frames": true,           // This drops frames that are late. (reduce CPU)
+                    "skip-frames": true,                // allow frame skipping under pressure (reduce CPU)
+                    "deinterlace": false                // Deinterlace is off. (reduce CPU)
+                ])
+                mediaPlayer.media = media
+                
+                if shouldPause {
+                    // Do not start playback; remain paused with new media loaded.
+                    // VLC does not have a "paused but not started" state; simply refrain from play().
+                } else {
+                    mediaPlayer.play()
+                }
+                return
+            }
+            
+            // URL is unchanged; reconcile pause/play intent.
+            if shouldPause {
+                if mediaPlayer.canPause, isCurrentlyPlaying {
+                    mediaPlayer.pause()
+                }
+            } else {
+                // Should be playing: if not already, start/resume.
+                if !isCurrentlyPlaying {
+                    mediaPlayer.play()
+                }
+            }
         }
         
         func seekForward() {

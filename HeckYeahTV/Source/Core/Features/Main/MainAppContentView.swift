@@ -11,20 +11,28 @@ import SwiftData
 
 struct MainAppContentView: View {
     
+    @Environment(\.scenePhase) private var scenePhase
     @State private var fadeTask: Task<Void, Never>?
     @State private var showPlayToast = false
     @State private var appState: SharedAppState = SharedAppState()
+    @Query(filter: #Predicate<IPTVChannel> { $0.isPlaying }, sort: []) private var playingChannels: [IPTVChannel]
+    private var selectedChannelId: ChannelId? { playingChannels.first?.id }
+    
+#if os(tvOS)
+    // Ensures we deterministically focus the activation layer when the guide is hidden.
+    @FocusState private var activationHasFocus: Bool
+#endif
     
     var body: some View {
         // Alignment required to layout the play/pause button in the bottom left corner.
         ZStack(alignment: .bottomLeading)  {
-            
-            VLCPlayerView(appState: $appState)
+            VLCPlayerView(appState: $appState, selectedChannelId: selectedChannelId)
                 .zIndex(0)
                 .ignoresSafeArea(.all)
             
             if appState.isPlayerPaused {
                 PlaybackBadge(isPlaying: false)
+                    .allowsHitTesting(false)
                     .transition(.opacity)
                     .padding(.leading, 50)
                     .padding(.bottom, 50)
@@ -32,6 +40,7 @@ struct MainAppContentView: View {
             
             if appState.isPlayerPaused == false && showPlayToast {
                 PlaybackBadge(isPlaying: true)
+                    .allowsHitTesting(false)
                     .padding(.leading, 50)
                     .padding(.bottom, 50)
             }
@@ -42,23 +51,34 @@ struct MainAppContentView: View {
                     .transition(.opacity)
             } else {
                 TabActivationView(appState: $appState)
+#if os(tvOS)
+                    // Make sure this gets initial focus when visible so select and commands route correctly.
+                    .focused($activationHasFocus)
+                    .onAppear {
+                        activationHasFocus = true
+                    }
+                    .onChange(of: appState.isGuideVisible) { _, newValue in
+                        // When hiding the guide, reclaim focus on the activation layer.
+                        if newValue == false {
+                            activationHasFocus = true
+                        }
+                    }
+#endif
                     .zIndex(1000)
             }
         }
         
 #if os(tvOS)
-        // VLCPlayerView global handler for play/pause
         .onPlayPauseCommand {
-            print("Tap Play/Pause button")
             appState.isPlayerPaused.toggle()
         }
-#endif // os(tvOS)
+#endif
         
-        .onChange(of: appState.isPlayerPaused, { oldValue, newValue in
+        .onChange(of: appState.isPlayerPaused, { _, newValue in
             fadeTask?.cancel()
             fadeTask = nil
             
-            if newValue == false {
+            if newValue == true {
                 showPlayToast = false
             } else {
                 fadeTask = Task { @MainActor in
@@ -74,7 +94,11 @@ struct MainAppContentView: View {
             }
         })
         
-        
+        .onChange(of: scenePhase,  { _, _ in
+            if scenePhase != .active && appState.isGuideVisible {
+                appState.isGuideVisible = false
+            }
+        })
         
 #if os(macOS)
         // macOS: arrow keys re-show the guide
@@ -83,44 +107,6 @@ struct MainAppContentView: View {
                 guideStore.isGuideVisible = true
             }
         })
-#endif // os(macOS)
+#endif
     }
 }
-
-
-//
-//#if DEBUG && targetEnvironment(simulator)
-//private struct PreviewMainAppContentView: View {
-//
-//    @State private var guideStore = GuideStore()
-//    @State private var channel = HDHomeRunChannel(guideNumber: "8.1",
-//                                                  guideName: "WRIC-TV",
-//                                                  videoCodec: "MPEG2",
-//                                                  audioCodec: "AC3",
-//                                                  hasDRM: true,
-//                                                  isHD: true ,
-//                                                  url: "http://192.168.50.250:5004/auto/v8.1")
-//    @State private var stream = IPStream(channelId:  "PlutoTVTrueCrime.us",
-//                                         feedId: "Austria",
-//                                         title: "Pluto TV True Crime",
-//                                         url:"https://amg00793-amg00793c5-firetv-us-4068.playouts.now.amagi.tv/playlist.m3u8",
-//                                         referrer: nil,
-//                                         userAgent: nil,
-//                                         quality: "2160p")
-//
-//    var body: some View {
-//        VStack {
-//            MainAppContentView().environment(guideStore)
-//        }
-//        .task {
-//            // This block runs when the view appears
-//            await guideStore.load(streams: [stream], tunerChannels: [channel])
-//        }
-//    }
-//}
-//
-//#Preview {
-//    PreviewMainAppContentView()
-//        .ignoresSafeArea(.all)
-//}
-//#endif // DEBUG && targetEnvironment(simulator)

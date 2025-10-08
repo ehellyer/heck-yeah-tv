@@ -59,6 +59,13 @@ typealias PlatformStackView = UIStackView
 
 //MARK: - Platform Utilities
 
+#if canImport(UIKit)
+@available(tvOS 13.0, *)
+private final class NonFocusableView_tvOS: UIView {
+    override var canBecomeFocused: Bool { false }
+}
+#endif
+
 struct PlatformUtils {
     
     static func createLabel(text: String = "", font: PlatformFont? = nil) -> PlatformLabel {
@@ -129,7 +136,17 @@ struct PlatformUtils {
     }
     
     static func createView() -> PlatformView {
+#if os(tvOS)
+        // Use a non-focusable backing view on tvOS so it never grabs initial focus.
+        let view: PlatformView
+        if #available(tvOS 13.0, *) {
+            view = NonFocusableView_tvOS()
+        } else {
+            view = PlatformView()
+        }
+#else
         let view = PlatformView()
+#endif
         view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = .clear
         return view
@@ -141,3 +158,4 @@ struct PlatformUtils {
         return tableView
     }
 }
+
