@@ -73,11 +73,7 @@ struct VLCPlayerView: UnifiedPlatformRepresentable {
             let predicate = #Predicate<IPTVChannel> { $0.id == id }
             var descriptor = FetchDescriptor<IPTVChannel>(predicate: predicate)
             descriptor.fetchLimit = 1
-            do {
-                return try viewContext.fetch(descriptor).first?.url
-            } catch {
-                return nil
-            }
+            return try? viewContext.fetch(descriptor).first?.url
         }
         
         //MARK: - Internal API

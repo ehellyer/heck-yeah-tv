@@ -12,7 +12,6 @@ import SwiftData
 struct TabContainerView: View {
     
     @FocusState var focus: FocusTarget?
-    
     @Binding var appState: SharedAppState
     
     private var selectedTab: Binding<TabSection> {
@@ -43,7 +42,7 @@ struct TabContainerView: View {
                 Tab(TabSection.channels.title,
                     systemImage: TabSection.channels.systemImage,
                     value: TabSection.channels) {
-                    ChannelsContainer(focus: $focus)
+                    ChannelsContainer(focus: $focus, appState: $appState)
                 }
                 
                 Tab(TabSection.search.title,

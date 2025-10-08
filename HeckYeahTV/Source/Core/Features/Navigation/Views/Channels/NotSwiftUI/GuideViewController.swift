@@ -13,6 +13,7 @@ import UIKit
 #endif
 
 import SwiftData
+import Observation
 
 protocol GuideViewControllerDelegate: AnyObject {
     /// Ask delegate to update the focus target to this target.
@@ -26,12 +27,14 @@ class GuideViewController: PlatformViewController {
     
     deinit {
         print("GuideViewController deallocated")
+        NotificationCenter.default.removeObserver(self)
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         setupTableView()
+        setupAppStateObservation()
         applySnapshot(animated: false)
         registerObservers()
     }
@@ -60,7 +63,6 @@ class GuideViewController: PlatformViewController {
     
     private var section: SectionModel = 0
     private lazy var viewContext = DataPersistence.shared.viewContext
-    private var didSaveObserver: Any?
     
     private lazy var dataSource = UITableViewDiffableDataSource<SectionModel, PersistentIdentifier>(tableView: self.tableView) { [weak self] tableView, indexPath, persistentIdentifier in
         let guideRowCell = tableView.dequeueReusableCell(withIdentifier: GuideRowCell.identifier, for: indexPath) as! GuideRowCell
@@ -100,15 +102,40 @@ class GuideViewController: PlatformViewController {
                     let visible = self.tableView.indexPathsForVisibleRows?
                         .compactMap { self.dataSource.itemIdentifier(for: $0) } ?? []
                     snap.reconfigureItems(visible)
-                    self.dataSource.apply(snap, animatingDifferences: true)
+                    self.dataSource.apply(snap, animatingDifferences: false)
                 }
-                
-                self.applySnapshot(animated: true)
             }
         }
     }
     
-    func setPlayingChannel(id: String) throws {
+    //MARK: - Observation of SharedAppState
+    
+    private func setupAppStateObservation() {
+        // If appState hasn't been injected yet, nothing to observe.
+        guard let appState else { return }
+        
+        // Re-run when showFavoritesOnly changes.
+        withObservationTracking({
+            // Access the property we care about. This registers the dependency.
+            _ = appState.showFavoritesOnly
+        }, onChange: { [weak self] in
+            // Called when any accessed observed property in the tracking block changes.
+            Task { @MainActor [weak self] in
+                self?.applySnapshot(animated: true)
+            }
+        })
+    }
+    
+    private func applySnapshot(animated: Bool) {
+        let channels: [PersistentIdentifier] = (try? self.getAllChannels().map(\.persistentModelID)) ?? []
+        var snap = NSDiffableDataSourceSnapshot<SectionModel, PersistentIdentifier>()
+        snap.appendSections([section])
+        snap.appendItems(channels, toSection: section)
+        dataSource.apply(snap, animatingDifferences: animated)
+    }
+
+    
+    private func setPlayingChannel(id: String) throws {
         /// There can only be one channel at a time playing, this code enforces that demand.
         let isPlayingPredicate = #Predicate<IPTVChannel> { $0.isPlaying }
         let isPlayingDescriptor = FetchDescriptor<IPTVChannel>(predicate: isPlayingPredicate)
@@ -127,7 +154,7 @@ class GuideViewController: PlatformViewController {
         try viewContext.save()
     }
     
-    func toggleFavorite(id: String) throws {
+    private func toggleFavorite(id: String) throws {
         let predicate = #Predicate<IPTVChannel> { $0.id == id }
         var descriptor = FetchDescriptor<IPTVChannel>(predicate: predicate)
         descriptor.fetchLimit = 1
@@ -137,25 +164,37 @@ class GuideViewController: PlatformViewController {
         }
     }
 
-    func getAllChannels() throws -> [IPTVChannel] {
-        let descriptor = FetchDescriptor<IPTVChannel>(sortBy: [SortDescriptor(\.sortHint, order: .forward)])
-        let channels = try viewContext.fetch(descriptor)
-        return channels
+    private func getAllChannels() throws -> [IPTVChannel] {
+        // Apply favorites filter based on appState.showFavoritesOnly.
+        let sort = [SortDescriptor(\IPTVChannel.sortHint, order: .forward)]
+        if appState?.showFavoritesOnly == true {
+            let predicate = #Predicate<IPTVChannel> { $0.isFavorite == true }
+            let descriptor = FetchDescriptor<IPTVChannel>(predicate: predicate, sortBy: sort)
+            return try viewContext.fetch(descriptor)
+        } else {
+            let descriptor = FetchDescriptor<IPTVChannel>(sortBy: sort)
+            return try viewContext.fetch(descriptor)
+        }
     }
     
+
+    //MARK: - Internal API - Injected App State (from SwiftUI)
     
-    //MARK: - Internal API - Updates
+    // Set by GuideViewRepresentable.Coordinator
+    var appState: SharedAppState! {
+        didSet {
+            // If the controller is already loaded and we get a new instance, rewire observation.
+            if isViewLoaded {
+                setupAppStateObservation()
+                // Re-apply snapshot in case filter intent changed with a new instance.
+                applySnapshot(animated: true)
+            }
+        }
+    }
+    
+    //MARK: - Internal API
     
     weak var delegate: GuideViewControllerDelegate?
-    
-    func applySnapshot(animated: Bool) {
-        let channels: [PersistentIdentifier] = (try? self.getAllChannels().map(\.persistentModelID)) ?? []
-        var snap = NSDiffableDataSourceSnapshot<SectionModel, PersistentIdentifier>()
-        snap.appendSections([section])
-        snap.appendItems(channels, toSection: section)
-        dataSource.apply(snap, animatingDifferences: animated)
-    }
-    
 }
 
 //MARK: - GuideViewDelegate protocol

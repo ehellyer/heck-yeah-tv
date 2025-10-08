@@ -14,19 +14,20 @@ struct GuideViewRepresentable: UnifiedPlatformControllerRepresentable {
     
     //MARK: - Bound State
     @FocusState.Binding var focus: FocusTarget?
+    @Binding var appState: SharedAppState
 
-    
-//    @Query(sort: \IPTVChannel.sortHint, order: .forward)
-//    private var channels: [IPTVChannel]
-    
     //MARK: - PlatformViewRepresentable overrides
     
     func makeViewController(context: Context) -> PlatformViewController {
+        // Inject the current appState into the controller.
+        context.coordinator.guideController.appState = appState
         return context.coordinator.guideController
     }
     
     func updateViewController(_ viewController: PlatformViewController, context: Context) {
-        //Not required - Updates handled via observation.
+        // Keep the controller's appState in sync as the binding changes.
+        context.coordinator.guideController.appState = appState
+        // Other updates are handled via observation that we’ll add in the controller.
     }
     
     static func dismantleViewController(_ viewController: PlatformViewController, coordinator: Coordinator) {
