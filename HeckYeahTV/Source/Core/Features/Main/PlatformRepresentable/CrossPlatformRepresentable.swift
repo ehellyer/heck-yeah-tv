@@ -1,5 +1,5 @@
 //
-//  UnifiedPlatformRepresentable.swift
+//  CrossPlatformRepresentable.swift
 //  Heck Yeah TV
 //
 //  Created by Ed Hellyer on 9/21/25.
@@ -9,7 +9,7 @@
 import SwiftUI
 
 @MainActor
-protocol UnifiedPlatformRepresentable: PlatformViewRepresentable {
+protocol CrossPlatformRepresentable: PlatformViewRepresentable {
 
     associatedtype Coordinator = Void
     
@@ -24,7 +24,7 @@ protocol UnifiedPlatformRepresentable: PlatformViewRepresentable {
 }
 
 // Add defaults for optional protocol implementation
-extension UnifiedPlatformRepresentable {
+extension CrossPlatformRepresentable {
     
     static func dismantleView(_ view: PlatformView, coordinator: Coordinator) {
         //No implementation
@@ -38,7 +38,7 @@ extension UnifiedPlatformRepresentable {
 
 #if canImport(UIKit)
 //MARK: - UIKit forwarding
-extension UnifiedPlatformRepresentable where PlatformView == UIView {
+extension CrossPlatformRepresentable where PlatformView == UIView {
 
     func makeUIView(context: Context) -> UIView {
         makeView(context: context)
@@ -61,7 +61,7 @@ extension UnifiedPlatformRepresentable where PlatformView == UIView {
 
 #if canImport(AppKit) && !targetEnvironment(macCatalyst)
 //MARK: - AppKit forwarding
-extension UnifiedPlatformRepresentable where PlatformView == NSView {
+extension CrossPlatformRepresentable where PlatformView == NSView {
     
     func makeNSView(context: Context) -> NSView {
         makeView(context: context)

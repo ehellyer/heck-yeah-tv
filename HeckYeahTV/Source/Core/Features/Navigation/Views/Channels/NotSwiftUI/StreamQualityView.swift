@@ -12,30 +12,62 @@ import AppKit
 import UIKit
 #endif
 
+@MainActor
 extension StreamQuality {
+    var legacyView: StreamQualityView {
+        return StreamQualityView(streamQuality: self)
+    }
+}
+
+@MainActor
+class StreamQualityView: CrossPlatformView {
     
-    var legacyView: PlatformView {
-        let view = PlatformUtils.createView()
-        view.tag = StreamQuality.streamQualityViewTagId
-        view.layer.cornerRadius = 6
-        view.layer.borderWidth = 1
-        view.layer.borderColor = PlatformColor.white.cgColor
-        view.layer.masksToBounds = false
+    init(streamQuality: StreamQuality) {
+        super.init(frame: CGRect(x: 0, y: 0, width: 1, height: 1))
+        self.translatesAutoresizingMaskIntoConstraints = false
+        self.clipsToBounds = false
+        
+        self.commonInit(sq: streamQuality)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    func commonInit(sq: StreamQuality) {
+        tag = StreamQuality.streamQualityViewTagId
         
         let label = PlatformUtils.createLabel()
         label.font = .systemFont(ofSize: 15, weight: .regular)
         label.textColor = .white
-        label.text = name
+        label.textValue = sq.name
         
-        view.addSubview(label)
-        label.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 5).isActive = true
-        view.trailingAnchor.constraint(equalTo: label.trailingAnchor, constant: 5).isActive = true
-        label.topAnchor.constraint(equalTo: view.topAnchor, constant: 3).isActive = true
-        view.bottomAnchor.constraint(equalTo: label.bottomAnchor, constant: 3).isActive = true
+        self.addSubview(label)
+        label.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 5).isActive = true
+        self.trailingAnchor.constraint(equalTo: label.trailingAnchor, constant: 5).isActive = true
+        label.topAnchor.constraint(equalTo: self.topAnchor, constant: 3).isActive = true
+        self.bottomAnchor.constraint(equalTo: label.bottomAnchor, constant: 3).isActive = true
         
         label.setContentCompressionResistancePriority(.required, for: .vertical)
         label.setContentCompressionResistancePriority(.required, for: .horizontal)
-        return view
+        self.setContentCompressionResistancePriority(.required, for: .vertical)
+        self.setContentCompressionResistancePriority(.required, for: .horizontal)
+
+#if os(macOS)
+        self.wantsLayer = true
+        layer?.cornerRadius = 6
+        layer?.borderWidth = 1
+        layer?.borderColor = PlatformColor.white.cgColor
+        layer?.masksToBounds = false
+        layer?.backgroundColor = PlatformColor.clear
+#else
+        layer.cornerRadius = 6
+        layer.borderWidth = 1
+        layer.borderColor = PlatformColor.white.cgColor
+        layer.masksToBounds = false
+        self.backgroundColor = PlatformColor.clear
+#endif
+        
+
     }
 }
-

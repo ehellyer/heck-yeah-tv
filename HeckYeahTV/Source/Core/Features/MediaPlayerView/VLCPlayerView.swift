@@ -17,7 +17,7 @@ import VLCKit
 import MobileVLCKit
 #endif
 
-struct VLCPlayerView: UnifiedPlatformRepresentable {
+struct VLCPlayerView: CrossPlatformRepresentable {
 
     //MARK: - Binding and State
     
@@ -27,7 +27,7 @@ struct VLCPlayerView: UnifiedPlatformRepresentable {
     // Selected channel to play (resolved to URL via SwiftData)
     let selectedChannelId: ChannelId?
     
-    //MARK: - UnifiedPlatformRepresentable overrides
+    //MARK: - CrossPlatformRepresentable overrides
 
     func makeCoordinator() -> VLCPlayerView.Coordinator {
         VLCPlayerView.Coordinator()

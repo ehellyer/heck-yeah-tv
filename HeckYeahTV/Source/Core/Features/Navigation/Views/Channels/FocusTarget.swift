@@ -9,6 +9,7 @@
 import SwiftUI
 
 enum FocusTarget: Hashable {
+    case guideActivationView
     case favoritesToggle
     case guide(channelId: String, col: Int)
 }
@@ -16,6 +17,8 @@ enum FocusTarget: Hashable {
 extension FocusTarget: CustomDebugStringConvertible {
     var debugDescription: String {
         switch self {
+            case .guideActivationView:
+                return "GuideActivationView"
             case .favoritesToggle:
                 return "ShowFavoritesToggle"
             case .guide(channelId: let channelId, col: let col):
@@ -23,4 +26,3 @@ extension FocusTarget: CustomDebugStringConvertible {
         }
     }
 }
-

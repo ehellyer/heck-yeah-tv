@@ -1,5 +1,5 @@
 //
-//  UnifiedPlatformControllerRepresentable.swift
+//  CrossPlatformControllerRepresentable.swift
 //  Heck Yeah TV
 //
 //  Created by Ed Hellyer on 9/24/25.
@@ -10,7 +10,7 @@
 import SwiftUI
 
 @MainActor
-protocol UnifiedPlatformControllerRepresentable: PlatformViewControllerRepresentable {
+protocol CrossPlatformControllerRepresentable: PlatformViewControllerRepresentable {
     
     func makeViewController(context: Context) -> PlatformViewController
     
@@ -21,7 +21,7 @@ protocol UnifiedPlatformControllerRepresentable: PlatformViewControllerRepresent
 
 #if canImport(UIKit)
 //MARK: - UIKit forwarding
-extension UnifiedPlatformControllerRepresentable where PlatformViewController == UIViewController {
+extension CrossPlatformControllerRepresentable where PlatformViewController == UIViewController {
     
     func makeUIViewController(context: Context) -> PlatformViewController {
         return makeViewController(context: context)
@@ -39,7 +39,7 @@ extension UnifiedPlatformControllerRepresentable where PlatformViewController ==
 
 #if canImport(AppKit) && !targetEnvironment(macCatalyst)
 //MARK: - AppKit forwarding
-extension UnifiedPlatformRepresentable where PlatformViewController == NSViewController {
+extension CrossPlatformControllerRepresentable where PlatformViewController == NSViewController {
     
     func makeNSViewController(context: Context) -> PlatformViewController {
         return makeViewController(context: context)

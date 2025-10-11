@@ -74,13 +74,13 @@ extension String {
     ///
     /// ````
     ///
-    /// "123".concat("456", withSeparator: " - ")
+    /// "123".concat("456", separator: " - ")
     /// //returns "123 - 456"
     ///
-    /// "123".concat(nil, withSeparator: " - ")
+    /// "123".concat(nil, separator: " - ")
     /// //returns "123"
     ///
-    /// "".concat("456", withSeparator: " - ")
+    /// "".concat("456", separator: " - ")
     /// //returns "456"
     ///
     /// "123".concat("456")

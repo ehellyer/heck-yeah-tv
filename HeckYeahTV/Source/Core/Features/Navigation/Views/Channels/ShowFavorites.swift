@@ -12,10 +12,8 @@ import SwiftData
 struct ShowFavorites: View {
     
     @FocusState.Binding var focus: FocusTarget?
-    private var isFocused: Bool { focus == .favoritesToggle }
-    
-    @State private var appState: SharedAppState = SharedAppState()
-    
+    @Binding var appState: SharedAppState
+
     var body: some View {
         HStack {
             Text("Favorites")
@@ -32,23 +30,5 @@ struct ShowFavorites: View {
             .focused($focus, equals: FocusTarget.favoritesToggle)
             Spacer()
         }
-    }
-}
-
-
-#Preview("On (constant)") {
-    ShowFavoritesPreview()
-}
-#Preview("Off (constant)") {
-    ShowFavoritesPreview()
-}
-
-private struct ShowFavoritesPreview: View {
-    @FocusState private var focus: FocusTarget?
-    var body: some View {
-        ShowFavorites(focus: $focus)
-            .padding()
-            .defaultFocus($focus, .favoritesToggle)
-            .onAppear { focus = .favoritesToggle }
     }
 }

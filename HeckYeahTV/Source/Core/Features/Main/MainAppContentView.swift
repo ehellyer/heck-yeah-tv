@@ -20,15 +20,23 @@ struct MainAppContentView: View {
     
 #if os(tvOS)
     // Ensures we deterministically focus the activation layer when the guide is hidden.
-    @FocusState private var activationHasFocus: Bool
+    @FocusState var focus: FocusTarget?
 #endif
     
     var body: some View {
         // Alignment required to layout the play/pause button in the bottom left corner.
         ZStack(alignment: .bottomLeading)  {
+            
+            
             VLCPlayerView(appState: $appState, selectedChannelId: selectedChannelId)
                 .zIndex(0)
                 .ignoresSafeArea(.all)
+            
+                .overlay(alignment: .bottomTrailing) {
+                    Text("Focus: \(focus?.debugDescription ?? "nil")")
+                        .fontWeight(.bold)
+                        .background(Color(.gray))
+                }
             
             if appState.isPlayerPaused {
                 PlaybackBadge(isPlaying: false)
@@ -46,25 +54,17 @@ struct MainAppContentView: View {
             }
             
             if appState.isGuideVisible {
-                TabContainerView(appState: $appState)
+                TabContainerView(focus: $focus, appState: $appState)
                     .zIndex(1)
-                    .transition(.opacity)
+                    .transition(.opacity)                    
             } else {
                 TabActivationView(appState: $appState)
+                    .zIndex(1000)
 #if os(tvOS)
                     // Make sure this gets initial focus when visible so select and commands route correctly.
-                    .focused($activationHasFocus)
-                    .onAppear {
-                        activationHasFocus = true
-                    }
-                    .onChange(of: appState.isGuideVisible) { _, newValue in
-                        // When hiding the guide, reclaim focus on the activation layer.
-                        if newValue == false {
-                            activationHasFocus = true
-                        }
-                    }
+                    .focused($focus, equals: .guideActivationView)
 #endif
-                    .zIndex(1000)
+                    
             }
         }
         
@@ -73,6 +73,15 @@ struct MainAppContentView: View {
             appState.isPlayerPaused.toggle()
         }
 #endif
+        
+        .onChange(of: appState.legacyKitFocus, { _, newValue in
+            focus = newValue
+            
+            DispatchQueue.main.async {
+                print("<<< Legacy Focus onChange: \(newValue?.debugDescription ?? "nil")")
+            }
+
+        })
         
         .onChange(of: appState.isPlayerPaused, { _, newValue in
             fadeTask?.cancel()
@@ -100,11 +109,17 @@ struct MainAppContentView: View {
             }
         })
         
+        .onChange(of: focus) {
+            DispatchQueue.main.async {
+                print("<<< Focus onChange: \(self.focus?.debugDescription ?? "nil")")
+            }
+        }
+        
 #if os(macOS)
         // macOS: arrow keys re-show the guide
         .background( MacArrowKeyCatcher {
             withAnimation {
-                guideStore.isGuideVisible = true
+                appState.isGuideVisible = true
             }
         })
 #endif

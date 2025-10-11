@@ -6,37 +6,70 @@
 //  Copyright © 2025 Hellyer Multimedia.
 //
 
+#if os(macOS)
+import AppKit
+#else
 import UIKit
+#endif
 
 /// Soft-clips (fades out) content on the left/right edges.
 /// `leftClip` / `rightClip` are fade widths (pts) from opaque → transparent.
-final class HorizontalClipContainer: UIView {
+final class HorizontalClipContainer: PlatformView {
     
-    //MARK: - UIView Overrides
+    //MARK: - PlatformView Overrides
     
     override init(frame: CGRect) {
         super.init(frame: frame)
         
         clipsToBounds = false
+#if os(macOS)
+        wantsLayer = true
+        layer?.masksToBounds = false
+#else
         layer.masksToBounds = false
+#endif
         
         // Gradient used as alpha mask: [clear, opaque, opaque, clear]
         gradientMask.startPoint = CGPoint(x: 0, y: 0.5)
         gradientMask.endPoint = CGPoint(x: 1, y: 0.5)
         gradientMask.colors = [
-            UIColor.black.withAlphaComponent(0).cgColor,
-            UIColor.black.cgColor,
-            UIColor.black.cgColor,
-            UIColor.black.withAlphaComponent(0).cgColor
+            PlatformColor.black.withAlphaComponent(0).cgColor,
+            PlatformColor.black.cgColor,
+            PlatformColor.black.cgColor,
+            PlatformColor.black.withAlphaComponent(0).cgColor
         ]
+        
+        // Apply the gradient as an alpha mask
+#if os(macOS)
+        layer?.mask = gradientMask
+#else
         layer.mask = gradientMask
+#endif
+    }
+    
+    convenience init() {
+        self.init(frame: .zero)
     }
     
     required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
     
+#if os(macOS)
+    override func layout() {
+        super.layout()
+        applyMaskLayout()
+    }
+#else
     override func layoutSubviews() {
         super.layoutSubviews()
-        
+        applyMaskLayout()
+    }
+#endif
+    
+    //MARK: - Private
+    
+    private let gradientMask = CAGradientLayer()
+    
+    private func applyMaskLayout() {
         guard bounds.width > 0 else { return }
         
         // Make the mask very tall so vertical overflow (shadows/halos) remains visible.
@@ -67,15 +100,27 @@ final class HorizontalClipContainer: UIView {
         CATransaction.commit()
     }
     
-    //MARK: - Private
-    
-    private let gradientMask = CAGradientLayer()
-    
     //MARK: - Internal API
     
     /// Fade width from the left edge (points). 0 = no left fade.
-    var leftClip: CGFloat  = 40 { didSet { setNeedsLayout() } }
+    var leftClip: CGFloat  = 40 {
+        didSet {
+#if os(macOS)
+            needsLayout = true
+#else
+            setNeedsLayout()
+#endif
+        }
+    }
     
     /// Fade width from the right edge (points). 0 = no right fade.
-    var rightClip: CGFloat = 40 { didSet { setNeedsLayout() } }
+    var rightClip: CGFloat = 40 {
+        didSet {
+#if os(macOS)
+            needsLayout = true
+#else
+            setNeedsLayout()
+#endif
+        }
+    }
 }

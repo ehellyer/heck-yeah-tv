@@ -15,8 +15,8 @@ struct ChannelsContainer: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
-            ShowFavorites(focus: $focus)
-            GuideViewRepresentable(focus: $focus, appState: $appState)
+            ShowFavorites(focus: $focus, appState: $appState)
+            GuideViewRepresentable(appState: $appState)
         }
     }
 }

@@ -14,6 +14,22 @@ final class SharedAppState {
     
     init() { }
     
+    
+#if os(tvOS)
+    private var _legacyKitFocus: FocusTarget?
+    var legacyKitFocus: FocusTarget? {
+        get {
+            access(keyPath: \.isPlayerPaused)
+            return _legacyKitFocus
+        }
+        set {
+            withMutation(keyPath: \.isPlayerPaused) {
+                _legacyKitFocus = newValue
+            }
+        }
+    }
+#endif
+    
     var isPlayerPaused: Bool {
         get {
             access(keyPath: \.isPlayerPaused)

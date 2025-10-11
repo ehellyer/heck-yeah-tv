@@ -10,24 +10,32 @@ import SwiftUI
 import SwiftData
 
 @MainActor
-struct GuideViewRepresentable: UnifiedPlatformControllerRepresentable {
+struct GuideViewRepresentable: CrossPlatformControllerRepresentable {
     
     //MARK: - Bound State
-    @FocusState.Binding var focus: FocusTarget?
     @Binding var appState: SharedAppState
 
     //MARK: - PlatformViewRepresentable overrides
     
     func makeViewController(context: Context) -> PlatformViewController {
+        
         // Inject the current appState into the controller.
         context.coordinator.guideController.appState = appState
+        
         return context.coordinator.guideController
     }
     
     func updateViewController(_ viewController: PlatformViewController, context: Context) {
+
         // Keep the controller's appState in sync as the binding changes.
         context.coordinator.guideController.appState = appState
-        // Other updates are handled via observation that we’ll add in the controller.
+        
+#if os(tvOS)
+        // If SwiftUI binding changed, you could optionally push focus into UIKit here.
+//        if let target = focus {
+//            context.coordinator.guideController.setFocus(target)
+//        }
+#endif
     }
     
     static func dismantleViewController(_ viewController: PlatformViewController, coordinator: Coordinator) {
@@ -52,11 +60,10 @@ struct GuideViewRepresentable: UnifiedPlatformControllerRepresentable {
     }
 }
 
+//MARK: - GuideViewControllerDelegate protocol
 extension GuideViewRepresentable.Coordinator: @MainActor GuideViewControllerDelegate {
-    
-    //MARK: - GuideViewControllerDelegate protocol
+
     func setFocus(_ target: FocusTarget) {
-        //TODO: EJH - Fix this.
-        //??? self.focus = target ???
+        self.guideController.appState.legacyKitFocus = target
     }
 }

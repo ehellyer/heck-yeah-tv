@@ -6,11 +6,7 @@
 //  Copyright © 2025 Hellyer Multimedia. All rights reserved.
 //
 
-#if os(macOS)
-import AppKit
-#else
 import UIKit
-#endif
 
 protocol FocusTargetView {
     
@@ -23,12 +19,12 @@ protocol FocusTargetView {
     func onTapUpFocusEffect()
 }
 
-extension FocusTargetView where Self: PlatformView {
+extension FocusTargetView where Self: UIView {
     
     private var scaleUp: CGFloat { return 1.10 }
     private var scaleDown: CGFloat { return 0.95 }
     
-    private func addParallaxMotionEffects(tiltValue : CGFloat = 0.25, panValue: CGFloat = 8) {
+    private func addParallaxMotionEffects(tiltValue: CGFloat = 0.25, panValue: CGFloat = 8.0) {
         let yRotation = UIInterpolatingMotionEffect(keyPath: "layer.transform.rotation.y", type: .tiltAlongHorizontalAxis)
         yRotation.minimumRelativeValue = tiltValue
         yRotation.maximumRelativeValue = -tiltValue
@@ -70,6 +66,7 @@ extension FocusTargetView where Self: PlatformView {
             self.addParallaxMotionEffects()
             
         }) { () -> Void in
+            // Do nothing for completion
         }
     }
     
@@ -82,6 +79,7 @@ extension FocusTargetView where Self: PlatformView {
             }
             self.removeParallaxMotionEffects()
         }) { () -> Void in
+            // Do nothing for completion
         }
     }
     

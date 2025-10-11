@@ -14,10 +14,48 @@ import UIKit
 
 class GuideRowCell: PlatformTableViewCell {
     
-    //MARK: - UITableViewCell overrides
+    //MARK: - PlatformTableViewCell overrides
     
+#if os(macOS)
+    override init(frame frameRect: NSRect) {
+        super.init(frame: frameRect)
+        commonInit()
+    }
+#else
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+        commonInit()
+    }
+#endif
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+#if !os(macOS)
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        programsStackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
+        channel = nil
+        programs = []
+    }
+#endif
+    
+#if os(tvOS)
+    // Make the cell itself not focusable; subviews will receive focus.
+    override var canBecomeFocused: Bool { false }
+#endif
+    
+    private func commonInit() {
+#if os(macOS)
+        self.wantsLayer = true
+        self.layer?.masksToBounds = false
+        self.clipsToBounds = false
+        // On macOS, NSTableCellView doesn't have contentView; use self as container.
+        rowStackView.spacing = 35
+        programsStackView.topAnchor.constraint(equalTo: self.topAnchor).isActive = true
+        programsStackView.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
+#else
         backgroundColor = .clear
         selectionStyle = .none
         clipsToBounds = false
@@ -25,23 +63,8 @@ class GuideRowCell: PlatformTableViewCell {
         rowStackView.spacing = 35
         programsStackView.topAnchor.constraint(equalTo: self.topAnchor).isActive = true
         programsStackView.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    override func prepareForReuse() {
-        super.prepareForReuse()
-        programsStackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
-        channel = nil
-        programs = []
-    }
-    
-#if os(tvOS)
-    // Make the cell itself not focusable; subviews will receive focus.
-    override var canBecomeFocused: Bool { false }
 #endif
+    }
     
     //MARK: - static internal API
     
@@ -59,19 +82,32 @@ class GuideRowCell: PlatformTableViewCell {
         return view
     }()
     
-    private lazy var favoriteButtonView: FavoritesToggleView = {
-        let view = FavoritesToggleView()
+    private lazy var favoriteButtonView: FavoriteToggleView = {
+        let view = FavoriteToggleView()
         return view
     }()
 
     private lazy var rowStackView: PlatformStackView = {
         let view = PlatformUtils.createStackView(axis: .horizontal)
+#if os(macOS)
+        self.addSubview(view)
+        view.leadingAnchor.constraint(equalTo: self.leadingAnchor).isActive = true
+        self.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+        view.topAnchor.constraint(equalTo: self.topAnchor).isActive = true
+        self.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+#else
         contentView.addSubview(view)
         view.leadingAnchor.constraint(equalTo: contentView.leadingAnchor).isActive = true
         contentView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         view.topAnchor.constraint(equalTo: contentView.topAnchor).isActive = true
         contentView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+#endif
+#if os(macOS)
+        view.alignment = .width
+#else
         view.alignment = .fill
+#endif
+
         view.distribution = .fill
         view.addArrangedSubview(favoriteButtonView)
         view.addArrangedSubview(channelNameView)
@@ -88,7 +124,11 @@ class GuideRowCell: PlatformTableViewCell {
         programsScrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         view.topAnchor.constraint(equalTo: programsScrollView.topAnchor).isActive = true
         programsScrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+#if os(macOS)
+        programsScrollView.contentInset = NSEdgeInsetsCompat(top: 0, left: view.leftClip, bottom: 0, right: view.rightClip)
+#else
         programsScrollView.contentInset = .init(top: 0, left: view.leftClip, bottom: 0, right: view.rightClip)
+#endif
         return view
     }()
     private lazy var programsScrollView: PlatformScrollView = {
@@ -99,19 +139,33 @@ class GuideRowCell: PlatformTableViewCell {
         view.topAnchor.constraint(equalTo: programsStackView.topAnchor).isActive = true
         programsStackView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
         view.clipsToBounds = false
+#if os(macOS)
+        view.wantsLayer = true
+        view.layer?.masksToBounds = false
+#else
         view.layer.masksToBounds = false
+#endif
         return view
     }()
     private lazy var programsStackView: PlatformStackView = {
         let view = PlatformUtils.createStackView(axis: .horizontal)
         view.spacing = 25
-        view.backgroundColor = .clear
+        
         view.distribution = .fill
+#if os(macOS)
+        view.alignment = .width
+#else
         view.alignment = .fill
+#endif
         view.clipsToBounds = false
+#if os(macOS)
+        view.wantsLayer = true
+        view.layer?.masksToBounds = false
+        view.layer?.backgroundColor = .clear
+#else
         view.layer.masksToBounds = false
-//        view.layoutMargins = UIEdgeInsets(top: 0, left: 15, bottom: 0, right: 15)
-//        view.isLayoutMarginsRelativeArrangement = true
+        view.backgroundColor = .clear
+#endif
         return view
     }()
     
@@ -129,6 +183,25 @@ class GuideRowCell: PlatformTableViewCell {
             programsStackView.addArrangedSubview(programView)
         }
     }
+    
+#if os(tvOS)
+    /// Resolve a FocusTarget for this row into a concrete UIView that can become focused.
+    /// Convention: col 0 = FavoriteToggleView, col 1 = ChannelNameView, col >= 2 = ProgramView at index (col - 2)
+    func focusableView(for target: FocusTarget) -> UIView? {
+        guard case let .guide(channelId, col) = target,
+              let channel,
+              channel.id == channelId else {
+            return nil
+        }
+        if col == 0 { return favoriteButtonView }
+        if col == 1 { return channelNameView }
+        let programIndex = col - 2
+        guard programIndex >= 0, programIndex < programsStackView.arrangedSubviews.count else {
+            return nil
+        }
+        return programsStackView.arrangedSubviews[programIndex]
+    }
+#endif
     
     //MARK: - Internal API
 
@@ -148,3 +221,4 @@ class GuideRowCell: PlatformTableViewCell {
         updateProgramsDisplay(with: channel)
     }
 }
+

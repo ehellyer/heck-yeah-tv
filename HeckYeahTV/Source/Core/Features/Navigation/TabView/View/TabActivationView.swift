@@ -31,24 +31,3 @@ struct TabActivationView: View {
             }
     }
 }
-
-#if DEBUG && targetEnvironment(simulator)
-private struct PreviewTabActivationView: View {
-    
-    @State var appState = SharedAppState()
-    
-    var body: some View {
-        VStack {
-            TabContainerView(appState: $appState)
-                .ignoresSafeArea(.all)
-        }
-    }
-}
-
-#Preview {
-    PreviewTabActivationView()
-        .ignoresSafeArea(.all)
-}
-#endif // DEBUG && targetEnvironment(simulator)
-
-

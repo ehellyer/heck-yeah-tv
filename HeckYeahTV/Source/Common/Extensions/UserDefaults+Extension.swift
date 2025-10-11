@@ -64,9 +64,9 @@ extension UserDefaults {
     /// Gets or sets the last tab that was selected.  Defaults to Channels tab for new installation.  Persisted into UserDefaults.standard.
     static var selectedTab: TabSection {
         get {
-            let data = standard.data(forKey: AppKeys.SharedAppState.selectedTab)
-            let _lastTab = try? TabSection.initialize(jsonData: data)
-            return _lastTab ?? TabSection.channels //Channels tab is default for new install.
+            let _data: Data? = standard.data(forKey: AppKeys.SharedAppState.selectedTab)
+            let _lastTab: TabSection = (try? TabSection.initialize(jsonData: _data)) ?? TabSection.channels //Channels tab is default for new install
+            return _lastTab
         }
         set {
             let data = try? newValue.toJSONData()

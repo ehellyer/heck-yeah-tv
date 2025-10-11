@@ -11,7 +11,7 @@ import SwiftData
 
 struct TabContainerView: View {
     
-    @FocusState var focus: FocusTarget?
+    @FocusState.Binding var focus: FocusTarget?
     @Binding var appState: SharedAppState
     
     private var selectedTab: Binding<TabSection> {
@@ -27,10 +27,6 @@ struct TabContainerView: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            Text("Focus: \(focus?.debugDescription ?? "nil") | Tab: \(selectedTab.wrappedValue.title)")
-                .fontWeight(.bold)
-                .background(Color(.gray))
-            
             TabView(selection: selectedTab) {
                 
                 Tab(TabSection.recents.title,
@@ -59,12 +55,6 @@ struct TabContainerView: View {
             }
             .padding()
             .background(Color.clear)
-
-            .onChange(of: focus) {
-                DispatchQueue.main.async {
-                    print("<<< Focus onChange: \(self.focus?.debugDescription ?? "nil")")
-                }
-            }
             
 #if !os(iOS)
             // Support for dismissing the tabview by tapping menu on Siri remote for tvOS or esc key on keyboard.
@@ -124,22 +114,3 @@ struct TabContainerView: View {
 #endif // !os(iOS)
 }
 
-// MARK: - Previews
-
-#if DEBUG && targetEnvironment(simulator)
-private struct PreviewTabContainerView: View {
-    @State var appState = SharedAppState()
-    
-    var body: some View {
-        VStack {
-            TabContainerView(appState: $appState)
-                .ignoresSafeArea(.all)
-        }
-    }
-}
-
-#Preview {
-    PreviewTabContainerView()
-        .ignoresSafeArea(.all)
-}
-#endif // DEBUG && targetEnvironment(simulator)
