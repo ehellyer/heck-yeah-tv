@@ -98,6 +98,7 @@
 		EB2C2E192E5E2238005CE685 /* Exceptions for "HeckYeahTV" folder in "macOS_HeckYeahTV" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				"Source/Common/Extensions/Notification+SwiftDataChangeTracking.swift",
 				"Source/Common/Extensions/String+Extension.swift",
 				"Source/Common/Extensions/UserDefaults+Extension.swift",
 				Source/Common/Utilities/AppKeys.swift,
@@ -152,17 +153,10 @@
 				Source/Core/Features/Navigation/TabView/View/TabContainerView.swift,
 				Source/Core/Features/Navigation/Views/Channels/ChannelsContainer.swift,
 				Source/Core/Features/Navigation/Views/Channels/FocusTarget.swift,
-				Source/Core/Features/Navigation/Views/Channels/NotSwiftUI/ChannelNameView.swift,
-				Source/Core/Features/Navigation/Views/Channels/NotSwiftUI/FavoritesToggleView.swift,
-				Source/Core/Features/Navigation/Views/Channels/NotSwiftUI/GuideRowCell.swift,
-				Source/Core/Features/Navigation/Views/Channels/NotSwiftUI/GuideViewController.swift,
-				Source/Core/Features/Navigation/Views/Channels/NotSwiftUI/GuideViewDelegate.swift,
-				Source/Core/Features/Navigation/Views/Channels/NotSwiftUI/GuideViewRepresentable.swift,
-				Source/Core/Features/Navigation/Views/Channels/NotSwiftUI/HorizontalClipContainer.swift,
-				Source/Core/Features/Navigation/Views/Channels/NotSwiftUI/ProgramView.swift,
-				Source/Core/Features/Navigation/Views/Channels/NotSwiftUI/StreamQualityView.swift,
-				Source/Core/Features/Navigation/Views/Channels/NotSwiftUI/SwiftDataChangeTracking.swift,
 				Source/Core/Features/Navigation/Views/Channels/ShowFavorites.swift,
+				Source/Core/Features/Navigation/Views/Channels/SwiftUI/GuideRow.swift,
+				Source/Core/Features/Navigation/Views/Channels/SwiftUI/GuideSubTitleView.swift,
+				Source/Core/Features/Navigation/Views/Channels/SwiftUI/GuideView.swift,
 				Source/Core/Features/Navigation/Views/Recents/RecentsView.swift,
 				Source/Core/Features/Navigation/Views/Search/SearchView.swift,
 				Source/Core/Features/Navigation/Views/Settings/SettingsView.swift,
@@ -175,6 +169,15 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				"Source/Common/Extensions/FocusTargetView+FocusAnimation.swift",
+				Source/Core/Features/Navigation/Views/Channels/NotSwiftUI/ChannelNameView.swift,
+				Source/Core/Features/Navigation/Views/Channels/NotSwiftUI/FavoritesToggleView.swift,
+				Source/Core/Features/Navigation/Views/Channels/NotSwiftUI/GuideRowCell.swift,
+				Source/Core/Features/Navigation/Views/Channels/NotSwiftUI/GuideViewController.swift,
+				Source/Core/Features/Navigation/Views/Channels/NotSwiftUI/GuideViewDelegate.swift,
+				Source/Core/Features/Navigation/Views/Channels/NotSwiftUI/GuideViewRepresentable.swift,
+				Source/Core/Features/Navigation/Views/Channels/NotSwiftUI/HorizontalClipContainer.swift,
+				Source/Core/Features/Navigation/Views/Channels/NotSwiftUI/ProgramView.swift,
+				Source/Core/Features/Navigation/Views/Channels/NotSwiftUI/StreamQualityView.swift,
 				"Source/SupportingFiles/plist/iOS-HeckYeahTV-Info.plist",
 				"Source/SupportingFiles/plist/macOS-HeckYeahTV-Info.plist",
 				"Source/SupportingFiles/plist/tvOS-HeckYeahTV-Info.plist",
@@ -185,6 +188,7 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				"Source/Common/Extensions/FocusTargetView+FocusAnimation.swift",
+				"Source/Common/Extensions/Notification+SwiftDataChangeTracking.swift",
 				"Source/Common/Extensions/String+Extension.swift",
 				"Source/Common/Extensions/UserDefaults+Extension.swift",
 				Source/Common/Utilities/AppKeys.swift,
@@ -239,17 +243,10 @@
 				Source/Core/Features/Navigation/TabView/View/TabContainerView.swift,
 				Source/Core/Features/Navigation/Views/Channels/ChannelsContainer.swift,
 				Source/Core/Features/Navigation/Views/Channels/FocusTarget.swift,
-				Source/Core/Features/Navigation/Views/Channels/NotSwiftUI/ChannelNameView.swift,
-				Source/Core/Features/Navigation/Views/Channels/NotSwiftUI/FavoritesToggleView.swift,
-				Source/Core/Features/Navigation/Views/Channels/NotSwiftUI/GuideRowCell.swift,
-				Source/Core/Features/Navigation/Views/Channels/NotSwiftUI/GuideViewController.swift,
-				Source/Core/Features/Navigation/Views/Channels/NotSwiftUI/GuideViewDelegate.swift,
-				Source/Core/Features/Navigation/Views/Channels/NotSwiftUI/GuideViewRepresentable.swift,
-				Source/Core/Features/Navigation/Views/Channels/NotSwiftUI/HorizontalClipContainer.swift,
-				Source/Core/Features/Navigation/Views/Channels/NotSwiftUI/ProgramView.swift,
-				Source/Core/Features/Navigation/Views/Channels/NotSwiftUI/StreamQualityView.swift,
-				Source/Core/Features/Navigation/Views/Channels/NotSwiftUI/SwiftDataChangeTracking.swift,
 				Source/Core/Features/Navigation/Views/Channels/ShowFavorites.swift,
+				Source/Core/Features/Navigation/Views/Channels/SwiftUI/GuideRow.swift,
+				Source/Core/Features/Navigation/Views/Channels/SwiftUI/GuideSubTitleView.swift,
+				Source/Core/Features/Navigation/Views/Channels/SwiftUI/GuideView.swift,
 				Source/Core/Features/Navigation/Views/Recents/RecentsView.swift,
 				Source/Core/Features/Navigation/Views/Search/SearchView.swift,
 				Source/Core/Features/Navigation/Views/Settings/SettingsView.swift,
@@ -718,6 +715,7 @@
 				"",
 				"",
 				"",
+				"",
 			);
 			showEnvVarsInLog = 0;
 		};
@@ -733,6 +731,7 @@
 			shellPath = /bin/sh;
 			shellScript = (
 				"\"${PODS_ROOT}/Target Support Files/Pods-iOS_HeckYeahTV/Pods-iOS_HeckYeahTV-frameworks.sh\"",
+				"",
 				"",
 				"",
 				"",
@@ -754,6 +753,7 @@
 				"",
 				"",
 				"",
+				"",
 			);
 			showEnvVarsInLog = 0;
 		};
@@ -769,6 +769,7 @@
 			shellPath = /bin/sh;
 			shellScript = (
 				"\"${PODS_ROOT}/Target Support Files/Pods-macOS_HeckYeahTV/Pods-macOS_HeckYeahTV-frameworks.sh\"",
+				"",
 				"",
 				"",
 				"",
@@ -798,6 +799,7 @@
 				"",
 				"",
 				"",
+				"",
 			);
 			showEnvVarsInLog = 0;
 		};
@@ -821,6 +823,7 @@
 				"fi",
 				"# This output is used by Xcode 'outputs' to avoid re-running this script phase.",
 				"echo \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"",
+				"",
 				"",
 				"",
 				"",

@@ -13,7 +13,7 @@ struct MainAppContentView: View {
     
     @Environment(\.scenePhase) private var scenePhase
     @State private var fadeTask: Task<Void, Never>?
-    @State private var showPlayToast = false
+    @State private var showPlayButtonToast = false
     @State private var appState: SharedAppState = SharedAppState()
     @Query(filter: #Predicate<IPTVChannel> { $0.isPlaying }, sort: []) private var playingChannels: [IPTVChannel]
     private var selectedChannelId: ChannelId? { playingChannels.first?.id }
@@ -27,32 +27,18 @@ struct MainAppContentView: View {
         // Alignment required to layout the play/pause button in the bottom left corner.
         ZStack(alignment: .bottomLeading)  {
             
-            
             VLCPlayerView(appState: $appState, selectedChannelId: selectedChannelId)
                 .zIndex(0)
                 .ignoresSafeArea(.all)
-            
+                .focusable(false)
                 .overlay(alignment: .bottomTrailing) {
                     Text("Focus: \(focus?.debugDescription ?? "nil")")
+                        .padding(10)
                         .fontWeight(.bold)
                         .background(Color(.gray))
+                        .focusable(false)
                 }
-            
-            if appState.isPlayerPaused {
-                PlaybackBadge(isPlaying: false)
-                    .allowsHitTesting(false)
-                    .transition(.opacity)
-                    .padding(.leading, 50)
-                    .padding(.bottom, 50)
-            }
-            
-            if appState.isPlayerPaused == false && showPlayToast {
-                PlaybackBadge(isPlaying: true)
-                    .allowsHitTesting(false)
-                    .padding(.leading, 50)
-                    .padding(.bottom, 50)
-            }
-            
+                
             if appState.isGuideVisible {
                 TabContainerView(focus: $focus, appState: $appState)
                     .zIndex(1)
@@ -63,8 +49,27 @@ struct MainAppContentView: View {
 #if os(tvOS)
                     // Make sure this gets initial focus when visible so select and commands route correctly.
                     .focused($focus, equals: .guideActivationView)
+                    .onAppear() {
+                        focus = .guideActivationView
+                    }
 #endif
-                    
+            }
+            
+            if appState.isPlayerPaused {
+                PlaybackBadge(isPlaying: false)
+                    .allowsHitTesting(false)
+                    .transition(.opacity)
+                    .padding(.leading, 50)
+                    .padding(.bottom, 50)
+                    .zIndex(10)
+            }
+            
+            if appState.isPlayerPaused == false && showPlayButtonToast {
+                PlaybackBadge(isPlaying: true)
+                    .allowsHitTesting(false)
+                    .padding(.leading, 50)
+                    .padding(.bottom, 50)
+                    .zIndex(10)
             }
         }
         
@@ -73,29 +78,20 @@ struct MainAppContentView: View {
             appState.isPlayerPaused.toggle()
         }
 #endif
-        
-        .onChange(of: appState.legacyKitFocus, { _, newValue in
-            focus = newValue
-            
-            DispatchQueue.main.async {
-                print("<<< Legacy Focus onChange: \(newValue?.debugDescription ?? "nil")")
-            }
 
-        })
-        
         .onChange(of: appState.isPlayerPaused, { _, newValue in
             fadeTask?.cancel()
             fadeTask = nil
             
             if newValue == true {
-                showPlayToast = false
+                showPlayButtonToast = false
             } else {
                 fadeTask = Task { @MainActor in
-                    showPlayToast = true
+                    showPlayButtonToast = true
                     do {
                         try await Task.sleep(nanoseconds: 2_000_000_000) //2 Seconds
                         try Task.checkCancellation()
-                        showPlayToast = false
+                        showPlayButtonToast = false
                     } catch {
                         // Task Cancelled - no op.
                     }
@@ -103,15 +99,16 @@ struct MainAppContentView: View {
             }
         })
         
-        .onChange(of: scenePhase,  { _, _ in
-            if scenePhase != .active && appState.isGuideVisible {
+        .onChange(of: scenePhase,  { _, newValue in
+            // If app becomes not-active with the guide up, dismiss the guide.
+            if newValue != .active && appState.isGuideVisible {
                 appState.isGuideVisible = false
             }
         })
         
         .onChange(of: focus) {
-            DispatchQueue.main.async {
-                print("<<< Focus onChange: \(self.focus?.debugDescription ?? "nil")")
+            Task { @MainActor in
+                print("Focus onChange observed: \(self.focus?.debugDescription ?? "nil")")
             }
         }
         

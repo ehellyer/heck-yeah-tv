@@ -64,6 +64,6 @@ struct GuideViewRepresentable: CrossPlatformControllerRepresentable {
 extension GuideViewRepresentable.Coordinator: @MainActor GuideViewControllerDelegate {
 
     func setFocus(_ target: FocusTarget) {
-        self.guideController.appState.legacyKitFocus = target
+//        self.guideController.appState.legacyKitFocus = target
     }
 }

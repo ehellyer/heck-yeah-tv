@@ -93,8 +93,7 @@ struct VLCPlayerView: CrossPlatformRepresentable {
         
         //MARK: - Player controls
 
-        
-        /// Essentially the play() function but takes parameters to determine the current player state based on channel selection and intent.
+        /// Essentially this is the play() function, but it takes parameters to determine the current player state based on channel selection and intent.
         /// - Parameters:
         ///   - channelId: (Optional) The identifier of the channel to play.
         ///   - shouldPause: Intent of the user to pause/resume an active playing stream.
@@ -115,7 +114,7 @@ struct VLCPlayerView: CrossPlatformRepresentable {
             let currentURL = mediaPlayer.media?.url
             let isCurrentlyPlaying = mediaPlayer.isPlaying
             
-            // If URL changed, prepare new media and start/hold based on pause intent.
+            // URL has changed, prepare new media and reconcile pause/play intent.
             if currentURL != channelURL {
                 // Always stop before switching media.
                 if isCurrentlyPlaying {
@@ -131,7 +130,7 @@ struct VLCPlayerView: CrossPlatformRepresentable {
                     "avcodec-hw": "any",                // Prefer hardware decode when possible. (reduce CPU)
                     "drop-late-frames": true,           // This drops frames that are late. (reduce CPU)
                     "skip-frames": true,                // allow frame skipping under pressure (reduce CPU)
-                    "deinterlace": false                // Deinterlace is off. (reduce CPU)
+                    "deinterlace": true                 // Turn deinterlace off to reduce CPU.
                 ])
                 mediaPlayer.media = media
                 

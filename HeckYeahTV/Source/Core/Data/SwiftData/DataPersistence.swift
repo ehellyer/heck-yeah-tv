@@ -25,7 +25,7 @@ final class DataPersistence {
             
             guard var _rootURL = FileManager.default.urls(for: searchPathDirectory,
                                                           in: FileManager.SearchPathDomainMask.userDomainMask).first else {
-                fatalError("Failed to initialize persistence store: Could not get application support directory URL.")
+                fatalError("Failed to initialize persistence store: Could not build application support directory root URL.")
             }
             
             _rootURL.append(component: "HeckYeahTV")
