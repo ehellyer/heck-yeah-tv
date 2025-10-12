@@ -98,14 +98,12 @@
 		EB2C2E192E5E2238005CE685 /* Exceptions for "HeckYeahTV" folder in "macOS_HeckYeahTV" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				"Source/Common/Extensions/Notification+SwiftDataChangeTracking.swift",
+				Source/App/Heck_Yeah_TVApp.swift,
 				"Source/Common/Extensions/String+Extension.swift",
 				"Source/Common/Extensions/UserDefaults+Extension.swift",
 				Source/Common/Utilities/AppKeys.swift,
-				Source/Common/Utilities/AppNotificationKeys.swift,
 				Source/Common/Utilities/AppUtil.swift,
 				Source/Common/Utilities/Asset.swift,
-				Source/Core/App/Heck_Yeah_TVApp.swift,
 				"Source/Core/Data/Adapters/Channel+Channelable.swift",
 				Source/Core/Data/Adapters/Channelable.swift,
 				Source/Core/Data/Adapters/ChannelSource.swift,
@@ -147,55 +145,42 @@
 				Source/Core/Features/Main/PulseRings.swift,
 				Source/Core/Features/Main/RootView.swift,
 				Source/Core/Features/MediaPlayerView/VLCPlayerView.swift,
-				Source/Core/Features/Navigation/ContentPlaceholder.swift,
-				Source/Core/Features/Navigation/TabView/Enum/TabSection.swift,
-				Source/Core/Features/Navigation/TabView/View/TabActivationView.swift,
-				Source/Core/Features/Navigation/TabView/View/TabContainerView.swift,
-				Source/Core/Features/Navigation/Views/Channels/ChannelsContainer.swift,
-				Source/Core/Features/Navigation/Views/Channels/FocusTarget.swift,
-				Source/Core/Features/Navigation/Views/Channels/ShowFavorites.swift,
-				Source/Core/Features/Navigation/Views/Channels/SwiftUI/GuideRow.swift,
-				Source/Core/Features/Navigation/Views/Channels/SwiftUI/GuideSubTitleView.swift,
-				Source/Core/Features/Navigation/Views/Channels/SwiftUI/GuideView.swift,
-				Source/Core/Features/Navigation/Views/Recents/RecentsView.swift,
-				Source/Core/Features/Navigation/Views/Search/SearchView.swift,
-				Source/Core/Features/Navigation/Views/Settings/SettingsView.swift,
-				Source/SupportingFiles/Assets.xcassets,
-				"Source/SupportingFiles/Sounds/soft-startup-sound.mp3",
+				Source/Core/Features/TabView/Enum/TabSection.swift,
+				Source/Core/Features/TabView/TabActivationView.swift,
+				Source/Core/Features/TabView/TabContainerView.swift,
+				Source/Core/Features/TabView/TabViews/Channels/ChannelsContainer.swift,
+				Source/Core/Features/TabView/TabViews/Channels/FocusTarget.swift,
+				Source/Core/Features/TabView/TabViews/Channels/GuideRow.swift,
+				Source/Core/Features/TabView/TabViews/Channels/GuideSubTitleView.swift,
+				Source/Core/Features/TabView/TabViews/Channels/GuideView.swift,
+				Source/Core/Features/TabView/TabViews/Channels/ShowFavorites.swift,
+				Source/Core/Features/TabView/TabViews/ContentPlaceholder.swift,
+				Source/Core/Features/TabView/TabViews/Recents/RecentsView.swift,
+				Source/Core/Features/TabView/TabViews/Search/SearchView.swift,
+				Source/Core/Features/TabView/TabViews/Settings/SettingsView.swift,
+				SupportingFiles/Assets.xcassets,
+				"SupportingFiles/Sounds/soft-startup-sound.mp3",
 			);
 			target = EB2C2DB62E5E203A005CE685 /* macOS_HeckYeahTV */;
 		};
 		EB2C313A2E5E4E06005CE685 /* Exceptions for "HeckYeahTV" folder in "iOS_HeckYeahTV" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				"Source/Common/Extensions/FocusTargetView+FocusAnimation.swift",
-				Source/Core/Features/Navigation/Views/Channels/NotSwiftUI/ChannelNameView.swift,
-				Source/Core/Features/Navigation/Views/Channels/NotSwiftUI/FavoritesToggleView.swift,
-				Source/Core/Features/Navigation/Views/Channels/NotSwiftUI/GuideRowCell.swift,
-				Source/Core/Features/Navigation/Views/Channels/NotSwiftUI/GuideViewController.swift,
-				Source/Core/Features/Navigation/Views/Channels/NotSwiftUI/GuideViewDelegate.swift,
-				Source/Core/Features/Navigation/Views/Channels/NotSwiftUI/GuideViewRepresentable.swift,
-				Source/Core/Features/Navigation/Views/Channels/NotSwiftUI/HorizontalClipContainer.swift,
-				Source/Core/Features/Navigation/Views/Channels/NotSwiftUI/ProgramView.swift,
-				Source/Core/Features/Navigation/Views/Channels/NotSwiftUI/StreamQualityView.swift,
-				"Source/SupportingFiles/plist/iOS-HeckYeahTV-Info.plist",
-				"Source/SupportingFiles/plist/macOS-HeckYeahTV-Info.plist",
-				"Source/SupportingFiles/plist/tvOS-HeckYeahTV-Info.plist",
+				"SupportingFiles/plist/iOS-HeckYeahTV-Info.plist",
+				"SupportingFiles/plist/macOS-HeckYeahTV-Info.plist",
+				"SupportingFiles/plist/tvOS-HeckYeahTV-Info.plist",
 			);
 			target = EBE03BB62E53D421006B7747 /* iOS_HeckYeahTV */;
 		};
 		EBE03C6D2E53E493006B7747 /* Exceptions for "HeckYeahTV" folder in "tvOS_HeckYeahTV" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				"Source/Common/Extensions/FocusTargetView+FocusAnimation.swift",
-				"Source/Common/Extensions/Notification+SwiftDataChangeTracking.swift",
+				Source/App/Heck_Yeah_TVApp.swift,
 				"Source/Common/Extensions/String+Extension.swift",
 				"Source/Common/Extensions/UserDefaults+Extension.swift",
 				Source/Common/Utilities/AppKeys.swift,
-				Source/Common/Utilities/AppNotificationKeys.swift,
 				Source/Common/Utilities/AppUtil.swift,
 				Source/Common/Utilities/Asset.swift,
-				Source/Core/App/Heck_Yeah_TVApp.swift,
 				"Source/Core/Data/Adapters/Channel+Channelable.swift",
 				Source/Core/Data/Adapters/Channelable.swift,
 				Source/Core/Data/Adapters/ChannelSource.swift,
@@ -237,21 +222,21 @@
 				Source/Core/Features/Main/PulseRings.swift,
 				Source/Core/Features/Main/RootView.swift,
 				Source/Core/Features/MediaPlayerView/VLCPlayerView.swift,
-				Source/Core/Features/Navigation/ContentPlaceholder.swift,
-				Source/Core/Features/Navigation/TabView/Enum/TabSection.swift,
-				Source/Core/Features/Navigation/TabView/View/TabActivationView.swift,
-				Source/Core/Features/Navigation/TabView/View/TabContainerView.swift,
-				Source/Core/Features/Navigation/Views/Channels/ChannelsContainer.swift,
-				Source/Core/Features/Navigation/Views/Channels/FocusTarget.swift,
-				Source/Core/Features/Navigation/Views/Channels/ShowFavorites.swift,
-				Source/Core/Features/Navigation/Views/Channels/SwiftUI/GuideRow.swift,
-				Source/Core/Features/Navigation/Views/Channels/SwiftUI/GuideSubTitleView.swift,
-				Source/Core/Features/Navigation/Views/Channels/SwiftUI/GuideView.swift,
-				Source/Core/Features/Navigation/Views/Recents/RecentsView.swift,
-				Source/Core/Features/Navigation/Views/Search/SearchView.swift,
-				Source/Core/Features/Navigation/Views/Settings/SettingsView.swift,
-				Source/SupportingFiles/Assets.xcassets,
-				"Source/SupportingFiles/Sounds/soft-startup-sound.mp3",
+				Source/Core/Features/TabView/Enum/TabSection.swift,
+				Source/Core/Features/TabView/TabActivationView.swift,
+				Source/Core/Features/TabView/TabContainerView.swift,
+				Source/Core/Features/TabView/TabViews/Channels/ChannelsContainer.swift,
+				Source/Core/Features/TabView/TabViews/Channels/FocusTarget.swift,
+				Source/Core/Features/TabView/TabViews/Channels/GuideRow.swift,
+				Source/Core/Features/TabView/TabViews/Channels/GuideSubTitleView.swift,
+				Source/Core/Features/TabView/TabViews/Channels/GuideView.swift,
+				Source/Core/Features/TabView/TabViews/Channels/ShowFavorites.swift,
+				Source/Core/Features/TabView/TabViews/ContentPlaceholder.swift,
+				Source/Core/Features/TabView/TabViews/Recents/RecentsView.swift,
+				Source/Core/Features/TabView/TabViews/Search/SearchView.swift,
+				Source/Core/Features/TabView/TabViews/Settings/SettingsView.swift,
+				SupportingFiles/Assets.xcassets,
+				"SupportingFiles/Sounds/soft-startup-sound.mp3",
 			);
 			target = EBE03C162E53D8DE006B7747 /* tvOS_HeckYeahTV */;
 		};
@@ -933,7 +918,7 @@
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "./HeckYeahTV/Source/SupportingFiles/plist/macOS-HeckYeahTV-Info.plist";
+				INFOPLIST_FILE = "./HeckYeahTV/SupportingFiles/plist/macOS-HeckYeahTV-Info.plist";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.entertainment";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2025 Hellyer Multimedia. All rights reserved.";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -971,7 +956,7 @@
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "./HeckYeahTV/Source/SupportingFiles/plist/macOS-HeckYeahTV-Info.plist";
+				INFOPLIST_FILE = "./HeckYeahTV/SupportingFiles/plist/macOS-HeckYeahTV-Info.plist";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.entertainment";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2025 Hellyer Multimedia. All rights reserved.";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1209,7 +1194,7 @@
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "./HeckYeahTV/Source/SupportingFiles/plist/iOS-HeckYeahTV-Info.plist";
+				INFOPLIST_FILE = "./HeckYeahTV/SupportingFiles/plist/iOS-HeckYeahTV-Info.plist";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.entertainment";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2025 Hellyer Multimedia. All rights reserved.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -1245,7 +1230,7 @@
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "./HeckYeahTV/Source/SupportingFiles/plist/iOS-HeckYeahTV-Info.plist";
+				INFOPLIST_FILE = "./HeckYeahTV/SupportingFiles/plist/iOS-HeckYeahTV-Info.plist";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.entertainment";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2025 Hellyer Multimedia. All rights reserved.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -1353,7 +1338,7 @@
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "./HeckYeahTV/Source/SupportingFiles/plist/tvOS-HeckYeahTV-Info.plist";
+				INFOPLIST_FILE = "./HeckYeahTV/SupportingFiles/plist/tvOS-HeckYeahTV-Info.plist";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.entertainment";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2025 Hellyer Multimedia. All rights reserved.";
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -1389,7 +1374,7 @@
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "./HeckYeahTV/Source/SupportingFiles/plist/tvOS-HeckYeahTV-Info.plist";
+				INFOPLIST_FILE = "./HeckYeahTV/SupportingFiles/plist/tvOS-HeckYeahTV-Info.plist";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.entertainment";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2025 Hellyer Multimedia. All rights reserved.";
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
