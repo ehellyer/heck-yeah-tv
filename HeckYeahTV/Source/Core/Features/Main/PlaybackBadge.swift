@@ -24,7 +24,6 @@ struct PlaybackBadge: View {
         .padding(.horizontal, 14)
         .padding(.vertical, 10)
         .background(
-            // Material on tvOS/macOS/iOS; falls back to opaque if needed
             RoundedRectangle(cornerRadius: 16, style: .continuous)
                 .fill(.ultraThinMaterial)
                 .overlay(

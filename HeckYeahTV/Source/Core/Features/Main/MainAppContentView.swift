@@ -18,10 +18,7 @@ struct MainAppContentView: View {
     @Query(filter: #Predicate<IPTVChannel> { $0.isPlaying }, sort: []) private var playingChannels: [IPTVChannel]
     private var selectedChannelId: ChannelId? { playingChannels.first?.id }
     
-#if os(tvOS)
-    // Ensures we deterministically focus the activation layer when the guide is hidden.
     @FocusState var focus: FocusTarget?
-#endif
     
     var body: some View {
         // Alignment required to layout the play/pause button in the bottom left corner.
