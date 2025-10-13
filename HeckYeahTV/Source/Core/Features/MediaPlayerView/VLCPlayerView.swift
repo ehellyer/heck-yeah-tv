@@ -24,8 +24,8 @@ struct VLCPlayerView: CrossPlatformRepresentable {
     @Environment(\.scenePhase) private var scenePhase
     @Binding var appState: SharedAppState
 
-    // Selected channel to play (resolved to URL via SwiftData)
-    let selectedChannelId: ChannelId?
+    @Query(filter: #Predicate<IPTVChannel> { $0.isPlaying }, sort: []) private var playingChannels: [IPTVChannel]
+    private var selectedChannelId: ChannelId? { playingChannels.first?.id }
     
     //MARK: - CrossPlatformRepresentable overrides
 

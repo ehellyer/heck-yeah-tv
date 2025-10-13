@@ -32,6 +32,7 @@ final class HDHomeRunDiscoveryController {
                                      timeoutInterval: 10.0,
                                      headers: self.defaultHeaders)
         do {
+            // Test the DataResponse async
             let response = try await self.sessionInterface.execute(request)
             self.discoveredDevices = try [HDHomeRunDiscovery].initialize(jsonData: response.body)
             summary.successes[hdHomeRunDiscoveryURL] = discoveredDevices.count
@@ -54,8 +55,9 @@ final class HDHomeRunDiscoveryController {
                                          timeoutInterval: 10.0,
                                          headers: self.defaultHeaders)
             do {
-                let response = try await self.sessionInterface.execute(request)
-                let tuner = try HDHomeRunDevice.initialize(jsonData: response.body)
+                // Test the JSONSerializableResponse async
+                let response: JSONSerializableResponse<HDHomeRunDevice> = try await self.sessionInterface.execute(request)
+                let tuner = response.jsonObject
                 tunerDevices.append(tuner)
                 summary.successes[deviceURL] = 1
             } catch {

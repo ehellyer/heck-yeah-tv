@@ -15,8 +15,6 @@ struct MainAppContentView: View {
     @State private var fadeTask: Task<Void, Never>?
     @State private var showPlayButtonToast = false
     @State private var appState: SharedAppState = SharedAppState()
-    @Query(filter: #Predicate<IPTVChannel> { $0.isPlaying }, sort: []) private var playingChannels: [IPTVChannel]
-    private var selectedChannelId: ChannelId? { playingChannels.first?.id }
     
     @FocusState var focus: FocusTarget?
     
@@ -24,22 +22,17 @@ struct MainAppContentView: View {
         // Alignment required to layout the play/pause button in the bottom left corner.
         ZStack(alignment: .bottomLeading)  {
             
-            VLCPlayerView(appState: $appState, selectedChannelId: selectedChannelId)
+            VLCPlayerView(appState: $appState)
                 .zIndex(0)
                 .ignoresSafeArea(.all)
                 .focusable(false)
-                .overlay(alignment: .bottomTrailing) {
-                    Text("Focus: \(focus?.debugDescription ?? "nil")")
-                        .padding(10)
-                        .fontWeight(.bold)
-                        .background(Color(.gray))
-                        .focusable(false)
-                }
+ 
                 
             if appState.isGuideVisible {
                 TabContainerView(focus: $focus, appState: $appState)
                     .zIndex(1)
-                    .transition(.opacity)                    
+                    .transition(.opacity)
+
             } else {
                 TabActivationView(appState: $appState)
                     .zIndex(1000)
@@ -68,6 +61,23 @@ struct MainAppContentView: View {
                     .padding(.bottom, 50)
                     .zIndex(10)
             }
+            
+            // Global debug overlay (always on top)
+            VStack {
+                Spacer()
+                HStack {
+                    Spacer()
+                    Text("Focus: \(focus?.debugDescription ?? "nil") || Tab: \(appState.selectedTab.title) || isPaused: \(appState.isPlayerPaused ? "Yes" : "No") || isGuideShowing: \(appState.isGuideVisible ? "Yes" : "No") || ShowFavorites: \(appState.showFavoritesOnly ? "Yes" : "No")")
+                        .padding(10)
+                        .fontWeight(.bold)
+                        .background(Color(.gray))
+                        .focusable(false)
+                        .allowsHitTesting(false) 
+                }
+                .padding()
+            }
+            .zIndex(10000)
+            .ignoresSafeArea()
         }
         
 #if os(tvOS)
