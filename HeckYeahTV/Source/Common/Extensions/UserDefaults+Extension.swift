@@ -32,12 +32,12 @@ extension UserDefaults {
     }
     
     /// A boolean to indicate if channels should be filtered to show only channels indicated as favorites.  Persisted into UserDefaults.standard.
-    static var showFavorites: Bool {
+    static var showFavoritesOnly: Bool {
         get {
-            standard.bool(forKey: AppKeys.SharedAppState.showFavoritesKey)
+            standard.bool(forKey: AppKeys.SharedAppState.showFavoritesOnlyKey)
         }
         set {
-            standard.set(newValue, forKey: AppKeys.SharedAppState.showFavoritesKey)
+            standard.set(newValue, forKey: AppKeys.SharedAppState.showFavoritesOnlyKey)
         }
     }
     

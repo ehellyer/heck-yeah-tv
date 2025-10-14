@@ -41,11 +41,11 @@ final class SharedAppState {
     var showFavoritesOnly: Bool {
         get {
             access(keyPath: \.showFavoritesOnly)
-            return UserDefaults.showFavorites
+            return UserDefaults.showFavoritesOnly
         }
         set {
             withMutation(keyPath: \.showFavoritesOnly) {
-                UserDefaults.showFavorites = newValue
+                UserDefaults.showFavoritesOnly = newValue
             }
         }
     }

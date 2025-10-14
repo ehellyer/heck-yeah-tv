@@ -135,7 +135,9 @@
 				Source/Core/Data/Services/IPTV/IPTVController.swift,
 				Source/Core/Data/SwiftData/ChannelImporter.swift,
 				Source/Core/Data/SwiftData/DataPersistence.swift,
+				Source/Core/Data/SwiftData/GuideViewRowLazy.swift,
 				Source/Core/Data/SwiftData/IPTVChannel.swift,
+				Source/Core/Data/SwiftData/IPTVChannelMap.swift,
 				Source/Core/Data/SwiftData/SharedAppState.swift,
 				Source/Core/Features/Main/BootGateView.swift,
 				Source/Core/Features/Main/BootSplashView.swift,
@@ -212,7 +214,9 @@
 				Source/Core/Data/Services/IPTV/IPTVController.swift,
 				Source/Core/Data/SwiftData/ChannelImporter.swift,
 				Source/Core/Data/SwiftData/DataPersistence.swift,
+				Source/Core/Data/SwiftData/GuideViewRowLazy.swift,
 				Source/Core/Data/SwiftData/IPTVChannel.swift,
+				Source/Core/Data/SwiftData/IPTVChannelMap.swift,
 				Source/Core/Data/SwiftData/SharedAppState.swift,
 				Source/Core/Features/Main/BootGateView.swift,
 				Source/Core/Features/Main/BootSplashView.swift,
@@ -258,15 +262,11 @@
 		};
 		EBE03BC72E53D423006B7747 /* HeckYeahTVTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-			);
 			path = HeckYeahTVTests;
 			sourceTree = "<group>";
 		};
 		EBE03BD12E53D423006B7747 /* HeckYeahTVUITests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-			);
 			path = HeckYeahTVUITests;
 			sourceTree = "<group>";
 		};
@@ -757,9 +757,13 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-iOS_HeckYeahTV/Pods-iOS_HeckYeahTV-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
+			inputPaths = (
+			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-iOS_HeckYeahTV/Pods-iOS_HeckYeahTV-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -774,9 +778,13 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-tvOS_HeckYeahTV/Pods-tvOS_HeckYeahTV-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
+			inputPaths = (
+			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-tvOS_HeckYeahTV/Pods-tvOS_HeckYeahTV-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -791,9 +799,13 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-macOS_HeckYeahTV/Pods-macOS_HeckYeahTV-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
+			inputPaths = (
+			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-macOS_HeckYeahTV/Pods-macOS_HeckYeahTV-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;

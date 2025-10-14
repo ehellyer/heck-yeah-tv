@@ -55,6 +55,8 @@ struct Heck_Yeah_TVApp: App {
             Task.detached(priority: .userInitiated) {
                 let importer = ChannelImporter(container: container)
                 try await importer.importChannels(streams: iptvController.streams, tunerChannels: hdHomeRunController.channels)
+                try await importer.buildChannelMap(context: nil, showFavoritesOnly: SharedAppState().showFavoritesOnly)
+                try await importer.save()
                 
                 await MainActor.run {
                     // Update state variable that fetches are completed, so the boot screen will hide and main app view will load.

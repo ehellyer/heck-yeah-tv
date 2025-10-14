@@ -12,36 +12,40 @@ import SwiftData
 struct GuideView: View {
     
     private let corner: CGFloat = 14
-    
+
+    @Environment(\.modelContext) private var viewContext
     @FocusState.Binding var focus: FocusTarget?
     @Binding var appState: SharedAppState
-    @State private var onAppearTask: Task<Void, Never>? = nil
-    
-    @Environment(\.modelContext) private var modelContext
+    @State private var onChannelListFocusTask: Task<Void, Never>? = nil
+    @State private var ensureSelectedVisibleTask: Task<Void, Never>? = nil
+    @State private var didEnsureSelectedVisible: Bool = false
     
     // Paging/state
     @State private var channels: [IPTVChannel] = []
-    @State private var isLoading: Bool = false
+    @State private var isLoadingChannels: Bool = false
     @State private var hasMore: Bool = true
     @State private var offset: Int = 0
-    private let pageSize: Int = 200 // Tune based on performance/memory
+    private let pageSize: Int = 200
     
-    // Sort and reusable predicates
-    private static let sort = [SortDescriptor(\IPTVChannel.sortHint, order: .forward)]
-    private static let favoritesPredicate = #Predicate<IPTVChannel> { $0.isFavorite == true }
-    private static let playingPredicate = #Predicate<IPTVChannel> { $0.isPlaying }
+    // Predicates and Sort
+    private static var favoritesPredicate = #Predicate<IPTVChannel> { $0.isFavorite == true }
+    static let isPlayingPredicate = #Predicate<IPTVChannel> { $0.isPlaying }
+    private static var channelsDescriptor: FetchDescriptor<IPTVChannel> = FetchDescriptor<IPTVChannel>(sortBy: [SortDescriptor(\IPTVChannel.sortHint, order: .forward)])
+
+    // Selected channel query (There should only ever be one channel in the store that is marked isPlaying.
+    // Note: isPlaying is indexed.  (See IPTVChannel model definition)
+    // Note: There is code on set that enforces and ensures only one channel isPlaying)
+    @Query(filter: GuideView.isPlayingPredicate, sort: []) private var playingChannels: [IPTVChannel]
+    private var selectedChannelId: ChannelId? { playingChannels.first?.id }
     
-    // Selected/playing channel id (fetched on demand)
-    @State private var selectedChannelId: ChannelId? = nil
-    
-    private var onAppearTarget: FocusTarget {
+    private var determinedFocusTarget: FocusTarget {
         if let channelId = selectedChannelId {
             return .guide(channelId: channelId, col: 1)
         } else {
             return .favoritesToggle
         }
     }
-    
+       
     var body: some View {
         ScrollViewReader { proxy in
             ScrollView(.vertical) {
@@ -50,14 +54,14 @@ struct GuideView: View {
                         GuideRow(channel: channel, focus: $focus, appState: $appState)
                             .id(channel.id)
                             .onAppear {
-                                // Infinite scroll trigger when approaching the end
+                                // Page fault trigger, when at the end of current page, fetch more channels
                                 if channel.id == channels.last?.id {
-                                    loadMore()
+                                    loadMoreChannels()
                                 }
                             }
                     }
                     
-                    if isLoading {
+                    if isLoadingChannels {
                         ProgressView()
                             .frame(maxWidth: .infinity)
                             .padding()
@@ -66,65 +70,71 @@ struct GuideView: View {
                             .frame(maxWidth: .infinity)
                             .padding()
                     }
-                }                
+                }
             }
             .contentMargins(.vertical, 20)
             .background(Color.clear)
             
             .onAppear {
-                // Initial load if needed
-                if channels.isEmpty {
-                    resetAndLoad()
-                } else {
-                    // Refresh playing channel id for focus behavior
-                    refreshPlayingChannelId()
-                }
-            }
-            
-            // When favorites toggle changes, reset paging and refetch with new predicate
-            .onChange(of: appState.showFavoritesOnly) { _, _ in
+                print("onAppear - resetAndLoad() called.")
                 resetAndLoad()
             }
             
-            // Cancel the onAppear task if we leave the tab
+            .onChange(of: appState.showFavoritesOnly) { _, _ in
+                print("onChange(of: appState.showFavoritesOnly - resetAndLoad() called.")
+                resetAndLoad()
+            }
+            
+            // Cancel tasks if we leave the tab
             .onChange(of: appState.selectedTab) { _, new in
                 if new != TabSection.channels {
-                    onAppearTask?.cancel()
+                    print("onChange(of: appState.selectedTab) - Cancel tasks")
+                    onChannelListFocusTask?.cancel()
+                    ensureSelectedVisibleTask?.cancel()
                 }
             }
+
+            //EJH - This fights the focus system responding to user input moving the focus around
+//            // Keep the focused row centered as focus moves
+//            .onChange(of: focus) { _, new in
+//                if case let .guide(id, _) = new {
+//                    withAnimation(.easeOut) {
+//                        proxy.scrollTo(id, anchor: .center)
+//                    }
+//                }
+//            }
             
-            // Keep the focused row centered as focus moves
-            .onChange(of: focus) { _, new in
-                if case let .guide(id, _) = new {
-                    withAnimation(.easeOut) {
-                        proxy.scrollTo(id, anchor: .center)
-                    }
-                }
-            }
-            
-            // After loading page(s), optionally center on the playing channel and set focus
             .onChange(of: channels) { _, _ in
-                // We only try to scroll/focus when we have a playing id
-                guard let channelId = selectedChannelId else { return }
-                // If that id is in the current dataset, center it
-                if channels.contains(where: { $0.id == channelId }) {
-                    onAppearTask?.cancel()
-                    onAppearTask = Task { @MainActor in
+                // Only attempt auto scroll/focus during the one-time ensure-visible phase
+                guard didEnsureSelectedVisible == false else { return }
+                
+                onChannelListFocusTask?.cancel()
+                onChannelListFocusTask = Task { @MainActor in
+                    if let channelId = selectedChannelId {
                         withAnimation(.easeOut) {
                             proxy.scrollTo(channelId, anchor: .center)
                         }
-                        do {
-                            try await Task.sleep(nanoseconds: 300_000_000) // 0.3 sec
-                            try Task.checkCancellation()
-                            withAnimation(.easeOut) {
-                                appState.selectedTab = TabSection.channels
-                                focus = onAppearTarget
-                            }
-                        } catch {
-                            // Task cancelled
+                    }
+                    do {
+                        try await Task.sleep(nanoseconds: 300_000_000) // 0.3 sec
+                        try Task.checkCancellation()
+                        withAnimation(.easeOut) {
+                            appState.selectedTab = TabSection.channels
+                            focus = determinedFocusTarget
                         }
+                    } catch {
+                        // Task cancelled
                     }
                 }
+                
+                // If selectedChannel has been set but it is not in the current fetched set of data, fetch next page.
+                if let channelId = selectedChannelId, not(channels.contains(where: { $0.id == channelId })) {
+                    loadMoreChannels()
+                    print("GuideView onChange(of: channels) - Selected channel not in channel list, loadMore() called")
+                }
+                
+                // One-time ensure selected channel is visible by paging until found
+                maybeEnsureSelectedVisible(proxy: proxy)
             }
         }
         
@@ -132,57 +142,122 @@ struct GuideView: View {
     }
 }
 
-// MARK: - Fetching
+// MARK: - Fetching and ensure-visible logic
 extension GuideView {
     
     private func resetAndLoad() {
-        onAppearTask?.cancel()
-        isLoading = false
+        onChannelListFocusTask?.cancel()
+        ensureSelectedVisibleTask?.cancel()
+        didEnsureSelectedVisible = false
+        isLoadingChannels = false
         hasMore = true
         offset = 0
         channels.removeAll(keepingCapacity: true)
-        refreshPlayingChannelId()
-        loadMore()
+        loadMoreChannels()
     }
     
-    private func loadMore() {
-        guard !isLoading, hasMore else { return }
-        isLoading = true
+    private func loadMoreChannels() {
+        guard !isLoadingChannels, hasMore else {
+            return
+        }
+        isLoadingChannels = true
         
         // Capture current paging and filter flags
         let currentOffset = offset
         let currentPageSize = pageSize
         let showFavorites = appState.showFavoritesOnly
         
-        // Build the descriptor off-main to avoid unnecessary main-thread work
-        let descriptor: FetchDescriptor<IPTVChannel> = {
-            var d = FetchDescriptor<IPTVChannel>(sortBy: GuideView.sort)
-            d.fetchLimit = currentPageSize
-            d.fetchOffset = currentOffset
-            if showFavorites {
-                d.predicate = GuideView.favoritesPredicate
-            }
-            return d
-        }()
+        // Build the descriptor
+        GuideView.channelsDescriptor.fetchLimit = currentPageSize
+        GuideView.channelsDescriptor.fetchOffset = currentOffset
+        GuideView.channelsDescriptor.predicate = (showFavorites ? GuideView.favoritesPredicate : nil)
         
         // Perform the fetch on the main-actor bound context
-        let page: [IPTVChannel] = (try? modelContext.fetch(descriptor)) ?? []
+        let page: [IPTVChannel] = (try? viewContext.fetch(GuideView.channelsDescriptor)) ?? []
         
         // Update paging state on MainActor
         channels.append(contentsOf: page)
         hasMore = page.count == currentPageSize
         offset += page.count
-        isLoading = false
+        isLoadingChannels = false
     }
     
-    private func refreshPlayingChannelId() {
-        Task { @MainActor in
-            let predicate = GuideView.playingPredicate
-            var descriptor = FetchDescriptor<IPTVChannel>(predicate: predicate)
-            descriptor.fetchLimit = 1
-            descriptor.propertiesToFetch = [\.id]
-            let result = try? modelContext.fetch(descriptor)
-            selectedChannelId = result?.first?.id
+    // Schedules a one-time task that keeps paging until the selected channel is present, then scrolls and focuses it.
+    private func maybeEnsureSelectedVisible(proxy: ScrollViewProxy) {
+        guard !didEnsureSelectedVisible else { return }
+        guard let targetId = selectedChannelId else {
+            // No selection; mark as done
+            didEnsureSelectedVisible = true
+            return
+        }
+        // If already visible, just mark and ensure focus/scroll
+        if channels.contains(where: { $0.id == targetId }) {
+            didEnsureSelectedVisible = true
+            onChannelListFocusTask?.cancel()
+            onChannelListFocusTask = Task { @MainActor in
+                withAnimation(.easeOut) {
+                    proxy.scrollTo(targetId, anchor: .center)
+                }
+                do {
+                    try await Task.sleep(nanoseconds: 300_000_000)
+                    try Task.checkCancellation()
+                    withAnimation(.easeOut) {
+                        appState.selectedTab = .channels
+                        focus = determinedFocusTarget
+                    }
+                } catch {
+                    // Cancelled
+                }
+            }
+            return
+        }
+        
+        // Otherwise, keep loading pages until found or exhausted
+        ensureSelectedVisibleTask?.cancel()
+        ensureSelectedVisibleTask = Task { @MainActor in
+            while !didEnsureSelectedVisible {
+                try? Task.checkCancellation()
+                
+                // Stop if we can’t load more
+                if !hasMore {
+                    didEnsureSelectedVisible = true
+                    break
+                }
+                
+                // If a load is already in-flight, yield to next cycle
+                if isLoadingChannels {
+                    // Small delay to let current load finish
+                    do {
+                        try await Task.sleep(nanoseconds: 50_000_000)
+                    } catch {
+                        break
+                    }
+                    continue
+                }
+                
+                // Load next page
+                loadMoreChannels()
+                
+                // If now present, scroll and focus and mark done
+                if channels.contains(where: { $0.id == targetId }) {
+                    didEnsureSelectedVisible = true
+                    withAnimation(.easeOut) {
+                        proxy.scrollTo(targetId, anchor: .center)
+                    }
+                    // Small delay then focus
+                    do {
+                        try await Task.sleep(nanoseconds: 300_000_000)
+                        try Task.checkCancellation()
+                        withAnimation(.easeOut) {
+                            appState.selectedTab = .channels
+                            focus = determinedFocusTarget
+                        }
+                    } catch {
+                        // Cancelled
+                    }
+                    break
+                }
+            }
         }
     }
 }

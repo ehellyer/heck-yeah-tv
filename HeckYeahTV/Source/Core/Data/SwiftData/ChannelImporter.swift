@@ -6,6 +6,7 @@
 //  Copyright © 2025 Hellyer Multimedia. All rights reserved.
 //
 
+import SwiftUI
 import SwiftData
 
 actor ChannelImporter {
@@ -16,7 +17,7 @@ actor ChannelImporter {
         self.context.autosaveEnabled = false
     }
 
-    func importChannels(streams: [IPStream], tunerChannels: [HDHomeRunChannel]) throws {
+    func importChannels(streams: [IPStream], tunerChannels: [HDHomeRunChannel]) async throws {
         guard !streams.isEmpty || !tunerChannels.isEmpty else { return }
        
         let existing = try context.fetch(FetchDescriptor<IPTVChannel>())
@@ -57,7 +58,38 @@ actor ChannelImporter {
 //                model.source   = src.sourceHint
 //            }
 //        }
-
-        try context.save()
+    }
+    
+    func buildChannelMap(context: ModelContext?, showFavoritesOnly: Bool) async throws {
+        
+        let context = context ?? self.context
+        var channelsDescriptor: FetchDescriptor<IPTVChannel> = FetchDescriptor<IPTVChannel>(
+            sortBy: [SortDescriptor(\IPTVChannel.sortHint, order: .forward)]
+        )
+        
+        channelsDescriptor.predicate = (showFavoritesOnly ? (#Predicate<IPTVChannel> { $0.isFavorite == true }) : nil)
+        let channels: [IPTVChannel] = try context.fetch(channelsDescriptor)
+        
+        let map: [MapIndex: ChannelId] = channels.enumerated().reduce(into: [:]) { dict, pair in
+            let (index, channel) = pair
+            dict[index] = channel.id
+        }
+        
+        // Replace existing singleton map (if any), then insert the new one
+        let mapPredicate = #Predicate<IPTVChannelMap> { $0.singletonKey == IPTVChannelMap.singletonKeyValue }
+        let existingMaps = try context.fetch(FetchDescriptor<IPTVChannelMap>(predicate: mapPredicate))
+        for m in existingMaps {
+            context.delete(m)
+        }
+        
+        context.insert(
+            IPTVChannelMap(map: map)
+        )
+    }
+    
+    func save() async throws {
+        if context.hasChanges {
+            try context.save()
+        }
     }
 }

@@ -26,13 +26,12 @@ struct MainAppContentView: View {
                 .zIndex(0)
                 .ignoresSafeArea(.all)
                 .focusable(false)
- 
                 
             if appState.isGuideVisible {
                 TabContainerView(focus: $focus, appState: $appState)
                     .zIndex(1)
                     .transition(.opacity)
-
+                    .background(Color.black.opacity(0.65))  //Apply a shady shim behind the whole view so that TV can be seen behind, but the UI is visible.
             } else {
                 TabActivationView(appState: $appState)
                     .zIndex(1000)
@@ -62,22 +61,22 @@ struct MainAppContentView: View {
                     .zIndex(10)
             }
             
-            // Global debug overlay (always on top)
-            VStack {
-                Spacer()
-                HStack {
-                    Spacer()
-                    Text("Focus: \(focus?.debugDescription ?? "nil") || Tab: \(appState.selectedTab.title) || isPaused: \(appState.isPlayerPaused ? "Yes" : "No") || isGuideShowing: \(appState.isGuideVisible ? "Yes" : "No") || ShowFavorites: \(appState.showFavoritesOnly ? "Yes" : "No")")
-                        .padding(10)
-                        .fontWeight(.bold)
-                        .background(Color(.gray))
-                        .focusable(false)
-                        .allowsHitTesting(false) 
-                }
-                .padding()
-            }
-            .zIndex(10000)
-            .ignoresSafeArea()
+//            // Global debug overlay (always on top)
+//            VStack {
+//                Spacer()
+//                HStack {
+//                    Spacer()
+//                    Text("Focus: \(focus?.debugDescription ?? "nil") || Tab: \(appState.selectedTab.title) || isPaused: \(appState.isPlayerPaused ? "Yes" : "No") || isGuideShowing: \(appState.isGuideVisible ? "Yes" : "No") || ShowFavorites: \(appState.showFavoritesOnly ? "Yes" : "No")")
+//                        .padding(10)
+//                        .fontWeight(.bold)
+//                        .background(Color(.gray))
+//                        .focusable(false)
+//                        .allowsHitTesting(false) 
+//                }
+//                .padding()
+//            }
+//            .zIndex(10000)
+//            .ignoresSafeArea()
         }
         
 #if os(tvOS)
@@ -115,7 +114,7 @@ struct MainAppContentView: View {
         
         .onChange(of: focus) {
             Task { @MainActor in
-                print("Focus onChange observed: \(self.focus?.debugDescription ?? "nil")")
+                print("MainAppContentView onChange(of: focus) observed: \(self.focus?.debugDescription ?? "nil")")
             }
         }
         

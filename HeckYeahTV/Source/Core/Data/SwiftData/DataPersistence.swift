@@ -31,9 +31,6 @@ final class DataPersistence {
             _rootURL.append(component: "HeckYeahTV")
             _rootURL.append(component: "ChannelData")
             try FileManager.default.createDirectory(atPath: _rootURL.path, withIntermediateDirectories: true)
-            rootURL = _rootURL
-            
-            print("HeckYeahTV persistence root URL: \(rootURL.path)")
             
             // Exclude from backups.  At this time I would prefer to let the store rebuild itself.
             // Users would lose favorite channels and recently played channels, but the channels themselves are
@@ -41,13 +38,15 @@ final class DataPersistence {
             var resourceValues = URLResourceValues()
             resourceValues.isExcludedFromBackup = true
             try _rootURL.setResourceValues(resourceValues)
+            print("HeckYeahTV persistence root URL: \(_rootURL.path)")
             
-            var _storeURL = rootURL.appending(path: "GuideStore", directoryHint: .notDirectory)
+            var _storeURL = _rootURL.appending(path: "GuideStore", directoryHint: .notDirectory)
             _storeURL.appendPathExtension("sqlite")
             storeURL = _storeURL
+            print("HeckYeahTV persistent store URL: \(_storeURL.path)")
             
             let config = ModelConfiguration(url: self.storeURL)
-            container = try ModelContainer(for: IPTVChannel.self, configurations: config)
+            container = try ModelContainer(for: IPTVChannel.self, IPTVChannelMap.self, configurations: config)
             viewContext = ModelContext(container)
             viewContext.autosaveEnabled = true
         } catch {
@@ -61,12 +60,9 @@ final class DataPersistence {
     /// Model Container.
     let container: ModelContainer
     
-    /// MainActor UI Context.
+    /// MainActor UI ModelContext.  (Autosave enabled)
     let viewContext: ModelContext
-
-    /// URL to the directory containing the persistent store.
-    let rootURL: URL
     
-    /// URL of the persistent store.
+    /// URL of the persistent store, can be used to build ModelConfiguration.
     let storeURL: URL
 }

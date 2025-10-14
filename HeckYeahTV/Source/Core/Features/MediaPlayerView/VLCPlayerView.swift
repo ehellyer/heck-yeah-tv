@@ -24,7 +24,7 @@ struct VLCPlayerView: CrossPlatformRepresentable {
     @Environment(\.scenePhase) private var scenePhase
     @Binding var appState: SharedAppState
 
-    @Query(filter: #Predicate<IPTVChannel> { $0.isPlaying }, sort: []) private var playingChannels: [IPTVChannel]
+    @Query(filter: GuideView.isPlayingPredicate, sort: []) private var playingChannels: [IPTVChannel]
     private var selectedChannelId: ChannelId? { playingChannels.first?.id }
     
     //MARK: - CrossPlatformRepresentable overrides
