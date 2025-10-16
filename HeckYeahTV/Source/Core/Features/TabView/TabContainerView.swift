@@ -55,18 +55,19 @@ struct TabContainerView: View {
                     SettingsView()
                 }
             }
-            .padding()
+            .padding(0)
             .background(Color.clear)
             
 #if !os(iOS)
             // Support for dismissing the tabview by tapping menu on Siri remote for tvOS or esc key on keyboard.
             .onExitCommand {
-                withAnimation(.easeOut(duration: 0.25)) {
+                withAnimation {
                     appState.isGuideVisible = false
                 }
             }
 #endif
         }
+        .focusSection()
     }
     
 

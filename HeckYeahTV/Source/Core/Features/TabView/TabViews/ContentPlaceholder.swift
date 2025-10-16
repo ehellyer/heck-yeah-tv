@@ -16,7 +16,9 @@ struct ContentPlaceholder: View {
     var body: some View {
         ZStack {
             Spacer()
+            
             #if os(tvOS)
+            
             VStack(spacing: 12) {
                 HStack(spacing: 8) {
                     Image(systemName: symbol).font(.system(size: 48))
@@ -27,15 +29,15 @@ struct ContentPlaceholder: View {
             }
             
             #else
+            
             VStack(spacing: 12) {
                 Image(systemName: symbol).font(.system(size: 48))
                 Text(title).font(.largeTitle.bold())
                 Text("For Development Only: Replace this with your real \(title) screen.")
                     .foregroundStyle(.secondary)
             }
+            
             #endif
-
         }
-
     }
 }

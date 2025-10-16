@@ -50,7 +50,7 @@ final class DataPersistence {
             viewContext = ModelContext(container)
             viewContext.autosaveEnabled = true
         } catch {
-            fatalError("Failed to initialize GuideStore: \(error)")
+            logFatal("Failed to initialize GuideStore: \(error)")
         }
     }
 

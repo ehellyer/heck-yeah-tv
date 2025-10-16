@@ -13,11 +13,18 @@ struct ChannelsContainer: View {
     @FocusState.Binding var focus: FocusTarget?
     @Binding var appState: SharedAppState
     var channelMap: IPTVChannelMap
+    @State private var updateScrollViewFocus: Bool = false
+    
     
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
-            ShowFavorites(focus: $focus, appState: $appState, channelMap: channelMap)
-            GuideView(focus: $focus, appState: $appState, channelMap: channelMap)
+            ShowFavorites(focus: $focus, appState: $appState) {
+                updateScrollViewFocus = true
+            }
+            .focusSection()
+            
+            GuideView(focus: $focus, appState: $appState, channelMap: channelMap, updateScrollViewFocus: $updateScrollViewFocus)
+                .focusSection()
         }
     }
 }

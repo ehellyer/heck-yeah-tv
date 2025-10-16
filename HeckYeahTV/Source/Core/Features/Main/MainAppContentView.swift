@@ -118,14 +118,11 @@ struct MainAppContentView: View {
             }
         })
         
-        .onChange(of: focus) {
-            if case .guide(let channelId, _) = focus {
+        .onChange(of: focus) { oldValue, newValue in
+            if case .guide(let channelId, let col) = focus, 0...1 ~= col {
                 lastFocusedChannel = channelId
             }
-            
-            Task { @MainActor in
-                logConsole("onChange(of: focus) observed: \(self.focus?.debugDescription ?? "nil")")
-            }
+            logConsole("onChange(of: focus) observed: old = \(oldValue?.debugDescription ?? "nil") new = \(newValue?.debugDescription ?? "nil")")
         }
 
 #if os(macOS)

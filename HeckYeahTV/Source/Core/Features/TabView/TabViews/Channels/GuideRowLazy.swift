@@ -20,11 +20,9 @@ struct GuideRowLazy: View {
     var body: some View {
         Group {
             if let channel = loader.channel {
-                // Reuse your existing GuideRow for the actual UI
                 GuideRow(channel: channel, focus: $focus, appState: $appState)
                     .id(channel.id)
             } else {
-                // Skeleton placeholder while loading
                 HStack(spacing: 25) {
                     Circle()
                         .fill(Color.gray.opacity(0.3))
@@ -49,11 +47,6 @@ struct GuideRowLazy: View {
                         .frame(maxWidth: .infinity, minHeight: 60, maxHeight: 80)
                         .redacted(reason: .placeholder)
                 }
-                .overlay(
-                    // Simple shimmering/pulsing effect using phase animation
-                    Color.clear
-                        .modifier(Shimmer())
-                )
                 .id("channelId-\(channelId)")
             }
         }
@@ -66,23 +59,21 @@ struct GuideRowLazy: View {
     }
 }
 
-// Simple shimmer effect using SwiftUI phase animation
-private struct Shimmer: ViewModifier {
-    @State private var phase: CGFloat = 0
+#Preview("GuideRowLazy - loads from SwiftData") {
+    @Previewable @State var appState = SharedAppState()
+    // Build an in-memory ModelContainer for previews
+    let config = ModelConfiguration(isStoredInMemoryOnly: true)
+    let container = try! ModelContainer(for: IPTVChannel.self, configurations: config)
+    let context = ModelContext(container)
     
-    func body(content: Content) -> some View {
-        content
-            .mask(
-                LinearGradient(gradient: Gradient(stops: [
-                    .init(color: .black.opacity(0.4), location: phase),
-                    .init(color: .black, location: phase + 0.1),
-                    .init(color: .black.opacity(0.4), location: phase + 0.2)
-                ]), startPoint: .leading, endPoint: .trailing)
-                .onAppear {
-                    withAnimation(.linear(duration: 0.5).repeatForever(autoreverses: false)) {
-                        phase = 1.0
-                    }
-                }
-            )
-    }
+    // Seed a sample channel the loader can fetch
+    let sampleId: ChannelId = "chan.preview.001"
+    
+    @FocusState var focus: FocusTarget?
+    
+    return GuideRowLazy(channelId: sampleId, focus: $focus, appState: $appState)
+        .modelContainer(container)
+        .environment(\.modelContext, context)
+        .padding()
+        .frame(width: 1200, height: 140)
 }

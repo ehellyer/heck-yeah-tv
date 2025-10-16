@@ -9,6 +9,7 @@
 import SwiftUI
 
 struct FocusSentinel: View {
+    
     @FocusState.Binding var focus: FocusTarget?
     var action: (() -> Void)?
     
@@ -27,12 +28,10 @@ struct FocusSentinel: View {
                 // Did this view get focus?
                 guard newFocus == targetId, !redirecting else { return }
                 redirecting = true
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                    withAnimation {
-                        action?()
-                        redirecting = false
-                    }
+                withAnimation {
+                    action?()
+                    redirecting = false
                 }
-            } 
+            }
     }
 }

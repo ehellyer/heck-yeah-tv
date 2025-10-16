@@ -25,6 +25,23 @@ internal func logDebug<T>(_ object: @autoclosure () -> T, file: StaticString = #
     DebugLogger.shared.log(.debug, object(), file, function, line)
 }
 
+internal func logInformation<T>(_ object: @autoclosure () -> T, file: StaticString = #file, function: StaticString = #function, line: UInt = #line) {
+    DebugLogger.shared.log(.information, object(), file, function, line)
+}
+
+internal func logWarning<T>(_ object: @autoclosure () -> T, file: StaticString = #file, function: StaticString = #function, line: UInt = #line) {
+    DebugLogger.shared.log(.warning, object(), file, function, line)
+}
+
+internal func logError<T>(_ object: @autoclosure () -> T, file: StaticString = #file, function: StaticString = #function, line: UInt = #line) {
+    DebugLogger.shared.log(.error, object(), file, function, line)
+}
+
+internal func logFatal<T>(_ object: @autoclosure () -> T, file: StaticString = #file, function: StaticString = #function, line: UInt = #line) -> Never {
+    DebugLogger.shared.log(.fatal, object(), file, function, line)
+    let message = String(reflecting: object())
+    fatalError(message)
+}
 
 class DebugLogger {
     
@@ -80,7 +97,7 @@ class DebugLogger {
         var name: String {
             switch self {
                 case .consoleOnly:
-                    return "Console"
+                    return "Console Message Only"
                 case .debug:
                     return "Debug"
                 case .information:
@@ -111,9 +128,7 @@ class DebugLogger {
         }
     }
     
-    private init() {
-        
-    }
+    private init() { }
     
     private lazy var dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
@@ -131,9 +146,9 @@ class DebugLogger {
         let fileName = URL(fileURLWithPath: file.description).lastPathComponent
         let timeStr = self.dateFormatter.string(from: Date())
         let message = String(reflecting: value)
-        //let emoji = level.emoji
+        let emoji = level.emoji
 
-        let consoleLogString = "\(timeStr) q:\(queue)  msg:\(message)  func:\(fileName) \(function) \(line)"
+        let consoleLogString = "\(timeStr) lv:\(level.name.concat(emoji, separator: " ")) qe:\(queue) me:\(message) sc:\(fileName) \(function) \(line)"
         print(consoleLogString)
     }
 }

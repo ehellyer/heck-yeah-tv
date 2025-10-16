@@ -13,7 +13,7 @@ struct ShowFavorites: View {
     
     @FocusState.Binding var focus: FocusTarget?
     @Binding var appState: SharedAppState
-    var channelMap: IPTVChannelMap
+    var focusRedirectAction: (() -> Void)?
     
     var body: some View {
         HStack(spacing: 20) {
@@ -22,6 +22,7 @@ struct ShowFavorites: View {
             Text("Favorites")
                 .font(.title2)
                 .fontWeight(.bold)
+                .focusable(false)
             
             // Button
             Button {
@@ -36,17 +37,14 @@ struct ShowFavorites: View {
             
             // Focus view for redirection
             FocusSentinel(focus: $focus) {
-                focus = .guide(channelId: channelMap.map.first!, col: 1)
+                logConsole("ShowFavorites redirect focus view caught focus.")
+                focusRedirectAction?()
             }
-            .frame(width: 60)
-            .frame(height: 60)
-            .focusable()
-            .focused($focus, equals: FocusTarget.guide(channelId: String.randomString(length: 5), col: -34))
+            .frame(width: 60, height: 60)
 
             // Space the remainder
             Spacer()
         }
-        .focusSection()
     }
 }
 

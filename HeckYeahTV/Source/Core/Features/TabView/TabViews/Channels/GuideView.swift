@@ -17,27 +17,20 @@ struct GuideView: View {
     @FocusState.Binding var focus: FocusTarget?
     @Binding var appState: SharedAppState
     var channelMap: IPTVChannelMap
-    
+    @Binding var updateScrollViewFocus: Bool
     @State private var onChannelListFocusTask: Task<Void, Never>? = nil
     @State private var ensureSelectedVisibleTask: Task<Void, Never>? = nil
     @State private var didEnsureSelectedVisible: Bool = false
-    
-    private var determinedFocusTarget: FocusTarget {
-        if let channelId = appState.selectedChannel {
-            return .guide(channelId: channelId, col: 1)
-        } else {
-            return .favoritesToggle
-        }
-    }
     
     var body: some View {
         HStack(spacing: 0) {
             // Leading sentinel view "edge focus catcher" for swiping off the left side of the ScrollView.
             FocusSentinel(focus: $focus) {
+                logConsole("LeftSideGuideView focus redirected to .favoritesToggle")
                 focus = .favoritesToggle
             }
             .frame(width: 1)
-
+            
             // Main scrolling content
             ScrollViewReader { proxy in
                 ScrollView(.vertical) {
@@ -55,57 +48,73 @@ struct GuideView: View {
                                 .zIndex(1)
                         }
                     }
+                    .focusSection()
                     // Shifts the rending of the rows to the right so the focus glow and row selection effects are not clipped on the left side.
                     .padding(.leading, 15)
                 }
                 .contentMargins(.vertical, 20)
-                .background(Color.clear)
+                .scrollClipDisabled(false)
                 
                 .onAppear {
-                    if let channelId = appState.selectedChannel {
-                        withAnimation(nil) {
-                            proxy.scrollTo(channelId, anchor: .center)
-                        }
-                    }
-                    
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                        withAnimation {
-                            focus = determinedFocusTarget
-                        }
-                    }
+                    updateFocusAndScroll(proxy: proxy, targetFocus: determinedFocusTarget)
+                }
+                
+                .onChange(of: channelMap.totalCount) { _, _ in
+                    updateFocusAndScroll(proxy: proxy, targetFocus: determinedFocusTarget)
                 }
                 
                 .onChange(of: appState.showFavoritesOnly) { _, _ in
-                    rebuildChannelMap()
+                    // Cancel any prior rebuild task if you want to coalesce rapid toggles
+                    onChannelListFocusTask?.cancel()
+                    onChannelListFocusTask = Task { @MainActor in
+                        await rebuildChannelMap()
+                        logConsole("Channel Map rebuild completed.")
+                    }
                 }
                 
+                .onChange(of: updateScrollViewFocus) { oldValue, newValue in
+                    guard oldValue == false, newValue == true else { return } // Only updateFocus and scroll when in this state.
+                    updateScrollViewFocus = false
+                    updateFocusAndScroll(proxy: proxy, targetFocus: determinedFocusTarget)
+                }
             }
         }
-        .focusSection()
     }
 }
 
 private extension GuideView {
-    private func rebuildChannelMap() {
-        
+    @MainActor
+    func rebuildChannelMap() async {
+        // Access the @MainActor DataPersistence singleton here
         let container = DataPersistence.shared.container
-        Task.detached(priority: .userInitiated) {
-            do {
-                logConsole("Is Main Thread: \(Thread.isMainThread)")
-                let importer = ChannelImporter(container: container)
-                try await importer.buildChannelMap(showFavoritesOnly: appState.showFavoritesOnly)
-            } catch {
-                logConsole("Error: \(error)")
+        do {
+            // ChannelImporter is an actor; its async methods run in its isolation without blocking the main actor.
+            let importer = ChannelImporter(container: container)
+            try await importer.buildChannelMap(showFavoritesOnly: appState.showFavoritesOnly)
+        } catch {
+            logError("Error: \(error)")
+        }
+    }
+    
+    private var determinedFocusTarget: FocusTarget {
+        if let channelId = appState.selectedChannel {
+            return .guide(channelId: channelId, col: 1)
+        } else {
+            return .favoritesToggle
+        }
+    }
+    
+    private func updateFocusAndScroll(proxy: ScrollViewProxy, targetFocus: FocusTarget?) {
+        // If there is a selected channel, scroll to it.
+        if let channelId = appState.selectedChannel {
+            withAnimation(.easeOut) {
+                proxy.scrollTo(channelId, anchor: .center)
             }
         }
-//        Task { @MainActor in
-//            do {
-//                let importer = ChannelImporter(container: DataPersistence.shared.container)
-//                try await importer.buildChannelMap(showFavoritesOnly: appState.showFavoritesOnly)
-//            } catch {
-//                logConsole("Error: \(error)")
-//            }
-//        }
+        
+        // Set the focus view after a short delay.
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            focus = targetFocus
+        }
     }
 }
-
