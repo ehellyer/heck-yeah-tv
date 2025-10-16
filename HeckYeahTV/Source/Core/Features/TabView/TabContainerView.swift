@@ -13,6 +13,8 @@ struct TabContainerView: View {
     
     @FocusState.Binding var focus: FocusTarget?
     @Binding var appState: SharedAppState
+    var channelMap: IPTVChannelMap
+    
     
     private var selectedTab: Binding<TabSection> {
         Binding(
@@ -38,7 +40,7 @@ struct TabContainerView: View {
                 Tab(TabSection.channels.title,
                     systemImage: TabSection.channels.systemImage,
                     value: TabSection.channels) {
-                    ChannelsContainer(focus: $focus, appState: $appState)
+                    ChannelsContainer(focus: $focus, appState: $appState, channelMap: channelMap)
                 }
                 
                 Tab(TabSection.search.title,
@@ -63,54 +65,10 @@ struct TabContainerView: View {
                     appState.isGuideVisible = false
                 }
             }
-#endif // !os(iOS)
-            
-#if !os(iOS)
-//            .onMoveCommand { direction in
-//                handleOnMoveCommand(direction)
-//            }
 #endif
         }
     }
     
-#if !os(iOS)
-    
-//    private func handleOnMoveCommand(_ direction: MoveCommandDirection) {
-//        print(">>> func handleOnMoveCommand(_ direction: \(direction)), FocusTarget: \(self.focus?.debugDescription ?? "unknown"), ")
-//        
-//        switch (self.focus, direction) {
-//
-//            case (.guide(let id, _), .up):
-//                if guideStore.visibleChannels.first?.id == id {
-//                    lastGuideFocusedTarget = focus
-//                    withAnimation {
-//                        focus = .favoritesToggle
-//                    }
-//                }
-//
-//            case (.favoritesToggle, .right),
-//                (.favoritesToggle, .left),
-//                (.favoritesToggle, .down):
-//
-//                // from Favorites to guide when either <LEFT> or <RIGHT> on favorites toggle.
-//                withAnimation {
-//                    if let channelId = guideStore.visibleChannels.first?.id {
-//                        focus = FocusTarget.guide(channelId: channelId, col: 1)
-//                    }
-//                }
-//
-//            case (.guide(_, let col), .left):
-//                // from guide channel col <LEFT> to favorites
-//                if col == 1 {
-//                    lastGuideFocusedTarget = focus
-//                    withAnimation {
-//                        focus = .favoritesToggle
-//                    }
-//                }
-//            default:
-//                break
-//        }
-//    }
-#endif // !os(iOS)
+
 }
 

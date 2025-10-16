@@ -24,7 +24,7 @@ struct TabActivationView: View {
 #endif
             .contentShape(Rectangle())
             .onTapGesture {
-                print("Tap gesture received")
+                logConsole("Tap gesture received")
                 withAnimation {
                     appState.isGuideVisible = true
                 }

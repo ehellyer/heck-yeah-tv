@@ -61,4 +61,16 @@ final class SharedAppState {
             }
         }
     }
+    
+    var selectedChannel: ChannelId? {
+        get {
+            access(keyPath: \.selectedChannel)
+            return UserDefaults.selectedChannel
+        }
+        set {
+            withMutation(keyPath: \.selectedChannel) {
+                UserDefaults.selectedChannel = newValue
+            }
+        }
+    }
 }

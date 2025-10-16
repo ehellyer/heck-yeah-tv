@@ -18,11 +18,11 @@ extension FocusTarget: CustomDebugStringConvertible {
     var debugDescription: String {
         switch self {
             case .guideActivationView:
-                return "GuideActivationView"
+                return "guideActivationView"
             case .favoritesToggle:
-                return "ShowFavoritesToggle"
+                return "favoritesToggle"
             case .guide(channelId: let channelId, col: let col):
-                return "Guide(channelId: \(channelId.prefix(8))..., col: \(col))"
+                return "guide(channelId: \(channelId.prefix(8)), col: \(col))"
         }
     }
 }

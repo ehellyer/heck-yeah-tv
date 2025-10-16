@@ -12,7 +12,7 @@ import SwiftData
 typealias ChannelId = String
 
 @Model final class IPTVChannel {
-    #Index<IPTVChannel>([\.sortHint], [\.isPlaying, \.sortHint], [\.isFavorite, \.sortHint])
+    #Index<IPTVChannel>([\.sortHint], [\.isFavorite, \.sortHint])
 
     init(id: ChannelId,
          sortHint: String,
@@ -23,8 +23,7 @@ typealias ChannelId = String
          quality: StreamQuality,
          hasDRM: Bool,
          source: ChannelSource,
-         isFavorite: Bool = false,
-         isPlaying: Bool = false) {
+         isFavorite: Bool = false) {
         self.id = id
         self.sortHint = sortHint
         self.title = title
@@ -35,7 +34,6 @@ typealias ChannelId = String
         self.hasDRM = hasDRM
         self.source = source
         self.isFavorite = isFavorite
-        self.isPlaying = isPlaying
     }
     
     @Attribute(.unique)
@@ -49,5 +47,4 @@ typealias ChannelId = String
     var hasDRM: Bool
     var source: ChannelSource
     var isFavorite: Bool = false
-    var isPlaying: Bool = false
 }

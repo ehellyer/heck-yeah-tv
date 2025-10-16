@@ -10,15 +10,19 @@ import SwiftUI
 import SwiftData
 
 struct GuideRow: View {
-    let corner: CGFloat = 40
+    let corner: CGFloat = 20
     
     @State var channel: IPTVChannel
     @FocusState.Binding var focus: FocusTarget?
     @Binding var appState: SharedAppState
     @Environment(\.modelContext) private var viewContext
     
+    private var isPlaying: Bool {
+        appState.selectedChannel == channel.id
+    }
+    
     var body: some View {
-        HStack(spacing: 25) {
+        HStack(spacing: 30) {
 
             Button {
                 channel.isFavorite.toggle()
@@ -32,7 +36,7 @@ struct GuideRow: View {
             .focused($focus, equals: FocusTarget.guide(channelId: channel.id, col: 0))
             
             Button {
-                setPlayingChannel(id: channel.id)
+                appState.selectedChannel = channel.id
             } label: {
                 VStack(alignment: .leading, spacing: 2) {
                     Text(channel.title)
@@ -59,34 +63,13 @@ struct GuideRow: View {
             .focusable(false)
         }
         .background {
-            if channel.isPlaying {
+            if isPlaying {
                 RoundedRectangle(cornerRadius: corner, style: .continuous)
                     .fill(Color.selectedChannel)
-                    .padding(-15)
+                    .padding(-15) // extend visually beyond the row
+                    .allowsHitTesting(false)
+                    .accessibilityHidden(true)
             }
-        }
-    }
-    
-    private func setPlayingChannel(id: String) {
-        do {
-            /// There can only be one channel at a time playing, this code enforces that demand.
-            let isPlayingPredicate = #Predicate<IPTVChannel> { $0.isPlaying }
-            let isPlayingDescriptor = FetchDescriptor<IPTVChannel>(predicate: isPlayingPredicate)
-            let channels = try viewContext.fetch(isPlayingDescriptor)
-            
-            let targetChannelPredicate = #Predicate<IPTVChannel> { $0.id == id }
-            var targetChannelDescriptor = FetchDescriptor<IPTVChannel>(predicate: targetChannelPredicate)
-            targetChannelDescriptor.fetchLimit = 1
-            let targetChannel = try viewContext.fetch(targetChannelDescriptor).first
-            
-            for channel in channels {
-                channel.isPlaying = false
-            }
-            targetChannel?.isPlaying = true
-            
-            try viewContext.save()
-        } catch {
-            print("Error: \(error) when setting a channel as playing")
         }
     }
 }

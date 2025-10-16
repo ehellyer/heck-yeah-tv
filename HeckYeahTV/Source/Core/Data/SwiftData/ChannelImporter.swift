@@ -58,26 +58,27 @@ actor ChannelImporter {
 //                model.source   = src.sourceHint
 //            }
 //        }
+        
+        if context.hasChanges {
+            try context.save()
+        }
     }
     
-    func buildChannelMap(context: ModelContext?, showFavoritesOnly: Bool) async throws {
+    func buildChannelMap(showFavoritesOnly: Bool) async throws {
         
-        let context = context ?? self.context
+        logConsole("Channel map building...")
+        
         var channelsDescriptor: FetchDescriptor<IPTVChannel> = FetchDescriptor<IPTVChannel>(
             sortBy: [SortDescriptor(\IPTVChannel.sortHint, order: .forward)]
         )
         
         channelsDescriptor.predicate = (showFavoritesOnly ? (#Predicate<IPTVChannel> { $0.isFavorite == true }) : nil)
         let channels: [IPTVChannel] = try context.fetch(channelsDescriptor)
-        
-        let map: [MapIndex: ChannelId] = channels.enumerated().reduce(into: [:]) { dict, pair in
-            let (index, channel) = pair
-            dict[index] = channel.id
-        }
+        let map: [ChannelId] = channels.map { $0.id }
         
         // Replace existing singleton map (if any), then insert the new one
-        let mapPredicate = #Predicate<IPTVChannelMap> { $0.singletonKey == IPTVChannelMap.singletonKeyValue }
-        let existingMaps = try context.fetch(FetchDescriptor<IPTVChannelMap>(predicate: mapPredicate))
+        let channelMapPredicate = #Predicate<IPTVChannelMap> { $0.id == channelMapKey }
+        let existingMaps = try context.fetch(FetchDescriptor<IPTVChannelMap>(predicate: channelMapPredicate))
         for m in existingMaps {
             context.delete(m)
         }
@@ -85,11 +86,11 @@ actor ChannelImporter {
         context.insert(
             IPTVChannelMap(map: map)
         )
-    }
-    
-    func save() async throws {
+        
         if context.hasChanges {
             try context.save()
         }
+        
+        logConsole("Channel map built")
     }
 }

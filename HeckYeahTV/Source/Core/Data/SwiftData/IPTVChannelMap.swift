@@ -11,22 +11,15 @@ import SwiftData
 
 typealias MapIndex = Int
 
-@Model final class IPTVChannelMap {
+@Model final class IPTVChannelMap: Identifiable {
     
-    init(map: [MapIndex: ChannelId]) {
-        self.singletonKey = IPTVChannelMap.singletonKeyValue
+    init(map: [ChannelId]) {
+        self.id = channelMapKey
         self.map = map
         self.totalCount = map.count
-        self.reverseMap = Dictionary(uniqueKeysWithValues: map.map { ($0.value, $0.key) })
     }
     
-    @Attribute(.unique) private(set) var singletonKey: String
-    private(set) var map: [MapIndex: ChannelId]
-    private(set) var reverseMap: [ChannelId: MapIndex]
-    @Transient private(set) var totalCount: Int = 0
-}
-
-extension IPTVChannelMap {
-    // Centralized constant to avoid typos across the app.  
-    static let singletonKeyValue = "IPTVChannelMapSingleton"
+    @Attribute(.unique) private(set) var id: String
+    private(set) var map: [ChannelId]
+    private(set) var totalCount: Int = 0
 }

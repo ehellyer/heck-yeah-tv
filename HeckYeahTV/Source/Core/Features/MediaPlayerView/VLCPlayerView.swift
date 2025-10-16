@@ -24,8 +24,7 @@ struct VLCPlayerView: CrossPlatformRepresentable {
     @Environment(\.scenePhase) private var scenePhase
     @Binding var appState: SharedAppState
 
-    @Query(filter: GuideView.isPlayingPredicate, sort: []) private var playingChannels: [IPTVChannel]
-    private var selectedChannelId: ChannelId? { playingChannels.first?.id }
+    private var selectedChannelId: ChannelId? { appState.selectedChannel }
     
     //MARK: - CrossPlatformRepresentable overrides
 
@@ -93,7 +92,7 @@ struct VLCPlayerView: CrossPlatformRepresentable {
         
         //MARK: - Player controls
 
-        /// Essentially this is the play() function, but it takes parameters to determine the current player state based on channel selection and intent.
+        /// Essentially this is the play() function, but it takes parameters to set player state based on channel selection and intent.
         /// - Parameters:
         ///   - channelId: (Optional) The identifier of the channel to play.
         ///   - shouldPause: Intent of the user to pause/resume an active playing stream.
@@ -179,7 +178,9 @@ struct VLCPlayerView: CrossPlatformRepresentable {
         }
         
         func dismantle() {
+            stop()
             mediaPlayer.drawable = nil
+            mediaPlayer.delegate = nil
             platformView.removeFromSuperview()
         }
     }

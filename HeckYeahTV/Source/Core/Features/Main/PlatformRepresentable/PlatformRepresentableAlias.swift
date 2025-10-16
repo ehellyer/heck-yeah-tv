@@ -91,114 +91,12 @@ class CrossPlatformTextField: PlatformTextField {
     }
 }
 
-class CrossPlatformLabel: PlatformLabel {
-    var textValue: String? {
-        get {
-#if canImport(UIKit)
-            return self.text
-#elseif canImport(AppKit)
-            return self.stringValue
-#endif
-        }
-        set {
-#if canImport(UIKit)
-            self.text = newValue
-#elseif canImport(AppKit)
-            self.stringValue = newValue ?? ""
-#endif
-        }
-    }
-
-    var lineLimit: Int {
-        get {
-#if canImport(UIKit)
-            return self.numberOfLines
-#elseif canImport(AppKit)
-            return self.maximumNumberOfLines
-#endif
-        }
-        set {
-#if canImport(UIKit)
-            self.numberOfLines = newValue
-#elseif canImport(AppKit)
-            self.maximumNumberOfLines = newValue
-#endif
-        }
-    }
-}
-
-//MARK: - UIKit/AppKit shims
-
-class CrossPlatformView: PlatformView {
-    
-    var bgColor: PlatformColor? {
-        get {
-#if os(macOS)
-            guard let cg = self.layer?.backgroundColor else { return nil }
-            return PlatformColor(cgColor: cg)
-#else
-            return self.backgroundColor
-#endif
-        }
-        set {
-#if os(macOS)
-            if self.wantsLayer == false { self.wantsLayer = true }
-            self.layer?.backgroundColor = newValue?.cgColor
-#else
-            self.backgroundColor = newValue
-#endif
-        }
-    }
-    
-}
-
-#if os(macOS)
-extension NSView {
-
-    
-    var isUserInteractionEnabled: Bool {
-        get { return true } // NSView always accepts events unless disabled via other means
-        set { /* no-op to mirror UIKit API */ }
-    }
-}
-
-/// UIScrollView.contentInset compatibility
-struct NSEdgeInsetsCompat {
-    var top: CGFloat
-    var left: CGFloat
-    var bottom: CGFloat
-    var right: CGFloat
-    static let zero = NSEdgeInsetsCompat(top: 0, left: 0, bottom: 0, right: 0)
-}
-
-private var contentInsetKey: UInt8 = 0
-
-extension NSScrollView {
-    var contentInset: NSEdgeInsetsCompat {
-        get {
-            (objc_getAssociatedObject(self, &contentInsetKey) as? NSEdgeInsetsCompat) ?? .zero
-        }
-        set {
-            objc_setAssociatedObject(self, &contentInsetKey, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-            // Implement a simple padding by adjusting the documentView’s frame inset within the clipView’s bounds.
-            guard let doc = self.documentView else { return }
-            var frame = self.contentView.bounds
-            frame.origin.x += newValue.left
-            frame.size.width -= (newValue.left + newValue.right)
-            frame.origin.y += newValue.top
-            frame.size.height -= (newValue.top + newValue.bottom)
-            doc.frame = frame
-        }
-    }
-}
-#endif
-
 struct PlatformUtils {
     
-    static func createLabel(text: String = "", font: PlatformFont? = nil) -> CrossPlatformLabel {
-        let label = CrossPlatformLabel()
+    static func createLabel(text: String = "", font: PlatformFont? = nil) -> PlatformLabel {
+        let label = PlatformLabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.textValue = text
+        label.text = text
         if let font {
             label.font = font
         }
@@ -251,25 +149,10 @@ struct PlatformUtils {
         return scrollView
     }
     
-    static func createImageView() -> PlatformImageView {
-        let imageView = PlatformImageView()
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        return imageView
-    }
-    
-    static func createView() -> CrossPlatformView {
-        let view: CrossPlatformView = CrossPlatformView()
-#if !os(macOS)
-        view.backgroundColor = PlatformColor.clear
-#endif
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }
-    
-    static func createTableView() -> PlatformTableView {
-        let tableView = PlatformTableView()
-        tableView.translatesAutoresizingMaskIntoConstraints = false
-        return tableView
+    static func createView() -> PlatformView {
+        let v = PlatformView()
+        v.translatesAutoresizingMaskIntoConstraints = false
+        return v
     }
 }
 

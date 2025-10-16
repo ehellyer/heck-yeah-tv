@@ -15,8 +15,14 @@ struct MainAppContentView: View {
     @State private var fadeTask: Task<Void, Never>?
     @State private var showPlayButtonToast = false
     @State private var appState: SharedAppState = SharedAppState()
-    
+
+    @State private var lastFocusedChannel: ChannelId?
     @FocusState var focus: FocusTarget?
+    
+    // IPTVChannelMap
+    @Query(filter: #Predicate<IPTVChannelMap> { $0.id == channelMapKey }, sort: []) private var channelMaps: [IPTVChannelMap]
+    private var channelMap: IPTVChannelMap { return channelMaps.first! }
+    
     
     var body: some View {
         // Alignment required to layout the play/pause button in the bottom left corner.
@@ -28,7 +34,7 @@ struct MainAppContentView: View {
                 .focusable(false)
                 
             if appState.isGuideVisible {
-                TabContainerView(focus: $focus, appState: $appState)
+                TabContainerView(focus: $focus, appState: $appState, channelMap: channelMap)
                     .zIndex(1)
                     .transition(.opacity)
                     .background(Color.black.opacity(0.65))  //Apply a shady shim behind the whole view so that TV can be seen behind, but the UI is visible.
@@ -113,11 +119,15 @@ struct MainAppContentView: View {
         })
         
         .onChange(of: focus) {
+            if case .guide(let channelId, _) = focus {
+                lastFocusedChannel = channelId
+            }
+            
             Task { @MainActor in
-                print("MainAppContentView onChange(of: focus) observed: \(self.focus?.debugDescription ?? "nil")")
+                logConsole("onChange(of: focus) observed: \(self.focus?.debugDescription ?? "nil")")
             }
         }
-        
+
 #if os(macOS)
         // macOS: arrow keys re-show the guide
         .background( MacArrowKeyCatcher {
@@ -128,3 +138,4 @@ struct MainAppContentView: View {
 #endif
     }
 }
+

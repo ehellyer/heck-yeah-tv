@@ -56,10 +56,11 @@ struct AppKeys {
     }
     
     struct SharedAppState {
-        static let isGuideVisible = "SharedAppState.isGuideVisible"
+        static let isGuideVisibleKey = "SharedAppState.isGuideVisibleKey"
         static let showFavoritesOnlyKey = "SharedAppState.showFavoritesOnlyKey"
-        static let isPlayerPaused = "SharedAppState.isPlayerPaused"
+        static let isPlayerPausedKey = "SharedAppState.isPlayerPausedKey"
         static let recentlyPlayedKey = "SharedAppState.recentlyPlayedKey"
-        static let selectedTab = "SharedAppState.selectedTab"
+        static let selectedTabKey = "SharedAppState.selectedTabKey"
+        static let selectedChannelKey = "SharedAppState.selectedChannelKey"
     }
 }

@@ -44,33 +44,44 @@ extension UserDefaults {
     /// A boolean to indicate to SwiftUI if the Guide TabView should be displayed.
     static var isGuideVisible: Bool {
         get {
-            standard.bool(forKey: AppKeys.SharedAppState.isGuideVisible)
+            standard.bool(forKey: AppKeys.SharedAppState.isGuideVisibleKey)
         }
         set {
-            standard.set(newValue, forKey: AppKeys.SharedAppState.isGuideVisible)
+            standard.set(newValue, forKey: AppKeys.SharedAppState.isGuideVisibleKey)
         }
     }
     
     /// A boolean to indicate if playback is in a paused state.  This is different from stopped.  Not all streams can be paused..  Persisted into UserDefaults.standard.
     static var isPlayerPaused: Bool {
         get {
-            standard.bool(forKey: AppKeys.SharedAppState.isPlayerPaused)
+            standard.bool(forKey: AppKeys.SharedAppState.isPlayerPausedKey)
         }
         set {
-            standard.set(newValue, forKey: AppKeys.SharedAppState.isPlayerPaused)
+            standard.set(newValue, forKey: AppKeys.SharedAppState.isPlayerPausedKey)
         }
     }
 
     /// Gets or sets the last tab that was selected.  Defaults to Channels tab for new installation.  Persisted into UserDefaults.standard.
     static var selectedTab: TabSection {
         get {
-            let _data: Data? = standard.data(forKey: AppKeys.SharedAppState.selectedTab)
+            let _data: Data? = standard.data(forKey: AppKeys.SharedAppState.selectedTabKey)
             let _lastTab: TabSection = (try? TabSection.initialize(jsonData: _data)) ?? TabSection.channels //Channels tab is default for new install
             return _lastTab
         }
         set {
             let data = try? newValue.toJSONData()
-            standard.set(data, forKey: AppKeys.SharedAppState.selectedTab)
+            standard.set(data, forKey: AppKeys.SharedAppState.selectedTabKey)
+        }
+    }
+
+    /// Gets or sets the ChannelId of the currently playing channel.
+    static var selectedChannel: ChannelId? {
+        get {
+            let _channelId: String? = standard.string(forKey: AppKeys.SharedAppState.selectedChannelKey)
+            return _channelId
+        }
+        set {
+            standard.set(newValue, forKey: AppKeys.SharedAppState.selectedChannelKey)
         }
     }
 }
