@@ -21,7 +21,6 @@ struct GuideRowLazy: View {
         Group {
             if let channel = loader.channel {
                 GuideRow(channel: channel, focus: $focus, appState: $appState)
-                    .id(channel.id)
             } else {
                 HStack(spacing: 25) {
                     Circle()
@@ -47,12 +46,13 @@ struct GuideRowLazy: View {
                         .frame(maxWidth: .infinity, minHeight: 60, maxHeight: 80)
                         .redacted(reason: .placeholder)
                 }
-                .id("channelId-\(channelId)")
             }
         }
+        
         .onAppear {
             loader.load(channelId: channelId, context: viewContext)
         }
+        
         .onDisappear {
             loader.cancel()
         }

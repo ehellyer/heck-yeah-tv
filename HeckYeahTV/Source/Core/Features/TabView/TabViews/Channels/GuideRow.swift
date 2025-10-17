@@ -66,7 +66,7 @@ struct GuideRow: View {
             if isPlaying {
                 RoundedRectangle(cornerRadius: corner, style: .continuous)
                     .fill(Color.selectedChannel)
-                    .padding(-15) // extend visually beyond the row
+                    .padding(-15) // Extend effect visually beyond the row (bleed out)
                     .allowsHitTesting(false)
                     .accessibilityHidden(true)
             }

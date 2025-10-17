@@ -12,8 +12,8 @@ import SwiftData
 @MainActor
 final class GuideRowLoader: ObservableObject {
     @Published var channel: IPTVChannel?
-    @Published var isLoading: Bool = false
     
+    private var isLoading: Bool = false
     private var task: Task<Void, Never>?
     
     func cancel() {
@@ -22,15 +22,12 @@ final class GuideRowLoader: ObservableObject {
     }
     
     func load(channelId: ChannelId, context: ModelContext) {
-        // Avoid refetch if already loaded for this row
-        if channel != nil { return }
-        
+        guard channel?.id != channelId, isLoading == false else { return }
         isLoading = true
         task?.cancel()
         task = Task { [weak self] in
             guard let self else { return }
             do {
-                
                 let chPredicate = #Predicate<IPTVChannel> { $0.id == channelId }
                 var chDescriptor = FetchDescriptor<IPTVChannel>(predicate: chPredicate)
                 chDescriptor.fetchLimit = 1
