@@ -17,7 +17,7 @@ struct FocusSentinel: View {
     @State private var redirecting = false
     
     var body: some View {
-        Color.clear
+        Color.red
             .contentShape(Rectangle())
             .focusable()
             .focusEffectDisabled(true)

@@ -21,10 +21,13 @@ struct ChannelsContainer: View {
             ShowFavorites(focus: $focus, appState: $appState) {
                 updateScrollViewFocus = true
             }
+#if os(tvOS)
             .focusSection()
-            
+#endif
             GuideView(focus: $focus, appState: $appState, channelMap: channelMap, updateScrollViewFocus: $updateScrollViewFocus)
+#if os(tvOS)
                 .focusSection()
+#endif
         }
     }
 }

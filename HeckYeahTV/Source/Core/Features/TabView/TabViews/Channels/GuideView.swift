@@ -24,13 +24,15 @@ struct GuideView: View {
     
     var body: some View {
         HStack(spacing: 0) {
+#if os(tvOS)
             // Leading sentinel view "edge focus catcher" for swiping off the left side of the ScrollView.
             FocusSentinel(focus: $focus) {
                 logConsole("LeftSideGuideView focus redirected to .favoritesToggle")
                 focus = .favoritesToggle
             }
             .frame(width: 1)
-            
+#endif
+
             // Main scrolling content
             ScrollViewReader { proxy in
                 ScrollView(.vertical) {
@@ -48,7 +50,10 @@ struct GuideView: View {
                                 .zIndex(1)
                         }
                     }
+#if os(tvOS)
                     .focusSection()
+#endif
+
                     // Shifts the rending of the rows to the right so the focus glow and row selection effects are not clipped on the left side.
                     .padding(.leading, 15)
                 }

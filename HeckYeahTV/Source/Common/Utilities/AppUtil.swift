@@ -35,5 +35,3 @@ let not = (!)
 func stringName<T>(_ object: T) -> String {
     return String(describing: type(of: object))
 }
-
-let channelMapKey = "IPTVChannelMapSingleton"

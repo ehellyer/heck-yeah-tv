@@ -16,34 +16,44 @@ struct ShowFavorites: View {
     var focusRedirectAction: (() -> Void)?
     
     var body: some View {
-        HStack(spacing: 20) {
-            
-            // Title
-            Text("Favorites")
-                .font(.title2)
-                .fontWeight(.bold)
-                .focusable(false)
-            
-            // Button
-            Button {
-                appState.showFavoritesOnly.toggle()
-            } label: {
-                Label(appState.showFavoritesOnly ? "On" : "Off",
-                      systemImage: appState.showFavoritesOnly ? "star.fill" : "star")
-                .font(.caption)
-                .foregroundStyle(.yellow)
-            }
-            .focused($focus, equals: FocusTarget.favoritesToggle)
-            
-            // Focus view for redirection
+        VStack(spacing: 0) {
+#if os(tvOS)
             FocusSentinel(focus: $focus) {
-                logConsole("ShowFavorites redirect focus view caught focus.")
-                focusRedirectAction?()
+                print(focus?.debugDescription ?? "")
             }
-            .frame(width: 60, height: 60)
+            .frame(height: 1)
+#endif
+            HStack(spacing: 20) {
+                
+                // Title
+                Text("Favorites")
+                    .font(.title2)
+                    .fontWeight(.bold)
+                    .focusable(false)
+                
+                // Button
+                Button {
+                    appState.showFavoritesOnly.toggle()
+                } label: {
+                    Label(appState.showFavoritesOnly ? "On" : "Off",
+                          systemImage: appState.showFavoritesOnly ? "star.fill" : "star")
+                    .font(.caption)
+                    .foregroundStyle(.yellow)
+                }
+                .focused($focus, equals: FocusTarget.favoritesToggle)
 
-            // Space the remainder
-            Spacer()
+#if os(tvOS)
+                // Focus view for redirection
+                FocusSentinel(focus: $focus) {
+                    logConsole("ShowFavorites redirect focus view caught focus.")
+                    focusRedirectAction?()
+                }
+                .frame(width: 60, height: 60)
+#endif
+                
+                // Space the remainder
+                Spacer()
+            }
         }
     }
 }

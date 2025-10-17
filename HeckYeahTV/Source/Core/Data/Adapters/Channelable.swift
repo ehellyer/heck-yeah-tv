@@ -19,5 +19,3 @@ protocol Channelable {
     var hasDRMHint: Bool { get }
     var sourceHint: ChannelSource { get }
 }
-
-

@@ -79,6 +79,18 @@
             argument = "-com.apple.CoreData.SQLDebug 1 "
             isEnabled = "NO">
          </CommandLineArgument>
+         <CommandLineArgument
+            argument = "-UIFocusMovementLoggingEnabled YES"
+            isEnabled = "YES">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "-UIFocusUpdateLoggingEnabled YES"
+            isEnabled = "YES">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "-UIFocusLoggingEnabled YES"
+            isEnabled = "YES">
+         </CommandLineArgument>
       </CommandLineArguments>
    </LaunchAction>
    <ProfileAction

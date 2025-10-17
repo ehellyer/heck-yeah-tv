@@ -22,11 +22,11 @@ struct AppKeys {
             return Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? ""
         }
         
-        /// Returns the apps current build number.  yy.M.dnnn
+        /// Returns the apps current build number.  Maintain this format:  yy.MM.ddnnn
         ///
         /// - yy = Two digit year
-        /// - M = Month no leading zeros
-        /// - d = Date no leading zeros
+        /// - MM = Month pad leading zero if needed to maintain 2 digits
+        /// - dd = Date pad leading zero if needed to maintain 2 digits
         /// - nnn = Build number for today, padded with leading zeros to maintain 3 digits.
         static var appBuildNumber: String {
             return Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as? String ?? ""

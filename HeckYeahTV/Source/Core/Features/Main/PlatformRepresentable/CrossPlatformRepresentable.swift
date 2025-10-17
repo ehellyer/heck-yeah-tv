@@ -23,15 +23,16 @@ protocol CrossPlatformRepresentable: PlatformViewRepresentable {
     func sizeThatFits(_ proposal: ProposedViewSize, view: PlatformView, context: Context) -> CGSize
 }
 
-// Add defaults for optional protocol implementation
+// Defaults for optional protocol implementation
 extension CrossPlatformRepresentable {
     
     static func dismantleView(_ view: PlatformView, coordinator: Coordinator) {
-        //No implementation
+        // No default implementation
     }
     
     @available(iOS 16.0, tvOS 16.0, macOS 13.0, *)
     func sizeThatFits(_ proposal: ProposedViewSize, view: PlatformView, context: Context) -> CGSize {
+        // Default implementation returning CGSize.zero
         return .zero
     }
 }

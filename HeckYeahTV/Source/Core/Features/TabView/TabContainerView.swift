@@ -29,6 +29,7 @@ struct TabContainerView: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
+            
             TabView(selection: selectedTab) {
                 
                 Tab(TabSection.recents.title,
@@ -57,6 +58,7 @@ struct TabContainerView: View {
             }
             .padding(0)
             .background(Color.clear)
+            .focused($focus, equals: .tabBar)
             
 #if !os(iOS)
             // Support for dismissing the tabview by tapping menu on Siri remote for tvOS or esc key on keyboard.
@@ -67,7 +69,9 @@ struct TabContainerView: View {
             }
 #endif
         }
+#if os(tvOS)
         .focusSection()
+#endif
     }
     
 
