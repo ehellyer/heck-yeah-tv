@@ -14,7 +14,7 @@ struct MainAppContentView: View {
     @Environment(\.scenePhase) private var scenePhase
     @State private var fadeTask: Task<Void, Never>?
     @State private var showPlayButtonToast = false
-    @State private var appState: SharedAppState = SharedAppState()
+    @State private var appState: SharedAppState = SharedAppState.shared
 
     @State private var lastFocusedChannel: ChannelId?
     @FocusState var focus: FocusTarget?
@@ -44,9 +44,11 @@ struct MainAppContentView: View {
 #if os(tvOS)
                     // Make sure this gets initial focus when visible so select and commands route correctly.
                     .focused($focus, equals: .guideActivationView)
+                    .defaultFocus($focus, .guideActivationView)
                     .onAppear() {
                         focus = .guideActivationView
                     }
+                    
 #endif
             }
             
@@ -67,22 +69,22 @@ struct MainAppContentView: View {
                     .zIndex(10)
             }
             
-//            // Global debug overlay (always on top)
-//            VStack {
-//                Spacer()
-//                HStack {
-//                    Spacer()
-//                    Text("Focus: \(focus?.debugDescription ?? "nil") || Tab: \(appState.selectedTab.title) || isPaused: \(appState.isPlayerPaused ? "Yes" : "No") || isGuideShowing: \(appState.isGuideVisible ? "Yes" : "No") || ShowFavorites: \(appState.showFavoritesOnly ? "Yes" : "No")")
-//                        .padding(10)
-//                        .fontWeight(.bold)
-//                        .background(Color(.gray))
-//                        .focusable(false)
-//                        .allowsHitTesting(false) 
-//                }
-//                .padding()
-//            }
-//            .zIndex(10000)
-//            .ignoresSafeArea()
+            // Global debug overlay (always on top)
+            VStack {
+                Spacer()
+                HStack {
+                    Spacer()
+                    Text("Focus: \(focus?.debugDescription ?? "nil") || Tab: \(appState.selectedTab.title) || isPaused: \(appState.isPlayerPaused ? "Yes" : "No") || isGuideShowing: \(appState.isGuideVisible ? "Yes" : "No") || ShowFavorites: \(appState.showFavoritesOnly ? "Yes" : "No")")
+                        .padding(10)
+                        .fontWeight(.bold)
+                        .background(Color(.gray))
+                        .focusable(false)
+                        .allowsHitTesting(false) 
+                }
+                .padding()
+            }
+            .zIndex(10000)
+
         }
         
 #if os(tvOS)

@@ -18,11 +18,9 @@ struct ChannelsContainer: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
-            ShowFavorites(focus: $focus, appState: $appState) {
-                updateScrollViewFocus = true
-            }
+            ShowFavorites(focus: $focus, appState: $appState, focusRedirectAction: { updateScrollViewFocus = true })
 #if os(tvOS)
-            .focusSection()
+                .focusSection()
 #endif
             GuideView(focus: $focus, appState: $appState, channelMap: channelMap, updateScrollViewFocus: $updateScrollViewFocus)
 #if os(tvOS)

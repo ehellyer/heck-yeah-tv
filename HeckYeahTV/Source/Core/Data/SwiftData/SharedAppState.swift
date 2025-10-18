@@ -12,7 +12,9 @@ import Observation
 @MainActor @Observable
 final class SharedAppState {
     
-    init() { }
+    static var shared = SharedAppState()
+    
+    private init() { }
     
     var isPlayerPaused: Bool {
         get {

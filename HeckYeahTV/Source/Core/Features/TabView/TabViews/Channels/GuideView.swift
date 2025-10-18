@@ -53,8 +53,7 @@ struct GuideView: View {
 #if os(tvOS)
                     .focusSection()
 #endif
-
-                    // Shifts the rending of the rows to the right so the focus glow and row selection effects are not clipped on the left side.
+                    // Shift row to the right so the focus glow and row selection effects are not clipped on the left side.
                     .padding(.leading, 15)
                 }
                 .contentMargins(.vertical, 20)

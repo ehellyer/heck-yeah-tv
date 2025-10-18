@@ -60,7 +60,7 @@ struct GuideRowLazy: View {
 }
 
 #Preview("GuideRowLazy - loads from SwiftData") {
-    @Previewable @State var appState = SharedAppState()
+    @Previewable @State var appState = SharedAppState.shared
     // Build an in-memory ModelContainer for previews
     let config = ModelConfiguration(isStoredInMemoryOnly: true)
     let container = try! ModelContainer(for: IPTVChannel.self, configurations: config)

@@ -19,9 +19,7 @@ struct TabActivationView: View {
             .frame(maxWidth: .infinity, maxHeight: .infinity) // fill parent
             .ignoresSafeArea()                                // fill safe areas too
             .accessibilityHidden(true)
-#if os(tvOS)
-            .focusable(true)
-#endif
+            .focusable(interactions: .activate)
             .contentShape(Rectangle())
             .onTapGesture {
                 logConsole("Tap gesture received")

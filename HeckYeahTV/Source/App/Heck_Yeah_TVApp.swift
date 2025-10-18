@@ -34,6 +34,10 @@ struct Heck_Yeah_TVApp: App {
     }
     
     private func startBootstrap() {
+        // Always ensure guide starts off in the dismissed state when there is a selected channel. Else present the guide.  This prevents a black screen on first startup.
+        let appState = SharedAppState.shared
+        appState.isGuideVisible = (appState.selectedChannel == nil)
+        
         startupTask?.cancel()
         startupTask = Task {
             
@@ -55,7 +59,7 @@ struct Heck_Yeah_TVApp: App {
             Task.detached(priority: .userInitiated) {
                 let importer = ChannelImporter(container: container)
                 try await importer.importChannels(streams: iptvController.streams, tunerChannels: hdHomeRunController.channels)
-                try await importer.buildChannelMap(showFavoritesOnly: SharedAppState().showFavoritesOnly)
+                try await importer.buildChannelMap(showFavoritesOnly: SharedAppState.shared.showFavoritesOnly)
                 
                 await MainActor.run {
                     // Update state variable that fetches are completed, so the boot screen will hide and main app view will load.
