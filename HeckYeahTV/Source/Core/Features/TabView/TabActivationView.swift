@@ -15,9 +15,7 @@ struct TabActivationView: View {
     
     var body: some View {
         Color.clear
-
             .frame(maxWidth: .infinity, maxHeight: .infinity) // fill parent
-            .ignoresSafeArea()                                // fill safe areas too
             .accessibilityHidden(true)
             .focusable(interactions: .activate)
             .contentShape(Rectangle())

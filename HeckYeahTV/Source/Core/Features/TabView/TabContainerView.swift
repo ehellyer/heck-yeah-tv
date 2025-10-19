@@ -59,7 +59,7 @@ struct TabContainerView: View {
             .padding(0)
             .background(Color.clear)
             .focused($focus, equals: .tabBar)
-            
+            //.tabViewStyle(.sidebarAdaptable)
 #if !os(iOS)
             // Support for dismissing the tabview by tapping menu on Siri remote for tvOS or esc key on keyboard.
             .onExitCommand {
@@ -69,11 +69,6 @@ struct TabContainerView: View {
             }
 #endif
         }
-#if os(tvOS)
-        .focusSection()
-#endif
     }
-    
-
 }
 

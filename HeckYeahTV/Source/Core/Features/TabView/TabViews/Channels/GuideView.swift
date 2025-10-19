@@ -40,14 +40,12 @@ struct GuideView: View {
                         ForEach(0..<channelMap.totalCount, id: \.self) { index in
                             GuideRowLazy(channelId: channelMap.map[index], focus: $focus, appState: $appState)
                                 .id(channelMap.map[index])
-                                .zIndex(1)
                         }
                         
                         if channelMap.totalCount == 0 {
                             Text("No channels found.")
                                 .frame(maxWidth: .infinity)
                                 .padding()
-                                .zIndex(1)
                         }
                     }
 #if os(tvOS)

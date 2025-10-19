@@ -28,18 +28,21 @@ struct MainAppContentView: View {
         // Alignment required to layout the play/pause button in the bottom left corner.
         ZStack(alignment: .bottomLeading)  {
             
-            VLCPlayerView(appState: $appState)
+            //VLCPlayerView(appState: $appState)
+            VideoPlayerView(appState: $appState)
                 .zIndex(0)
-                .ignoresSafeArea(.all)
+                .ignoresSafeArea()
+                .accessibilityHidden(true)
+                .allowsHitTesting(false)
                 .focusable(false)
                 
             if appState.isGuideVisible {
                 TabContainerView(focus: $focus, appState: $appState, channelMap: channelMap)
-                    .zIndex(1)
                     .transition(.opacity)
                     .background(Color.black.opacity(0.65))  //Apply a shady shim behind the whole view so that TV can be seen behind, but the UI is visible.
             } else {
                 TabActivationView(appState: $appState)
+                    // If TabActivationView is being rendered then we want it on top of everything.
                     .zIndex(1000)
 #if os(tvOS)
                     // Make sure this gets initial focus when visible so select and commands route correctly.
@@ -58,7 +61,6 @@ struct MainAppContentView: View {
                     .transition(.opacity)
                     .padding(.leading, 50)
                     .padding(.bottom, 50)
-                    .zIndex(10)
             }
             
             if appState.isPlayerPaused == false && showPlayButtonToast {
@@ -66,7 +68,6 @@ struct MainAppContentView: View {
                     .allowsHitTesting(false)
                     .padding(.leading, 50)
                     .padding(.bottom, 50)
-                    .zIndex(10)
             }
             
             // Global debug overlay (always on top)
@@ -84,7 +85,6 @@ struct MainAppContentView: View {
                 .padding()
             }
             .zIndex(10000)
-
         }
         
 #if os(tvOS)
