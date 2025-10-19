@@ -58,13 +58,22 @@ extension VideoPlayerView {
         }
         
         Task { @MainActor in
+            // If HDHomeRun channel and proxy enabled, rewrite to local HLS
+            let finalInputURL: URL = {
+                if appState.useHLSProxy, isHDHomeRunChannel(id: channelId) {
+                    let port = appState.hlsProxyPort
+                    return URL(string: "http://127.0.0.1:\(port)/channel/\(channelId).m3u8") ?? url
+                }
+                return url
+            }()
+            
             // Resolve .m3u if needed; .m3u8 or direct URLs pass through
             let finalURL: URL
             do {
-                finalURL = try await PlaylistResolver.resolve(url: url)
+                finalURL = try await PlaylistResolver.resolve(url: finalInputURL)
             } catch {
                 // If resolution fails, try original URL as a fallback
-                finalURL = url
+                finalURL = finalInputURL
             }
             
             // Build asset with useful network options
@@ -90,6 +99,16 @@ extension VideoPlayerView {
         var descriptor = FetchDescriptor<IPTVChannel>(predicate: predicate)
         descriptor.fetchLimit = 1
         return try? viewContext.fetch(descriptor).first?.url
+    }
+    
+    private func isHDHomeRunChannel(id: ChannelId) -> Bool {
+        let predicate = #Predicate<IPTVChannel> { $0.id == id }
+        var descriptor = FetchDescriptor<IPTVChannel>(predicate: predicate)
+        descriptor.fetchLimit = 1
+        if let ch = try? viewContext.fetch(descriptor).first {
+            return ch.source == .homeRunTuner
+        }
+        return false
     }
 }
 
@@ -292,3 +311,4 @@ final class PlayerDiagnostics {
         }
     }
 }
+

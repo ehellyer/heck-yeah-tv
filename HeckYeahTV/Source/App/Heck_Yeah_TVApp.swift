@@ -22,10 +22,28 @@ struct Heck_Yeah_TVApp: App {
                 .ignoresSafeArea()
                 .task {
                     startBootstrap()
+                    // Start proxy if enabled
+                    let appState = SharedAppState.shared
+                    if appState.useHLSProxy {
+                        PureHLSProxyServer.shared.start(port: appState.hlsProxyPort)
+                    }
                 }
                 .onChange(of: scenePhase) { _, phase in
                     if phase != .active {
                         startupTask?.cancel()
+                    }
+                    // Manage proxy lifecycle
+                    let appState = SharedAppState.shared
+                    switch phase {
+                        case .active:
+                            if appState.useHLSProxy {
+                                PureHLSProxyServer.shared.start(port: appState.hlsProxyPort)
+                            }
+                        case .background, .inactive:
+                            // Keep it simple: stop when not active
+                            PureHLSProxyServer.shared.stop()
+                        @unknown default:
+                            break
                     }
                 }
                 .modelContainer(DataPersistence.shared.container)
@@ -69,3 +87,4 @@ struct Heck_Yeah_TVApp: App {
         }
     }
 }
+

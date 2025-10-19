@@ -84,4 +84,29 @@ extension UserDefaults {
             standard.set(newValue, forKey: AppKeys.SharedAppState.selectedChannelKey)
         }
     }
+    
+    // New: pure-Swift HLS proxy settings
+    static var useHLSProxy: Bool {
+        get {
+            if standard.object(forKey: AppKeys.SharedAppState.useHLSProxyKey) == nil {
+                // Default to true across platforms for ease of testing
+                return true
+            }
+            return standard.bool(forKey: AppKeys.SharedAppState.useHLSProxyKey)
+        }
+        set {
+            standard.set(newValue, forKey: AppKeys.SharedAppState.useHLSProxyKey)
+        }
+    }
+    
+    static var hlsProxyPort: Int {
+        get {
+            let v = standard.integer(forKey: AppKeys.SharedAppState.hlsProxyPortKey)
+            return v == 0 ? 8089 : v
+        }
+        set {
+            standard.set(newValue, forKey: AppKeys.SharedAppState.hlsProxyPortKey)
+        }
+    }
 }
+

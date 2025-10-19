@@ -75,4 +75,30 @@ final class SharedAppState {
             }
         }
     }
+    
+    // New: pure-Swift HLS proxy settings
+    var useHLSProxy: Bool {
+        get {
+            access(keyPath: \.useHLSProxy)
+            return UserDefaults.useHLSProxy
+        }
+        set {
+            withMutation(keyPath: \.useHLSProxy) {
+                UserDefaults.useHLSProxy = newValue
+            }
+        }
+    }
+    
+    var hlsProxyPort: Int {
+        get {
+            access(keyPath: \.hlsProxyPort)
+            return UserDefaults.hlsProxyPort
+        }
+        set {
+            withMutation(keyPath: \.hlsProxyPort) {
+                UserDefaults.hlsProxyPort = newValue
+            }
+        }
+    }
 }
+

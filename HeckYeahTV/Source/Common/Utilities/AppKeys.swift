@@ -62,5 +62,10 @@ struct AppKeys {
         static let recentlyPlayedKey = "SharedAppState.recentlyPlayedKey"
         static let selectedTabKey = "SharedAppState.selectedTabKey"
         static let selectedChannelKey = "SharedAppState.selectedChannelKey"
+        
+        // New keys for pure-Swift HLS proxy
+        static let useHLSProxyKey = "SharedAppState.useHLSProxyKey"
+        static let hlsProxyPortKey = "SharedAppState.hlsProxyPortKey"
     }
 }
+
