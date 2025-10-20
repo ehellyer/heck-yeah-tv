@@ -75,6 +75,7 @@ actor ChannelImporter {
         channelsDescriptor.predicate = (showFavoritesOnly ? (#Predicate<IPTVChannel> { $0.isFavorite == true }) : nil)
         let channels: [IPTVChannel] = try context.fetch(channelsDescriptor)
         let map: [ChannelId] = channels.map { $0.id }
+        //let reverseLookup: [ChannelId: Int] = Dictionary(uniqueKeysWithValues: map.enumerated().map { (index, channelId) in (channelId, index) })
         
         // Replace existing singleton map (if any), then insert the new one
         let channelMapPredicate = #Predicate<IPTVChannelMap> { $0.id == channelMapKey }
@@ -82,8 +83,9 @@ actor ChannelImporter {
         for m in existingMaps {
             context.delete(m)
         }
-        
+
         context.insert(
+            //IPTVChannelMap(map: map, reverseLookup: reverseLookup)
             IPTVChannelMap(map: map)
         )
         

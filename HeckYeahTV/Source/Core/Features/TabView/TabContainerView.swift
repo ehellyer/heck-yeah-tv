@@ -15,7 +15,6 @@ struct TabContainerView: View {
     @Binding var appState: SharedAppState
     var channelMap: IPTVChannelMap
     
-    
     private var selectedTab: Binding<TabSection> {
         Binding(
             get: {
@@ -29,7 +28,6 @@ struct TabContainerView: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            
             TabView(selection: selectedTab) {
                 
                 Tab(TabSection.recents.title,
@@ -56,10 +54,17 @@ struct TabContainerView: View {
                     SettingsView()
                 }
             }
+            .frame(maxWidth: .infinity)                // Expand TabView to full width
             .padding(0)
             .background(Color.clear)
+            .contentShape(Rectangle())                 // Make the whole rect focus-hit eligible
             .focused($focus, equals: .tabBar)
+            .defaultFocus($focus, .tabBar)
+#if os(tvOS)
+            .focusSection()                            // Treat as one focus section on tvOS
+#endif
             //.tabViewStyle(.sidebarAdaptable)
+            
 #if !os(iOS)
             // Support for dismissing the tabview by tapping menu on Siri remote for tvOS or esc key on keyboard.
             .onExitCommand {
@@ -69,6 +74,6 @@ struct TabContainerView: View {
             }
 #endif
         }
+        .frame(maxWidth: .infinity)                    // Ensure container also spans full width
     }
 }
-

@@ -60,6 +60,7 @@ struct GuideRow: View {
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
             .contentShape(Rectangle())
+            .disabled(true)
             .focusable(false)
         }
         .background {

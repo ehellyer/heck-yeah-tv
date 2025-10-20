@@ -13,6 +13,7 @@ struct GuideRowLazy: View {
     let channelId: ChannelId
     @FocusState.Binding var focus: FocusTarget?
     @Binding var appState: SharedAppState
+    let isVisible: Bool
     
     @Environment(\.modelContext) private var viewContext
     @StateObject private var loader = GuideRowLoader()
@@ -20,7 +21,9 @@ struct GuideRowLazy: View {
     var body: some View {
         Group {
             if let channel = loader.channel {
-                GuideRow(channel: channel, focus: $focus, appState: $appState)
+                GuideRow(channel: channel,
+                         focus: $focus,
+                         appState: $appState)
             } else {
                 HStack(spacing: 25) {
                     Circle()
@@ -48,6 +51,7 @@ struct GuideRowLazy: View {
                 }
             }
         }
+        .disabled(!isVisible)
         
         .onAppear {
             loader.load(channelId: channelId, context: viewContext)
@@ -61,6 +65,7 @@ struct GuideRowLazy: View {
 
 #Preview("GuideRowLazy - loads from SwiftData") {
     @Previewable @State var appState = SharedAppState.shared
+    
     // Build an in-memory ModelContainer for previews
     let config = ModelConfiguration(isStoredInMemoryOnly: true)
     let container = try! ModelContainer(for: IPTVChannel.self, configurations: config)
@@ -69,11 +74,32 @@ struct GuideRowLazy: View {
     // Seed a sample channel the loader can fetch
     let sampleId: ChannelId = "chan.preview.001"
     
+    // Insert one IPTVChannel into the in-memory context
+    do {
+        let sampleChannel = IPTVChannel(
+            id: "chan.preview.001",  //Change 001 to 002 to see the two effects
+            sortHint: "0001",
+            title: "Preview Channel",
+            number: "Channel 121",
+            url: URL(string: "https://example.com/stream.m3u8")!,
+            logoURL: nil,
+            quality: .fhd,
+            hasDRM: false,
+            source: .ipStream,
+            isFavorite: true
+        )
+        context.insert(sampleChannel)
+        try? context.save()
+    }
+    
     @FocusState var focus: FocusTarget?
     
-    return GuideRowLazy(channelId: sampleId, focus: $focus, appState: $appState)
-        .modelContainer(container)
-        .environment(\.modelContext, context)
-        .padding()
-        .frame(width: 1200, height: 140)
+    return GuideRowLazy(channelId: sampleId,
+                        focus: $focus,
+                        appState: $appState,
+                        isVisible: true)
+    .modelContainer(container)
+    .environment(\.modelContext, context)
+    .padding()
+    .frame(width: 1200, height: 140)
 }

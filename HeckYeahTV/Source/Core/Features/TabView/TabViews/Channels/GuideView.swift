@@ -21,6 +21,7 @@ struct GuideView: View {
     @State private var onChannelListFocusTask: Task<Void, Never>? = nil
     @State private var ensureSelectedVisibleTask: Task<Void, Never>? = nil
     @State private var didEnsureSelectedVisible: Bool = false
+    @State private var visibleIndices: Set<Int> = []
     
     var body: some View {
         HStack(spacing: 0) {
@@ -38,8 +39,20 @@ struct GuideView: View {
                 ScrollView(.vertical) {
                     LazyVStack(alignment: .leading, spacing: 30) {
                         ForEach(0..<channelMap.totalCount, id: \.self) { index in
-                            GuideRowLazy(channelId: channelMap.map[index], focus: $focus, appState: $appState)
-                                .id(channelMap.map[index])
+                            let channelId = channelMap.map[index]
+                            GuideRowLazy(channelId: channelId,
+                                         focus: $focus,
+                                         appState: $appState,
+                                         isVisible: visibleIndices.contains(index))
+                                .id(channelId)
+                                .onScrollVisibilityChange(threshold: 1.0) { isVisible in
+                                    //logConsole("Item \(index) visibility changed to: \(isVisible)")
+                                    if isVisible {
+                                        visibleIndices.insert(index)
+                                    } else {
+                                        visibleIndices.remove(index)
+                                    }
+                                }
                         }
                         
                         if channelMap.totalCount == 0 {
@@ -48,9 +61,6 @@ struct GuideView: View {
                                 .padding()
                         }
                     }
-#if os(tvOS)
-                    .focusSection()
-#endif
                     // Shift row to the right so the focus glow and row selection effects are not clipped on the left side.
                     .padding(.leading, 15)
                 }
@@ -114,9 +124,11 @@ private extension GuideView {
             }
         }
         
-        // Set the focus view after a short delay.
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+        // Set the focus view after a short delay using async Task to let layout settle.
+        Task { @MainActor in
+            try? await Task.sleep(nanoseconds: 200_000_000) // 200ms
             focus = targetFocus
         }
     }
 }
+

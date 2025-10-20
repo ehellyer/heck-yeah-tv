@@ -62,7 +62,7 @@ struct Heck_Yeah_TVApp: App {
                 try await importer.buildChannelMap(showFavoritesOnly: SharedAppState.shared.showFavoritesOnly)
                 
                 await MainActor.run {
-                    // Update state variable that fetches are completed, so the boot screen will hide and main app view will load.
+                    // Update state variable that fetches and pre-start processes are completed, so the boot screen will hide and main app view will load.
                     isBootComplete = true
                 }
             }

@@ -17,12 +17,7 @@ struct ShowFavorites: View {
     
     var body: some View {
         VStack(spacing: 0) {
-#if os(tvOS)
-            FocusSentinel(focus: $focus) {
-                print(focus?.debugDescription ?? "")
-            }
-            .frame(height: 1)
-#endif
+
             HStack(spacing: 20) {
                 
                 // Title
