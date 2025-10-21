@@ -17,11 +17,11 @@ struct GuideView: View {
     @FocusState.Binding var focus: FocusTarget?
     @Binding var appState: SharedAppState
     var channelMap: IPTVChannelMap
-    @Binding var updateScrollViewFocus: Bool
+    @Binding var scrollToSelectedAndFocus: Bool
     @State private var rebuildChannelMapTask: Task<Void, Never>? = nil
     @State private var scrollThenFocusTask: Task<Void, Never>? = nil
     @State private var didEnsureSelectedVisible: Bool = false
-    @State private var visibleIndices: Set<Int> = []
+//    @State private var visibleIndices: Set<Int> = []
     
     var body: some View {
         HStack(spacing: 0) {
@@ -42,14 +42,14 @@ struct GuideView: View {
                             GuideRowLazy(channelId: channelId,
                                          focus: $focus,
                                          appState: $appState,
-                                         isVisible: visibleIndices.contains(index))
-                            .onScrollVisibilityChange(threshold: 0.5) { isVisible in
-                                if isVisible {
-                                    visibleIndices.insert(index)
-                                } else {
-                                    visibleIndices.remove(index)
-                                }
-                            }
+                                         isVisible: true)//visibleIndices.contains(index))
+//                            .onScrollVisibilityChange(threshold: 0.5) { isVisible in
+//                                if isVisible {
+//                                    visibleIndices.insert(index)
+//                                } else {
+//                                    visibleIndices.remove(index)
+//                                }
+//                            }
                             //Keep last in the modifier chain.
                             .id(channelId)
                         }
@@ -82,12 +82,12 @@ struct GuideView: View {
                     }
                 }
                 
-                .onChange(of: updateScrollViewFocus) { oldValue, newValue in
+                .onChange(of: scrollToSelectedAndFocus) { oldValue, newValue in
                     // Only updateFocus and scroll when in this state.
                     guard oldValue == false, newValue == true else {
                         return
                     }
-                    updateScrollViewFocus = false
+                    scrollToSelectedAndFocus = false
                     scrollThenFocus(proxy: proxy, targetFocus: determinedFocusTarget)
                 }
             }

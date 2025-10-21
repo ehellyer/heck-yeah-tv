@@ -13,7 +13,7 @@ struct ShowFavorites: View {
     
     @FocusState.Binding var focus: FocusTarget?
     @Binding var appState: SharedAppState
-    var focusRedirectAction: (() -> Void)?
+    var rightSwipeRedirectAction: (() -> Void)?
     
     var body: some View {
         VStack(spacing: 0) {
@@ -36,15 +36,15 @@ struct ShowFavorites: View {
                     .foregroundStyle(.yellow)
                 }
                 .focused($focus, equals: FocusTarget.favoritesToggle)
-
-#if os(tvOS)
-                // Focus view for redirection
-                FocusSentinel(focus: $focus) {
-                    logConsole("ShowFavorites redirect focus view caught focus.")
-                    focusRedirectAction?()
+                .onMoveCommand { direction in
+                    if direction == .up {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                            focus = .tabBar
+                        }
+                    } else if direction == .right {
+                        rightSwipeRedirectAction?()
+                    }
                 }
-                .frame(width: 60, height: 60)
-#endif
                 
                 // Space the remainder
                 Spacer()

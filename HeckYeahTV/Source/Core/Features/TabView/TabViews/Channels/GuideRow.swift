@@ -37,7 +37,6 @@ struct GuideRow: View {
             .focused($focus, equals: FocusTarget.guide(channelId: channel.id, col: 0))
             .disabled(!isViewVisible)
             
-            
             Button {
                 appState.selectedChannel = channel.id
             } label: {
@@ -54,7 +53,7 @@ struct GuideRow: View {
             }
             .focused($focus, equals: FocusTarget.guide(channelId: channel.id, col: 1))
             .disabled(!isViewVisible)
-            
+
             Button {
                 // No op
             } label: {

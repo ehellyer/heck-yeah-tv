@@ -60,9 +60,9 @@ struct TabContainerView: View {
             .contentShape(Rectangle())                 // Make the whole rect focus-hit eligible
             .focused($focus, equals: .tabBar)
             .defaultFocus($focus, .tabBar)
-#if os(tvOS)
-            .focusSection()                            // Treat as one focus section on tvOS
-#endif
+//#if os(tvOS)
+//            .focusSection()                            // Treat as one focus section on tvOS
+//#endif
             //.tabViewStyle(.sidebarAdaptable)
             
 #if !os(iOS)

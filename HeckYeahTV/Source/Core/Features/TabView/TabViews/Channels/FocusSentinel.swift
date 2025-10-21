@@ -13,7 +13,7 @@ struct FocusSentinel: View {
     @FocusState.Binding var focus: FocusTarget?
     var action: (() -> Void)?
     
-    @State private var sentinelFocusId: FocusTarget = FocusTarget.guide(channelId: String.randomString(length: 5), col: Int.random(in: -100 ... -10))
+    @State private var sentinelFocusId: FocusTarget = FocusTarget.guide(channelId: UUID().uuidString, col: -999_999)
     @State private var redirecting = false
     
     var body: some View {

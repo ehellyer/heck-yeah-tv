@@ -20,7 +20,6 @@ struct TabActivationView: View {
             .focusable(interactions: .activate)
             .contentShape(Rectangle())
             .onTapGesture {
-                logConsole("Tap gesture received")
                 withAnimation {
                     appState.isGuideVisible = true
                 }
