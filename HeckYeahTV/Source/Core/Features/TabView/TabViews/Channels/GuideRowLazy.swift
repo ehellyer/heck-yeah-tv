@@ -23,7 +23,8 @@ struct GuideRowLazy: View {
             if let channel = loader.channel {
                 GuideRow(channel: channel,
                          focus: $focus,
-                         appState: $appState)
+                         appState: $appState,
+                         isViewVisible: isVisible)
             } else {
                 HStack(spacing: 25) {
                     Circle()
@@ -51,7 +52,6 @@ struct GuideRowLazy: View {
                 }
             }
         }
-        .disabled(!isVisible)
         
         .onAppear {
             loader.load(channelId: channelId, context: viewContext)

@@ -15,6 +15,7 @@ struct GuideRow: View {
     @State var channel: IPTVChannel
     @FocusState.Binding var focus: FocusTarget?
     @Binding var appState: SharedAppState
+    let isViewVisible: Bool
     @Environment(\.modelContext) private var viewContext
     
     private var isPlaying: Bool {
@@ -34,6 +35,8 @@ struct GuideRow: View {
                     .scaleEffect(1.5)
             }
             .focused($focus, equals: FocusTarget.guide(channelId: channel.id, col: 0))
+            .disabled(!isViewVisible)
+            
             
             Button {
                 appState.selectedChannel = channel.id
@@ -50,6 +53,7 @@ struct GuideRow: View {
                 .padding(20)
             }
             .focused($focus, equals: FocusTarget.guide(channelId: channel.id, col: 1))
+            .disabled(!isViewVisible)
             
             Button {
                 // No op
