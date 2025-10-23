@@ -10,21 +10,29 @@ import SwiftUI
 
 struct ChannelsContainer: View {
     
-    @FocusState.Binding var focus: FocusTarget?
+    @FocusState.Binding var tabHasFocus: Bool
+    @FocusState var focus: FocusTarget?
     @Binding var appState: SharedAppState
-    var channelMap: IPTVChannelMap
-    @State private var scrollToSelectedAndFocus: Bool = false
     
+    @State private var scrollToSelectedAndFocus: Bool = false
     
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
             ShowFavorites(focus: $focus,
                           appState: $appState,
-                          rightSwipeRedirectAction: { scrollToSelectedAndFocus = true })
+                          upSwipeRedirectAction: {
+                withAnimation {
+                    focus = nil
+                    tabHasFocus = true
+                }
+            },
+                          rightSwipeRedirectAction: {
+                scrollToSelectedAndFocus = true
+            })
 #if os(tvOS)
                 .focusSection()
 #endif
-            GuideView(focus: $focus, appState: $appState, channelMap: channelMap, scrollToSelectedAndFocus: $scrollToSelectedAndFocus)
+            GuideView(focus: $focus, appState: $appState, scrollToSelectedAndFocus: $scrollToSelectedAndFocus)
 #if os(tvOS)
                 .focusSection()
 #endif

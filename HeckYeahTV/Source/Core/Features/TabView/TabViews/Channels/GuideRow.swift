@@ -34,6 +34,7 @@ struct GuideRow: View {
                     .padding(.vertical, 40)
                     .scaleEffect(1.5)
             }
+            //.buttonStyle(.card)
             .focused($focus, equals: FocusTarget.guide(channelId: channel.id, col: 0))
             .disabled(!isViewVisible)
             
@@ -51,6 +52,7 @@ struct GuideRow: View {
                 .frame(width: 320, alignment: .leading)
                 .padding(20)
             }
+            //.buttonStyle(.card)
             .focused($focus, equals: FocusTarget.guide(channelId: channel.id, col: 1))
             .disabled(!isViewVisible)
 

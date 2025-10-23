@@ -12,28 +12,21 @@ import SwiftData
 struct MainAppContentView: View {
     
     @Environment(\.scenePhase) private var scenePhase
+    
     @State private var fadeTask: Task<Void, Never>?
     @State private var showPlayButtonToast = false
     @State private var appState: SharedAppState = SharedAppState.shared
-
-    @State private var lastFocusedChannel: ChannelId?
-    @FocusState var focus: FocusTarget?
     
+    @FocusState private var hasFocus: Bool
     // Focus scopes (Namespace) for isolating focus between guide and activation views
     @Namespace private var guideScope
     @Namespace private var activationScope
-    
-    // IPTVChannelMap
-    @Query(filter: #Predicate<IPTVChannelMap> { $0.id == channelMapKey }, sort: []) private var channelMaps: [IPTVChannelMap]
-    private var channelMap: IPTVChannelMap { return channelMaps.first! }
-    
-    
+
     var body: some View {
         // Alignment required to layout the play/pause button in the bottom left corner.
         ZStack(alignment: .bottomLeading)  {
             
             VLCPlayerView(appState: $appState)
-                .zIndex(0)
                 .ignoresSafeArea()
                 .accessibilityHidden(true)
                 .allowsHitTesting(false)
@@ -41,24 +34,11 @@ struct MainAppContentView: View {
                 
             if appState.isGuideVisible {
                 // Scope the entire guide UI to the same FocusState
-                TabContainerView(focus: $focus, appState: $appState, channelMap: channelMap)
+                TabContainerView(appState: $appState)
                     .transition(.opacity)
                     .background(Color.black.opacity(0.65))
 #if os(tvOS)
                     .focusScope(guideScope)
-#endif
-            } else {
-                // Scope the activation view separately
-                TabActivationView(appState: $appState)
-                    // If TabActivationView is being rendered then we want it on top of everything.
-                    .zIndex(1000)
-#if os(tvOS)
-                    .focusScope(activationScope)
-                    .focused($focus, equals: .guideActivationView)
-                    .defaultFocus($focus, .guideActivationView)
-                    .onAppear {
-                        focus = .guideActivationView
-                    }
 #endif
             }
             
@@ -77,21 +57,17 @@ struct MainAppContentView: View {
                     .padding(.bottom, 50)
             }
             
-//            // Global debug overlay (always on top)
-//            VStack {
-//                Spacer()
-//                HStack {
-//                    Spacer()
-//                    Text("Focus: \(focus?.debugDescription ?? "nil") || Tab: \(appState.selectedTab.title) || isPaused: \(appState.isPlayerPaused ? "Yes" : "No") || isGuideShowing: \(appState.isGuideVisible ? "Yes" : "No") || ShowFavorites: \(appState.showFavoritesOnly ? "Yes" : "No")")
-//                        .padding(10)
-//                        .fontWeight(.bold)
-//                        .background(Color(.gray))
-//                        .focusable(false)
-//                        .allowsHitTesting(false) 
-//                }
-//                .padding()
-//            }
-//            .zIndex(10000)
+            if not(appState.isGuideVisible) {
+                // Scope the activation view separately
+                TabActivationView(appState: $appState)
+#if os(tvOS)
+                    .focusScope(activationScope)
+                    .focused($hasFocus)
+                    .onAppear {
+                        hasFocus = true
+                    }
+#endif
+            }
         }
         
 #if os(tvOS)
@@ -110,12 +86,6 @@ struct MainAppContentView: View {
                 appState.isGuideVisible = false
             }
         })
-        
-        .onChange(of: focus) { oldValue, newValue in
-            if case .guide(let channelId, let col) = newValue, 0...1 ~= col {
-                lastFocusedChannel = channelId
-            }
-        }
 
 #if os(macOS)
         // macOS: arrow keys re-show the guide

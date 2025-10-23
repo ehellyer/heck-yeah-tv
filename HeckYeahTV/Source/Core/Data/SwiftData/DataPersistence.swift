@@ -46,7 +46,7 @@ final class DataPersistence {
             logConsole("HeckYeahTV persistent store URL: \(_storeURL.path)")
             
             let config = ModelConfiguration(url: self.storeURL)
-            container = try ModelContainer(for: IPTVChannel.self, IPTVChannelMap.self, configurations: config)
+            container = try ModelContainer(for: IPTVChannel.self, configurations: config)
             viewContext = ModelContext(container)
             viewContext.autosaveEnabled = true
         } catch {

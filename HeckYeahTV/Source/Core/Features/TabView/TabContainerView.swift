@@ -11,9 +11,8 @@ import SwiftData
 
 struct TabContainerView: View {
     
-    @FocusState.Binding var focus: FocusTarget?
+    @FocusState var tabHasFocus: Bool
     @Binding var appState: SharedAppState
-    var channelMap: IPTVChannelMap
     
     private var selectedTab: Binding<TabSection> {
         Binding(
@@ -39,7 +38,8 @@ struct TabContainerView: View {
                 Tab(TabSection.channels.title,
                     systemImage: TabSection.channels.systemImage,
                     value: TabSection.channels) {
-                    ChannelsContainer(focus: $focus, appState: $appState, channelMap: channelMap)
+                    ChannelsContainer(tabHasFocus: $tabHasFocus,
+                                      appState: $appState)
                 }
                 
                 Tab(TabSection.search.title,
@@ -58,12 +58,7 @@ struct TabContainerView: View {
             .padding(0)
             .background(Color.clear)
             .contentShape(Rectangle())                 // Make the whole rect focus-hit eligible
-            .focused($focus, equals: .tabBar)
-            .defaultFocus($focus, .tabBar)
-//#if os(tvOS)
-//            .focusSection()                            // Treat as one focus section on tvOS
-//#endif
-            //.tabViewStyle(.sidebarAdaptable)
+            .focused($tabHasFocus)
             
 #if !os(iOS)
             // Support for dismissing the tabview by tapping menu on Siri remote for tvOS or esc key on keyboard.

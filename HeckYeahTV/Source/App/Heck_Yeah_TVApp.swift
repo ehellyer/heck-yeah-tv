@@ -15,6 +15,7 @@ struct Heck_Yeah_TVApp: App {
     @Environment(\.scenePhase) private var scenePhase
     @State private var isBootComplete = false
     @State private var startupTask: Task<Void, Never>? = nil
+    @State private var channelMap: ChannelMap = ChannelMap(map: [], totalCount: 0)
     
     var body: some Scene {
         WindowGroup {
@@ -30,6 +31,7 @@ struct Heck_Yeah_TVApp: App {
                 }
                 .modelContainer(DataPersistence.shared.container)
                 .modelContext(DataPersistence.shared.viewContext)
+                .environment(channelMap)
         }
     }
     
@@ -59,11 +61,11 @@ struct Heck_Yeah_TVApp: App {
             Task.detached(priority: .userInitiated) {
                 let importer = ChannelImporter(container: container)
                 try await importer.importChannels(streams: iptvController.streams, tunerChannels: hdHomeRunController.channels)
-                try await importer.buildChannelMap(showFavoritesOnly: SharedAppState.shared.showFavoritesOnly)
-                
+                let cm = try await importer.buildChannelMap(showFavoritesOnly: appState.showFavoritesOnly)
                 await MainActor.run {
-                    // Update state variable that fetches and pre-start processes are completed, so the boot screen will hide and main app view will load.
+                    // Update state variable that boot up processes are completed.
                     isBootComplete = true
+                    channelMap = cm
                 }
             }
         }

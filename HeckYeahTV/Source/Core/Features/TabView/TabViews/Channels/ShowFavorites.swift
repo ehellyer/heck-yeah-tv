@@ -13,6 +13,7 @@ struct ShowFavorites: View {
     
     @FocusState.Binding var focus: FocusTarget?
     @Binding var appState: SharedAppState
+    var upSwipeRedirectAction: (() -> Void)?
     var rightSwipeRedirectAction: (() -> Void)?
     
     var body: some View {
@@ -38,9 +39,7 @@ struct ShowFavorites: View {
                 .focused($focus, equals: FocusTarget.favoritesToggle)
                 .onMoveCommand { direction in
                     if direction == .up {
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                            focus = .tabBar
-                        }
+                        upSwipeRedirectAction?()
                     } else if direction == .right {
                         rightSwipeRedirectAction?()
                     }

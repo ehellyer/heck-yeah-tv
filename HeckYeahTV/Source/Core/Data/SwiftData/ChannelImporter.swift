@@ -64,7 +64,7 @@ actor ChannelImporter {
         }
     }
     
-    func buildChannelMap(showFavoritesOnly: Bool) async throws {
+    func buildChannelMap(showFavoritesOnly: Bool) async throws -> ChannelMap {
         
         logConsole("Channel map building...")
         
@@ -77,22 +77,10 @@ actor ChannelImporter {
         let map: [ChannelId] = channels.map { $0.id }
         //let reverseLookup: [ChannelId: Int] = Dictionary(uniqueKeysWithValues: map.enumerated().map { (index, channelId) in (channelId, index) })
         
-        // Replace existing singleton map (if any), then insert the new one
-        let channelMapPredicate = #Predicate<IPTVChannelMap> { $0.id == channelMapKey }
-        let existingMaps = try context.fetch(FetchDescriptor<IPTVChannelMap>(predicate: channelMapPredicate))
-        for m in existingMaps {
-            context.delete(m)
-        }
+        let cm = ChannelMap(map: map, totalCount: map.count)
 
-        context.insert(
-            //IPTVChannelMap(map: map, reverseLookup: reverseLookup)
-            IPTVChannelMap(map: map)
-        )
-        
-        if context.hasChanges {
-            try context.save()
-        }
-        
         logConsole("Channel map built")
+        return cm
+       
     }
 }

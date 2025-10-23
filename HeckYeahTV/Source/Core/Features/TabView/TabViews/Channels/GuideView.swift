@@ -16,7 +16,7 @@ struct GuideView: View {
     @Environment(\.modelContext) private var viewContext
     @FocusState.Binding var focus: FocusTarget?
     @Binding var appState: SharedAppState
-    var channelMap: IPTVChannelMap
+    @Environment(ChannelMap.self) private var channelMap
     @Binding var scrollToSelectedAndFocus: Bool
     @State private var rebuildChannelMapTask: Task<Void, Never>? = nil
     @State private var scrollThenFocusTask: Task<Void, Never>? = nil
@@ -103,7 +103,10 @@ private extension GuideView {
         do {
             // ChannelImporter is an actor; its async methods run in its isolation without blocking the main actor.
             let importer = ChannelImporter(container: container)
-            try await importer.buildChannelMap(showFavoritesOnly: appState.showFavoritesOnly)
+            let cm = try await importer.buildChannelMap(showFavoritesOnly: SharedAppState.shared.showFavoritesOnly)
+            await MainActor.run {
+                channelMap.update(with: cm.map, totalCount: cm.map.count)
+            }
         } catch {
             logError("Error: \(error)")
         }
