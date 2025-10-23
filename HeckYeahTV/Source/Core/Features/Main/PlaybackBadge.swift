@@ -36,6 +36,10 @@ struct PlaybackBadge: View {
 #if os(tvOS)
         .focusable(false)
 #endif
+        .accessibilityHidden(true)
+        .allowsHitTesting(false)
+        .padding(.leading, 50)
+        .padding(.bottom, 50)
     }
 }
 

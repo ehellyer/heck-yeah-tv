@@ -18,6 +18,7 @@ struct MainAppContentView: View {
     @State private var appState: SharedAppState = SharedAppState.shared
     
     @FocusState private var hasFocus: Bool
+    
     // Focus scopes (Namespace) for isolating focus between guide and activation views
     @Namespace private var guideScope
     @Namespace private var activationScope
@@ -42,19 +43,8 @@ struct MainAppContentView: View {
 #endif
             }
             
-            if appState.isPlayerPaused {
-                PlaybackBadge(isPlaying: false)
-                    .allowsHitTesting(false)
-                    .transition(.opacity)
-                    .padding(.leading, 50)
-                    .padding(.bottom, 50)
-            }
-            
-            if appState.isPlayerPaused == false && showPlayButtonToast {
-                PlaybackBadge(isPlaying: true)
-                    .allowsHitTesting(false)
-                    .padding(.leading, 50)
-                    .padding(.bottom, 50)
+            if appState.isPlayerPaused || showPlayButtonToast {
+                PlaybackBadge(isPlaying: not(appState.isPlayerPaused))
             }
             
             if not(appState.isGuideVisible) {

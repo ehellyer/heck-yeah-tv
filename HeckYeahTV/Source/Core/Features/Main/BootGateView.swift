@@ -20,14 +20,14 @@ struct BootGateView<T: View>: View {
             self.mainAppContent()
         } else {
             BootSplashView()
-                .id("BootSplashView")
-                .allowsHitTesting(false)
                 .task {
                     try? await Task.sleep(nanoseconds: 4_500_000_000)
                     minimumDelayElapsed = true
                 }
                 .transition(.opacity.combined(with: .scale))
                 .animation(.easeInOut(duration: 0.35), value: (isBootComplete && minimumDelayElapsed))
+                .allowsHitTesting(false)
+                .id("BootSplashView")
         }
     }
 }
