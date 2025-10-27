@@ -11,7 +11,6 @@ import SwiftUI
 enum FocusTarget: Hashable {
     case guideActivationView
     case favoritesToggle
-    case tabBar             // New: focus redirection target for the TabView area
     case guide(channelId: String, col: Int)
 }
 
@@ -22,8 +21,6 @@ extension FocusTarget: CustomDebugStringConvertible {
                 return "guideActivationView"
             case .favoritesToggle:
                 return "favoritesToggle"
-            case .tabBar:
-                return "tabBar"
             case .guide(channelId: let channelId, col: let col):
                 return "guide(channelId: \(channelId.prefix(8)), col: \(col))"
         }

@@ -17,11 +17,9 @@ struct MainAppContentView: View {
     @State private var showPlayButtonToast = false
     @State private var appState: SharedAppState = SharedAppState.shared
     
-    @FocusState private var hasFocus: Bool
-    
     // Focus scopes (Namespace) for isolating focus between guide and activation views
-    @Namespace private var guideScope
-    @Namespace private var activationScope
+//    @Namespace private var guideScope
+//    @Namespace private var activationScope
 
     var body: some View {
         // Alignment required to layout the play/pause button in the bottom left corner.
@@ -38,9 +36,9 @@ struct MainAppContentView: View {
                 TabContainerView(appState: $appState)
                     .transition(.opacity)
                     .background(Color.black.opacity(0.65))
-#if os(tvOS)
-                    .focusScope(guideScope)
-#endif
+//#if os(tvOS)
+//                    .focusScope(guideScope)
+//#endif
             }
             
             if appState.isPlayerPaused || showPlayButtonToast {
@@ -50,13 +48,9 @@ struct MainAppContentView: View {
             if not(appState.isGuideVisible) {
                 // Scope the activation view separately
                 TabActivationView(appState: $appState)
-#if os(tvOS)
-                    .focusScope(activationScope)
-                    .focused($hasFocus)
-                    .onAppear {
-                        hasFocus = true
-                    }
-#endif
+//#if os(tvOS)
+//                    .focusScope(activationScope)
+//#endif
             }
         }
         

@@ -11,7 +11,6 @@ import SwiftData
 
 struct TabContainerView: View {
     
-    @FocusState var tabHasFocus: Bool
     @Binding var appState: SharedAppState
     
     private var selectedTab: Binding<TabSection> {
@@ -38,8 +37,7 @@ struct TabContainerView: View {
                 Tab(TabSection.channels.title,
                     systemImage: TabSection.channels.systemImage,
                     value: TabSection.channels) {
-                    ChannelsContainer(tabHasFocus: $tabHasFocus,
-                                      appState: $appState)
+                    ChannelsContainer(appState: $appState)
                 }
                 
                 Tab(TabSection.search.title,
@@ -58,7 +56,6 @@ struct TabContainerView: View {
             .padding(0)
             .background(Color.clear)
             .contentShape(Rectangle())                 // Make the whole rect focus-hit eligible
-            .focused($tabHasFocus)
             
 #if !os(iOS)
             // Support for dismissing the tabview by tapping menu on Siri remote for tvOS or esc key on keyboard.

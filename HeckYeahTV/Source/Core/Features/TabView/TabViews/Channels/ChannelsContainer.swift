@@ -10,7 +10,6 @@ import SwiftUI
 
 struct ChannelsContainer: View {
     
-    @FocusState.Binding var tabHasFocus: Bool
     @FocusState var focus: FocusTarget?
     @Binding var appState: SharedAppState
     
@@ -18,13 +17,11 @@ struct ChannelsContainer: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
+            
             ShowFavorites(focus: $focus,
                           appState: $appState,
                           upSwipeRedirectAction: {
-                withAnimation {
-                    focus = nil
-                    tabHasFocus = true
-                }
+                focus = nil
             },
                           rightSwipeRedirectAction: {
                 scrollToSelectedAndFocus = true
@@ -32,6 +29,7 @@ struct ChannelsContainer: View {
 #if os(tvOS)
                 .focusSection()
 #endif
+            
             GuideView(focus: $focus, appState: $appState, scrollToSelectedAndFocus: $scrollToSelectedAndFocus)
 #if os(tvOS)
                 .focusSection()

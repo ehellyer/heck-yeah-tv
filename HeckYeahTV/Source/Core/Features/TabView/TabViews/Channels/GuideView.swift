@@ -21,7 +21,8 @@ struct GuideView: View {
     @State private var rebuildChannelMapTask: Task<Void, Never>? = nil
     @State private var scrollThenFocusTask: Task<Void, Never>? = nil
     @State private var didEnsureSelectedVisible: Bool = false
-//    @State private var visibleIndices: Set<Int> = []
+
+    @State private var visibleChannelIds: Set<String> = []
     
     var body: some View {
         HStack(spacing: 0) {
@@ -39,19 +40,25 @@ struct GuideView: View {
                     LazyVStack(alignment: .leading, spacing: 30) {
                         ForEach(0..<channelMap.totalCount, id: \.self) { index in
                             let channelId = channelMap.map[index]
+                            let isChannelVisible = visibleChannelIds.contains(channelId)
                             GuideRowLazy(channelId: channelId,
                                          focus: $focus,
                                          appState: $appState,
-                                         isVisible: true)//visibleIndices.contains(index))
-//                            .onScrollVisibilityChange(threshold: 0.5) { isVisible in
-//                                if isVisible {
-//                                    visibleIndices.insert(index)
-//                                } else {
-//                                    visibleIndices.remove(index)
-//                                }
-//                            }
-                            //Keep last in the modifier chain.
+                                         isVisible: isChannelVisible)
                             .id(channelId)
+                            .onScrollVisibilityChange(threshold: 0.5) { isVisible in
+                                if isVisible {
+                                    visibleChannelIds.insert(channelId)
+                                } else {
+                                    visibleChannelIds.remove(channelId)
+                                }
+                            }
+                            .onAppear {
+                                visibleChannelIds.insert(channelId)
+                            }
+                            .onDisappear {
+                                visibleChannelIds.remove(channelId)
+                            }
                         }
                         
                         if channelMap.totalCount == 0 {
@@ -128,13 +135,16 @@ private extension GuideView {
             
             // If there is a selected channel, scroll to it.
             if let channelId = appState.selectedChannel {
-                withAnimation(.easeOut) {
-                    proxy.scrollTo(channelId, anchor: .center)
+                if let index = channelMap.map.firstIndex(of: channelId) {
+                    withAnimation(.easeOut) {
+                        proxy.scrollTo(index, anchor: .center)
+                    }
                 }
             }
             
             // Let scrolling/layout settle before setting the focus.
             try? await Task.sleep(nanoseconds: 300_000_000) // 300ms
+            
             if !Task.isCancelled {
                 focus = targetFocus
             }

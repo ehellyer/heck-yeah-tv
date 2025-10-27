@@ -37,13 +37,22 @@ struct ShowFavorites: View {
                     .foregroundStyle(.yellow)
                 }
                 .focused($focus, equals: FocusTarget.favoritesToggle)
+#if os(tvOS)
                 .onMoveCommand { direction in
                     if direction == .up {
-                        upSwipeRedirectAction?()
-                    } else if direction == .right {
+                        // Use a slight delay to ensure the focus change takes priority
+                        DispatchQueue.main.async {
+                            upSwipeRedirectAction?()
+                        }
+                    } else if direction == .right  {
                         rightSwipeRedirectAction?()
                     }
                 }
+                // Add move handling to prevent automatic focus finding
+                .onExitCommand {
+                    // Block automatic exit behavior that might interfere
+                }
+#endif
                 
                 // Space the remainder
                 Spacer()

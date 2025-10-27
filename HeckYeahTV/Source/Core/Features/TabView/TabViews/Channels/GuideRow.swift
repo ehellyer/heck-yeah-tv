@@ -43,6 +43,7 @@ struct GuideRow: View {
             } label: {
                 VStack(alignment: .leading, spacing: 2) {
                     Text(channel.title)
+                        //.foregroundStyle(Color(((isViewVisible) ? Color.green : Color.red)))  //Debug to help see when partially occluded views are disabled.
                         .font(.headline)
                         .lineLimit(1)
                         .truncationMode(.tail)
@@ -54,6 +55,7 @@ struct GuideRow: View {
             }
             //.buttonStyle(.card)
             .focused($focus, equals: FocusTarget.guide(channelId: channel.id, col: 1))
+
             .disabled(!isViewVisible)
 
             Button {
@@ -68,6 +70,7 @@ struct GuideRow: View {
             .disabled(true)
             .focusable(false)
         }
+        //.disabled(!isViewVisible)
         .background {
             if isPlaying {
                 RoundedRectangle(cornerRadius: corner, style: .continuous)
