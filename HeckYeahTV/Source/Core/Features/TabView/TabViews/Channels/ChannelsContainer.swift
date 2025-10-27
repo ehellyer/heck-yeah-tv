@@ -10,7 +10,7 @@ import SwiftUI
 
 struct ChannelsContainer: View {
     
-    @FocusState var focus: FocusTarget?
+    @FocusState.Binding var focus: FocusTarget?
     @Binding var appState: SharedAppState
     
     @State private var scrollToSelectedAndFocus: Bool = false
