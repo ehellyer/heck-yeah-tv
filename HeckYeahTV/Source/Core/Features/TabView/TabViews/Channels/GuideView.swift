@@ -46,7 +46,7 @@ struct GuideView: View {
                                          appState: $appState,
                                          isVisible: isChannelVisible)
                             .id(channelId)
-                            .onScrollVisibilityChange(threshold: 0.5) { isVisible in
+                            .onScrollVisibilityChange(threshold: 0.95) { isVisible in
                                 if isVisible {
                                     visibleChannelIds.insert(channelId)
                                 } else {

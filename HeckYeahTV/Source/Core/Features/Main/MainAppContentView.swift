@@ -52,16 +52,14 @@ struct MainAppContentView: View {
                 TabActivationView(appState: $appState)
 #if os(tvOS)
                     .focusScope(activationScope)
+#endif
                     .focused($focus, equals: .guideActivationView)
                     .defaultFocus($focus, .guideActivationView)
                     .onAppear {
                         focus = .guideActivationView
                     }
-#endif
-                
             }
         }
-
         
 #if os(tvOS)
         .onPlayPauseCommand {
