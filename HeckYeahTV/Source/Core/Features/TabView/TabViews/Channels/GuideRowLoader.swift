@@ -13,7 +13,6 @@ import SwiftData
 final class GuideRowLoader: ObservableObject {
     @Published var channel: IPTVChannel?
     
-    private var isLoading: Bool = false
     private var task: Task<Void, Never>?
     
     func cancel() {
@@ -22,8 +21,6 @@ final class GuideRowLoader: ObservableObject {
     }
     
     func load(channelId: ChannelId, context: ModelContext) {
-        guard channel?.id != channelId, isLoading == false else { return }
-        isLoading = true
         task?.cancel()
         task = Task { [weak self] in
             guard let self else { return }
@@ -32,15 +29,15 @@ final class GuideRowLoader: ObservableObject {
                 var chDescriptor = FetchDescriptor<IPTVChannel>(predicate: chPredicate)
                 chDescriptor.fetchLimit = 1
                 let model = try context.fetch(chDescriptor).first
+                //try await Task.sleep(nanoseconds: 1_000_000_000) //Debug only
+                try Task.checkCancellation()
                 
                 await MainActor.run {
                     self.channel = model
-                    self.isLoading = false
                 }
             } catch {
                 await MainActor.run {
                     self.channel = nil
-                    self.isLoading = false
                 }
             }
         }

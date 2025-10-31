@@ -18,8 +18,12 @@ actor ChannelImporter {
     }
 
     func importChannels(streams: [IPStream], tunerChannels: [HDHomeRunChannel]) async throws {
-        guard !streams.isEmpty || !tunerChannels.isEmpty else { return }
+        guard !streams.isEmpty || !tunerChannels.isEmpty else {
+            logWarning("No channels to import, exiting process without changes to local store.")
+            return
+        }
        
+        logDebug("Channel Import Process Starting... 🏳️")
         let existing = try context.fetch(FetchDescriptor<IPTVChannel>())
 
         let incoming: [Channelable] = streams + tunerChannels
@@ -62,11 +66,12 @@ actor ChannelImporter {
         if context.hasChanges {
             try context.save()
         }
+        logDebug("Channel Import Process Completed. Total imported: \(incoming.count) 🏁")
     }
     
     func buildChannelMap(showFavoritesOnly: Bool) async throws -> ChannelMap {
         
-        logConsole("Channel map building...")
+        logDebug("Building Channel Map... 🏳️")
         
         var channelsDescriptor: FetchDescriptor<IPTVChannel> = FetchDescriptor<IPTVChannel>(
             sortBy: [SortDescriptor(\IPTVChannel.sortHint, order: .forward)]
@@ -79,7 +84,7 @@ actor ChannelImporter {
         //let reverseLookup: [ChannelId: Int] = Dictionary(uniqueKeysWithValues: map.enumerated().map { (index, channelId) in (channelId, index) })
         let cm = ChannelMap(map: map, totalCount: map.count)
 
-        logConsole("Channel map built.")
+        logDebug("Channel map built.  Total Channels: \(cm.totalCount) 🏁")
         return cm
     }
 }

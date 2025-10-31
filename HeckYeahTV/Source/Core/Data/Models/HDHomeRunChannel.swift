@@ -11,7 +11,7 @@ import Hellfire
 
 /// HDHomeRunChannel - Returned as an array when asking for the tuners channel list.
 ///
-/// e.g. [http://192.168.50.250/lineup.json](http://192.168.50.250/lineup.json) -> [Channel]
+/// e.g. [http://192.168.78.220/lineup.json](http://192.168.78.220/lineup.json) -> [Channel]
 struct HDHomeRunChannel: JSONSerializable, Equatable {
     
     /// Stable hash id generated on JSON decoding. See init below.

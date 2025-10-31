@@ -19,7 +19,7 @@ struct HDHomeRunKeys {
 
 /// HDHomeRunDevice - After initial discover call to find HDHomeRun Devices on the network, a device discover call is made and returns details on the specific device.
 /// 
-/// e.g. [http://192.168.50.250/discover.json](http://192.168.50.250/discover.json) -> HDHomeRunDevice
+/// e.g. [http://192.168.78.220/discover.json](http://192.168.78.220/discover.json) -> HDHomeRunDevice
 struct HDHomeRunDevice: JSONSerializable, Equatable {
     
     let friendlyName: String

@@ -14,7 +14,11 @@ extension IPStream: Channelable {
     var titleHint: String { title }
     var numberHint: String? { channelId }
     var urlHint: URL { url }
-    var qualityHint: StreamQuality {
+    var qualityHint: StreamQuality { qualityHint(quality) }
+    var hasDRMHint: Bool { false }
+    var sourceHint: ChannelSource { ChannelSource.ipStream }
+    
+    private func qualityHint(_ quality: String?) -> StreamQuality {
         guard let quality else {
             return .unknown
         }
@@ -31,10 +35,8 @@ extension IPStream: Channelable {
         } else if quality.contains("4320") {
             //(7680x4320)
             return .uhd8k
-        } else {
-            return .unknown
         }
+        
+        return .unknown
     }
-    var hasDRMHint: Bool { false }
-    var sourceHint: ChannelSource { ChannelSource.ipStream }
 }

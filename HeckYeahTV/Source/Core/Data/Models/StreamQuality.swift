@@ -15,8 +15,6 @@ import Hellfire
 /// can still map to a consistent user-facing quality label.
 enum StreamQuality: JSONSerializable, Codable {
     
-    static let streamQualityViewTagId: Int = 23456604455
-    
     /// **Standard Definition** — typically ≤ 480p (e.g., 640×480).
     /// Suitable for legacy devices or very limited bandwidth.
     case sd

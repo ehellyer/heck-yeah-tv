@@ -89,7 +89,7 @@
          </CommandLineArgument>
          <CommandLineArgument
             argument = "-UIFocusLoggingEnabled YES"
-            isEnabled = "NO">
+            isEnabled = "YES">
          </CommandLineArgument>
       </CommandLineArguments>
    </LaunchAction>

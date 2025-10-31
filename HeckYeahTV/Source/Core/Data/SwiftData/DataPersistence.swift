@@ -38,12 +38,12 @@ final class DataPersistence {
             var resourceValues = URLResourceValues()
             resourceValues.isExcludedFromBackup = true
             try _rootURL.setResourceValues(resourceValues)
-            logConsole("HeckYeahTV persistence root URL: \(_rootURL.path)")
+            logDebug("HeckYeahTV persistence root URL: \(_rootURL.path)")
             
             var _storeURL = _rootURL.appending(path: "GuideStore", directoryHint: .notDirectory)
             _storeURL.appendPathExtension("sqlite")
             storeURL = _storeURL
-            logConsole("HeckYeahTV persistent store URL: \(_storeURL.path)")
+            logDebug("HeckYeahTV persistent store URL: \(_storeURL.path)")
             
             let config = ModelConfiguration(url: self.storeURL)
             container = try ModelContainer(for: IPTVChannel.self, configurations: config)

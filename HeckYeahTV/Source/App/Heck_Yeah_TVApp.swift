@@ -54,7 +54,7 @@ struct Heck_Yeah_TVApp: App {
             
             // TODO: Log summary for collection, analysis and diagnostics.
             if summary.failures.count > 0 {
-                logError("ERROR: Failure in bootstrap data fetch: \(summary.failures)")
+                logError("\(summary.failures.count) failure(s) in bootstrap data fetch: \(summary.failures)")
             }
             
             let container = DataPersistence.shared.container

@@ -12,7 +12,7 @@ import SwiftData
 typealias ChannelId = String
 
 @Model final class IPTVChannel {
-    #Index<IPTVChannel>([\.sortHint], [\.isFavorite, \.sortHint])
+    #Index<IPTVChannel>([\.sortHint], [\.isFavorite, \.sortHint], [\.id])
 
     init(id: ChannelId,
          sortHint: String,
