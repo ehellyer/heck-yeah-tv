@@ -124,7 +124,7 @@ extension MainAppContentView {
         
         if isPlayerPaused == true {
             // When paused, ensure the toast is not visible.
-            showPlayPauseButton = false
+            showPlayPauseButton = true
         } else {
             // When playing, show the toast briefly, then hide it unless cancelled by a new state change.
             fadeTask = Task { @MainActor in
