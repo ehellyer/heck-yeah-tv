@@ -14,7 +14,7 @@ struct MainAppContentView: View {
     @Environment(\.scenePhase) private var scenePhase
     
     @State private var fadeTask: Task<Void, Never>?
-    @State private var showPlayButtonToast = false
+    @State private var showPlayPauseButton = false
     @State private var appState: SharedAppState = SharedAppState.shared
     
     @FocusState var focus: FocusTarget?
@@ -43,8 +43,8 @@ struct MainAppContentView: View {
 #endif
             }
             
-            if appState.isPlayerPaused || showPlayButtonToast {
-                PlaybackBadge(isPlaying: not(appState.isPlayerPaused))
+            if showPlayPauseButton {
+                PlayPauseBadge()
             }
             
             if not(appState.isGuideVisible) {
@@ -78,6 +78,10 @@ struct MainAppContentView: View {
             }
         })
 
+        .onAppear {
+            showPlayPauseButton = appState.isPlayerPaused
+        }
+
 #if os(macOS)
         // macOS: arrow keys re-show the guide
         .background( MacArrowKeyCatcher {
@@ -99,12 +103,12 @@ extension MainAppContentView {
     ///
     /// Behavior:
     /// - Cancels any in-flight toast task to avoid overlapping timers or stale UI updates.
-    /// - If `isPlayerPaused` is `true`, sets `showPlayButtonToast` to `false` right away.
+    /// - If `isPlayerPaused` is `true`, sets `showPlayPauseButton` to `false` right away.
     /// - If `isPlayerPaused` is `false`, starts a new `Task` on the main actor that:
-    ///   - Sets `showPlayButtonToast` to `true`.
+    ///   - Sets `showPlayPauseButton` to `true`.
     ///   - Waits approximately 2 seconds.
     ///   - Checks for cancellation to ensure newer state changes take precedence.
-    ///   - Sets `showPlayButtonToast` to `false` if not cancelled.
+    ///   - Sets `showPlayPauseButton` to `false` if not cancelled.
     ///
     /// Concurrency:
     /// - The task runs on the main actor because it mutates view state.
@@ -120,17 +124,17 @@ extension MainAppContentView {
         
         if isPlayerPaused == true {
             // When paused, ensure the toast is not visible.
-            showPlayButtonToast = false
+            showPlayPauseButton = false
         } else {
             // When playing, show the toast briefly, then hide it unless cancelled by a new state change.
             fadeTask = Task { @MainActor in
-                showPlayButtonToast = true
+                showPlayPauseButton = true
                 do {
                     // Display the "Play" toast for 2 seconds.
                     try await Task.sleep(nanoseconds: 2_000_000_000)
                     // Ensure we weren't cancelled during the wait (e.g., state changed again).
                     try Task.checkCancellation()
-                    showPlayButtonToast = false
+                    showPlayPauseButton = false
                 } catch {
                     // Task was cancelled; intentionally ignore to let the latest state win.
                 }

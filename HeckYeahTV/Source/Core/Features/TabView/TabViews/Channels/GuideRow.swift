@@ -36,6 +36,7 @@ struct GuideRow: View {
             }
             //.buttonStyle(.card)
             .focused($focus, equals: FocusTarget.guide(channelId: channel.id, col: 0))
+            .focusable(isViewVisible)
             .disabled(!isViewVisible)
             
             Button {
@@ -55,7 +56,7 @@ struct GuideRow: View {
             }
             //.buttonStyle(.card)
             .focused($focus, equals: FocusTarget.guide(channelId: channel.id, col: 1))
-
+            .focusable(isViewVisible)
             .disabled(!isViewVisible)
 
             Button {
