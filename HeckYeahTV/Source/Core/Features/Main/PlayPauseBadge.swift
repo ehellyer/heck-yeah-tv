@@ -1,5 +1,5 @@
 //
-//  PlaybackBadge.swift
+//  PlayPauseBadge.swift
 //  Heck Yeah TV
 //
 //  Created by Ed Hellyer on 9/4/25.
@@ -8,12 +8,12 @@
 
 import SwiftUI
 
-struct PlaybackBadge: View {
+struct PlayPauseBadge: View {
     
-    @State var isPlaying: Bool
-        
+    @State var appState: AppStateProvider = SharedAppState.shared
+    
     var body: some View {
-        
+        let isPlaying = not(appState.isPlayerPaused)
         HStack(spacing: 8) {
             Image(systemName: isPlaying ? "play.fill" : "pause.fill")
                 .imageScale(.medium)
@@ -43,10 +43,14 @@ struct PlaybackBadge: View {
     }
 }
 
-#Preview("Play") {
-    PlaybackBadge(isPlaying: true)
+
+struct PreviewPlayPauseBadge: View {
+    @State var appState: MockSharedAppState = MockSharedAppState(isPlayerPaused: true)
+    var body: some View {
+        PlayPauseBadge(appState: appState)
+    }
 }
 
-#Preview("Pause") {
-    PlaybackBadge(isPlaying: false)
+#Preview {
+    PreviewPlayPauseBadge()
 }

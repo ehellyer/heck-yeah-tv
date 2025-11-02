@@ -44,7 +44,7 @@ struct MainAppContentView: View {
             }
             
             if appState.isPlayerPaused || showPlayButtonToast {
-                PlaybackBadge(isPlaying: not(appState.isPlayerPaused))
+                PlayPauseBadge(isPlaying: not(appState.isPlayerPaused))
             }
             
             if not(appState.isGuideVisible) {
