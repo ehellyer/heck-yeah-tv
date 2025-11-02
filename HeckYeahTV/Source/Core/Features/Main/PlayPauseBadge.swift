@@ -11,7 +11,7 @@ import SwiftUI
 struct PlayPauseBadge: View {
     
     @State var appState: AppStateProvider = SharedAppState.shared
-
+    
     var body: some View {
         let isPlaying = not(appState.isPlayerPaused)
         HStack(spacing: 8) {
@@ -42,7 +42,6 @@ struct PlayPauseBadge: View {
         .padding(.bottom, 50)
     }
 }
-
 
 
 struct PreviewPlayPauseBadge: View {

@@ -77,11 +77,11 @@ struct MainAppContentView: View {
                 appState.isGuideVisible = false
             }
         })
-        
+
         .onAppear {
             showPlayPauseButton = appState.isPlayerPaused
         }
-        
+
 #if os(macOS)
         // macOS: arrow keys re-show the guide
         .background( MacArrowKeyCatcher {
