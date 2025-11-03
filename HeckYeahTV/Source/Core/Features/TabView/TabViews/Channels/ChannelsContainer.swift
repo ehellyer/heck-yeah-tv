@@ -17,9 +17,9 @@ struct ChannelsContainer: View {
     @State private var scrollToSelectedAndFocus: Bool = false
     @State private var rebuildChannelMapTask: Task<Void, Never>? = nil
     
+    
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
-            
             ShowFavorites(focus: $focus,
                           appState: $appState,
                           upSwipeRedirectAction: {
@@ -33,18 +33,35 @@ struct ChannelsContainer: View {
 #endif
             
 //            GuideView(focus: $focus, appState: $appState, scrollToSelectedAndFocus: $scrollToSelectedAndFocus)
-            GuideViewRepresentable(appState: $appState)
-#if os(tvOS)
-                .focusSection()
-#endif
+            GuideViewRepresentable(appState: $appState, focusTarget: $focus)
+                .onAppear {
+                    logDebug("🎯 GuideViewRepresentable appeared")
+                }
+
                 .onChange(of: appState.showFavoritesOnly) { _, _ in
-                    // Cancel any prior rebuild task if you want to coalesce rapid toggles
+                    //Debounce rebuilding of channel map.
                     rebuildChannelMapTask?.cancel()
                     rebuildChannelMapTask = Task { @MainActor in
-                        await rebuildChannelMap()
+                        do {
+                            try await Task.sleep(nanoseconds: 100_000_000)
+                            try Task.checkCancellation()
+                            await rebuildChannelMap()
+                        } catch {
+                            //Task cancelled.
+                        }
+                    }
+                }
+            
+                .onChange(of: focus) { oldValue, newValue in
+                    if case .guide = newValue {
+                        // Focus should be in the guide
+                        logDebug("Focus moving to guide content")
                     }
                 }
 
+        }
+        .onChange(of: focus) { _, _ in
+            logDebug("Focus updated to :\(String(describing: focus))")
         }
     }
 }

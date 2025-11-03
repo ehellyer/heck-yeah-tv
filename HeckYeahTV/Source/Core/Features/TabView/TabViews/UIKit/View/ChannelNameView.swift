@@ -186,9 +186,6 @@ extension ChannelNameView: @MainActor FocusTargetView {
     override func didUpdateFocus(in context: UIFocusUpdateContext, with coordinator: UIFocusAnimationCoordinator) {
         super.didUpdateFocus(in: context, with: coordinator)
         if (context.nextFocusedView === self) {
-//            if let channelId {
-//                delegate?.didBecomeFocused(target: FocusTarget.guide(channelId: channelId, col: 1))
-//            }
             self.becomeFocusedUsingAnimationCoordinator(in: context, with: coordinator)
         } else if (context.previouslyFocusedView === self) {
             self.resignFocusUsingAnimationCoordinator(in: context, with: coordinator)

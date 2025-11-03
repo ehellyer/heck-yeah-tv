@@ -116,7 +116,7 @@ class FavoriteToggleView: CrossPlatformView {
     @objc private func leftSwipeDetected(_ gesture: UISwipeGestureRecognizer) {
         guard gesture.state == .ended else { return }
         logDebug("Left swipe detected on Siri remote")
-        delegate?.didBecomeFocused(target: FocusTarget.favoritesToggle)
+        
     }
 #endif
     
@@ -168,9 +168,6 @@ extension FavoriteToggleView: FocusTargetView {
     override func didUpdateFocus(in context: UIFocusUpdateContext, with coordinator: UIFocusAnimationCoordinator) {
         super.didUpdateFocus(in: context, with: coordinator)
         if (context.nextFocusedView === self) {
-//            if let channelId {
-//                delegate?.didBecomeFocused(target: FocusTarget.guide(channelId: channelId, col: 0))
-//            }
             self.becomeFocusedUsingAnimationCoordinator(in: context, with: coordinator)
         } else if (context.previouslyFocusedView === self) {
             self.resignFocusUsingAnimationCoordinator(in: context, with: coordinator)

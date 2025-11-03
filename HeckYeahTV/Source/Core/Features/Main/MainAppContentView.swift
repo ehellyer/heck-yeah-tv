@@ -20,7 +20,6 @@ struct MainAppContentView: View {
     @FocusState var focus: FocusTarget?
     
     // Focus scopes (Namespace) for isolating focus between guide and activation views
-    @Namespace private var guideScope
     @Namespace private var activationScope
 
     var body: some View {
@@ -38,9 +37,6 @@ struct MainAppContentView: View {
                 TabContainerView(focus: $focus, appState: $appState)
                     .transition(.opacity)
                     .background(Color.black.opacity(0.65))
-#if os(tvOS)
-                    .focusScope(guideScope)
-#endif
             }
             
             if showPlayPauseButton {

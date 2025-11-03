@@ -71,7 +71,8 @@ class GuideRowCell: PlatformTableViewCell {
     //MARK: - Private API - View Models
     
     private var isPlaying: Bool = false
-    private var channelId: ChannelId?
+    private(set) var channelId: ChannelId?
+    private var channel: IPTVChannel?
     private var programs: [Program] = []
     private var channelLoader = GuideRowLoader()
     private var loaderBindings = Set<AnyCancellable>()
@@ -83,6 +84,7 @@ class GuideRowCell: PlatformTableViewCell {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] channel in
                 guard let self, channelId == channel?.id else { return }
+                self.channel = channel
                 self.channelNameView.configure(with: channel, isPlaying: isPlaying)
                 self.favoriteButtonView.configure(with: channel, isPlaying: isPlaying)
                 self.updateProgramsDisplay(with: channel?.id, isPlaying: isPlaying)
@@ -92,7 +94,7 @@ class GuideRowCell: PlatformTableViewCell {
         
     //MARK: - Private API - Lazy view binding
     
-    private lazy var channelNameView: ChannelNameView = {
+    private(set) lazy var channelNameView: ChannelNameView = {
         let view =  ChannelNameView()
         return view
     }()
@@ -202,25 +204,6 @@ class GuideRowCell: PlatformTableViewCell {
         }
     }
     
-#if os(tvOS)
-    /// Resolve a FocusTarget for this row into a concrete UIView that can become focused.
-    /// Convention: col 0 = FavoriteToggleView, col 1 = ChannelNameView, col >= 2 = ProgramView at index (col - 2)
-    func focusableView(for target: FocusTarget) -> UIView? {
-        guard case let .guide(cId, col) = target,
-              let channelId,
-              channelId == cId else {
-            return nil
-        }
-        if col == 0 { return favoriteButtonView }
-        if col == 1 { return channelNameView }
-        let programIndex = col - 2
-        guard programIndex >= 0, programIndex < programsStackView.arrangedSubviews.count else {
-            return nil
-        }
-        return programsStackView.arrangedSubviews[programIndex]
-    }
-#endif
-    
     //MARK: - Internal API
 
     weak var delegate: GuideViewDelegate? {
@@ -236,19 +219,29 @@ class GuideRowCell: PlatformTableViewCell {
         self.programs = programs
         self.isPlaying = isPlaying
         
-        channelLoader.load(channelId: channelId, context: viewContext)
-        
-        channelNameView.configure(with: nil, isPlaying: isPlaying)
-        favoriteButtonView.configure(with: nil, isPlaying: isPlaying)
-        updateProgramsDisplay(with: nil, isPlaying: isPlaying)
+        if self.channel?.id != channelId {
+            channelLoader.load(channelId: channelId, context: viewContext)
+            channelNameView.configure(with: nil, isPlaying: isPlaying)
+            favoriteButtonView.configure(with: nil, isPlaying: isPlaying)
+            updateProgramsDisplay(with: nil, isPlaying: isPlaying)
+        } else {
+            channelNameView.configure(with: self.channel, isPlaying: isPlaying)
+            favoriteButtonView.configure(with: self.channel, isPlaying: isPlaying)
+            updateProgramsDisplay(with: channelId, isPlaying: isPlaying)
+        }
     }
 }
 
 #if os(tvOS)
+//MARK: - tvOS Focus Code
 extension GuideRowCell {
     
     override var canBecomeFocused: Bool {
         return false
     }
+    
+//    override var preferredFocusEnvironments: [any UIFocusEnvironment] {
+//        return [self.channelNameView, self.favoriteButtonView]
+//    }
 }
 #endif

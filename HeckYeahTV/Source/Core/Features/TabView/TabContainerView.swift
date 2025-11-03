@@ -24,7 +24,9 @@ struct TabContainerView: View {
             }
         )
     }
-    
+
+    @Namespace private var channelsScope
+
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             TabView(selection: selectedTab) {
@@ -39,6 +41,7 @@ struct TabContainerView: View {
                     systemImage: TabSection.channels.systemImage,
                     value: TabSection.channels) {
                     ChannelsContainer(focus: $focus, appState: $appState)
+                        .focusScope(channelsScope)
                 }
                 
                 Tab(TabSection.search.title,
@@ -59,7 +62,7 @@ struct TabContainerView: View {
             .contentShape(Rectangle())                 // Make the whole rect focus-hit eligible
             
 #if !os(iOS)
-            // Support for dismissing the tabview by tapping menu on Siri remote for tvOS or esc key on keyboard.
+            // Support for dismissing the tabview by tapping menu on Siri remote for tvOS or esc key on keyboard (on tvOS or macOS).
             .onExitCommand {
                 withAnimation {
                     appState.isGuideVisible = false

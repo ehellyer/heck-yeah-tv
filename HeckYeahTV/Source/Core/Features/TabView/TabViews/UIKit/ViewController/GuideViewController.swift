@@ -15,11 +15,6 @@ import UIKit
 import SwiftData
 import Observation
 
-protocol GuideViewControllerDelegate: AnyObject {
-    /// Ask delegate to update the focus target to this target.
-    func setFocus(_ target: FocusTarget)
-}
-
 class GuideViewController: PlatformViewController {
 
     //MARK: - PlatformViewController overrides
@@ -33,20 +28,55 @@ class GuideViewController: PlatformViewController {
         
         setupTableView()
         setupAppStateObservation()
+        
+#if os(tvOS)
+        logDebug("🎯 GuideViewController appeared!")
+
+        // Make the view controller's view focusable so UIKit can take over focus
+        self.view.isUserInteractionEnabled = true
+
+        // CRITICAL: Force focus into our view hierarchy
+        // This is necessary because SwiftUI TabView captures focus by default
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            logDebug("🎯 Requesting focus for table view")
+            self.setNeedsFocusUpdate()
+            self.updateFocusIfNeeded()
+            self.scrollToSelectedChannelAndFocus()
+        }
+#endif
     }
     
 #if os(tvOS)
     override var preferredFocusEnvironments: [any UIFocusEnvironment] {
-        if let tfv = self.targetFocusView {
-            return [tfv]
+        // If we have a specific target view, prefer it
+        if let targetView = self.targetFocusView {
+            logDebug("Preferred focus: target view \(targetView)")
+            return [targetView]
         }
-        return self.preferredFocusEnvironments
+        // Otherwise prefer the table view so focus can enter our hierarchy
+        logDebug("Preferred focus: table view")
+        return [self.tableView]
     }
     
     override func didUpdateFocus(in context: UIFocusUpdateContext, with coordinator: UIFocusAnimationCoordinator) {
-        if context.nextFocusedItem as? PlatformView == targetFocusView {
+        super.didUpdateFocus(in: context, with: coordinator)
+        
+        // Clear the target once it receives focus
+        if let targetView = targetFocusView, context.nextFocusedItem as? UIView == targetView {
             targetFocusView = nil
+            logDebug("Target view received focus successfully")
         }
+        
+        // Log focus changes for debugging
+        logDebug("Focus update - Previous: \(String(describing: context.previouslyFocusedItem))")
+        logDebug("Focus update - Next: \(String(describing: context.nextFocusedItem))")
+    }
+    
+    override func shouldUpdateFocus(in context: UIFocusUpdateContext) -> Bool {
+        // Always allow focus updates
+        logDebug("shouldUpdateFocus called")
+        return true
     }
 #endif
     
@@ -88,11 +118,11 @@ class GuideViewController: PlatformViewController {
     private lazy var viewContext = DataPersistence.shared.viewContext
     private var reloadTableViewTask: Task<Void, Never>? = nil
     
-    //TODO: Integrate program data into GuideChannel
+    //TODO: Integrate program data into IPTVChannel
     private var channelPrograms: [Program] = Program.mockPrograms()
     
     private func setupTableView() {
-        //tableView.delegate = self
+        tableView.delegate = self
         tableView.dataSource = self
 #if os(macOS)
         tableView.headerView = nil
@@ -106,6 +136,13 @@ class GuideViewController: PlatformViewController {
 #else
         tableView.register(GuideRowCell.self, forCellReuseIdentifier: GuideRowCell.identifier)
         tableView.allowsSelection = false
+        
+        #if os(tvOS)
+        // CRITICAL: These settings allow the table view to participate in the focus system
+        tableView.remembersLastFocusedIndexPath = true
+        tableView.clipsToBounds = false
+        tableView.contentInsetAdjustmentBehavior = .never
+        #endif
 #endif
     }
     
@@ -128,7 +165,7 @@ class GuideViewController: PlatformViewController {
                         try await Task.sleep(nanoseconds: 300_000_000)
                         try Task.checkCancellation()
                         self?.tableView.reloadData()
-                        self?.scrollToSelectedChannel()
+                        self?.scrollToSelectedChannelAndFocus()
                         self?.setupAppStateObservation()
                     } catch {
                         //Do nothing, task was cancelled.
@@ -166,50 +203,95 @@ class GuideViewController: PlatformViewController {
 #else
         // On iOS/tvOS, UITableView uses indexPaths
         let indexPaths = self.tableView.indexPathsForVisibleRows ?? []
-        tableView.reloadRows(at: indexPaths, with: .automatic)
+        indexPaths.forEach { indexPath in
+            logDebug("Refreshing cell at indexPath: \(indexPath)")
+            let channelId = channelMap.map[indexPath.row]
+            let isPlaying = appState?.selectedChannel == channelId
+            let cell = self.tableView.cellForRow(at: indexPath) as? GuideRowCell
+            cell?.configure(with: channelId, isPlaying: isPlaying, programs: [], viewContext: viewContext)
+        }
 #endif
     }
     
-    
-//    func focusImmediately(_ view: UIView, from env: UIFocusEnvironment) {
-//        guard view.canBecomeFocused else {
-//            logDebug("View is not a focusable view")
-//            return
-//        }
-//        
-//        // Get the focus system for this environment (API is deprecated on newer SDKs; use #available if needed)
-//        if let system = UIFocusSystem.focusSystem(for: env) {
-//            system.requestFocusUpdate(to: view)
-//            system.updateFocusIfNeeded()
-//        }
-//    }
-    
     private func requestFocus(on view: UIView) {
-        logDebug("Focus requested")
+        logDebug("Focus requested for view: \(view)")
         guard view.canBecomeFocused else {
             logDebug("View is not a focusable view")
             return
         }
    
+        // Set the target view so preferredFocusEnvironments returns it
         self.targetFocusView = view
-        let env = self.parentFocusEnvironment ?? self
-        if let system = UIFocusSystem.focusSystem(for: env) {
-            logDebug("Focus system available")
-            system.requestFocusUpdate(to: view)
-            system.updateFocusIfNeeded()
-        } else {
-            logDebug("No focus system available for view")
+        
+        // Check if we're already in the focus hierarchy
+        let focusSystem = UIFocusSystem.focusSystem(for: self)
+        let currentlyFocusedItem = focusSystem?.focusedItem
+        
+        logDebug("Current focused item: \(String(describing: currentlyFocusedItem))")
+        logDebug("Is view in focus hierarchy: \(view.canBecomeFocused)")
+        
+        // Request focus update on the view controller
+        self.setNeedsFocusUpdate()
+        self.updateFocusIfNeeded()
+        
+        logDebug("Requested Focus on view \(view)")
+    }
+    
+    func applyFocus(at indexPath: IndexPath) {
+        
+        let visibleCells: [GuideRowCell] = self.tableView.visibleCells as? [GuideRowCell] ?? []
+        
+        guard let channelId = channelMap?.map[indexPath.row],
+              let cell = visibleCells.first(where: { $0.channelId == channelId }) else {
+            logDebug("Cell for row \(indexPath.row) not found in visible cells")
+            return
+        }
+        
+        let view = cell.channelNameView
+        logDebug("applyFocus: Preparing to focus on view in cell at \(indexPath)")
+        
+        Task { @MainActor in
+          
+            try? await Task.sleep(nanoseconds: 100_000_000) // 0.1 seconds
+            
+            // Check if we're now in the focus hierarchy
+            if let focusSystem = UIFocusSystem.focusSystem(for: self),
+               let currentFocus = focusSystem.focusedItem as? UIView {
+                logDebug("Current focused item: \(currentFocus)")
+                
+                // Check if focus is somewhere in our view controller
+                var responder: UIResponder? = currentFocus
+                var isInOurHierarchy = false
+                while let current = responder {
+                    if current === self {
+                        isInOurHierarchy = true
+                        break
+                    }
+                    responder = current.next
+                }
+                
+                if isInOurHierarchy {
+                    logDebug("We're in the focus hierarchy, requesting specific view focus")
+                    self.requestFocus(on: view)
+                } else {
+                    logDebug("Not in focus hierarchy yet, requesting VC focus first")
+                    // Request focus on ourselves first
+                    self.setNeedsFocusUpdate()
+                    self.updateFocusIfNeeded()
+                    
+                    // Then try again after another delay
+                    try? await Task.sleep(nanoseconds: 100_000_000)
+                    self.requestFocus(on: view)
+                }
+            } else {
+                logDebug("No focus system available")
+                self.requestFocus(on: view)
+            }
         }
     }
     
-    private func applyFocus(_ target: FocusTarget, at indexPath: IndexPath) {
-        guard let cell = tableView.cellForRow(at: indexPath) as? GuideRowCell,
-              let view = cell.focusableView(for: target) else { return }
-        requestFocus(on: view)
-    }
-    
-    private func scrollToSelectedChannel() {
-        guard let channelId = appState.selectedChannel,
+    func scrollToSelectedChannelAndFocus() {
+        guard let channelId = appState.selectedChannel ?? channelMap.map.first,
               let index = index(forChannelId: channelId)
         else {
             return
@@ -220,9 +302,7 @@ class GuideViewController: PlatformViewController {
 #else
         let indexPath = IndexPath(row: index, section: 0)
         tableView.scrollToRow(at: indexPath, at: .middle, animated: true)
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
-            self.applyFocus(FocusTarget.guide(channelId: channelId, col: 1), at: indexPath)
-        }
+        // Focus will be applied in scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView)
 #endif
     }
 
@@ -235,36 +315,39 @@ class GuideViewController: PlatformViewController {
         return index
     }
     
+    private func debugFocusHierarchy(for view: UIView) {
+        logDebug("=== Focus Hierarchy Debug ===")
+        logDebug("View: \(view)")
+        logDebug("canBecomeFocused: \(view.canBecomeFocused)")
+        logDebug("isUserInteractionEnabled: \(view.isUserInteractionEnabled)")
+        
+        var currentEnvironment: UIFocusEnvironment? = view
+        var depth = 0
+        while let env = currentEnvironment, depth < 10 {
+            logDebug("  [\(depth)] \(env)")
+            currentEnvironment = env.parentFocusEnvironment
+            depth += 1
+        }
+        logDebug("===========================")
+    }
+    
+    
     //MARK: - Internal API - Injected App State (from SwiftUI)
     
     // Set by GuideViewRepresentable.Coordinator
-    var appState: SharedAppState! {
-        didSet {
-            if self.isViewLoaded {
-                DispatchQueue.main.async {
-                    self.scrollToSelectedChannel()
-                }
-            }
-        }
-    }
+    var appState: SharedAppState!
     
     // Set by GuideViewRepresentable.Coordinator
     var channelMap: ChannelMap!
-    
-    //MARK: - Internal API
-    
-    weak var delegate: GuideViewControllerDelegate?
+
 }
 
 //MARK: - GuideViewDelegate protocol
 
 extension GuideViewController: GuideViewDelegate {
         
-    func didBecomeFocused(target: FocusTarget) {
-        delegate?.setFocus(target)
-    }
-    
     func selectChannel(_ channelId: ChannelId) {
+        guard channelId != appState.selectedChannel else { return }
         try? self.setPlayingChannel(id: channelId)
     }
     
@@ -323,7 +406,7 @@ extension GuideViewController: UITableViewDataSource {
         let isPlaying = (appState.selectedChannel != nil && channelId == appState.selectedChannel)
         guideRowCell.configure(with: channelId,
                                isPlaying: isPlaying,
-                               programs: ((indexPath.row % 2 == 0) ? self.channelPrograms : []),
+                               programs: [], //((indexPath.row % 2 == 0) ? self.channelPrograms : []),
                                viewContext: viewContext)
         guideRowCell.delegate = self
         return guideRowCell
@@ -333,3 +416,25 @@ extension GuideViewController: UITableViewDataSource {
 #endif
 
 
+#if !os(macOS)
+extension GuideViewController: UITableViewDelegate {
+    
+    func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        // Cell scrolled off screen
+    }
+    
+    func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
+        // Called when programmatic scroll animation completes
+        logDebug("Scroll animation ended")
+        
+        guard let channelId = appState.selectedChannel,
+              let index = index(forChannelId: channelId) else { return }
+        
+        let indexPath = IndexPath(row: index, section: 0)
+        
+        Task { @MainActor in
+            self.applyFocus(at: indexPath)
+        }
+    }
+}
+#endif

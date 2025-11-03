@@ -31,14 +31,14 @@ class StreamQualityView: PlatformView {
         self.translatesAutoresizingMaskIntoConstraints = false
         self.clipsToBounds = false
         
-        self.commonInit(sq: streamQuality)
+        self.commonInit(streamQuality)
     }
     
     required init?(coder: NSCoder) {
         logFatal("init(coder:) has not been implemented")
     }
     
-    private func commonInit(sq: StreamQuality) {
+    private func commonInit(_ streamQuality: StreamQuality) {
         
 #if os(macOS)
         identifier = NSUserInterfaceItemIdentifier(rawValue: "\(Self.viewTypeTagId)")
@@ -49,7 +49,7 @@ class StreamQualityView: PlatformView {
         let label = PlatformUtils.createLabel()
         label.font = .systemFont(ofSize: 15, weight: .regular)
         label.textColor = .white
-        label.textValue = sq.name
+        label.textValue = streamQuality.name
         
         self.addSubview(label)
         label.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 5).isActive = true

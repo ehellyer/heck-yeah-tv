@@ -134,7 +134,10 @@ class DebugLogger {
         let message = String(reflecting: value)
         let emoji = level.emoji
 
-        let consoleLogString = "\(timeStr) l:\(emoji.concat(level.name, separator: " ")) q:\(queue) s:\(fileName) \(function) \(line) m:\(message)"
+#if DEBUG
+        let consoleLogString = "\(timeStr) l:\(emoji)) q:\(queue) s:\(fileName) \(function) \(line) m:\(message)"
         print(consoleLogString)
+#endif
+        //TODO: Log to cycling offline local file for post crash analytics package.
     }
 }
