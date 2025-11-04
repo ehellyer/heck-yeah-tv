@@ -63,9 +63,9 @@ struct Heck_Yeah_TVApp: App {
                 try await importer.importChannels(streams: iptvController.streams, tunerChannels: hdHomeRunController.channels)
                 let cm = try await importer.buildChannelMap(showFavoritesOnly: appState.showFavoritesOnly)
                 await MainActor.run {
+                    channelMap = cm
                     // Update state variable that boot up processes are completed.
                     isBootComplete = true
-                    channelMap = cm
                 }
             }
         }

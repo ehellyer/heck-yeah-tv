@@ -31,7 +31,6 @@ final class GuideRowLoader: ObservableObject {
                 let model = try context.fetch(chDescriptor).first
                 //try await Task.sleep(nanoseconds: 1_000_000_000) //Debug only
                 try Task.checkCancellation()
-                
                 await MainActor.run {
                     self.channel = model
                 }

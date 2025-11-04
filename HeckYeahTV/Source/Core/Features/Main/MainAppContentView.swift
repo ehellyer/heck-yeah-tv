@@ -93,13 +93,13 @@ extension MainAppContentView {
     
     /// Updates the visibility of the transient “Play” toast in response to the player's pause state.
     ///
-    /// When the player becomes paused, this hides the toast immediately. When the player
+    /// When the player becomes paused, this presents the toast permenently. When the player
     /// becomes unpaused (i.e., playing), this shows the toast for a short duration and then
     /// hides it automatically.
     ///
     /// Behavior:
     /// - Cancels any in-flight toast task to avoid overlapping timers or stale UI updates.
-    /// - If `isPlayerPaused` is `true`, sets `showPlayPauseButton` to `false` right away.
+    /// - If `isPlayerPaused` is `true`, sets `showPlayPauseButton` to `true` right away.
     /// - If `isPlayerPaused` is `false`, starts a new `Task` on the main actor that:
     ///   - Sets `showPlayPauseButton` to `true`.
     ///   - Waits approximately 2 seconds.
@@ -119,7 +119,7 @@ extension MainAppContentView {
         fadeTask = nil
         
         if isPlayerPaused == true {
-            // When paused, ensure the toast is not visible.
+            // When paused, ensure the toast is visible.
             showPlayPauseButton = true
         } else {
             // When playing, show the toast briefly, then hide it unless cancelled by a new state change.
@@ -128,7 +128,6 @@ extension MainAppContentView {
                 do {
                     // Display the "Play" toast for 2 seconds.
                     try await Task.sleep(nanoseconds: 2_000_000_000)
-                    // Ensure we weren't cancelled during the wait (e.g., state changed again).
                     try Task.checkCancellation()
                     showPlayPauseButton = false
                 } catch {

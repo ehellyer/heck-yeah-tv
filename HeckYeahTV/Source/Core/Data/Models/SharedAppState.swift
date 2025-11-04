@@ -100,8 +100,8 @@ final class MockSharedAppState: AppStateProvider {
         isGuideVisible: Bool = false,
         showFavoritesOnly: Bool = false,
         selectedTab: TabSection = .channels,
-        selectedChannel: ChannelId? = nil
-    ) {
+        selectedChannel: ChannelId? = nil) {
+            
         self.isPlayerPaused = isPlayerPaused
         self.isGuideVisible = isGuideVisible
         self.showFavoritesOnly = showFavoritesOnly
