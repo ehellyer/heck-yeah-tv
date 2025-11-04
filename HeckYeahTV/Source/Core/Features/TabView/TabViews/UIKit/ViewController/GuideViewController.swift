@@ -291,28 +291,24 @@ class GuideViewController: PlatformViewController {
     }
     
     func scrollToSelectedChannelAndFocus() {
-        guard let channelId = appState.selectedChannel ?? channelMap.map.first,
-              let index = index(forChannelId: channelId)
-        else {
+        guard let channelId = appState.selectedChannel ?? channelMap.map.first else {
             return
         }
         
+        let indexPath = indexPathOrDefault(for: channelId)
+        
 #if os(macOS)
-        tableView.scrollRowToVisible(index)
+        tableView.scrollRowToVisible(indexPath.row)
 #else
-        let indexPath = IndexPath(row: index, section: 0)
-        tableView.scrollToRow(at: indexPath, at: .middle, animated: true)
         // Focus will be applied in scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView)
+        tableView.scrollToRow(at: indexPath, at: .middle, animated: true)
 #endif
     }
 
-    private func index(forChannelId channelId: String?) -> Int? {
-        guard let channelId,
-              let index = channelMap.map.firstIndex(of: channelId)
-        else {
-            return nil
-        }
-        return index
+    private func indexPathOrDefault(for channelId: String?) -> IndexPath {
+        let _channelId = channelId ?? ""
+        let index = channelMap?.map.firstIndex(of: _channelId) ?? 0
+        return IndexPath(row: index, section: 0)
     }
     
     private func debugFocusHierarchy(for view: UIView) {
@@ -426,11 +422,7 @@ extension GuideViewController: UITableViewDelegate {
     func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
         // Called when programmatic scroll animation completes
         logDebug("Scroll animation ended")
-        
-        guard let channelId = appState.selectedChannel,
-              let index = index(forChannelId: channelId) else { return }
-        
-        let indexPath = IndexPath(row: index, section: 0)
+        let indexPath = indexPathOrDefault(for: appState.selectedChannel)
         
         Task { @MainActor in
             self.applyFocus(at: indexPath)

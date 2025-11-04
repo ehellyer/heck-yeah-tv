@@ -14,7 +14,6 @@ struct GuideViewRepresentable: CrossPlatformControllerRepresentable {
     //MARK: - Bound State
     
     @Binding var appState: SharedAppState
-    @FocusState.Binding var focusTarget: FocusTarget?
     @Environment(ChannelMap.self) private var channelMap
     
     // Track if we should request initial focus
@@ -31,24 +30,8 @@ struct GuideViewRepresentable: CrossPlatformControllerRepresentable {
     
     func updateViewController(_ viewController: PlatformViewController, context: Context) {
         guard let controller = viewController as? GuideViewController else { return }
-        
         controller.appState = appState
         controller.channelMap = channelMap
-        
-        // Handle focus updates triggered from SwiftUI to UIKit
-        if let focusTarget = focusTarget, focusTarget != context.coordinator.lastProcessedFocus {
-            context.coordinator.lastProcessedFocus = focusTarget
-            
-            // When SwiftUI sets a guide focus target, we need to apply it in UIKit
-            if case .guide(let channelId, let col) = focusTarget {
-                // First, make sure the view controller can receive focus
-                controller.setNeedsFocusUpdate()
-                controller.updateFocusIfNeeded()
-                
-                // Then apply the specific focus
-                context.coordinator.applyFocusToGuide(channelId: channelId, col: col)
-            }
-        }
     }
     
     static func dismantleViewController(_ viewController: PlatformViewController, coordinator: Coordinator) {
@@ -74,13 +57,5 @@ struct GuideViewRepresentable: CrossPlatformControllerRepresentable {
             let vc = GuideViewController()
             return vc
         }()
-        
-        func applyFocusToGuide(channelId: String, col: Int) {
-
-            // Make sure the cell is visible
-            #if !os(macOS)
-            guideController.scrollToSelectedChannelAndFocus()
-            #endif
-        }
     }
 }

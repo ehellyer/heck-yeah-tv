@@ -11,7 +11,6 @@ import SwiftData
 
 struct ShowFavorites: View {
     
-    @FocusState.Binding var focus: FocusTarget?
     @Binding var appState: SharedAppState
     var upSwipeRedirectAction: (() -> Void)?
     var rightSwipeRedirectAction: (() -> Void)?
@@ -36,7 +35,6 @@ struct ShowFavorites: View {
                     .font(.caption)
                     .foregroundStyle(.yellow)
                 }
-                .focused($focus, equals: FocusTarget.favoritesToggle)
 #if os(tvOS)
                 .onMoveCommand { direction in
                     if direction == .up {

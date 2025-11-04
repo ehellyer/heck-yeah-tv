@@ -10,34 +10,32 @@ import SwiftUI
 
 struct ChannelsContainer: View {
     
-    @FocusState.Binding var focus: FocusTarget?
     @Binding var appState: SharedAppState
     @Environment(ChannelMap.self) private var channelMap
     
     @State private var scrollToSelectedAndFocus: Bool = false
     @State private var rebuildChannelMapTask: Task<Void, Never>? = nil
     
-    
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
-            ShowFavorites(focus: $focus,
-                          appState: $appState,
+            
+            ShowFavorites(appState: $appState,
                           upSwipeRedirectAction: {
-                focus = nil
+                //Do nothing.
             },
                           rightSwipeRedirectAction: {
                 scrollToSelectedAndFocus = true
             })
 #if os(tvOS)
-                .focusSection()
+            .focusSection()
 #endif
             
 //            GuideView(focus: $focus, appState: $appState, scrollToSelectedAndFocus: $scrollToSelectedAndFocus)
-            GuideViewRepresentable(appState: $appState, focusTarget: $focus)
+            GuideViewRepresentable(appState: $appState)
                 .onAppear {
                     logDebug("🎯 GuideViewRepresentable appeared")
                 }
-
+            
                 .onChange(of: appState.showFavoritesOnly) { _, _ in
                     //Debounce rebuilding of channel map.
                     rebuildChannelMapTask?.cancel()
@@ -51,17 +49,6 @@ struct ChannelsContainer: View {
                         }
                     }
                 }
-            
-                .onChange(of: focus) { oldValue, newValue in
-                    if case .guide = newValue {
-                        // Focus should be in the guide
-                        logDebug("Focus moving to guide content")
-                    }
-                }
-
-        }
-        .onChange(of: focus) { _, _ in
-            logDebug("Focus updated to :\(String(describing: focus))")
         }
     }
 }

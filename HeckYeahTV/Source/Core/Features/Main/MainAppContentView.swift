@@ -17,7 +17,7 @@ struct MainAppContentView: View {
     @State private var showPlayPauseButton = false
     @State private var appState: SharedAppState = SharedAppState.shared
     
-    @FocusState var focus: FocusTarget?
+    @FocusState var hasFocus: Bool
     
     // Focus scopes (Namespace) for isolating focus between guide and activation views
     @Namespace private var activationScope
@@ -34,7 +34,7 @@ struct MainAppContentView: View {
                 
             if appState.isGuideVisible {
                 // Scope the entire guide UI to the same FocusState
-                TabContainerView(focus: $focus, appState: $appState)
+                TabContainerView(appState: $appState)
                     .transition(.opacity)
                     .background(Color.black.opacity(0.65))
             }
@@ -49,10 +49,10 @@ struct MainAppContentView: View {
 #if os(tvOS)
                     .focusScope(activationScope)
 #endif
-                    .focused($focus, equals: .guideActivationView)
-                    .defaultFocus($focus, .guideActivationView)
+                    .focused($hasFocus, equals: true)
+                    .defaultFocus($hasFocus, true)
                     .onAppear {
-                        focus = .guideActivationView
+                        hasFocus = true
                     }
             }
         }
