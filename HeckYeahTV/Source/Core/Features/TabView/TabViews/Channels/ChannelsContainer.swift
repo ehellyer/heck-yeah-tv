@@ -12,6 +12,7 @@ struct ChannelsContainer: View {
     
     @Binding var appState: SharedAppState
     @Environment(ChannelMap.self) private var channelMap
+    @FocusState private var isFocused: Bool
     
     @State private var scrollToSelectedAndFocus: Bool = false
     @State private var rebuildChannelMapTask: Task<Void, Never>? = nil
@@ -20,20 +21,20 @@ struct ChannelsContainer: View {
         VStack(alignment: .leading, spacing: 10) {
             
             ShowFavorites(appState: $appState,
-                          upSwipeRedirectAction: {
-                //Do nothing.
-            },
                           rightSwipeRedirectAction: {
                 scrollToSelectedAndFocus = true
             })
 #if os(tvOS)
             .focusSection()
+            .focused($isFocused)
 #endif
             
 //            GuideView(focus: $focus, appState: $appState, scrollToSelectedAndFocus: $scrollToSelectedAndFocus)
-            GuideViewRepresentable(appState: $appState)
+            GuideViewRepresentable(appState: $appState, isFocused: $isFocused)
+                .focused($isFocused) // Bind to SwiftUI focus
                 .onAppear {
                     logDebug("🎯 GuideViewRepresentable appeared")
+                    isFocused = true
                 }
             
                 .onChange(of: appState.showFavoritesOnly) { _, _ in
@@ -41,7 +42,7 @@ struct ChannelsContainer: View {
                     rebuildChannelMapTask?.cancel()
                     rebuildChannelMapTask = Task { @MainActor in
                         do {
-                            try await Task.sleep(nanoseconds: 100_000_000)
+                            try await Task.sleep(nanoseconds: debounceNS)
                             try Task.checkCancellation()
                             await rebuildChannelMap()
                         } catch {
@@ -62,7 +63,7 @@ extension ChannelsContainer {
             let importer = ChannelImporter(container: container)
             let cm = try await importer.buildChannelMap(showFavoritesOnly: SharedAppState.shared.showFavoritesOnly)
             await MainActor.run {
-                channelMap.update(with: cm.map, totalCount: cm.map.count)
+                channelMap.update(with: cm.map)
             }
         } catch {
             logError("Error: \(error)")

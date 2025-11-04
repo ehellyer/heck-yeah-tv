@@ -12,7 +12,6 @@ import SwiftData
 struct ShowFavorites: View {
     
     @Binding var appState: SharedAppState
-    var upSwipeRedirectAction: (() -> Void)?
     var rightSwipeRedirectAction: (() -> Void)?
     
     var body: some View {
@@ -37,12 +36,7 @@ struct ShowFavorites: View {
                 }
 #if os(tvOS)
                 .onMoveCommand { direction in
-                    if direction == .up {
-                        // Use a slight delay to ensure the focus change takes priority
-                        DispatchQueue.main.async {
-                            upSwipeRedirectAction?()
-                        }
-                    } else if direction == .right  {
+                    if direction == .right  {
                         rightSwipeRedirectAction?()
                     }
                 }

@@ -1,5 +1,5 @@
 //
-//  Channel+Channelable.swift
+//  HDHomeRunChannel+Channelable.swift
 //  Heck Yeah TV
 //
 //  Created by Ed Hellyer on 8/23/25.

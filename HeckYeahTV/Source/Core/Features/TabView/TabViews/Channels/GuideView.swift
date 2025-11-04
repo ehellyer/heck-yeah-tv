@@ -112,7 +112,7 @@ private extension GuideView {
             let importer = ChannelImporter(container: container)
             let cm = try await importer.buildChannelMap(showFavoritesOnly: SharedAppState.shared.showFavoritesOnly)
             await MainActor.run {
-                channelMap.update(with: cm.map, totalCount: cm.map.count)
+                channelMap.update(with: cm.map)
             }
         } catch {
             logError("Error: \(error)")

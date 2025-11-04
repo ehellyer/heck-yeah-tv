@@ -15,7 +15,7 @@ struct Heck_Yeah_TVApp: App {
     @Environment(\.scenePhase) private var scenePhase
     @State private var isBootComplete = false
     @State private var startupTask: Task<Void, Never>? = nil
-    @State private var channelMap: ChannelMap = ChannelMap(map: [], totalCount: 0)
+    @State private var channelMap: ChannelMap = ChannelMap(map: [])
     
     var body: some Scene {
         WindowGroup {

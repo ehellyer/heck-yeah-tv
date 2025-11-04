@@ -52,7 +52,7 @@ class EmptyProgramView: CrossPlatformView {
         self.centerYAnchor.constraint(equalTo: timeLabel.centerYAnchor).isActive = true
         
         // Try not to blow label out the sides
-        let leadingConstraint = timeLabel.leadingAnchor.constraint(greaterThanOrEqualTo: self.leadingAnchor, constant: 50)
+        let leadingConstraint = timeLabel.leadingAnchor.constraint(greaterThanOrEqualTo: self.leadingAnchor, constant: 20)
         leadingConstraint.priority = .init(900)
         leadingConstraint.isActive = true
         let trailingConstraint = timeLabel.trailingAnchor.constraint(greaterThanOrEqualTo: self.trailingAnchor, constant: 20)
@@ -79,6 +79,7 @@ class EmptyProgramView: CrossPlatformView {
         label.setContentCompressionResistancePriority(.required, for: .vertical)
         label.numberOfLines = 1
 #endif
+        label.textAlignment = .center
         return label
     }()
     

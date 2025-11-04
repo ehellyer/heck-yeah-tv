@@ -79,10 +79,8 @@ actor ChannelImporter {
         
         channelsDescriptor.predicate = (showFavoritesOnly ? (#Predicate<IPTVChannel> { $0.isFavorite == true }) : nil)
         let channels: [IPTVChannel] = try context.fetch(channelsDescriptor)
-
         let map: [ChannelId] = channels.map { $0.id }
-        //let reverseLookup: [ChannelId: Int] = Dictionary(uniqueKeysWithValues: map.enumerated().map { (index, channelId) in (channelId, index) })
-        let cm = ChannelMap(map: map, totalCount: map.count)
+        let cm = ChannelMap(map: map)
 
         logDebug("Channel map built.  Total Channels: \(cm.totalCount) 🏁")
         return cm

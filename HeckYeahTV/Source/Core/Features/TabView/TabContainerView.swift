@@ -24,8 +24,6 @@ struct TabContainerView: View {
         )
     }
 
-    @Namespace private var channelsScope
-
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             TabView(selection: selectedTab) {
@@ -40,7 +38,6 @@ struct TabContainerView: View {
                     systemImage: TabSection.channels.systemImage,
                     value: TabSection.channels) {
                     ChannelsContainer(appState: $appState)
-                        .focusScope(channelsScope)
                 }
                 
                 Tab(TabSection.search.title,

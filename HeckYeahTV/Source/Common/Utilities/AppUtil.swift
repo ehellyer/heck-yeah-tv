@@ -35,3 +35,9 @@ let not = (!)
 func stringName<T>(_ object: T) -> String {
     return String(describing: type(of: object))
 }
+
+/// A value in nanoseconds representing 0.01s or 10ms.
+///
+/// This is the time to sleep before executing a task, providing a small delay for
+/// the the task to be cancelled because it was replaced by a similar subsequent task.
+let debounceNS: UInt64 = 10_000_000 //0.01 seconds

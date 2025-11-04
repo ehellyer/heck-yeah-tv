@@ -15,9 +15,7 @@ struct GuideViewRepresentable: CrossPlatformControllerRepresentable {
     
     @Binding var appState: SharedAppState
     @Environment(ChannelMap.self) private var channelMap
-    
-    // Track if we should request initial focus
-    var shouldRequestInitialFocus: Bool = false
+    @FocusState.Binding var isFocused: Bool
     
     //MARK: - PlatformViewRepresentable overrides
     
@@ -39,20 +37,13 @@ struct GuideViewRepresentable: CrossPlatformControllerRepresentable {
     }
 
     func makeCoordinator() -> Coordinator {
-        return Coordinator(parent: self)
+        return Coordinator()
     }
     
     //MARK: - ViewControllerRepresentable Coordinator
     
     @MainActor
     final class Coordinator: NSObject {
-        var parent: GuideViewRepresentable
-        var lastProcessedFocus: FocusTarget?
-        
-        init(parent: GuideViewRepresentable) {
-            self.parent = parent
-        }
-        
         lazy var guideController: GuideViewController = {
             let vc = GuideViewController()
             return vc

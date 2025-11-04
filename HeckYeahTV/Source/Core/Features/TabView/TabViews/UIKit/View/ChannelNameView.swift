@@ -179,7 +179,6 @@ extension ChannelNameView: @MainActor FocusTargetView {
     }
 
     override func shouldUpdateFocus(in context: UIFocusUpdateContext) -> Bool {
-        logDebug("shouldUpdateFocusInContext")
         return true
     }
     
