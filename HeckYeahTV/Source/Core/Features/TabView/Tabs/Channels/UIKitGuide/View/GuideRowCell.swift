@@ -233,15 +233,17 @@ class GuideRowCell: PlatformTableViewCell {
 }
 
 #if os(tvOS)
+
 //MARK: - tvOS Focus Code
+
 extension GuideRowCell {
     
     override var canBecomeFocused: Bool {
         return false
     }
     
-//    override var preferredFocusEnvironments: [any UIFocusEnvironment] {
-//        return [self.channelNameView, self.favoriteButtonView]
-//    }
+    override var preferredFocusEnvironments: [any UIFocusEnvironment] {
+        return [self.channelNameView, self.favoriteButtonView]
+    }
 }
 #endif

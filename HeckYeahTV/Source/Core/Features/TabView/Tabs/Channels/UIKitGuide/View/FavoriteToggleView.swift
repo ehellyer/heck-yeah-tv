@@ -52,11 +52,21 @@ class FavoriteToggleView: CrossPlatformView {
     
     //MARK: - Private API - View Lazy Binding
     
+    private var width: CGFloat {
+#if os(tvOS)
+        60
+#elseif os(iOS)
+        30
+#else
+        30
+#endif
+    }
+    
     private lazy var imageView: PlatformImageView = {
         let view = PlatformUtils.createImageView()
         addSubview(view)
-        view.widthAnchor.constraint(equalToConstant: 60).isActive = true
-        let heightConstraint = view.heightAnchor.constraint(equalToConstant: 60)
+        view.widthAnchor.constraint(equalToConstant: width).isActive = true
+        let heightConstraint = view.heightAnchor.constraint(equalToConstant: width)
         heightConstraint.priority = .defaultLow
         heightConstraint.isActive = true
 #if !os(macOS)

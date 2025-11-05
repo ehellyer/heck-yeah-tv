@@ -72,14 +72,16 @@ class EmptyProgramView: CrossPlatformView {
         let label = PlatformUtils.createLabel()
 #if os(macOS)
         // Match semantics; NSColor.labelColor equivalents
-        label.font = .systemFont(ofSize: 24, weight: .semibold)
+        label.font = AppStyle.Fonts.programTimeFont
+        label.alignment = .center
 #else
-        label.font = .systemFont(ofSize: 24, weight: .semibold)
+        label.font = AppStyle.Fonts.programTimeFont
         label.textColor = .white
+        label.textAlignment = .center
         label.setContentCompressionResistancePriority(.required, for: .vertical)
         label.numberOfLines = 1
 #endif
-        label.textAlignment = .center
+        
         return label
     }()
     

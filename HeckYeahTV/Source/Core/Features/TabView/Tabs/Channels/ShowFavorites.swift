@@ -17,7 +17,7 @@ struct ShowFavorites: View {
     var body: some View {
         VStack(spacing: 0) {
 
-            HStack(spacing: 20) {
+            HStack {
                 
                 // Title
                 Text("Favorites")
@@ -49,6 +49,7 @@ struct ShowFavorites: View {
                 // Space the remainder
                 Spacer()
             }
+            .padding(.horizontal, 20)
         }
     }
 }

@@ -33,7 +33,6 @@ struct ChannelsContainer: View {
             GuideViewRepresentable(appState: $appState, isFocused: $isFocused)
                 .focused($isFocused) // Bind to SwiftUI focus
                 .onAppear {
-                    logDebug("🎯 GuideViewRepresentable appeared")
                     isFocused = true
                 }
             

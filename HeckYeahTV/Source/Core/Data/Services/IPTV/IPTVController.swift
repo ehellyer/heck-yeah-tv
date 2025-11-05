@@ -47,6 +47,7 @@ final class IPTVController {
     }
     
     func fetchAll() async -> FetchSummary {
+        logDebug("Discovering IPTV channels... 🏳️")
         var source = StreamSource()
         source.summary.startedAt = Date()
         
@@ -84,6 +85,7 @@ final class IPTVController {
         }
         
         source.summary.finishedAt = Date()
+        logDebug("IPTV channel discovery completed. 🏁")
         return source.summary
     }
 }

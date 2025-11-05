@@ -80,7 +80,7 @@ class ProgramView: CrossPlatformView {
         let label = PlatformUtils.createLabel()
         label.lineLimit = 3
 #if !os(macOS)
-        label.font = .systemFont(ofSize: 23, weight: .medium)
+        label.font = AppStyle.Fonts.programTitleFont
         label.textColor = .label
 #endif
         return label
@@ -89,9 +89,9 @@ class ProgramView: CrossPlatformView {
         let label = PlatformUtils.createLabel()
 #if os(macOS)
         // Match semantics; NSColor.labelColor equivalents
-        label.font = .systemFont(ofSize: 24, weight: .semibold)
+        label.font = AppStyle.Fonts.programTimeFont
 #else
-        label.font = .systemFont(ofSize: 24, weight: .semibold)
+        label.font = AppStyle.Fonts.programTimeFont
         label.textColor = .secondaryLabel
         label.setContentCompressionResistancePriority(.required, for: .vertical)
         label.numberOfLines = 1

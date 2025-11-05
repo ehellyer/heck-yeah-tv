@@ -75,12 +75,13 @@ class ChannelNameView: CrossPlatformView {
         stackView.setContentHuggingPriority(.required, for: .vertical)
         stackView.distribution = .fill
         stackView.addArrangedSubview(numberLabel)
+        stackView.addArrangedSubview(qualityImageView)
         return stackView
     }()
     
     private lazy var titleLabel: CrossPlatformLabel = {
         let label = PlatformUtils.createLabel()
-        label.font = .systemFont(ofSize: 34, weight: .semibold)
+        label.font = AppStyle.Fonts.titleFont
         label.setContentHuggingPriority(.required, for: .vertical)
         label.textColor = .white
         label.lineLimit = 1
@@ -89,11 +90,24 @@ class ChannelNameView: CrossPlatformView {
     
     private lazy var numberLabel: CrossPlatformLabel = {
         let label = PlatformUtils.createLabel()
-        label.font = .systemFont(ofSize: 32)
+        label.font = AppStyle.Fonts.subtitleFont
         label.setContentHuggingPriority(.required, for: .vertical)
         label.textColor = .white
         label.lineLimit = 1
         return label
+    }()
+    
+    private lazy var qualityImageView: PlatformImageView = {
+        let imageView = PlatformUtils.createImageView()
+        
+#if canImport(AppKit)
+        imageView.imageScaling = .scaleProportionallyUpOrDown
+#else
+        imageView.setContentCompressionResistancePriority(.required, for: .horizontal)
+        imageView.contentMode = .scaleAspectFit
+        imageView.tintColor = .white
+#endif
+        return imageView
     }()
     
     private lazy var logoImageView: PlatformImageView = {
@@ -104,6 +118,7 @@ class ChannelNameView: CrossPlatformView {
 #else
         imageView.contentMode = .scaleAspectFit
 #endif
+        imageView.setContentCompressionResistancePriority(.required, for: .horizontal)
         imageView.widthAnchor.constraint(equalToConstant: 35).isActive = true
         imageView.heightAnchor.constraint(equalToConstant: 35).isActive = true
         imageView.setContentHuggingPriority(.required, for: .vertical)
@@ -154,14 +169,13 @@ class ChannelNameView: CrossPlatformView {
     
     func configure(with channel: IPTVChannel?, isPlaying: Bool) {
         self.channelId = channel?.id
-        subTextStackView.viewWithTag(StreamQualityView.viewTypeTagId)?.removeFromSuperview()
         bgColor = (isPlaying) ? PlatformColor(named: "selectedChannel") : PlatformColor(named: "guideBackgroundNoFocus")
         
         titleLabel.textValue = channel?.title ?? " "
         numberLabel.textValue = channel?.number ?? " "
+        qualityImageView.image = channel?.quality?.image
         
-        if let channel, channel.quality != .unknown {
-            subTextStackView.addArrangedSubview(channel.quality.legacyView)
+        if qualityImageView.image != nil {
             numberLabel.textValue = numberLabel.textValue?.trim()
         }
     }
@@ -186,8 +200,14 @@ extension ChannelNameView: @MainActor FocusTargetView {
         super.didUpdateFocus(in: context, with: coordinator)
         if (context.nextFocusedView === self) {
             self.becomeFocusedUsingAnimationCoordinator(in: context, with: coordinator)
+            self.titleLabel.textColor = .black
+            self.numberLabel.textColor = .black
+            qualityImageView.tintColor = .black
         } else if (context.previouslyFocusedView === self) {
             self.resignFocusUsingAnimationCoordinator(in: context, with: coordinator)
+            self.titleLabel.textColor = .white
+            self.numberLabel.textColor = .white
+            qualityImageView.tintColor = .white
         }
     }
 }

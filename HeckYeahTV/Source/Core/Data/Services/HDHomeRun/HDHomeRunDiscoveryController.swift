@@ -95,6 +95,7 @@ final class HDHomeRunDiscoveryController {
     var channels: [HDHomeRunChannel] = []
     
     func bootStrapTunerChannelDiscovery() async -> FetchSummary {
+        logDebug("Looking for HDHomeRun Tuners and discovering their channels. 🏳️")
         let summary = await deviceDiscovery()
         if discoveredDevices.count > 0 {
             summary.mergeSummary(await deviceDetails())
@@ -102,6 +103,7 @@ final class HDHomeRunDiscoveryController {
         if let tuner = devices.first {
             summary.mergeSummary(await self.channelLineUp(tuner))
         }
+        logDebug("HDHomeRun discovery completed. 🏁")
         return summary
     }
 }

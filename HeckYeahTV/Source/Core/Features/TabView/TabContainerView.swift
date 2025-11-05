@@ -26,18 +26,27 @@ struct TabContainerView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
+#if !os(tvOS)
+            Button {
+                appState.isGuideVisible = false
+            } label: {
+                Image(systemName: "xmark.circle.fill")
+                    .font(.title)
+            }
+            .padding(.leading, 40)
+#endif
             TabView(selection: selectedTab) {
-                
-                Tab(TabSection.recents.title,
-                    systemImage: TabSection.recents.systemImage,
-                    value: TabSection.recents) {
-                    RecentsView()
-                }
                 
                 Tab(TabSection.channels.title,
                     systemImage: TabSection.channels.systemImage,
                     value: TabSection.channels) {
                     ChannelsContainer(appState: $appState)
+                }
+
+                Tab(TabSection.recents.title,
+                    systemImage: TabSection.recents.systemImage,
+                    value: TabSection.recents) {
+                    RecentsView()
                 }
                 
                 Tab(TabSection.search.title,
@@ -53,7 +62,7 @@ struct TabContainerView: View {
                 }
             }
             .frame(maxWidth: .infinity)                // Expand TabView to full width
-            .padding(0)
+            
             .background(Color.clear)
             
 #if !os(iOS)
