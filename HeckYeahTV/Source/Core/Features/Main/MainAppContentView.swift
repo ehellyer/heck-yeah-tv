@@ -15,7 +15,7 @@ struct MainAppContentView: View {
     
     @State private var fadeTask: Task<Void, Never>?
     @State private var showPlayPauseButton = false
-    @State private var appState: SharedAppState = SharedAppState.shared
+    @State private var appState: AppStateProvider = SharedAppState.shared
     
     @FocusState var hasFocus: Bool
     
@@ -31,13 +31,18 @@ struct MainAppContentView: View {
                 .accessibilityHidden(true)
                 .allowsHitTesting(false)
                 .focusable(false)
-                
+
             if appState.isGuideVisible {
+#if os(tvOS)
                 // Scope the entire guide UI to the same FocusState
                 TabContainerView(appState: $appState)
                     .transition(.opacity)
                     .background(Color.black.opacity(0.65))
+#else
+                
+#endif
             }
+
             
             if showPlayPauseButton {
                 PlayPauseBadge()

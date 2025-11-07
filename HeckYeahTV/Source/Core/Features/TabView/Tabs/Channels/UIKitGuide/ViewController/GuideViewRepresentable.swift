@@ -13,9 +13,10 @@ struct GuideViewRepresentable: CrossPlatformControllerRepresentable {
     
     //MARK: - Bound State
     
-    @Binding var appState: SharedAppState
-    @Environment(ChannelMap.self) private var channelMap
+    @Binding var appState: AppStateProvider
     @FocusState.Binding var isFocused: Bool
+    
+    @Environment(ChannelMap.self) private var channelMap
     
     //MARK: - PlatformViewRepresentable overrides
     

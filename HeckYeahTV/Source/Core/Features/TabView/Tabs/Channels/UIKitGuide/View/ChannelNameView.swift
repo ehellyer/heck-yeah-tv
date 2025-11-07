@@ -6,11 +6,7 @@
 //  Copyright © 2025 Hellyer Multimedia. All rights reserved.
 //
 
-#if canImport(AppKit)
-import AppKit
-#else
 import UIKit
-#endif
 
 @MainActor
 class ChannelNameView: CrossPlatformView {
@@ -30,14 +26,8 @@ class ChannelNameView: CrossPlatformView {
         
         bgColor = PlatformColor(named: "guideBackgroundNoFocus")
 
-#if canImport(AppKit)
-        wantsLayer = true
-        layer?.masksToBounds = true
-        layer?.cornerRadius = 25
-#else
         layer.masksToBounds = true
         layer.cornerRadius = 25
-#endif
         clipsToBounds = true
         
         channelInfoStackView.widthAnchor.constraint(equalToConstant: 300).isActive = true
@@ -67,11 +57,7 @@ class ChannelNameView: CrossPlatformView {
     
     private lazy var subTextStackView: PlatformStackView = {
         let stackView = PlatformUtils.createStackView(axis: .horizontal)
-#if canImport(AppKit)
-        stackView.alignment = NSLayoutConstraint.Attribute.centerX
-#else
         stackView.alignment = UIStackView.Alignment.center
-#endif
         stackView.setContentHuggingPriority(.required, for: .vertical)
         stackView.distribution = .fill
         stackView.addArrangedSubview(numberLabel)
@@ -99,25 +85,15 @@ class ChannelNameView: CrossPlatformView {
     
     private lazy var qualityImageView: PlatformImageView = {
         let imageView = PlatformUtils.createImageView()
-        
-#if canImport(AppKit)
-        imageView.imageScaling = .scaleProportionallyUpOrDown
-#else
         imageView.setContentCompressionResistancePriority(.required, for: .horizontal)
         imageView.contentMode = .scaleAspectFit
         imageView.tintColor = .white
-#endif
         return imageView
     }()
     
     private lazy var logoImageView: PlatformImageView = {
         let imageView = PlatformUtils.createImageView()
-        
-#if canImport(AppKit)
-        imageView.imageScaling = .scaleProportionallyUpOrDown
-#else
         imageView.contentMode = .scaleAspectFit
-#endif
         imageView.setContentCompressionResistancePriority(.required, for: .horizontal)
         imageView.widthAnchor.constraint(equalToConstant: 35).isActive = true
         imageView.heightAnchor.constraint(equalToConstant: 35).isActive = true
@@ -127,9 +103,7 @@ class ChannelNameView: CrossPlatformView {
     
     private lazy var longTapGesture: PlatformPressGestureRecognizer = {
         let gesture = PlatformPressGestureRecognizer(target: self, action: #selector(viewTapped))
-#if canImport(UIKit)
         gesture.cancelsTouchesInView = false
-#endif
         gesture.minimumPressDuration = 0
         gesture.allowableMovement = 12
         return gesture
@@ -140,16 +114,10 @@ class ChannelNameView: CrossPlatformView {
     @objc private func viewTapped(_ gesture: PlatformPressGestureRecognizer) {
         switch gesture.state {
             case .began:
-#if os(tvOS)
                 onTapDownFocusEffect()
-#else
-                break
-#endif
-                
+
             case .ended, .changed, .cancelled, .failed:
-#if os(tvOS)
                 onTapUpFocusEffect()
-#endif
                 if gesture.state == .ended, let channelId {
                     delegate?.selectChannel(channelId)
                 }
@@ -173,7 +141,7 @@ class ChannelNameView: CrossPlatformView {
         
         titleLabel.textValue = channel?.title ?? " "
         numberLabel.textValue = channel?.number ?? " "
-        qualityImageView.image = channel?.quality?.image
+        qualityImageView.image = channel?.quality.image
         
         if qualityImageView.image != nil {
             numberLabel.textValue = numberLabel.textValue?.trim()
@@ -181,7 +149,6 @@ class ChannelNameView: CrossPlatformView {
     }
 }
 
-#if os(tvOS)
 extension ChannelNameView: @MainActor FocusTargetView {
     
     override var preferredFocusEnvironments: [UIFocusEnvironment] {
@@ -211,4 +178,3 @@ extension ChannelNameView: @MainActor FocusTargetView {
         }
     }
 }
-#endif

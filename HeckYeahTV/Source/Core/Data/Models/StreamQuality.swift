@@ -13,7 +13,7 @@ import Hellfire
 ///
 /// This enum is intentionally broad so sources with slightly different pixel dimensions
 /// can still map to a consistent user-facing quality label.
-enum StreamQuality: JSONSerializable, Codable {
+enum StreamQuality: JSONSerializable {
     
     /// **Standard Definition** — typically ≤ 480p (e.g., 640×480).
     /// Suitable for legacy devices or very limited bandwidth.

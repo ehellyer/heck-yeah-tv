@@ -6,11 +6,7 @@
 //  Copyright © 2025 Hellyer Multimedia. All rights reserved.
 //
 
-#if os(macOS)
-import AppKit
-#else
 import UIKit
-#endif
 
 class ProgramView: CrossPlatformView {
     
@@ -27,15 +23,9 @@ class ProgramView: CrossPlatformView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-#if os(macOS)
-        wantsLayer = true
-        layer?.masksToBounds = true
-        layer?.cornerRadius = 25
-#else
         layer.masksToBounds = true
         layer.cornerRadius = 25
         isUserInteractionEnabled = true
-#endif
         clipsToBounds = true
         
         // Bootstrap the lazy loading.
@@ -69,45 +59,31 @@ class ProgramView: CrossPlatformView {
         stackContainerView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 0).isActive = true
         view.topAnchor.constraint(equalTo: stackContainerView.topAnchor, constant: 0).isActive = true
         stackContainerView.bottomAnchor.constraint(greaterThanOrEqualTo: view.bottomAnchor, constant: 0).isActive = true
-#if !os(macOS)
         view.distribution = .fill
         view.alignment = .fill
-#endif
         view.spacing = 2
         return view
     }()
     private lazy var titleLabel: CrossPlatformLabel = {
         let label = PlatformUtils.createLabel()
         label.lineLimit = 3
-#if !os(macOS)
         label.font = AppStyle.Fonts.programTitleFont
         label.textColor = .label
-#endif
         return label
     }()
     private lazy var timeLabel: CrossPlatformLabel = {
         let label = PlatformUtils.createLabel()
-#if os(macOS)
-        // Match semantics; NSColor.labelColor equivalents
-        label.font = AppStyle.Fonts.programTimeFont
-#else
         label.font = AppStyle.Fonts.programTimeFont
         label.textColor = .secondaryLabel
         label.setContentCompressionResistancePriority(.required, for: .vertical)
         label.numberOfLines = 1
-#endif
         return label
     }()
     private lazy var longTapGesture: PlatformPressGestureRecognizer = {
         let gesture = PlatformPressGestureRecognizer(target: self, action: #selector(viewTapped))
-#if !os(macOS)
         gesture.cancelsTouchesInView = false
         gesture.minimumPressDuration = 0
         gesture.allowableMovement = 12
-#else
-        gesture.minimumPressDuration = 0
-        gesture.allowableMovement = 12
-#endif
         return gesture
     }()
     
@@ -116,13 +92,11 @@ class ProgramView: CrossPlatformView {
     @objc private func viewTapped(_ gesture: PlatformPressGestureRecognizer) {
         switch gesture.state {
             case .began:
-#if os(tvOS)
                 onTapDownFocusEffect()
-#endif
+
             case .ended, .changed, .cancelled, .failed:
-#if os(tvOS)
                 onTapUpFocusEffect()
-#endif
+
                 if gesture.state == .ended {
                     //TODO: Not yet implemented.  Put code here to send a message to the delegate to present information about the program.
                 }
@@ -149,7 +123,6 @@ class ProgramView: CrossPlatformView {
     }
 }
 
-#if os(tvOS)
 extension ProgramView: FocusTargetView {
     
     override var preferredFocusEnvironments: [UIFocusEnvironment] {
@@ -169,4 +142,3 @@ extension ProgramView: FocusTargetView {
         }
     }
 }
-#endif

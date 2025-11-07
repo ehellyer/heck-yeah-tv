@@ -11,7 +11,7 @@ import SwiftData
 
 struct ShowFavorites: View {
     
-    @Binding var appState: SharedAppState
+    @Binding var appState: AppStateProvider
     var rightSwipeRedirectAction: (() -> Void)?
     
     var body: some View {

@@ -11,7 +11,7 @@ import SwiftData
 
 struct TabContainerView: View {
     
-    @Binding var appState: SharedAppState
+    @Binding var appState: AppStateProvider
     
     private var selectedTab: Binding<TabSection> {
         Binding(
@@ -26,21 +26,13 @@ struct TabContainerView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-#if !os(tvOS)
-            Button {
-                appState.isGuideVisible = false
-            } label: {
-                Image(systemName: "xmark.circle.fill")
-                    .font(.title)
-            }
-            .padding(.leading, 40)
-#endif
             TabView(selection: selectedTab) {
                 
                 Tab(TabSection.channels.title,
                     systemImage: TabSection.channels.systemImage,
                     value: TabSection.channels) {
                     ChannelsContainer(appState: $appState)
+                        .padding(.leading, -20) // Expand on the left edge to prevent the clipping of the focus effect on the fav toggle view.
                 }
 
                 Tab(TabSection.recents.title,
@@ -65,14 +57,12 @@ struct TabContainerView: View {
             
             .background(Color.clear)
             
-#if !os(iOS)
-            // Support for dismissing the tabview by tapping menu on Siri remote for tvOS or esc key on keyboard (on tvOS or macOS).
+            // Support for dismissing the tabview by tapping menu on Siri remote for tvOS.
             .onExitCommand {
                 withAnimation {
                     appState.isGuideVisible = false
                 }
             }
-#endif
         }
         .frame(maxWidth: .infinity)                    // Ensure container also spans full width
     }

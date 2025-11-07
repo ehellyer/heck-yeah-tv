@@ -20,7 +20,7 @@ typealias ChannelId = String
          number: String?,
          url: URL,
          logoURL: URL?,
-         quality: StreamQuality?,
+         quality: StreamQuality,
          hasDRM: Bool,
          source: ChannelSource,
          isFavorite: Bool = false) {
@@ -43,7 +43,7 @@ typealias ChannelId = String
     var number: String?
     var url: URL
     var logoURL: URL?
-    var quality: StreamQuality?
+    var quality: StreamQuality
     var hasDRM: Bool
     var source: ChannelSource
     var isFavorite: Bool = false

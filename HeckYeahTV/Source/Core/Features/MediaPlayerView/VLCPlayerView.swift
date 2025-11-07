@@ -17,12 +17,16 @@ import VLCKit
 import MobileVLCKit
 #endif
 
+#if !targetEnvironment(simulator) && !DEBUG_PREVIEW
+import VLCKit
+#endif
+
 struct VLCPlayerView: CrossPlatformRepresentable {
 
     //MARK: - Binding and State
     
     @Environment(\.scenePhase) private var scenePhase
-    @Binding var appState: SharedAppState
+    @Binding var appState: AppStateProvider
 
     private var selectedChannelId: ChannelId? { appState.selectedChannel }
     

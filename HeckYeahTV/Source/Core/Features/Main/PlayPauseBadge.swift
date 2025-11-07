@@ -43,14 +43,7 @@ struct PlayPauseBadge: View {
     }
 }
 
-
-struct PreviewPlayPauseBadge: View {
-    @State var appState: MockSharedAppState = MockSharedAppState(isPlayerPaused: true)
-    var body: some View {
-        PlayPauseBadge(appState: appState)
-    }
-}
-
 #Preview {
-    PreviewPlayPauseBadge()
+    @Previewable @State var appState = MockSharedAppState(isPlayerPaused: true)
+    PlayPauseBadge(appState: appState)
 }

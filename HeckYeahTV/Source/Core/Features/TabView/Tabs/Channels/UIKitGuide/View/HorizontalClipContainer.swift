@@ -6,11 +6,7 @@
 //  Copyright © 2025 Hellyer Multimedia.
 //
 
-#if os(macOS)
-import AppKit
-#else
 import UIKit
-#endif
 
 /// Soft-clips (fades out) content on the left/right edges.
 /// `leftClip` / `rightClip` are fade widths (pts) from opaque → transparent.
@@ -26,12 +22,7 @@ final class HorizontalClipContainer: PlatformView {
         super.init(frame: frame)
         
         clipsToBounds = false
-#if os(macOS)
-        wantsLayer = true
-        layer?.masksToBounds = false
-#else
         layer.masksToBounds = false
-#endif
         
         // Gradient used as alpha mask: [clear, opaque, opaque, clear]
         gradientMask.startPoint = CGPoint(x: 0, y: 0.5)
@@ -44,11 +35,7 @@ final class HorizontalClipContainer: PlatformView {
         ]
         
         // Apply the gradient as an alpha mask
-#if os(macOS)
-        layer?.mask = gradientMask
-#else
         layer.mask = gradientMask
-#endif
     }
     
     convenience init() {
@@ -57,17 +44,10 @@ final class HorizontalClipContainer: PlatformView {
     
     required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
     
-#if os(macOS)
-    override func layout() {
-        super.layout()
-        applyMaskLayout()
-    }
-#else
     override func layoutSubviews() {
         super.layoutSubviews()
         applyMaskLayout()
     }
-#endif
     
     //MARK: - Private
     
@@ -109,22 +89,14 @@ final class HorizontalClipContainer: PlatformView {
     /// Fade width from the left edge (points). 0 = no left fade.
     var leftClip: CGFloat  = 40 {
         didSet {
-#if os(macOS)
-            needsLayout = true
-#else
             setNeedsLayout()
-#endif
         }
     }
     
     /// Fade width from the right edge (points). 0 = no right fade.
     var rightClip: CGFloat = 40 {
         didSet {
-#if os(macOS)
-            needsLayout = true
-#else
             setNeedsLayout()
-#endif
         }
     }
 }

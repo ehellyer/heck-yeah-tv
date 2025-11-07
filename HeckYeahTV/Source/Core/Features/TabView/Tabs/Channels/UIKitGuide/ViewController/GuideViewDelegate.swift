@@ -6,12 +6,7 @@
 //  Copyright © 2025 Hellyer Multimedia. All rights reserved.
 //
 
-
-#if os(macOS)
-import AppKit
-#else
 import UIKit
-#endif
 
 @MainActor
 protocol GuideViewDelegate: AnyObject {

@@ -6,12 +6,7 @@
 //  Copyright © 2025 Hellyer Multimedia. All rights reserved.
 //
 
-#if canImport(AppKit)
-import AppKit
-#else
 import UIKit
-#endif
-
 import SwiftData
 import Observation
 
@@ -29,19 +24,10 @@ class GuideViewController: PlatformViewController {
         setupTableView()
         setupAppStateObservation()
         
-#if os(tvOS)
         // Make the view controller's view focusable so UIKit can take over focus
         self.view.isUserInteractionEnabled = true
-#endif
     }
-
     
-#if os(macOS)
-    override func viewDidAppear() {
-        super.viewDidAppear()
-        self.scrollToSelectedChannel(animated: false)
-    }
-#else
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         self.scrollToSelectedChannel(animated: false)
@@ -49,11 +35,7 @@ class GuideViewController: PlatformViewController {
             self?.applyFocus()
         }
     }
-#endif
 
-    
-    
-#if os(tvOS)
     override var preferredFocusEnvironments: [any UIFocusEnvironment] {
         // If we have a specific target view, prefer it
         if let targetView = self.targetFocusView {
@@ -75,7 +57,6 @@ class GuideViewController: PlatformViewController {
     override func shouldUpdateFocus(in context: UIFocusUpdateContext) -> Bool {
         return true
     }
-#endif
     
     //MARK: - Private API - Lazy binding vars
     
@@ -86,20 +67,8 @@ class GuideViewController: PlatformViewController {
         view.addSubview(_tableView)
         _tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         view.trailingAnchor.constraint(equalTo: _tableView.trailingAnchor).isActive = true
-#if os(macOS)
-        _tableView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
-        view.bottomAnchor.constraint(equalTo: _tableView.bottomAnchor).isActive = true
-        
-        // CRITICAL: Add a column so viewForTableColumn gets called
-        let column = NSTableColumn(identifier: NSUserInterfaceItemIdentifier("GuideColumn"))
-        _tableView.addTableColumn(column)
-#else
         _tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
         view.bottomAnchor.constraint(equalTo: _tableView.bottomAnchor).isActive = true
-#endif
-#if os(macOS)
-        // NSTableView sizing handled by delegate methods; no estimatedRowHeight
-#else
         _tableView.clipsToBounds = false
         _tableView.estimatedRowHeight = 120
         if #available(iOS 15.0, tvOS 15.0, *) {
@@ -108,7 +77,6 @@ class GuideViewController: PlatformViewController {
         _tableView.rowHeight = UITableView.automaticDimension
         _tableView.sectionHeaderHeight = UITableView.automaticDimension
         _tableView.estimatedSectionHeaderHeight = 50
-#endif
         return _tableView
     }()
     
@@ -130,18 +98,8 @@ class GuideViewController: PlatformViewController {
         tableView.delegate = self
         tableView.dataSource = self
         tableView.clipsToBounds = true
-#if os(macOS)
-        tableView.headerView = nil
-        tableView.selectionHighlightStyle = .none
-        tableView.allowsEmptySelection = true
-        tableView.allowsMultipleSelection = false
-        tableView.usesAlternatingRowBackgroundColors = false
-        tableView.rowSizeStyle = .default
-        // Cell-based table view - no registration needed
-#else
         tableView.register(GuideRowCell.self, forCellReuseIdentifier: GuideRowCell.identifier)
         tableView.allowsSelection = false
-#endif
     }
     
     //MARK: - Observation of SharedAppState
@@ -190,16 +148,6 @@ class GuideViewController: PlatformViewController {
     }
 
     private func reloadVisibleRows() {
-#if os(macOS)
-        // On macOS, NSTableView uses different methods
-        let visibleRect = tableView.visibleRect
-        let visibleRange = tableView.rows(in: visibleRect)
-        if visibleRange.length > 0 {
-            let indexSet = IndexSet(integersIn: visibleRange.location..<(visibleRange.location + visibleRange.length))
-            tableView.reloadData(forRowIndexes: indexSet, columnIndexes: IndexSet(integer: 0))
-        }
-#else
-        // On iOS/tvOS, UITableView uses indexPaths
         let cells = self.tableView.visibleCells as? [GuideRowCell] ?? []
         let selectedChannel = appState?.selectedChannel
         
@@ -211,26 +159,20 @@ class GuideViewController: PlatformViewController {
             }
             cell.configure(with: channelId, isPlaying: isPlaying, programs: [], viewContext: viewContext)
         }
-#endif
     }
-
-#if !os(macOS)
     
-    private func requestFocus(on view: PlatformView) {
-        guard view.canBecomeFocused else {
-            logDebug("View is not a focusable view")
-            return
-        }
-   
-        // Set the target view so preferredFocusEnvironments returns it
-        self.targetFocusView = view
+    private func scrollToSelectedChannel(animated: Bool = true) {
+        guard let _channelId = targetChannelId else { return }
+        let index = channelMap?.map.firstIndex(of: _channelId) ?? 0
+        let indexPath = IndexPath(row: index, section: 0)
         
-        // Request focus update on the view controller
-        self.setNeedsFocusUpdate()
-        self.updateFocusIfNeeded()
+        // Focus will be applied in scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView)
+        tableView.scrollToRow(at: indexPath, at: .middle, animated: animated)
     }
     
-    func applyFocus() {
+    //MARK: - Private API - Focus
+    
+    private func applyFocus() {
         
         let visibleCells: [GuideRowCell] = self.tableView.visibleCells as? [GuideRowCell] ?? []
         
@@ -275,31 +217,25 @@ class GuideViewController: PlatformViewController {
             }
         }
     }
-#endif
     
-    func scrollToSelectedChannel(animated: Bool = true) {
-        guard let _channelId = targetChannelId else { return }
-        let index = channelMap?.map.firstIndex(of: _channelId) ?? 0
+    private func requestFocus(on view: PlatformView) {
+        guard view.canBecomeFocused else {
+            logDebug("View is not a focusable view")
+            return
+        }
         
-#if os(macOS)
-        tableView.scrollRowToVisible(index)
-#else
+        // Set the target view so preferredFocusEnvironments returns it
+        self.targetFocusView = view
         
-#if os(iOS)
-        let indexPath = IndexPath(row: 0, section: index)
-#else
-        let indexPath = IndexPath(row: index, section: 0)
-#endif
-      
-        // Focus will be applied in scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView)
-        tableView.scrollToRow(at: indexPath, at: .middle, animated: animated)
-#endif
+        // Request focus update on the view controller
+        self.setNeedsFocusUpdate()
+        self.updateFocusIfNeeded()
     }
 
     //MARK: - Internal API - Injected App State (from SwiftUI)
     
     // Set by GuideViewRepresentable.Coordinator
-    var appState: SharedAppState!
+    var appState: AppStateProvider!
     
     // Set by GuideViewRepresentable.Coordinator
     var channelMap: ChannelMap!
@@ -319,78 +255,21 @@ extension GuideViewController: GuideViewDelegate {
     }
 }
 
-#if os(macOS)
-
-// MARK: - NSTableViewDataSource/Delegate protocol
-
-extension GuideViewController: NSTableViewDataSource, NSTableViewDelegate {
-    func numberOfRows(in tableView: NSTableView) -> Int {
-        return channelMap?.totalCount ?? 0
-    }
-    
-    // This is the main delegate method that provides views for each row
-    func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
-        // Try to dequeue a reusable cell
-        let identifier = NSUserInterfaceItemIdentifier(GuideRowCell.identifier)
-        let guideRowCell: GuideRowCell
-        
-        if let reusedCell = tableView.makeView(withIdentifier: identifier, owner: self) as? GuideRowCell {
-            guideRowCell = reusedCell
-        } else {
-            // Create new cell and set its identifier for reuse
-            guideRowCell = GuideRowCell(frame: NSRect(x: 0, y: 0, width: 300, height: 140))
-            guideRowCell.identifier = identifier
-        }
-        
-        // Configure the cell with data
-        let channelId = channelMap.map[row]
-        let isPlaying = (appState.selectedChannel != nil && channelId == appState.selectedChannel)
-        guideRowCell.configure(
-            with: channelId,
-            isPlaying: isPlaying,
-            programs: ((row % 2 == 0) ? self.channelPrograms : []),
-            viewContext: viewContext
-        )
-        guideRowCell.delegate = self
-       
-        return guideRowCell
-    }
-    
-//    func tableView(_ tableView: NSTableView, heightOfRow row: Int) -> CGFloat {
-//        140 // Approximate row height; adjust as needed
-//    }
-}
-
-#else
-
 // MARK: - UITableViewDataSource protocol
 
 extension GuideViewController: UITableViewDataSource {
-    // Then modify your data source to have one section per row
+
     func numberOfSections(in tableView: UITableView) -> Int {
-#if os(iOS)
-        return channelMap?.totalCount ?? 0
-#else
         return min(channelMap?.totalCount ?? 0, 1)
-#endif
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-#if os(iOS)
-        return 1 // One row per section for spacing
-#else
         return channelMap?.totalCount ?? 0
-#endif
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let guideRowCell = tableView.dequeueReusableCell(withIdentifier: GuideRowCell.identifier, for: indexPath) as! GuideRowCell
-#if os(iOS)
-        let channelId = channelMap.map[indexPath.section]
-#else
         let channelId = channelMap.map[indexPath.row]
-#endif
-
         let isPlaying = (appState.selectedChannel != nil && channelId == appState.selectedChannel)
         guideRowCell.configure(with: channelId,
                                isPlaying: isPlaying,
@@ -401,10 +280,8 @@ extension GuideViewController: UITableViewDataSource {
     }
 }
 
-#endif
+// MARK: - UITableViewDelegate protocol
 
-
-#if !os(macOS)
 extension GuideViewController: UITableViewDelegate {
     
     func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
@@ -413,4 +290,3 @@ extension GuideViewController: UITableViewDelegate {
         }
     }
 }
-#endif

@@ -10,7 +10,7 @@ import SwiftUI
 
 struct ChannelsContainer: View {
     
-    @Binding var appState: SharedAppState
+    @Binding var appState: AppStateProvider
     @Environment(ChannelMap.self) private var channelMap
     @FocusState private var isFocused: Bool
     
@@ -24,12 +24,9 @@ struct ChannelsContainer: View {
                           rightSwipeRedirectAction: {
                 scrollToSelectedAndFocus = true
             })
-#if os(tvOS)
             .focusSection()
             .focused($isFocused)
-#endif
-            
-//            GuideView(focus: $focus, appState: $appState, scrollToSelectedAndFocus: $scrollToSelectedAndFocus)
+
             GuideViewRepresentable(appState: $appState, isFocused: $isFocused)
                 .focused($isFocused) // Bind to SwiftUI focus
                 .onAppear {

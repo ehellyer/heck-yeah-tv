@@ -6,11 +6,7 @@
 //  Copyright © 2025 Hellyer Multimedia. All rights reserved.
 //
 
-#if os(macOS)
-import AppKit
-#else
 import UIKit
-#endif
 
 class EmptyProgramView: CrossPlatformView {
     
@@ -27,24 +23,13 @@ class EmptyProgramView: CrossPlatformView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-#if os(macOS)
-        wantsLayer = true
-        layer?.masksToBounds = true
-        layer?.cornerRadius = 25
-#else
         layer.masksToBounds = true
         layer.cornerRadius = 25
         isUserInteractionEnabled = true
-#endif
         clipsToBounds = true
         translatesAutoresizingMaskIntoConstraints = false
         
-#if os(macOS)
-        identifier = NSUserInterfaceItemIdentifier(rawValue: "\(Self.viewTypeTagId)")
-#else
         tag = Self.viewTypeTagId
-#endif
-        
         self.addSubview(timeLabel)
         
         // Must be centered.
@@ -70,18 +55,11 @@ class EmptyProgramView: CrossPlatformView {
     
     private lazy var timeLabel: CrossPlatformLabel = {
         let label = PlatformUtils.createLabel()
-#if os(macOS)
-        // Match semantics; NSColor.labelColor equivalents
-        label.font = AppStyle.Fonts.programTimeFont
-        label.alignment = .center
-#else
         label.font = AppStyle.Fonts.programTimeFont
         label.textColor = .white
         label.textAlignment = .center
         label.setContentCompressionResistancePriority(.required, for: .vertical)
         label.numberOfLines = 1
-#endif
-        
         return label
     }()
     
@@ -110,11 +88,9 @@ class EmptyProgramView: CrossPlatformView {
     }
 }
 
-#if os(tvOS)
 extension EmptyProgramView {
     
     override var canBecomeFocused: Bool {
         return false
     }
 }
-#endif

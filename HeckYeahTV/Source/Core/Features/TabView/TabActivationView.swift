@@ -11,7 +11,7 @@ import SwiftData
 
 struct TabActivationView: View {
 
-    @Binding var appState: SharedAppState
+    @Binding var appState: AppStateProvider
     
     var body: some View {
         Color.clear

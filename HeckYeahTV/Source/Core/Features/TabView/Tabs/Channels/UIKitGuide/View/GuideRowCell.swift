@@ -6,11 +6,7 @@
 //  Copyright © 2025 Hellyer Multimedia. All rights reserved.
 //
 
-#if os(macOS)
-import AppKit
-#else
 import UIKit
-#endif
 import Combine
 import SwiftData
 
@@ -22,42 +18,27 @@ class GuideRowCell: PlatformTableViewCell {
 //        logDebug("Deallocated")
 //    }
     
-#if os(macOS)
-    override init(frame frameRect: NSRect) {
-        super.init(frame: frameRect)
-        commonInit()
-    }
-#else
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         commonInit()
     }
-#endif
     
     required init?(coder: NSCoder) {
         logFatal("init?(coder:) has not been implemented.")
     }
     
-#if !os(macOS)
     override func prepareForReuse() {
         super.prepareForReuse()
         programsStackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
         channelId = nil
         programs = []
     }
-#endif
     
     private func commonInit() {
-#if os(macOS)
-        self.wantsLayer = true
-        self.layer?.masksToBounds = false
-        self.clipsToBounds = false
-#else
         backgroundColor = .clear
         selectionStyle = .none
         clipsToBounds = false
         layer.masksToBounds = false
-#endif
         rowStackView.spacing = 35
         programsStackView.topAnchor.constraint(equalTo: self.topAnchor).isActive = true
         programsStackView.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
@@ -106,21 +87,12 @@ class GuideRowCell: PlatformTableViewCell {
 
     private lazy var rowStackView: PlatformStackView = {
         let view = PlatformUtils.createStackView(axis: .horizontal)
-#if os(macOS)
-        self.addSubview(view)
-        view.leadingAnchor.constraint(equalTo: self.leadingAnchor).isActive = true
-        self.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-        view.topAnchor.constraint(equalTo: self.topAnchor).isActive = true
-        self.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
-        view.alignment = .width
-#else
         contentView.addSubview(view)
         view.leadingAnchor.constraint(equalTo: contentView.leadingAnchor).isActive = true
         contentView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         view.topAnchor.constraint(equalTo: contentView.topAnchor).isActive = true
         contentView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
         view.alignment = .fill
-#endif
         view.distribution = .fill
         view.addArrangedSubview(favoriteButtonView)
         view.addArrangedSubview(channelNameView)
@@ -138,11 +110,7 @@ class GuideRowCell: PlatformTableViewCell {
         programsScrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         view.topAnchor.constraint(equalTo: programsScrollView.topAnchor).isActive = true
         programsScrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
-#if os(macOS)
-        programsScrollView.contentInset = NSEdgeInsetsCompat(top: 0, left: view.leftClip, bottom: 0, right: view.rightClip)
-#else
         programsScrollView.contentInset = .init(top: 0, left: view.leftClip, bottom: 0, right: view.rightClip)
-#endif
         return view
     }()
     
@@ -154,12 +122,7 @@ class GuideRowCell: PlatformTableViewCell {
         view.topAnchor.constraint(equalTo: programsStackView.topAnchor).isActive = true
         programsStackView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
         view.clipsToBounds = false
-#if os(macOS)
-        view.wantsLayer = true
-        view.layer?.masksToBounds = false
-#else
         view.layer.masksToBounds = false
-#endif
         return view
     }()
     
@@ -168,16 +131,9 @@ class GuideRowCell: PlatformTableViewCell {
         view.spacing = 25
         view.distribution = .fill
         view.clipsToBounds = false
-#if os(macOS)
-        view.wantsLayer = true
-        view.layer?.masksToBounds = false
-        view.layer?.backgroundColor = .clear
-        view.alignment = .width
-#else
         view.layer.masksToBounds = false
         view.backgroundColor = .clear
         view.alignment = .fill
-#endif
         return view
     }()
     
@@ -232,8 +188,6 @@ class GuideRowCell: PlatformTableViewCell {
     }
 }
 
-#if os(tvOS)
-
 //MARK: - tvOS Focus Code
 
 extension GuideRowCell {
@@ -246,4 +200,3 @@ extension GuideRowCell {
         return [self.channelNameView, self.favoriteButtonView]
     }
 }
-#endif

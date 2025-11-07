@@ -6,11 +6,7 @@
 //  Copyright © 2025 Hellyer Multimedia. All rights reserved.
 //
 
-#if os(macOS)
-import AppKit
-#else
 import UIKit
-#endif
 
 /// Extension that adds image generation capabilities to `StreamQuality` enum values.
 ///
@@ -42,15 +38,8 @@ extension StreamQuality {
             let view = StreamQualityView(streamQuality: self)
             
             // Force layout so Auto Layout does its thing and gives us proper bounds
-#if os(macOS)
-            view.layout()
-            let renderedImage = view.asImage()
-            renderedImage.isTemplate = true
-            image = renderedImage
-#else
             view.layoutIfNeeded()
             image = view.asImage().withRenderingMode(.alwaysTemplate)
-#endif
             Self.cachedImages[streamQuality] = image
         }
         return image
@@ -114,11 +103,7 @@ class StreamQualityView: PlatformView {
     /// - Parameter streamQuality: The quality to display in the badge.
     private func commonInit(_ streamQuality: StreamQuality) {
         
-#if os(macOS)
-        identifier = NSUserInterfaceItemIdentifier(rawValue: "\(Self.viewTypeTagId)")
-#else
         tag = Self.viewTypeTagId
-#endif
         
         // Create the label that will show our quality text
         let label = PlatformUtils.createLabel()
@@ -142,20 +127,11 @@ class StreamQualityView: PlatformView {
 
         // Style the container with rounded corners and a border
         // Same visual result on all platforms, different APIs because... reasons
-#if os(macOS)
-        self.wantsLayer = true
-        layer?.cornerRadius = 6
-        layer?.borderWidth = 1
-        layer?.borderColor = PlatformColor.white.cgColor
-        layer?.masksToBounds = false
-        layer?.backgroundColor = PlatformColor.clear.cgColor
-#else
         layer.cornerRadius = 6
         layer.borderWidth = 1
         layer.borderColor = PlatformColor.white.cgColor
         layer.masksToBounds = false
         self.backgroundColor = PlatformColor.clear
-#endif
     }
     
     // MARK: - Constants
