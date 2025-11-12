@@ -24,7 +24,7 @@ class EmptyProgramView: CrossPlatformView {
         super.init(frame: frame)
         
         layer.masksToBounds = true
-        layer.cornerRadius = 25
+        layer.cornerRadius = GuideRowCell.viewCornerRadius
         isUserInteractionEnabled = true
         clipsToBounds = true
         translatesAutoresizingMaskIntoConstraints = false

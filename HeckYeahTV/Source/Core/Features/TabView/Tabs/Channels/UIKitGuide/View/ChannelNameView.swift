@@ -27,11 +27,10 @@ class ChannelNameView: CrossPlatformView {
         bgColor = PlatformColor(named: "guideBackgroundNoFocus")
 
         layer.masksToBounds = true
-        layer.cornerRadius = 25
+        layer.cornerRadius = GuideRowCell.viewCornerRadius
         clipsToBounds = true
-        
-        channelInfoStackView.widthAnchor.constraint(equalToConstant: 300).isActive = true
-        self.addGestureRecognizer(longTapGesture)
+        addGestureRecognizer(longTapGesture)
+        addChannelInfoStackView()
     }
     
     required init?(coder: NSCoder) {
@@ -40,18 +39,21 @@ class ChannelNameView: CrossPlatformView {
     
     //MARK: - Private API - View Lazy Binding
     
+    private func addChannelInfoStackView() {
+        addSubview(channelInfoStackView)
+        channelInfoStackView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 20).isActive = true
+        trailingAnchor.constraint(equalTo: channelInfoStackView.trailingAnchor, constant: 20).isActive = true
+        channelInfoStackView.topAnchor.constraint(equalTo: self.topAnchor, constant: 20).isActive = true
+        bottomAnchor.constraint(equalTo: channelInfoStackView.bottomAnchor, constant: 20).isActive = true
+    }
+    
     private lazy var channelInfoStackView: PlatformStackView = {
         let stackView = PlatformUtils.createStackView(axis: .vertical)
-        addSubview(stackView)
         stackView.setContentCompressionResistancePriority(.required, for: .vertical)
         stackView.alignment = .leading
         stackView.addArrangedSubview(titleLabel)
         stackView.addArrangedSubview(subTextStackView)
 //        stackView.addArrangedSubview(logoImageView)
-        stackView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 20).isActive = true
-        trailingAnchor.constraint(equalTo: stackView.trailingAnchor, constant: 20).isActive = true
-        stackView.topAnchor.constraint(equalTo: self.topAnchor, constant: 20).isActive = true
-        bottomAnchor.constraint(equalTo: stackView.bottomAnchor, constant: 20).isActive = true
         return stackView
     }()
     

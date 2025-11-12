@@ -39,15 +39,15 @@ class GuideRowCell: PlatformTableViewCell {
         selectionStyle = .none
         clipsToBounds = false
         layer.masksToBounds = false
-        rowStackView.spacing = 35
-        programsStackView.topAnchor.constraint(equalTo: self.topAnchor).isActive = true
-        programsStackView.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
+        addRowStackView()
+        channelNameView.widthAnchor.constraint(equalTo: self.widthAnchor, multiplier: 0.3).isActive = true
         bindViewModel()
     }
     
     //MARK: - static internal API
     
     static var identifier: String = "GuideRowCellIdentifier"
+    static var viewCornerRadius: CGFloat = 25.0
     
     //MARK: - Private API - View Models
     
@@ -75,6 +75,17 @@ class GuideRowCell: PlatformTableViewCell {
         
     //MARK: - Private API - Lazy view binding
     
+    private func addRowStackView() {
+        contentView.addSubview(rowStackView)
+        rowStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor).isActive = true
+        contentView.trailingAnchor.constraint(equalTo: rowStackView.trailingAnchor).isActive = true
+        rowStackView.topAnchor.constraint(equalTo: contentView.topAnchor).isActive = true
+        contentView.bottomAnchor.constraint(equalTo: rowStackView.bottomAnchor).isActive = true
+        //
+        programsStackView.topAnchor.constraint(equalTo: self.topAnchor).isActive = true
+        programsStackView.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
+    }
+    
     private(set) lazy var channelNameView: ChannelNameView = {
         let view =  ChannelNameView()
         return view
@@ -87,13 +98,9 @@ class GuideRowCell: PlatformTableViewCell {
 
     private lazy var rowStackView: PlatformStackView = {
         let view = PlatformUtils.createStackView(axis: .horizontal)
-        contentView.addSubview(view)
-        view.leadingAnchor.constraint(equalTo: contentView.leadingAnchor).isActive = true
-        contentView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-        view.topAnchor.constraint(equalTo: contentView.topAnchor).isActive = true
-        contentView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
         view.alignment = .fill
         view.distribution = .fill
+        view.spacing = 35
         view.addArrangedSubview(favoriteButtonView)
         view.addArrangedSubview(channelNameView)
         view.addArrangedSubview(programsMaskView)
@@ -115,15 +122,15 @@ class GuideRowCell: PlatformTableViewCell {
     }()
     
     private lazy var programsScrollView: PlatformScrollView = {
-        let view = PlatformUtils.createScrollView()
-        view.addSubview(programsStackView)
-        view.leadingAnchor.constraint(equalTo: programsStackView.leadingAnchor).isActive = true
-        programsStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-        view.topAnchor.constraint(equalTo: programsStackView.topAnchor).isActive = true
-        programsStackView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
-        view.clipsToBounds = false
-        view.layer.masksToBounds = false
-        return view
+        let scrollView = PlatformUtils.createScrollView()
+        scrollView.addSubview(programsStackView)
+        scrollView.leadingAnchor.constraint(equalTo: programsStackView.leadingAnchor).isActive = true
+        programsStackView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor).isActive = true
+        scrollView.topAnchor.constraint(equalTo: programsStackView.topAnchor).isActive = true
+        programsStackView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor).isActive = true
+        scrollView.clipsToBounds = false
+        scrollView.layer.masksToBounds = false
+        return scrollView
     }()
     
     private lazy var programsStackView: PlatformStackView = {

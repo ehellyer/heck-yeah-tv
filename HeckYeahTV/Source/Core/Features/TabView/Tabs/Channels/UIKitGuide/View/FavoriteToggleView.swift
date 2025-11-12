@@ -25,7 +25,7 @@ class FavoriteToggleView: CrossPlatformView {
         super.init(frame: frame)
 
         layer.masksToBounds = true
-        layer.cornerRadius = 25
+        layer.cornerRadius = GuideRowCell.viewCornerRadius
         isUserInteractionEnabled = true
         clipsToBounds = true
 
@@ -68,7 +68,7 @@ class FavoriteToggleView: CrossPlatformView {
     }()
     
     private lazy var leftSwipeGesture: UISwipeGestureRecognizer = {
-        let gesture = UISwipeGestureRecognizer(target: self, action: #selector(leftSwipeDetected))
+        let gesture = UISwipeGestureRecognizer(target: self, action: #selector(viewLeftSwipe))
         gesture.direction = .left
         return gesture
     }()
@@ -91,7 +91,7 @@ class FavoriteToggleView: CrossPlatformView {
         }
     }
     
-    @objc private func leftSwipeDetected(_ gesture: UISwipeGestureRecognizer) {
+    @objc private func viewLeftSwipe(_ gesture: UISwipeGestureRecognizer) {
         guard gesture.state == .ended else { return }
         logDebug("Left swipe detected on Siri remote")
         
