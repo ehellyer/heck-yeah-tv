@@ -67,7 +67,7 @@ class EmptyProgramView: CrossPlatformView {
     
     func configure(isPlaying: Bool, isLoading: Bool) {
         timeLabel.textValue = isLoading ? "" : "No Guide Information"
-        bgColor = (isPlaying) ? PlatformColor(named: "selectedChannel") : PlatformColor(named: "guideBackgroundNoFocus")
+        bgColor = (isPlaying) ? PlatformColor(named: "GuideSelectedChannelBackground") : PlatformColor(named: "GuideBackgroundNoFocus")
     }
     
     func fillSuperview() {

@@ -10,9 +10,11 @@ import UIKit
 
 protocol FocusTargetView {
     
-    func becomeFocusedUsingAnimationCoordinator(in context: UIFocusUpdateContext, with coordinator: UIFocusAnimationCoordinator)
+    typealias ViewBlock = (UIColor) -> Void
     
-    func resignFocusUsingAnimationCoordinator(in context: UIFocusUpdateContext, with coordinator: UIFocusAnimationCoordinator)
+    func becomeFocusedUsingAnimationCoordinator(in context: UIFocusUpdateContext, with coordinator: UIFocusAnimationCoordinator, viewBlock: ViewBlock?)
+    
+    func resignFocusUsingAnimationCoordinator(in context: UIFocusUpdateContext, with coordinator: UIFocusAnimationCoordinator, viewBlock: ViewBlock?)
     
     func onTapDownFocusEffect()
     
@@ -23,6 +25,7 @@ extension FocusTargetView where Self: UIView {
     
     private var scaleUp: CGFloat { return 1.10 }
     private var scaleDown: CGFloat { return 0.95 }
+    private var selectedLayerName: String { return "selectedEffectLayer" }
     
     private func addParallaxMotionEffects(tiltValue: CGFloat = 0.25, panValue: CGFloat = 8.0) {
         let yRotation = UIInterpolatingMotionEffect(keyPath: "layer.transform.rotation.y", type: .tiltAlongHorizontalAxis)
@@ -48,7 +51,8 @@ extension FocusTargetView where Self: UIView {
         self.motionEffects = []
     }
     
-    func becomeFocusedUsingAnimationCoordinator(in context: UIFocusUpdateContext, with coordinator: UIFocusAnimationCoordinator) {
+    func becomeFocusedUsingAnimationCoordinator(in context: UIFocusUpdateContext, with coordinator: UIFocusAnimationCoordinator, viewBlock: ViewBlock? = nil) {
+        viewBlock?(UIColor.guideForegroundFocus)
         coordinator.addCoordinatedAnimations({ () -> Void in
             var rotationMatrix = CATransform3DIdentity
             rotationMatrix.m34 = (1.0 / -1000.0)
@@ -56,11 +60,11 @@ extension FocusTargetView where Self: UIView {
             let rotationAndScaleMatrix = CATransform3DScale(rotationMatrix, self.scaleUp, self.scaleUp, 1)
             self.layer.transform = rotationAndScaleMatrix
             
-            if context.nextFocusedView?.layer.sublayers?.first(where: { $0.name == "selectedLayerEffect" }) == nil {
+            if context.nextFocusedView?.layer.sublayers?.first(where: { $0.name == self.selectedLayerName }) == nil {
                 let newLayer = CALayer()
                 newLayer.frame = self.bounds
-                newLayer.name = "selectedLayerEffect"
-                newLayer.backgroundColor = PlatformColor(named: "guideBackgroundFocus")!.cgColor
+                newLayer.name = self.selectedLayerName
+                newLayer.backgroundColor = UIColor.guideBackgroundFocus.cgColor
                 context.nextFocusedView?.layer.insertSublayer(newLayer, at: 0)
             }
             self.addParallaxMotionEffects()
@@ -70,11 +74,11 @@ extension FocusTargetView where Self: UIView {
         }
     }
     
-    func resignFocusUsingAnimationCoordinator(in context: UIFocusUpdateContext, with coordinator: UIFocusAnimationCoordinator) {
+    func resignFocusUsingAnimationCoordinator(in context: UIFocusUpdateContext, with coordinator: UIFocusAnimationCoordinator, viewBlock: ViewBlock? = nil) {
+        viewBlock?(UIColor.guideForegroundNoFocus)
         coordinator.addCoordinatedAnimations({ () -> Void in
-            self.layer.transform = CATransform3DIdentity
-            
-            if let layer = context.previouslyFocusedView?.layer.sublayers?.first(where: { $0.name == "selectedLayerEffect" }) {
+            self.layer.transform = CATransform3DIdentity            
+            if let layer = context.previouslyFocusedView?.layer.sublayers?.first(where: { $0.name == self.selectedLayerName }) {
                 layer.removeFromSuperlayer()
             }
             self.removeParallaxMotionEffects()

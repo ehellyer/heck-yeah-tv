@@ -68,13 +68,13 @@ class ProgramView: CrossPlatformView {
         let label = PlatformUtils.createLabel()
         label.lineLimit = 3
         label.font = AppStyle.Fonts.programTitleFont
-        label.textColor = .label
+        label.textColor = PlatformColor(named: "GuideForegroundNoFocus")
         return label
     }()
     private lazy var timeLabel: CrossPlatformLabel = {
         let label = PlatformUtils.createLabel()
         label.font = AppStyle.Fonts.programTimeFont
-        label.textColor = .secondaryLabel
+        label.textColor = PlatformColor(named: "GuideForegroundNoFocus")
         label.setContentCompressionResistancePriority(.required, for: .vertical)
         label.numberOfLines = 1
         return label
@@ -110,6 +110,11 @@ class ProgramView: CrossPlatformView {
     private var channelId: ChannelId?
     private var program: Program?
     
+    private func updateViewTintColor(_ color: UIColor) {
+        titleLabel.textColor = color
+        timeLabel.textColor = color
+    }
+    
     //MARK: - Internal API
     
     weak var delegate: GuideViewDelegate?
@@ -117,7 +122,7 @@ class ProgramView: CrossPlatformView {
     func configure(with program: Program?, channelId: ChannelId?, isPlaying: Bool) {
         self.channelId = channelId
         self.program = program
-        bgColor = (isPlaying) ? PlatformColor(named: "selectedChannel") : PlatformColor(named: "guideBackgroundNoFocus")
+        bgColor = (isPlaying) ? PlatformColor(named: "GuideSelectedChannelBackground") : PlatformColor(named: "GuideBackgroundNoFocus")
         titleLabel.textValue = program?.title
         timeLabel.textValue = program?.timeSlot
     }
@@ -136,9 +141,13 @@ extension ProgramView: FocusTargetView {
     override func didUpdateFocus(in context: UIFocusUpdateContext, with coordinator: UIFocusAnimationCoordinator) {
         super.didUpdateFocus(in: context, with: coordinator)
         if (context.nextFocusedView === self) {
-            self.becomeFocusedUsingAnimationCoordinator(in: context, with: coordinator)
+            self.becomeFocusedUsingAnimationCoordinator(in: context, with: coordinator) { [weak self] color in
+                self?.updateViewTintColor(color)
+            }
         } else if (context.previouslyFocusedView === self) {
-            self.resignFocusUsingAnimationCoordinator(in: context, with: coordinator)
+            self.resignFocusUsingAnimationCoordinator(in: context, with: coordinator) { [weak self] color in
+                self?.updateViewTintColor(color)
+            }
         }
     }
 }

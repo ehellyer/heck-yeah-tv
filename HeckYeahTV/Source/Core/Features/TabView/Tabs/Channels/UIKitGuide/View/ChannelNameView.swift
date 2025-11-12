@@ -24,7 +24,7 @@ class ChannelNameView: CrossPlatformView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        bgColor = PlatformColor(named: "guideBackgroundNoFocus")
+        bgColor = PlatformColor(named: "GuideBackgroundNoFocus")
 
         layer.masksToBounds = true
         layer.cornerRadius = GuideRowCell.viewCornerRadius
@@ -132,14 +132,20 @@ class ChannelNameView: CrossPlatformView {
     //MARK: - Private API
     
     private var channelId: ChannelId?
-
+    
+    private func updateViewTintColor(_ color: UIColor) {
+        titleLabel.textColor = color
+        numberLabel.textColor = color
+        qualityImageView.tintColor = color
+    }
+    
     //MARK: - Internal API
     
     weak var delegate: GuideViewDelegate?
     
     func configure(with channel: IPTVChannel?, isPlaying: Bool) {
         self.channelId = channel?.id
-        bgColor = (isPlaying) ? PlatformColor(named: "selectedChannel") : PlatformColor(named: "guideBackgroundNoFocus")
+        bgColor = (isPlaying) ? PlatformColor(named: "GuideSelectedChannelBackground") : PlatformColor(named: "GuideBackgroundNoFocus")
         
         titleLabel.textValue = channel?.title ?? " "
         numberLabel.textValue = channel?.number ?? " "
@@ -168,15 +174,13 @@ extension ChannelNameView: @MainActor FocusTargetView {
     override func didUpdateFocus(in context: UIFocusUpdateContext, with coordinator: UIFocusAnimationCoordinator) {
         super.didUpdateFocus(in: context, with: coordinator)
         if (context.nextFocusedView === self) {
-            self.becomeFocusedUsingAnimationCoordinator(in: context, with: coordinator)
-            self.titleLabel.textColor = .black
-            self.numberLabel.textColor = .black
-            qualityImageView.tintColor = .black
+            self.becomeFocusedUsingAnimationCoordinator(in: context, with: coordinator) { [weak self] color in
+                self?.updateViewTintColor(color)
+            }
         } else if (context.previouslyFocusedView === self) {
-            self.resignFocusUsingAnimationCoordinator(in: context, with: coordinator)
-            self.titleLabel.textColor = .white
-            self.numberLabel.textColor = .white
-            qualityImageView.tintColor = .white
+            self.resignFocusUsingAnimationCoordinator(in: context, with: coordinator) { [weak self] color in
+                self?.updateViewTintColor(color)
+            }
         }
     }
 }

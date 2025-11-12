@@ -116,7 +116,7 @@ class FavoriteToggleView: CrossPlatformView {
     func configure(with channel: IPTVChannel?, isPlaying: Bool) {
         self.channelId = channel?.id
         let isFavorite = (channel?.isFavorite == true)
-        bgColor = (isPlaying) ? PlatformColor(named: "selectedChannel") : PlatformColor(named: "guideBackgroundNoFocus")
+        bgColor = (isPlaying) ? PlatformColor(named: "GuideSelectedChannelBackground") : PlatformColor(named: "GuideBackgroundNoFocus")
 
         if (channel == nil) {
             imageView.layer.opacity = 0.0

@@ -153,11 +153,12 @@
 				Source/Core/Features/TabView/Tabs/Recents/RecentsView.swift,
 				Source/Core/Features/TabView/Tabs/Search/SearchView.swift,
 				Source/Core/Features/TabView/Tabs/Settings/SettingsView.swift,
-				SupportingFiles/Assets.xcassets,
+				SupportingFiles/AppIconAssets.xcassets,
+				SupportingFiles/AppMediaAssets.xcassets,
+				SupportingFiles/ColorAssets.xcassets,
 				SupportingFiles/MockData/MockDataPersistence.swift,
 				SupportingFiles/MockData/MockIPTVChannels.json,
 				SupportingFiles/MockData/MockSharedAppState.swift,
-				"SupportingFiles/Sounds/soft-startup-sound.mp3",
 			);
 			target = EB2C2DB62E5E203A005CE685 /* macOS_HeckYeahTV */;
 		};
@@ -258,11 +259,12 @@
 				Source/Core/Features/TabView/Tabs/Recents/RecentsView.swift,
 				Source/Core/Features/TabView/Tabs/Search/SearchView.swift,
 				Source/Core/Features/TabView/Tabs/Settings/SettingsView.swift,
-				SupportingFiles/Assets.xcassets,
+				SupportingFiles/AppIconAssets.xcassets,
+				SupportingFiles/AppMediaAssets.xcassets,
+				SupportingFiles/ColorAssets.xcassets,
 				SupportingFiles/MockData/MockDataPersistence.swift,
 				SupportingFiles/MockData/MockIPTVChannels.json,
 				SupportingFiles/MockData/MockSharedAppState.swift,
-				"SupportingFiles/Sounds/soft-startup-sound.mp3",
 			);
 			target = EBE03C162E53D8DE006B7747 /* tvOS_HeckYeahTV */;
 		};

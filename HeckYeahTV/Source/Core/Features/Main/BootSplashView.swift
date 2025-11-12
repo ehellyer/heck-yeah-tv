@@ -91,16 +91,17 @@ final class BootSoundPlayer: NSObject, @unchecked Sendable {
     private var player: AVAudioPlayer?
     
     func play(resource: String, ext: String) {
-        guard let url = Bundle.main.url(forResource: resource, withExtension: ext) else {
+        guard let audioDataAsset = NSDataAsset(name: "BootSound") else {
             return
         }
+        
 #if !os(macOS)
         let session = AVAudioSession.sharedInstance()
         try? session.setCategory(.ambient, mode: .default, options: [.duckOthers])
         try? session.setActive(true, options: [])
 #endif
         do {
-            let audio = try AVAudioPlayer(contentsOf: url)
+            let audio = try AVAudioPlayer(data: audioDataAsset.data)
             audio.volume = 1.0
             audio.prepareToPlay()
             audio.play()
