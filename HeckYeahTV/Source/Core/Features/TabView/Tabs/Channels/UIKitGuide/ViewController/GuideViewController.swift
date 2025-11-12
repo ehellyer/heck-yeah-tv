@@ -273,7 +273,7 @@ extension GuideViewController: UITableViewDataSource {
         let isPlaying = (appState.selectedChannel != nil && channelId == appState.selectedChannel)
         guideRowCell.configure(with: channelId,
                                isPlaying: isPlaying,
-                               programs: ((indexPath.row % 2 == 0) ? self.channelPrograms : []),
+                               programs: [],//((indexPath.row % 2 == 0) ? self.channelPrograms : []),
                                viewContext: viewContext)
         guideRowCell.delegate = self
         return guideRowCell
