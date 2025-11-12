@@ -10,11 +10,10 @@ import SwiftUI
 import SwiftData
 
 struct GuideRow: View {
-    let corner: CGFloat = 20
+    let corner: CGFloat = 10
     
-    @State var channel: IPTVChannel
+    @State var channel: IPTVChannel?
     @Binding var appState: AppStateProvider
-    @Environment(\.modelContext) private var viewContext
     @Environment(\.verticalSizeClass) private var verticalSizeClass
     
     private var isLandscape: Bool {
@@ -22,33 +21,35 @@ struct GuideRow: View {
     }
 
     private var isPlaying: Bool {
-        appState.selectedChannel == channel.id
+        guard let selectedChannelId = appState.selectedChannel else {
+            return false
+        }
+        return selectedChannelId == channel?.id
     }
     
     var body: some View {
         HStack(spacing: 10) {
 
             Button {
-                channel.isFavorite.toggle()
+                channel?.isFavorite.toggle()
             } label: {
-                Image(systemName: channel.isFavorite ? "star.fill" : "star")
+                Image(systemName: channel?.isFavorite == true ? "star.fill" : "star")
                     .foregroundStyle(Color.yellow)
-                    .padding(.horizontal, 10)
-                    .padding(.vertical, 10)
+                    .padding(.horizontal, 7)
+                    .padding(.vertical, 7.5)
             }
             
             Button {
-                appState.selectedChannel = channel.id
+                appState.selectedChannel = channel?.id
             } label: {
                 VStack(alignment: .leading, spacing: 2) {
-                    Text(channel.title)
+                    Text(channel?.title ?? "Placeholder")
                         .font(.headline)
                         .lineLimit(1)
                         .truncationMode(.tail)
                         
                     GuideSubTitleView(channel: channel)
                 }
-                
             }
 
             if (isLandscape) {
@@ -56,10 +57,8 @@ struct GuideRow: View {
                     // No op
                 } label: {
                     Text("No guide information")
-                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
-                        .contentShape(Rectangle())
                 }
-                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+                .frame(maxWidth: .infinity, alignment: .center)
                 .contentShape(Rectangle())
                 .disabled(true)
             }
@@ -79,12 +78,9 @@ struct GuideRow: View {
 
 #if !os(tvOS)
 #Preview("GuideRow - loads from Mock SwiftData") {
-    @Previewable @State var appState: AppStateProvider = MockSharedAppState(selectedChannel: "chan.movies.001")
-    
+    @Previewable @State var appState: AppStateProvider = MockSharedAppState()
     let mockData = MockDataPersistence(appState: appState)
-    
-    GuideRow(channel: mockData.channels[1],
-             appState: $appState)
-        .environment(\.modelContext, mockData.context)
+    GuideRow(channel: mockData.channels[2], appState: $appState)
+        //.redacted(reason: .placeholder)
 }
 #endif

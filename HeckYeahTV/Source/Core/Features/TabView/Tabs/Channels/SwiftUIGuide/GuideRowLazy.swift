@@ -10,6 +10,7 @@ import SwiftUI
 import SwiftData
 
 struct GuideRowLazy: View {
+    
     let channelId: ChannelId
     @Binding var appState: AppStateProvider
     
@@ -22,30 +23,9 @@ struct GuideRowLazy: View {
                 GuideRow(channel: channel,
                          appState: $appState)
             } else {
-                HStack(spacing: 25) {
-                    Circle()
-                        .fill(Color.gray.opacity(0.3))
-                        .frame(width: 100, height: 100)
-                        .redacted(reason: .placeholder)
-                    
-                    VStack(alignment: .leading, spacing: 8) {
-                        RoundedRectangle(cornerRadius: 6)
-                            .fill(Color.gray.opacity(0.3))
-                            .frame(width: 300, height: 18)
-                            .redacted(reason: .placeholder)
-                        RoundedRectangle(cornerRadius: 6)
-                            .fill(Color.gray.opacity(0.3))
-                            .frame(width: 220, height: 14)
-                            .redacted(reason: .placeholder)
-                    }
-                    .frame(width: 400, alignment: .leading)
-                    .padding(20)
-                    
-                    RoundedRectangle(cornerRadius: 8)
-                        .fill(Color.gray.opacity(0.2))
-                        .frame(maxWidth: .infinity, minHeight: 60, maxHeight: 80)
-                        .redacted(reason: .placeholder)
-                }
+                GuideRow(channel: nil,
+                         appState: $appState)
+                .redacted(reason: .placeholder)
             }
         }
         
@@ -59,9 +39,9 @@ struct GuideRowLazy: View {
     }
 }
 
-#if !os(tvOS)
-#Preview("GuideRowLazy - loads from Mock SwiftData") {
-    @Previewable @State var appState: AppStateProvider = MockSharedAppState(selectedChannel: "chan.movies.001")
+
+#Preview("GuideRowLazy") {
+    @Previewable @State var appState: AppStateProvider = MockSharedAppState()
     
     let mockData = MockDataPersistence(appState: appState)
     
@@ -70,4 +50,3 @@ struct GuideRowLazy: View {
     .environment(\.modelContext, mockData.context)
     .padding()
 }
-#endif

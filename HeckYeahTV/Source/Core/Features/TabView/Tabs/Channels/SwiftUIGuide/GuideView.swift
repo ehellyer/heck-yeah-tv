@@ -112,9 +112,7 @@ private extension GuideView {
                 
                 if let channelId = appState.selectedChannel {
                     if let index = channelMap.map.firstIndex(of: channelId) {
-                        withAnimation(.easeOut) {
-                            proxy.scrollTo(index, anchor: .center)
-                        }
+                        proxy.scrollTo(index, anchor: .center)
                     }
                 }
             } catch {
@@ -125,7 +123,6 @@ private extension GuideView {
     }
 }
 
-#if !os(tvOS)
 #Preview("GuideView") {
     
     @Previewable @State var appState: AppStateProvider = SharedAppState.shared
@@ -137,4 +134,3 @@ private extension GuideView {
         .environment(\.modelContext, mockData.context)
         .environment(mockData.channelMap)
 }
-#endif

@@ -15,9 +15,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "EBE03BB62E53D421006B7747"
+               BlueprintIdentifier = "EB2C2DB62E5E203A005CE685"
                BuildableName = "HeckYeahTV.app"
-               BlueprintName = "iOS_HeckYeahTV"
+               BlueprintName = "macOS_HeckYeahTV"
                ReferencedContainer = "container:HeckYeahTV.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -35,9 +35,9 @@
             parallelizable = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "EBE03BC32E53D423006B7747"
-               BuildableName = "iOS_HeckYeahTVTests.xctest"
-               BlueprintName = "iOS_HeckYeahTVTests"
+               BlueprintIdentifier = "EB2C2DC32E5E203C005CE685"
+               BuildableName = "macOS_HeckYeahTVTests.xctest"
+               BlueprintName = "macOS_HeckYeahTVTests"
                ReferencedContainer = "container:HeckYeahTV.xcodeproj">
             </BuildableReference>
          </TestableReference>
@@ -46,9 +46,9 @@
             parallelizable = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "EBE03BCD2E53D423006B7747"
-               BuildableName = "iOS_HeckYeahTVUITests.xctest"
-               BlueprintName = "iOS_HeckYeahTVUITests"
+               BlueprintIdentifier = "EB2C2DCD2E5E203C005CE685"
+               BuildableName = "macOS_HeckYeahTVUITests.xctest"
+               BlueprintName = "macOS_HeckYeahTVUITests"
                ReferencedContainer = "container:HeckYeahTV.xcodeproj">
             </BuildableReference>
          </TestableReference>
@@ -68,9 +68,9 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "EBE03BB62E53D421006B7747"
+            BlueprintIdentifier = "EB2C2DB62E5E203A005CE685"
             BuildableName = "HeckYeahTV.app"
-            BlueprintName = "iOS_HeckYeahTV"
+            BlueprintName = "macOS_HeckYeahTV"
             ReferencedContainer = "container:HeckYeahTV.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -85,9 +85,9 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "EBE03BB62E53D421006B7747"
+            BlueprintIdentifier = "EB2C2DB62E5E203A005CE685"
             BuildableName = "HeckYeahTV.app"
-            BlueprintName = "iOS_HeckYeahTV"
+            BlueprintName = "macOS_HeckYeahTV"
             ReferencedContainer = "container:HeckYeahTV.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>

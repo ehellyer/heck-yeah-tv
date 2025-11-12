@@ -20,7 +20,7 @@ struct Heck_Yeah_TVApp: App {
     var body: some Scene {
         WindowGroup {
             RootView(isBootComplete: $isBootComplete)
-                .ignoresSafeArea()
+                
                 .task {
                     startBootstrap()
                 }

@@ -17,10 +17,6 @@ import VLCKit
 import MobileVLCKit
 #endif
 
-#if !targetEnvironment(simulator) && !DEBUG_PREVIEW
-import VLCKit
-#endif
-
 struct VLCPlayerView: CrossPlatformRepresentable {
 
     //MARK: - Binding and State

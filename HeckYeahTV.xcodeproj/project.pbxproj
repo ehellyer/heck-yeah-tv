@@ -9,8 +9,7 @@
 /* Begin PBXBuildFile section */
 		483F6B111781DCB2AAB8EA48 /* Pods_tvOS_HeckYeahTV.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E589179213073D8CB516EAE /* Pods_tvOS_HeckYeahTV.framework */; };
 		A70B739F4ADE7A0311642D9D /* Pods_iOS_HeckYeahTV.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 28D09A551F11AFAC0F7FA422 /* Pods_iOS_HeckYeahTV.framework */; };
-		EB7B6FCF2EBD8FFC00257D38 /* Pods_macOS_HeckYeahTV.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 35897EE2B3E94DAF0E2D7858 /* Pods_macOS_HeckYeahTV.framework */; };
-		EB7B6FD02EBD8FFC00257D38 /* Pods_macOS_HeckYeahTV.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 35897EE2B3E94DAF0E2D7858 /* Pods_macOS_HeckYeahTV.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		DBA1F7056EA3BFB7DB63248C /* Pods_macOS_HeckYeahTV.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 35897EE2B3E94DAF0E2D7858 /* Pods_macOS_HeckYeahTV.framework */; };
 		EBC92B472E9D53EC00FF62BC /* Hellfire in Frameworks */ = {isa = PBXBuildFile; productRef = EBC92B462E9D53EC00FF62BC /* Hellfire */; };
 		EBC92B492E9D53F700FF62BC /* Hellfire in Frameworks */ = {isa = PBXBuildFile; productRef = EBC92B482E9D53F700FF62BC /* Hellfire */; };
 		EBE03C072E53D665006B7747 /* Hellfire in Frameworks */ = {isa = PBXBuildFile; productRef = EBE03C062E53D665006B7747 /* Hellfire */; };
@@ -61,38 +60,25 @@
 		};
 /* End PBXContainerItemProxy section */
 
-/* Begin PBXCopyFilesBuildPhase section */
-		EB7B6FD12EBD8FFD00257D38 /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				EB7B6FD02EBD8FFC00257D38 /* Pods_macOS_HeckYeahTV.framework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXCopyFilesBuildPhase section */
-
 /* Begin PBXFileReference section */
 		041B0E4284C5A34ED0896BCC /* Pods-iOS_HeckYeahTV.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-iOS_HeckYeahTV.release.xcconfig"; path = "Target Support Files/Pods-iOS_HeckYeahTV/Pods-iOS_HeckYeahTV.release.xcconfig"; sourceTree = "<group>"; };
-		095EBC57F732E20B7132F49D /* Pods-macOS_HeckYeahTV.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-macOS_HeckYeahTV.release.xcconfig"; path = "Target Support Files/Pods-macOS_HeckYeahTV/Pods-macOS_HeckYeahTV.release.xcconfig"; sourceTree = "<group>"; };
 		28D09A551F11AFAC0F7FA422 /* Pods_iOS_HeckYeahTV.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_iOS_HeckYeahTV.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		35897EE2B3E94DAF0E2D7858 /* Pods_macOS_HeckYeahTV.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_macOS_HeckYeahTV.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		4464AAFF16E6511C859AB9B9 /* Pods-macOS_HeckYeahTV.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-macOS_HeckYeahTV.release.xcconfig"; path = "Target Support Files/Pods-macOS_HeckYeahTV/Pods-macOS_HeckYeahTV.release.xcconfig"; sourceTree = "<group>"; };
 		4E589179213073D8CB516EAE /* Pods_tvOS_HeckYeahTV.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_tvOS_HeckYeahTV.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		5CBBA1045CCC45B21067FAF6 /* Pods-macOS_HeckYeahTV.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-macOS_HeckYeahTV.debug.xcconfig"; path = "Target Support Files/Pods-macOS_HeckYeahTV/Pods-macOS_HeckYeahTV.debug.xcconfig"; sourceTree = "<group>"; };
 		784D723A8565B63F2B3BE567 /* Pods-iOS_HeckYeahTV.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-iOS_HeckYeahTV.debug.xcconfig"; path = "Target Support Files/Pods-iOS_HeckYeahTV/Pods-iOS_HeckYeahTV.debug.xcconfig"; sourceTree = "<group>"; };
 		99DD7EF0B671BCAE9438AFEC /* Pods-tvOS_HeckYeahTV.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-tvOS_HeckYeahTV.release.xcconfig"; path = "Target Support Files/Pods-tvOS_HeckYeahTV/Pods-tvOS_HeckYeahTV.release.xcconfig"; sourceTree = "<group>"; };
 		D26DFFAFE9DE104EB29DC823 /* Pods-tvOS_HeckYeahTV.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-tvOS_HeckYeahTV.debug.xcconfig"; path = "Target Support Files/Pods-tvOS_HeckYeahTV/Pods-tvOS_HeckYeahTV.debug.xcconfig"; sourceTree = "<group>"; };
-		E2DA9D815C94AE993025AF8C /* Pods-macOS_HeckYeahTV.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-macOS_HeckYeahTV.debug.xcconfig"; path = "Target Support Files/Pods-macOS_HeckYeahTV/Pods-macOS_HeckYeahTV.debug.xcconfig"; sourceTree = "<group>"; };
-		EB2C2DB72E5E203A005CE685 /* Heck Yeah TV.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Heck Yeah TV.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		EB2C2DB72E5E203A005CE685 /* HeckYeahTV.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HeckYeahTV.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EB2C2DC42E5E203C005CE685 /* macOS_HeckYeahTVTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = macOS_HeckYeahTVTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		EB2C2DCE2E5E203C005CE685 /* macOS_HeckYeahTVUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = macOS_HeckYeahTVUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		EBB393192EC37F9F00FA55AF /* VLCKit.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = VLCKit.xcframework; path = Pods/VLCKit/VLCKit.xcframework; sourceTree = "<group>"; };
 		EBC92B4A2E9D5FFA00FF62BC /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
-		EBE03BB72E53D421006B7747 /* Heck Yeah TV.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Heck Yeah TV.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		EBE03BB72E53D421006B7747 /* HeckYeahTV.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HeckYeahTV.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EBE03BC42E53D423006B7747 /* iOS_HeckYeahTVTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = iOS_HeckYeahTVTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		EBE03BCE2E53D423006B7747 /* iOS_HeckYeahTVUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = iOS_HeckYeahTVUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		EBE03C172E53D8DE006B7747 /* Heck Yeah TV.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Heck Yeah TV.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		EBE03C172E53D8DE006B7747 /* HeckYeahTV.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HeckYeahTV.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EBE03C232E53D8DF006B7747 /* tvOS_HeckYeahTVTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = tvOS_HeckYeahTVTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		EBE03C2D2E53D8DF006B7747 /* tvOS_HeckYeahTVUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = tvOS_HeckYeahTVUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -114,11 +100,13 @@
 				Source/Common/Utilities/AppUtil.swift,
 				Source/Common/Utilities/Asset.swift,
 				Source/Core/Data/Adapters/Channelable.swift,
+				Source/Core/Data/Adapters/ChannelSource.swift,
+				Source/Core/Data/Adapters/FetchSummary.swift,
 				"Source/Core/Data/Adapters/HDHomeRunChannel+Channelable.swift",
 				"Source/Core/Data/Adapters/IPStream+Channelable.swift",
-				Source/Core/Data/Models/ChannelSource.swift,
+				Source/Core/Data/Adapters/StreamQuality.swift,
+				Source/Core/Data/Adapters/StreamSource.swift,
 				Source/Core/Data/Models/Country.swift,
-				Source/Core/Data/Models/FetchSummary.swift,
 				Source/Core/Data/Models/HDHomeRunChannel.swift,
 				Source/Core/Data/Models/HDHomeRunDevice.swift,
 				Source/Core/Data/Models/HDHomeRunDiscovery.swift,
@@ -133,8 +121,6 @@
 				Source/Core/Data/Models/Program.swift,
 				Source/Core/Data/Models/Region.swift,
 				Source/Core/Data/Models/SharedAppState.swift,
-				Source/Core/Data/Models/StreamQuality.swift,
-				Source/Core/Data/Models/StreamSource.swift,
 				Source/Core/Data/Models/Subdivision.swift,
 				Source/Core/Data/Models/Timezone.swift,
 				Source/Core/Data/Services/HDHomeRun/HDHomeRunDiscoveryController.swift,
@@ -144,6 +130,8 @@
 				Source/Core/Data/SwiftData/DataPersistence.swift,
 				Source/Core/Data/SwiftData/IPTVChannel.swift,
 				Source/Core/Data/SwiftData/SwiftDataChangeTracking.swift,
+				Source/Core/Features/MacAndPhone/SectionContentView.swift,
+				Source/Core/Features/MacAndPhone/SectionView.swift,
 				Source/Core/Features/Main/BootGateView.swift,
 				Source/Core/Features/Main/BootSplashView.swift,
 				Source/Core/Features/Main/MacArrowKeyCatcher.swift,
@@ -152,14 +140,12 @@
 				Source/Core/Features/Main/PulseRings.swift,
 				Source/Core/Features/Main/RootView.swift,
 				Source/Core/Features/MediaPlayerView/VLCPlayerView.swift,
-				Source/Core/Features/PhoneGuide/PhoneGuideView.swift,
 				Source/Core/Features/Shared/GuideRowLoader.swift,
 				Source/Core/Features/TabView/ContentPlaceholder.swift,
 				Source/Core/Features/TabView/Enum/FocusTarget.swift,
 				Source/Core/Features/TabView/Enum/TabSection.swift,
 				Source/Core/Features/TabView/TabActivationView.swift,
 				Source/Core/Features/TabView/Tabs/Channels/ShowFavorites.swift,
-				Source/Core/Features/TabView/Tabs/Channels/SwiftUIGuide/FocusSentinel.swift,
 				Source/Core/Features/TabView/Tabs/Channels/SwiftUIGuide/GuideRow.swift,
 				Source/Core/Features/TabView/Tabs/Channels/SwiftUIGuide/GuideRowLazy.swift,
 				Source/Core/Features/TabView/Tabs/Channels/SwiftUIGuide/GuideSubTitleView.swift,
@@ -170,6 +156,7 @@
 				SupportingFiles/Assets.xcassets,
 				SupportingFiles/MockData/MockDataPersistence.swift,
 				SupportingFiles/MockData/MockIPTVChannels.json,
+				SupportingFiles/MockData/MockSharedAppState.swift,
 				"SupportingFiles/Sounds/soft-startup-sound.mp3",
 			);
 			target = EB2C2DB62E5E203A005CE685 /* macOS_HeckYeahTV */;
@@ -213,11 +200,13 @@
 				Source/Common/Utilities/AppUtil.swift,
 				Source/Common/Utilities/Asset.swift,
 				Source/Core/Data/Adapters/Channelable.swift,
+				Source/Core/Data/Adapters/ChannelSource.swift,
+				Source/Core/Data/Adapters/FetchSummary.swift,
 				"Source/Core/Data/Adapters/HDHomeRunChannel+Channelable.swift",
 				"Source/Core/Data/Adapters/IPStream+Channelable.swift",
-				Source/Core/Data/Models/ChannelSource.swift,
+				Source/Core/Data/Adapters/StreamQuality.swift,
+				Source/Core/Data/Adapters/StreamSource.swift,
 				Source/Core/Data/Models/Country.swift,
-				Source/Core/Data/Models/FetchSummary.swift,
 				Source/Core/Data/Models/HDHomeRunChannel.swift,
 				Source/Core/Data/Models/HDHomeRunDevice.swift,
 				Source/Core/Data/Models/HDHomeRunDiscovery.swift,
@@ -232,8 +221,6 @@
 				Source/Core/Data/Models/Program.swift,
 				Source/Core/Data/Models/Region.swift,
 				Source/Core/Data/Models/SharedAppState.swift,
-				Source/Core/Data/Models/StreamQuality.swift,
-				Source/Core/Data/Models/StreamSource.swift,
 				Source/Core/Data/Models/Subdivision.swift,
 				Source/Core/Data/Models/Timezone.swift,
 				Source/Core/Data/Services/HDHomeRun/HDHomeRunDiscoveryController.swift,
@@ -272,6 +259,9 @@
 				Source/Core/Features/TabView/Tabs/Search/SearchView.swift,
 				Source/Core/Features/TabView/Tabs/Settings/SettingsView.swift,
 				SupportingFiles/Assets.xcassets,
+				SupportingFiles/MockData/MockDataPersistence.swift,
+				SupportingFiles/MockData/MockIPTVChannels.json,
+				SupportingFiles/MockData/MockSharedAppState.swift,
 				"SupportingFiles/Sounds/soft-startup-sound.mp3",
 			);
 			target = EBE03C162E53D8DE006B7747 /* tvOS_HeckYeahTV */;
@@ -306,8 +296,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				EB7B6FCF2EBD8FFC00257D38 /* Pods_macOS_HeckYeahTV.framework in Frameworks */,
 				EBC92B492E9D53F700FF62BC /* Hellfire in Frameworks */,
+				DBA1F7056EA3BFB7DB63248C /* Pods_macOS_HeckYeahTV.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -390,13 +380,13 @@
 		EBE03BB82E53D421006B7747 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				EBE03BB72E53D421006B7747 /* Heck Yeah TV.app */,
+				EBE03BB72E53D421006B7747 /* HeckYeahTV.app */,
 				EBE03BC42E53D423006B7747 /* iOS_HeckYeahTVTests.xctest */,
 				EBE03BCE2E53D423006B7747 /* iOS_HeckYeahTVUITests.xctest */,
-				EBE03C172E53D8DE006B7747 /* Heck Yeah TV.app */,
+				EBE03C172E53D8DE006B7747 /* HeckYeahTV.app */,
 				EBE03C232E53D8DF006B7747 /* tvOS_HeckYeahTVTests.xctest */,
 				EBE03C2D2E53D8DF006B7747 /* tvOS_HeckYeahTVUITests.xctest */,
-				EB2C2DB72E5E203A005CE685 /* Heck Yeah TV.app */,
+				EB2C2DB72E5E203A005CE685 /* HeckYeahTV.app */,
 				EB2C2DC42E5E203C005CE685 /* macOS_HeckYeahTVTests.xctest */,
 				EB2C2DCE2E5E203C005CE685 /* macOS_HeckYeahTVUITests.xctest */,
 			);
@@ -406,6 +396,7 @@
 		EBE03C812E53E5DC006B7747 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				EBB393192EC37F9F00FA55AF /* VLCKit.xcframework */,
 				28D09A551F11AFAC0F7FA422 /* Pods_iOS_HeckYeahTV.framework */,
 				4E589179213073D8CB516EAE /* Pods_tvOS_HeckYeahTV.framework */,
 				35897EE2B3E94DAF0E2D7858 /* Pods_macOS_HeckYeahTV.framework */,
@@ -420,8 +411,8 @@
 				041B0E4284C5A34ED0896BCC /* Pods-iOS_HeckYeahTV.release.xcconfig */,
 				D26DFFAFE9DE104EB29DC823 /* Pods-tvOS_HeckYeahTV.debug.xcconfig */,
 				99DD7EF0B671BCAE9438AFEC /* Pods-tvOS_HeckYeahTV.release.xcconfig */,
-				E2DA9D815C94AE993025AF8C /* Pods-macOS_HeckYeahTV.debug.xcconfig */,
-				095EBC57F732E20B7132F49D /* Pods-macOS_HeckYeahTV.release.xcconfig */,
+				5CBBA1045CCC45B21067FAF6 /* Pods-macOS_HeckYeahTV.debug.xcconfig */,
+				4464AAFF16E6511C859AB9B9 /* Pods-macOS_HeckYeahTV.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -433,12 +424,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = EB2C2DD62E5E203C005CE685 /* Build configuration list for PBXNativeTarget "macOS_HeckYeahTV" */;
 			buildPhases = (
-				0997BEB9F92174AF7BF0BDB8 /* [CP] Check Pods Manifest.lock */,
+				FF3E370D74D5BBB4D08B0694 /* [CP] Check Pods Manifest.lock */,
 				EB2C2DB32E5E203A005CE685 /* Sources */,
 				EB2C2DB42E5E203A005CE685 /* Frameworks */,
 				EB2C2DB52E5E203A005CE685 /* Resources */,
-				3544117D0CB20F50D8E5E54D /* [CP] Embed Pods Frameworks */,
-				EB7B6FD12EBD8FFD00257D38 /* Embed Frameworks */,
+				AE7B5C654515C13717B62E77 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -449,7 +439,7 @@
 				EBC92B482E9D53F700FF62BC /* Hellfire */,
 			);
 			productName = macOSHeckYeahTV;
-			productReference = EB2C2DB72E5E203A005CE685 /* Heck Yeah TV.app */;
+			productReference = EB2C2DB72E5E203A005CE685 /* HeckYeahTV.app */;
 			productType = "com.apple.product-type.application";
 		};
 		EB2C2DC32E5E203C005CE685 /* macOS_HeckYeahTVTests */ = {
@@ -510,7 +500,7 @@
 				EBE03C062E53D665006B7747 /* Hellfire */,
 			);
 			productName = "Heck Yeah TV";
-			productReference = EBE03BB72E53D421006B7747 /* Heck Yeah TV.app */;
+			productReference = EBE03BB72E53D421006B7747 /* HeckYeahTV.app */;
 			productType = "com.apple.product-type.application";
 		};
 		EBE03BC32E53D423006B7747 /* iOS_HeckYeahTVTests */ = {
@@ -574,7 +564,7 @@
 				EBC92B462E9D53EC00FF62BC /* Hellfire */,
 			);
 			productName = "Heck Yeah TV";
-			productReference = EBE03C172E53D8DE006B7747 /* Heck Yeah TV.app */;
+			productReference = EBE03C172E53D8DE006B7747 /* HeckYeahTV.app */;
 			productType = "com.apple.product-type.application";
 		};
 		EBE03C222E53D8DF006B7747 /* tvOS_HeckYeahTVTests */ = {
@@ -756,28 +746,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		0997BEB9F92174AF7BF0BDB8 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-macOS_HeckYeahTV-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
 		0F13C7D648D782C01BBF6195 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -820,27 +788,6 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-tvOS_HeckYeahTV/Pods-tvOS_HeckYeahTV-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		3544117D0CB20F50D8E5E54D /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-macOS_HeckYeahTV/Pods-macOS_HeckYeahTV-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			inputPaths = (
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-macOS_HeckYeahTV/Pods-macOS_HeckYeahTV-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-macOS_HeckYeahTV/Pods-macOS_HeckYeahTV-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		77DEDF4426CED6C7F389E63F /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -879,6 +826,49 @@
 			);
 			outputPaths = (
 				"$(DERIVED_FILE_DIR)/Pods-tvOS_HeckYeahTV-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		AE7B5C654515C13717B62E77 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-macOS_HeckYeahTV/Pods-macOS_HeckYeahTV-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-macOS_HeckYeahTV/Pods-macOS_HeckYeahTV-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-macOS_HeckYeahTV/Pods-macOS_HeckYeahTV-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		FF3E370D74D5BBB4D08B0694 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-macOS_HeckYeahTV-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -989,7 +979,7 @@
 /* Begin XCBuildConfiguration section */
 		EB2C2DD72E5E203C005CE685 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = E2DA9D815C94AE993025AF8C /* Pods-macOS_HeckYeahTV.debug.xcconfig */;
+			baseConfigurationReference = 5CBBA1045CCC45B21067FAF6 /* Pods-macOS_HeckYeahTV.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -1010,25 +1000,27 @@
 				INFOPLIST_KEY_CFBundleDisplayName = "Heck Yeah TV";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.entertainment";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2025 Hellyer Multimedia. All rights reserved.";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
-					"@executable_path/../Frameworks",
+					"@executable_path/Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 15.6;
 				MARKETING_VERSION = 1.0;
+				OTHER_LDFLAGS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.hellyermultimedia.heckyeahtv.go;
-				PRODUCT_NAME = "Heck Yeah TV";
+				PRODUCT_NAME = HeckYeahTV;
 				REGISTER_APP_GROUPS = YES;
 				SDKROOT = macosx;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TVOS_DEPLOYMENT_TARGET = 17.6;
+				TVOS_DEPLOYMENT_TARGET = 18.6;
 			};
 			name = Debug;
 		};
 		EB2C2DD82E5E203C005CE685 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 095EBC57F732E20B7132F49D /* Pods-macOS_HeckYeahTV.release.xcconfig */;
+			baseConfigurationReference = 4464AAFF16E6511C859AB9B9 /* Pods-macOS_HeckYeahTV.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -1049,19 +1041,21 @@
 				INFOPLIST_KEY_CFBundleDisplayName = "Heck Yeah TV";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.entertainment";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2025 Hellyer Multimedia. All rights reserved.";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
-					"@executable_path/../Frameworks",
+					"@executable_path/Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 15.6;
 				MARKETING_VERSION = 1.0;
+				OTHER_LDFLAGS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.hellyermultimedia.heckyeahtv.go;
-				PRODUCT_NAME = "Heck Yeah TV";
+				PRODUCT_NAME = HeckYeahTV;
 				REGISTER_APP_GROUPS = YES;
 				SDKROOT = macosx;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TVOS_DEPLOYMENT_TARGET = 17.6;
+				TVOS_DEPLOYMENT_TARGET = 18.6;
 			};
 			name = Release;
 		};
@@ -1074,6 +1068,7 @@
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = 84CS8BE5EQ;
 				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
 				MACOSX_DEPLOYMENT_TARGET = 15.6;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.hellyermultimedia.heckyeahtv.macOSHeckYeahTVTests;
@@ -1082,6 +1077,7 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/macOSHeckYeahTV.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/macOSHeckYeahTV";
+				TVOS_DEPLOYMENT_TARGET = 18.6;
 			};
 			name = Debug;
 		};
@@ -1094,6 +1090,7 @@
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = 84CS8BE5EQ;
 				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
 				MACOSX_DEPLOYMENT_TARGET = 15.6;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.hellyermultimedia.heckyeahtv.macOSHeckYeahTVTests;
@@ -1102,6 +1099,7 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/macOSHeckYeahTV.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/macOSHeckYeahTV";
+				TVOS_DEPLOYMENT_TARGET = 18.6;
 			};
 			name = Release;
 		};
@@ -1113,6 +1111,7 @@
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = 84CS8BE5EQ;
 				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
 				MACOSX_DEPLOYMENT_TARGET = 15.6;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.hellyermultimedia.heckyeahtv.macOSHeckYeahTVUITests;
@@ -1121,6 +1120,7 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TEST_TARGET_NAME = macOSHeckYeahTV;
+				TVOS_DEPLOYMENT_TARGET = 18.6;
 			};
 			name = Debug;
 		};
@@ -1132,6 +1132,7 @@
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = 84CS8BE5EQ;
 				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
 				MACOSX_DEPLOYMENT_TARGET = 15.6;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.hellyermultimedia.heckyeahtv.macOSHeckYeahTVUITests;
@@ -1140,6 +1141,7 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TEST_TARGET_NAME = macOSHeckYeahTV;
+				TVOS_DEPLOYMENT_TARGET = 18.6;
 			};
 			name = Release;
 		};
@@ -1179,6 +1181,7 @@
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = 84CS8BE5EQ;
+				DRIVERKIT_DEPLOYMENT_TARGET = 20.4;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -1196,9 +1199,9 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
-				MACOSX_DEPLOYMENT_TARGET = 15.0;
+				MACOSX_DEPLOYMENT_TARGET = 15.6;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -1206,7 +1209,9 @@
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				TVOS_DEPLOYMENT_TARGET = 18.0;
+				TVOS_DEPLOYMENT_TARGET = 18.6;
+				WATCHOS_DEPLOYMENT_TARGET = 8.7;
+				XROS_DEPLOYMENT_TARGET = 1.3;
 			};
 			name = Debug;
 		};
@@ -1246,6 +1251,7 @@
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 84CS8BE5EQ;
+				DRIVERKIT_DEPLOYMENT_TARGET = 20.4;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -1257,16 +1263,18 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
-				MACOSX_DEPLOYMENT_TARGET = 15.0;
+				MACOSX_DEPLOYMENT_TARGET = 15.6;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
-				TVOS_DEPLOYMENT_TARGET = 18.0;
+				TVOS_DEPLOYMENT_TARGET = 18.6;
 				VALIDATE_PRODUCT = YES;
+				WATCHOS_DEPLOYMENT_TARGET = 8.7;
+				XROS_DEPLOYMENT_TARGET = 1.3;
 			};
 			name = Release;
 		};
@@ -1297,9 +1305,10 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 15.6;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.hellyermultimedia.heckyeahtv.go;
-				PRODUCT_NAME = "Heck Yeah TV";
+				PRODUCT_NAME = HeckYeahTV;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -1308,7 +1317,7 @@
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TVOS_DEPLOYMENT_TARGET = 17.6;
+				TVOS_DEPLOYMENT_TARGET = 18.6;
 			};
 			name = Debug;
 		};
@@ -1339,9 +1348,10 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 15.6;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.hellyermultimedia.heckyeahtv.go;
-				PRODUCT_NAME = "Heck Yeah TV";
+				PRODUCT_NAME = HeckYeahTV;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -1350,7 +1360,7 @@
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TVOS_DEPLOYMENT_TARGET = 17.6;
+				TVOS_DEPLOYMENT_TARGET = 18.6;
 			};
 			name = Release;
 		};
@@ -1363,6 +1373,7 @@
 				DEVELOPMENT_TEAM = 84CS8BE5EQ;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
+				MACOSX_DEPLOYMENT_TARGET = 15.6;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.hellyermultimedia.heckyeahtv.Heck-Yeah-TVTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1370,6 +1381,7 @@
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Heck_Yeah_TV.app/Heck_Yeah_TV";
+				TVOS_DEPLOYMENT_TARGET = 18.6;
 			};
 			name = Debug;
 		};
@@ -1382,6 +1394,7 @@
 				DEVELOPMENT_TEAM = 84CS8BE5EQ;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
+				MACOSX_DEPLOYMENT_TARGET = 15.6;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.hellyermultimedia.heckyeahtv.Heck-Yeah-TVTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1389,6 +1402,7 @@
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Heck_Yeah_TV.app/Heck_Yeah_TV";
+				TVOS_DEPLOYMENT_TARGET = 18.6;
 			};
 			name = Release;
 		};
@@ -1400,6 +1414,7 @@
 				DEVELOPMENT_TEAM = 84CS8BE5EQ;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
+				MACOSX_DEPLOYMENT_TARGET = 15.6;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.hellyermultimedia.heckyeahtv.Heck-Yeah-TVUITests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1407,6 +1422,7 @@
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_TARGET_NAME = "Heck Yeah TV";
+				TVOS_DEPLOYMENT_TARGET = 18.6;
 			};
 			name = Debug;
 		};
@@ -1418,6 +1434,7 @@
 				DEVELOPMENT_TEAM = 84CS8BE5EQ;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
+				MACOSX_DEPLOYMENT_TARGET = 15.6;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.hellyermultimedia.heckyeahtv.Heck-Yeah-TVUITests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1425,6 +1442,7 @@
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_TARGET_NAME = "Heck Yeah TV";
+				TVOS_DEPLOYMENT_TARGET = 18.6;
 			};
 			name = Release;
 		};
@@ -1449,13 +1467,15 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UIRequiredDeviceCapabilities = arm64;
 				INFOPLIST_KEY_UIUserInterfaceStyle = Automatic;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 15.6;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.hellyermultimedia.heckyeahtv.go;
-				PRODUCT_NAME = "Heck Yeah TV";
+				PRODUCT_NAME = HeckYeahTV;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = appletvos;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -1486,13 +1506,15 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UIRequiredDeviceCapabilities = arm64;
 				INFOPLIST_KEY_UIUserInterfaceStyle = Automatic;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 15.6;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.hellyermultimedia.heckyeahtv.go;
-				PRODUCT_NAME = "Heck Yeah TV";
+				PRODUCT_NAME = HeckYeahTV;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = appletvos;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -1510,6 +1532,8 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 84CS8BE5EQ;
 				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
+				MACOSX_DEPLOYMENT_TARGET = 15.6;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.hellyermultimedia.heckyeahtv.Heck-Yeah-TVTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1530,6 +1554,8 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 84CS8BE5EQ;
 				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
+				MACOSX_DEPLOYMENT_TARGET = 15.6;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.hellyermultimedia.heckyeahtv.Heck-Yeah-TVTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1549,6 +1575,8 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 84CS8BE5EQ;
 				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
+				MACOSX_DEPLOYMENT_TARGET = 15.6;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.hellyermultimedia.heckyeahtv.Heck-Yeah-TVUITests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1568,6 +1596,8 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 84CS8BE5EQ;
 				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
+				MACOSX_DEPLOYMENT_TARGET = 15.6;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.hellyermultimedia.heckyeahtv.Heck-Yeah-TVUITests";
 				PRODUCT_NAME = "$(TARGET_NAME)";

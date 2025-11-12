@@ -37,7 +37,7 @@ extension CrossPlatformControllerRepresentable where PlatformViewController == U
 }
 #endif
 
-#if canImport(AppKit) && !targetEnvironment(macCatalyst)
+#if canImport(AppKit) //&& !targetEnvironment(macCatalyst)
 //MARK: - AppKit forwarding
 extension CrossPlatformControllerRepresentable where PlatformViewController == NSViewController {
     

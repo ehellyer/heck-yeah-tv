@@ -60,7 +60,7 @@ extension CrossPlatformRepresentable where PlatformView == UIView {
 }
 #endif
 
-#if canImport(AppKit) && !targetEnvironment(macCatalyst)
+#if canImport(AppKit) //&& !targetEnvironment(macCatalyst)
 //MARK: - AppKit forwarding
 extension CrossPlatformRepresentable where PlatformView == NSView {
     

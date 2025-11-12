@@ -18,19 +18,20 @@ struct MainAppContentView: View {
     @State private var appState: AppStateProvider = SharedAppState.shared
     
     @FocusState var hasFocus: Bool
-    
+
     // Focus scopes (Namespace) for isolating focus between guide and activation views
     @Namespace private var activationScope
 
     var body: some View {
         // Alignment required to layout the play/pause button in the bottom left corner.
         ZStack(alignment: .bottomLeading)  {
-            
+         
             VLCPlayerView(appState: $appState)
                 .ignoresSafeArea()
                 .accessibilityHidden(true)
                 .allowsHitTesting(false)
                 .focusable(false)
+
 
             if appState.isGuideVisible {
 #if os(tvOS)
@@ -38,8 +39,6 @@ struct MainAppContentView: View {
                 TabContainerView(appState: $appState)
                     .transition(.opacity)
                     .background(Color.black.opacity(0.65))
-#else
-                
 #endif
             }
 
@@ -90,6 +89,39 @@ struct MainAppContentView: View {
                 appState.isGuideVisible = true
             }
         })
+        
+        .sheet(isPresented: $appState.isGuideVisible) {
+            SectionView(appState: $appState)
+                .frame(minWidth: 800, idealWidth: 1200, maxWidth: 1400,
+                       minHeight: 300, idealHeight: 400, maxHeight: 600)
+                .toolbar {
+                    ToolbarItem(placement: .cancellationAction) {
+                        Button("Done") {
+                            appState.isGuideVisible = false
+                        }
+                    }
+                }
+        }
+        
+#endif
+        
+#if os(iOS)
+        .sheet(isPresented: $appState.isGuideVisible) {
+            SectionView(appState: $appState)
+                .presentationDetents([.fraction(0.5), .large])
+                .presentationDragIndicator(.visible)
+                .presentationBackground(.ultraThinMaterial)
+                .presentationBackgroundInteraction(.enabled(upThrough: .large))
+                .presentationCornerRadius(20)
+                .presentationCompactAdaptation(.sheet)
+                .toolbar {
+                    ToolbarItem(placement: .cancellationAction) {
+                        Button("Done") {
+                            appState.isGuideVisible = false
+                        }
+                    }
+                }
+        }
 #endif
     }
 }
@@ -98,7 +130,7 @@ extension MainAppContentView {
     
     /// Updates the visibility of the transient “Play” toast in response to the player's pause state.
     ///
-    /// When the player becomes paused, this presents the toast permenently. When the player
+    /// When the player becomes paused, this presents the toast permanently. When the player
     /// becomes unpaused (i.e., playing), this shows the toast for a short duration and then
     /// hides it automatically.
     ///

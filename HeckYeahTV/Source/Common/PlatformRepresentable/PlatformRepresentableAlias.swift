@@ -10,7 +10,7 @@ import SwiftUI
 
 //MARK: - Cross platform aliases
 
-#if canImport(AppKit) && !targetEnvironment(macCatalyst)
+#if canImport(AppKit) //&& !targetEnvironment(macCatalyst)
 
 import AppKit
 

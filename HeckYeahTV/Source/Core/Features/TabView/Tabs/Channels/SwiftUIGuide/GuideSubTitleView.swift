@@ -10,53 +10,75 @@ import SwiftUI
 
 struct GuideSubTitleView: View {
     
-    @State var channel: IPTVChannel
+    @Environment(\.redactionReasons) private var redactionReasons
+    @State var channel: IPTVChannel?
     
-    init(channel: IPTVChannel) {
-        self.channel = channel
+    var number: String {
+        if channel == nil {
+            return "Placeholder"
+        } else if let _number = channel?.number {
+            let spacer = (channel?.quality.name != nil) ? " " : ""
+            return _number + spacer
+        } else {
+            return ""
+        }
+    }
+    
+    var quality: String? {
+        if channel == nil {
+            return "PH"
+        } else {
+            return channel?.quality.name
+        }
     }
     
     var body: some View {
         HStack(spacing: 8) {
-            if let n = channel.number ?? (channel.quality.name == nil ? " " : nil) {
-                Text(n)
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-                    .lineLimit(1)
-                    .truncationMode(.tail)
-            }
-            if let quality = channel.quality.name {
-                Text(quality)
+            Text(number)
+                .font(.caption)
+                .foregroundStyle(.secondary)
+                .lineLimit(1)
+                 .truncationMode(.tail)
+            
+            if let _quality = quality {
+                Text(_quality)
                     .font(.caption2)
                     .lineLimit(1)
                     .truncationMode(.tail)
                     .padding(.horizontal, 2)
                     .padding(.vertical, 0)
-                    .overlay(RoundedRectangle(cornerRadius: 3).stroke())
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 3)
+                            .stroke(lineWidth: redactionReasons.contains(.placeholder) ? 0 : 1)
+                    )
             }
-            if channel.hasDRM {
+            if channel?.hasDRM == true {
                 Text("DRM")
                     .font(.caption2)
                     .lineLimit(1)
                     .truncationMode(.tail)
                     .padding(.horizontal, 2)
                     .padding(.vertical, 0)
-                    .overlay(RoundedRectangle(cornerRadius: 3).stroke())
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 3)
+                            .stroke(lineWidth: redactionReasons.contains(.placeholder) ? 0 : 1)
+                    )
             }
         }
     }
 }
 
-#if !os(tvOS)
 #Preview("GuideSubTitleView - loads from Mock SwiftData") {
-    @Previewable @State var appState = SharedAppState.shared
+    @Previewable @State var appState: AppStateProvider =
+    MockSharedAppState(isPlayerPaused: false,
+                       selectedChannel: "chan.movies.001")
     
     let mockData = MockDataPersistence(appState: appState)
     
     HStack {
-        GuideSubTitleView(channel: mockData.channels[1])
-            .environment(\.modelContext, mockData.context)
+        Spacer()
+        GuideSubTitleView(channel: mockData.channels[2])
+        //.redacted(reason: .placeholder)
         Spacer()
     }
 }
-#endif
