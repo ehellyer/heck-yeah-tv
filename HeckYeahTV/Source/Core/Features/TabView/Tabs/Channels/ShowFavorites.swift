@@ -22,6 +22,7 @@ struct ShowFavorites: View {
                 // Title
                 Text("Favorites")
                     .font(.title2)
+                    .foregroundStyle(.white)
                     .fontWeight(.bold)
                     .focusable(false)
                 
@@ -32,6 +33,7 @@ struct ShowFavorites: View {
                     Label(appState.showFavoritesOnly ? "On" : "Off",
                           systemImage: appState.showFavoritesOnly ? "star.fill" : "star")
                     .font(.caption)
+                    //.foregroundStyle(appState.showFavoritesOnly ? .yellow : .white)
                     .foregroundStyle(.yellow)
                 }
 #if os(tvOS)
