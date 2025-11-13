@@ -39,7 +39,7 @@ struct GuideRow: View {
                     channel?.isFavorite.toggle()
                 } label: {
                     Image(systemName: channel?.isFavorite == true ? "star.fill" : "star")
-                        .foregroundStyle(Color.yellow)
+                        .foregroundStyle(channel?.isFavorite == true ? Color.yellow : Color.white)
                         .padding(.horizontal, 7)
                         .padding(.vertical, 7.5)
                 }

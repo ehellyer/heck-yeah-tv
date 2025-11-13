@@ -95,25 +95,28 @@ struct MainAppContentView: View {
             NavigationStack {
                 SectionView(appState: $appState)
                     .navigationTitle(TabSection.channels.title)
+#if !os(macOS)
                     .navigationBarTitleDisplayMode(.inline)
                     .toolbarBackground(.visible, for: .navigationBar)
+#endif
                     .padding(.top, 10)
                     .toolbar {
                         ToolbarItem {
                             Menu {
-                                Picker("Category", selection: $appState.selectedTab) {
+                                Picker("", selection: $appState.selectedTab) {
                                     ForEach(TabSection.allCases) { tabSection in
                                         Text(tabSection.title).tag(tabSection)
                                     }
                                 }
                                 .pickerStyle(.inline)
+                                .labelsHidden()
                                 
                                 Toggle(isOn: $appState.showFavoritesOnly) {
                                     Label("Favorites only", systemImage: "star.fill")
                                 }
                                 
                             } label: {
-                                Label("Filter", systemImage: "slider.horizontal.3")
+                                Label("", systemImage: "slider.horizontal.3")
                             }
                         }
                         ToolbarItem(placement: .cancellationAction) {
@@ -199,6 +202,6 @@ extension MainAppContentView {
         .onAppear {
             _appState.selectedChannel = mockData.channelMap.map[2]
             _appState.isGuideVisible = true
-            _appState.showFavoritesOnly = true
+            _appState.showFavoritesOnly = false
         }
 }
