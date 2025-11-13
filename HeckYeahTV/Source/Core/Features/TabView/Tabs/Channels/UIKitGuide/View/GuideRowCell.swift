@@ -159,12 +159,13 @@ class GuideRowCell: UITableViewCell {
         programsMaskView.viewWithTag(EmptyProgramView.viewTypeTagId)?.removeFromSuperview()
         
         if channelId == nil || programs.count == 0 {
+            // Add 'No guide information' view.
             let emptyProgramView = EmptyProgramView(frame: CGRect.zero)
             emptyProgramView.configure(isPlaying: isPlaying, isLoading: (channelId == nil))
             programsMaskView.addSubview(emptyProgramView)
             emptyProgramView.fillSuperview()
         } else {
-            // Add new program views
+            // Add program views
             for program in programs {
                 let programView = ProgramView()
                 programView.delegate = self.delegate

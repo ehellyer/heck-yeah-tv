@@ -77,15 +77,13 @@ class EmptyProgramView: UIView {
             return
         }
         
-        NSLayoutConstraint.activate([
-            self.topAnchor.constraint(equalTo: superview.topAnchor),
-            self.leadingAnchor.constraint(equalTo: superview.leadingAnchor, constant: 20),
-            superview.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: 30),
-            self.bottomAnchor.constraint(equalTo: superview.bottomAnchor)
-        ])
+        self.topAnchor.constraint(equalTo: superview.topAnchor).isActive = true
+        self.leadingAnchor.constraint(equalTo: superview.leadingAnchor, constant: 20).isActive = true
+        superview.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: 30).isActive = true
+        self.bottomAnchor.constraint(equalTo: superview.bottomAnchor).isActive = true
         
-        self.setContentHuggingPriority(.init(1), for: .horizontal)
-        self.setContentHuggingPriority(.init(1), for: .vertical)
+        self.setContentHuggingPriority(UILayoutPriority(1), for: .horizontal)
+        self.setContentHuggingPriority(UILayoutPriority(1), for: .vertical)
     }
 }
 
