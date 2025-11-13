@@ -10,9 +10,9 @@ import UIKit
 
 /// Soft-clips (fades out) content on the left/right edges.
 /// `leftClip` / `rightClip` are fade widths (pts) from opaque → transparent.
-final class HorizontalClipContainer: PlatformView {
+final class HorizontalClipContainer: UIView {
     
-    //MARK: - PlatformView Overrides
+    //MARK: - UIView Overrides
     
 //    deinit {
 //        logDebug("Deallocated")
@@ -28,10 +28,10 @@ final class HorizontalClipContainer: PlatformView {
         gradientMask.startPoint = CGPoint(x: 0, y: 0.5)
         gradientMask.endPoint = CGPoint(x: 1, y: 0.5)
         gradientMask.colors = [
-            PlatformColor.black.withAlphaComponent(0).cgColor,
-            PlatformColor.black.cgColor,
-            PlatformColor.black.cgColor,
-            PlatformColor.black.withAlphaComponent(0).cgColor
+            UIColor.black.withAlphaComponent(0).cgColor,
+            UIColor.black.cgColor,
+            UIColor.black.cgColor,
+            UIColor.black.withAlphaComponent(0).cgColor
         ]
         
         // Apply the gradient as an alpha mask

@@ -10,9 +10,9 @@ import UIKit
 import Combine
 import SwiftData
 
-class GuideRowCell: PlatformTableViewCell {
+class GuideRowCell: UITableViewCell {
     
-    //MARK: - PlatformTableViewCell overrides
+    //MARK: - UITableViewCell overrides
     
 //    deinit  {
 //        logDebug("Deallocated")
@@ -96,15 +96,17 @@ class GuideRowCell: PlatformTableViewCell {
         return view
     }()
 
-    private lazy var rowStackView: PlatformStackView = {
-        let view = PlatformUtils.createStackView(axis: .horizontal)
-        view.alignment = .fill
-        view.distribution = .fill
-        view.spacing = 35
-        view.addArrangedSubview(favoriteButtonView)
-        view.addArrangedSubview(channelNameView)
-        view.addArrangedSubview(programsMaskView)
-        return view
+    private lazy var rowStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.axis = .horizontal
+        stackView.spacing = 35
+        stackView.distribution = .fill
+        stackView.alignment = .fill
+        stackView.addArrangedSubview(favoriteButtonView)
+        stackView.addArrangedSubview(channelNameView)
+        stackView.addArrangedSubview(programsMaskView)
+        return stackView
     }()
     
     private lazy var programsMaskView: HorizontalClipContainer = {
@@ -121,8 +123,11 @@ class GuideRowCell: PlatformTableViewCell {
         return view
     }()
     
-    private lazy var programsScrollView: PlatformScrollView = {
-        let scrollView = PlatformUtils.createScrollView()
+    private lazy var programsScrollView: UIScrollView = {
+        let scrollView = UIScrollView()
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        scrollView.showsHorizontalScrollIndicator = true
+        scrollView.showsVerticalScrollIndicator = false
         scrollView.addSubview(programsStackView)
         scrollView.leadingAnchor.constraint(equalTo: programsStackView.leadingAnchor).isActive = true
         programsStackView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor).isActive = true
@@ -133,15 +138,17 @@ class GuideRowCell: PlatformTableViewCell {
         return scrollView
     }()
     
-    private lazy var programsStackView: PlatformStackView = {
-        let view = PlatformUtils.createStackView(axis: .horizontal)
-        view.spacing = 25
-        view.distribution = .fill
-        view.clipsToBounds = false
-        view.layer.masksToBounds = false
-        view.backgroundColor = .clear
-        view.alignment = .fill
-        return view
+    private lazy var programsStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.axis = .horizontal
+        stackView.spacing = 25
+        stackView.distribution = .fill
+        stackView.alignment = .fill
+        stackView.clipsToBounds = false
+        stackView.layer.masksToBounds = false
+        stackView.backgroundColor = .clear
+        return stackView
     }()
     
     //MARK: - Private API

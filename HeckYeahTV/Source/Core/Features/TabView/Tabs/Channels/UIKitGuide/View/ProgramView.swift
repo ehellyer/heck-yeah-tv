@@ -8,9 +8,9 @@
 
 import UIKit
 
-class ProgramView: CrossPlatformView {
+class ProgramView: UIView {
     
-    //MARK: - PlatformView Overrides
+    //MARK: - UIView Overrides
     
 //    deinit {
 //        logDebug("Deallocated")
@@ -29,7 +29,7 @@ class ProgramView: CrossPlatformView {
         clipsToBounds = true
         
         // Bootstrap the lazy loading.
-        stackContainerView.bgColor = .clear
+        stackContainerView.backgroundColor = .clear
         stackView.addArrangedSubview(timeLabel)
         stackView.addArrangedSubview(titleLabel)
         self.addGestureRecognizer(longTapGesture)
@@ -43,8 +43,9 @@ class ProgramView: CrossPlatformView {
     
     //MARK: - Private API - View lazy binding.
     
-    private lazy var stackContainerView: CrossPlatformView = {
-        let view = PlatformUtils.createView()
+    private lazy var stackContainerView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
         addSubview(view)
         view.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20).isActive = true
         trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 20).isActive = true
@@ -52,35 +53,39 @@ class ProgramView: CrossPlatformView {
         bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 20).isActive = true
         return view
     }()
-    private lazy var stackView: PlatformStackView = {
-        let view = PlatformUtils.createStackView(axis: .vertical)
-        stackContainerView.addSubview(view)
-        view.leadingAnchor.constraint(equalTo: stackContainerView.leadingAnchor, constant: 0).isActive = true
-        stackContainerView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 0).isActive = true
-        view.topAnchor.constraint(equalTo: stackContainerView.topAnchor, constant: 0).isActive = true
-        stackContainerView.bottomAnchor.constraint(greaterThanOrEqualTo: view.bottomAnchor, constant: 0).isActive = true
-        view.distribution = .fill
-        view.alignment = .fill
-        view.spacing = 2
-        return view
+    private lazy var stackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.axis = .vertical
+        stackView.spacing = 2
+        stackView.distribution = .fill
+        stackView.alignment = .fill
+        stackContainerView.addSubview(stackView)
+        stackView.leadingAnchor.constraint(equalTo: stackContainerView.leadingAnchor, constant: 0).isActive = true
+        stackContainerView.trailingAnchor.constraint(equalTo: stackView.trailingAnchor, constant: 0).isActive = true
+        stackView.topAnchor.constraint(equalTo: stackContainerView.topAnchor, constant: 0).isActive = true
+        stackContainerView.bottomAnchor.constraint(greaterThanOrEqualTo: stackView.bottomAnchor, constant: 0).isActive = true
+        return stackView
     }()
-    private lazy var titleLabel: CrossPlatformLabel = {
-        let label = PlatformUtils.createLabel()
-        label.lineLimit = 3
+    private lazy var titleLabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.numberOfLines = 3
         label.font = AppStyle.Fonts.programTitleFont
-        label.textColor = PlatformColor(named: "GuideForegroundNoFocus")
+        label.textColor = .guideForegroundNoFocus
         return label
     }()
-    private lazy var timeLabel: CrossPlatformLabel = {
-        let label = PlatformUtils.createLabel()
-        label.font = AppStyle.Fonts.programTimeFont
-        label.textColor = PlatformColor(named: "GuideForegroundNoFocus")
-        label.setContentCompressionResistancePriority(.required, for: .vertical)
+    private lazy var timeLabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
         label.numberOfLines = 1
+        label.font = AppStyle.Fonts.programTimeFont
+        label.textColor = .guideForegroundNoFocus
+        label.setContentCompressionResistancePriority(.required, for: .vertical)
         return label
     }()
-    private lazy var longTapGesture: PlatformPressGestureRecognizer = {
-        let gesture = PlatformPressGestureRecognizer(target: self, action: #selector(viewTapped))
+    private lazy var longTapGesture: UILongPressGestureRecognizer = {
+        let gesture = UILongPressGestureRecognizer(target: self, action: #selector(viewTapped))
         gesture.cancelsTouchesInView = false
         gesture.minimumPressDuration = 0
         gesture.allowableMovement = 12
@@ -89,7 +94,7 @@ class ProgramView: CrossPlatformView {
     
     //MARK: - Private API - Actions and action view modifiers
     
-    @objc private func viewTapped(_ gesture: PlatformPressGestureRecognizer) {
+    @objc private func viewTapped(_ gesture: UILongPressGestureRecognizer) {
         switch gesture.state {
             case .began:
                 onTapDownFocusEffect()
@@ -122,9 +127,9 @@ class ProgramView: CrossPlatformView {
     func configure(with program: Program?, channelId: ChannelId?, isPlaying: Bool) {
         self.channelId = channelId
         self.program = program
-        bgColor = (isPlaying) ? PlatformColor(named: "GuideSelectedChannelBackground") : PlatformColor(named: "GuideBackgroundNoFocus")
-        titleLabel.textValue = program?.title
-        timeLabel.textValue = program?.timeSlot
+        backgroundColor = (isPlaying) ? .guideSelectedChannelBackground : .guideBackgroundNoFocus
+        titleLabel.text = program?.title
+        timeLabel.text = program?.timeSlot
     }
 }
 

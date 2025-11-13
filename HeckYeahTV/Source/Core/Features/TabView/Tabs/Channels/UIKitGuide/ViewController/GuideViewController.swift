@@ -10,9 +10,9 @@ import UIKit
 import SwiftData
 import Observation
 
-class GuideViewController: PlatformViewController {
+class GuideViewController: UIViewController {
 
-    //MARK: - PlatformViewController overrides
+    //MARK: - UIViewController overrides
     
     deinit {
         logDebug("Deallocated")
@@ -60,10 +60,11 @@ class GuideViewController: PlatformViewController {
     
     //MARK: - Private API - Lazy binding vars
     
-    private weak var targetFocusView: PlatformView?
+    private weak var targetFocusView: UIView?
     
-    private lazy var tableView: PlatformTableView = {
-        let _tableView = PlatformUtils.createTableView()
+    private lazy var tableView: UITableView = {
+        let _tableView = UITableView()
+        _tableView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(_tableView)
         _tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         view.trailingAnchor.constraint(equalTo: _tableView.trailingAnchor).isActive = true
@@ -217,7 +218,7 @@ class GuideViewController: PlatformViewController {
         }
     }
     
-    private func requestFocus(on view: PlatformView) {
+    private func requestFocus(on view: UIView) {
         guard view.canBecomeFocused else {
             logDebug("View is not a focusable view")
             return

@@ -8,9 +8,9 @@
 
 import UIKit
 
-class EmptyProgramView: CrossPlatformView {
+class EmptyProgramView: UIView {
     
-    //MARK: - PlatformView Overrides
+    //MARK: - UIView Overrides
     
 //    deinit {
 //        logDebug("Deallocated")
@@ -53,8 +53,9 @@ class EmptyProgramView: CrossPlatformView {
     
     //MARK: - Private API - View lazy binding.
     
-    private lazy var timeLabel: CrossPlatformLabel = {
-        let label = PlatformUtils.createLabel()
+    private lazy var timeLabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
         label.font = AppStyle.Fonts.programTimeFont
         label.textColor = .white
         label.textAlignment = .center
@@ -66,8 +67,8 @@ class EmptyProgramView: CrossPlatformView {
     //MARK: - Internal API
     
     func configure(isPlaying: Bool, isLoading: Bool) {
-        timeLabel.textValue = isLoading ? "" : "No Guide Information"
-        bgColor = (isPlaying) ? PlatformColor(named: "GuideSelectedChannelBackground") : PlatformColor(named: "GuideBackgroundNoFocus")
+        timeLabel.text = isLoading ? "" : "No Guide Information"
+        backgroundColor = (isPlaying) ? .guideSelectedChannelBackground : .guideBackgroundNoFocus
     }
     
     func fillSuperview() {

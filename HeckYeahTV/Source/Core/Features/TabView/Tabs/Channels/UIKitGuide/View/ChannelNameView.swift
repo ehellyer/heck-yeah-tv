@@ -9,9 +9,9 @@
 import UIKit
 
 @MainActor
-class ChannelNameView: CrossPlatformView {
+class ChannelNameView: UIView {
 
-    //MARK: - PlatformView Overrides
+    //MARK: - UIView Overrides
     
 //    deinit {
 //        logDebug("Deallocated")
@@ -24,8 +24,7 @@ class ChannelNameView: CrossPlatformView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        bgColor = PlatformColor(named: "GuideBackgroundNoFocus")
-
+        backgroundColor = .guideBackgroundNoFocus
         layer.masksToBounds = true
         layer.cornerRadius = GuideRowCell.viewCornerRadius
         clipsToBounds = true
@@ -47,8 +46,12 @@ class ChannelNameView: CrossPlatformView {
         bottomAnchor.constraint(equalTo: channelInfoStackView.bottomAnchor, constant: 20).isActive = true
     }
     
-    private lazy var channelInfoStackView: PlatformStackView = {
-        let stackView = PlatformUtils.createStackView(axis: .vertical)
+    private lazy var channelInfoStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.axis = .vertical
+        stackView.spacing = 8
+        stackView.distribution = .fill
         stackView.setContentCompressionResistancePriority(.required, for: .vertical)
         stackView.alignment = .leading
         stackView.addArrangedSubview(titleLabel)
@@ -57,44 +60,51 @@ class ChannelNameView: CrossPlatformView {
         return stackView
     }()
     
-    private lazy var subTextStackView: PlatformStackView = {
-        let stackView = PlatformUtils.createStackView(axis: .horizontal)
-        stackView.alignment = UIStackView.Alignment.center
-        stackView.setContentHuggingPriority(.required, for: .vertical)
+    private lazy var subTextStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.axis = .horizontal
+        stackView.spacing = 8
         stackView.distribution = .fill
+        stackView.setContentHuggingPriority(.required, for: .vertical)
+        stackView.alignment = .center
         stackView.addArrangedSubview(numberLabel)
         stackView.addArrangedSubview(qualityImageView)
         return stackView
     }()
     
-    private lazy var titleLabel: CrossPlatformLabel = {
-        let label = PlatformUtils.createLabel()
+    private lazy var titleLabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
         label.font = AppStyle.Fonts.titleFont
         label.setContentHuggingPriority(.required, for: .vertical)
         label.textColor = .white
-        label.lineLimit = 1
+        label.numberOfLines = 1
         return label
     }()
     
-    private lazy var numberLabel: CrossPlatformLabel = {
-        let label = PlatformUtils.createLabel()
+    private lazy var numberLabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
         label.font = AppStyle.Fonts.subtitleFont
         label.setContentHuggingPriority(.required, for: .vertical)
         label.textColor = .white
-        label.lineLimit = 1
+        label.numberOfLines = 1
         return label
     }()
     
-    private lazy var qualityImageView: PlatformImageView = {
-        let imageView = PlatformUtils.createImageView()
+    private lazy var qualityImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.setContentCompressionResistancePriority(.required, for: .horizontal)
         imageView.contentMode = .scaleAspectFit
         imageView.tintColor = .white
         return imageView
     }()
     
-    private lazy var logoImageView: PlatformImageView = {
-        let imageView = PlatformUtils.createImageView()
+    private lazy var logoImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFit
         imageView.setContentCompressionResistancePriority(.required, for: .horizontal)
         imageView.widthAnchor.constraint(equalToConstant: 35).isActive = true
@@ -103,8 +113,8 @@ class ChannelNameView: CrossPlatformView {
         return imageView
     }()
     
-    private lazy var longTapGesture: PlatformPressGestureRecognizer = {
-        let gesture = PlatformPressGestureRecognizer(target: self, action: #selector(viewTapped))
+    private lazy var longTapGesture: UILongPressGestureRecognizer = {
+        let gesture = UILongPressGestureRecognizer(target: self, action: #selector(viewTapped))
         gesture.cancelsTouchesInView = false
         gesture.minimumPressDuration = 0
         gesture.allowableMovement = 12
@@ -113,7 +123,7 @@ class ChannelNameView: CrossPlatformView {
     
     //MARK: - Private API - Actions and action view modifiers
     
-    @objc private func viewTapped(_ gesture: PlatformPressGestureRecognizer) {
+    @objc private func viewTapped(_ gesture: UILongPressGestureRecognizer) {
         switch gesture.state {
             case .began:
                 onTapDownFocusEffect()
@@ -145,14 +155,14 @@ class ChannelNameView: CrossPlatformView {
     
     func configure(with channel: IPTVChannel?, isPlaying: Bool) {
         self.channelId = channel?.id
-        bgColor = (isPlaying) ? PlatformColor(named: "GuideSelectedChannelBackground") : PlatformColor(named: "GuideBackgroundNoFocus")
+        backgroundColor = (isPlaying) ? .guideSelectedChannelBackground : .guideBackgroundNoFocus
         
-        titleLabel.textValue = channel?.title ?? " "
-        numberLabel.textValue = channel?.number ?? " "
+        titleLabel.text = channel?.title ?? " "
+        numberLabel.text = channel?.number ?? " "
         qualityImageView.image = channel?.quality.image
         
         if qualityImageView.image != nil {
-            numberLabel.textValue = numberLabel.textValue?.trim()
+            numberLabel.text = numberLabel.text?.trim()
         }
     }
 }

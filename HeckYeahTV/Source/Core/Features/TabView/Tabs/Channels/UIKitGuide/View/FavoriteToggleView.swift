@@ -9,9 +9,9 @@
 import UIKit
 
 @MainActor
-class FavoriteToggleView: CrossPlatformView {
+class FavoriteToggleView: UIView {
     
-    //MARK: - PlatformView Overrides
+    //MARK: - UIView Overrides
     
 //    deinit {
 //        logDebug("Deallocated")
@@ -42,8 +42,9 @@ class FavoriteToggleView: CrossPlatformView {
     
     private var width: CGFloat = 60.0
     
-    private lazy var imageView: PlatformImageView = {
-        let view = PlatformUtils.createImageView()
+    private lazy var imageView: UIImageView = {
+        let view = UIImageView()
+        view.translatesAutoresizingMaskIntoConstraints = false
         addSubview(view)
         view.widthAnchor.constraint(equalToConstant: width).isActive = true
         let heightConstraint = view.heightAnchor.constraint(equalToConstant: width)
@@ -59,8 +60,8 @@ class FavoriteToggleView: CrossPlatformView {
         return view
     }()
     
-    private lazy var longTapGesture: PlatformPressGestureRecognizer = {
-        let gesture = PlatformPressGestureRecognizer(target: self, action: #selector(viewTapped))
+    private lazy var longTapGesture: UILongPressGestureRecognizer = {
+        let gesture = UILongPressGestureRecognizer(target: self, action: #selector(viewTapped))
         gesture.cancelsTouchesInView = false
         gesture.minimumPressDuration = 0
         gesture.allowableMovement = 12
@@ -75,7 +76,7 @@ class FavoriteToggleView: CrossPlatformView {
     
     //MARK: - Private API - Actions and action view modifiers
     
-    @objc private func viewTapped(_ gesture: PlatformPressGestureRecognizer) {
+    @objc private func viewTapped(_ gesture: UILongPressGestureRecognizer) {
         switch gesture.state {
             case .began:
                 onTapDownFocusEffect()
@@ -116,7 +117,7 @@ class FavoriteToggleView: CrossPlatformView {
     func configure(with channel: IPTVChannel?, isPlaying: Bool) {
         self.channelId = channel?.id
         let isFavorite = (channel?.isFavorite == true)
-        bgColor = (isPlaying) ? PlatformColor(named: "GuideSelectedChannelBackground") : PlatformColor(named: "GuideBackgroundNoFocus")
+        backgroundColor = (isPlaying) ? .guideSelectedChannelBackground : .guideBackgroundNoFocus
 
         if (channel == nil) {
             imageView.layer.opacity = 0.0

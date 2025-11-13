@@ -29,7 +29,6 @@ struct GuideViewRepresentable: CrossPlatformControllerRepresentable {
     }
     
     func updateViewController(_ viewController: PlatformViewController, context: Context) {
-        //guard let controller = viewController as? GuideViewController else { return }
         let controller = context.coordinator.guideController
         controller.appState = appState
         controller.channelMap = channelMap

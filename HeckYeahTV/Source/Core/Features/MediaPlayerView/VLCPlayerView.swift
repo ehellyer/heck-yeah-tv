@@ -84,7 +84,7 @@ struct VLCPlayerView: CrossPlatformRepresentable {
         
         // Platform view that VLC renders into
         lazy var platformView: PlatformView = {
-            let view = PlatformUtils.createView()
+            let view = PlatformView()
 #if os(macOS)
             view.wantsLayer = true
             view.layer?.backgroundColor = PlatformColor.black.cgColor

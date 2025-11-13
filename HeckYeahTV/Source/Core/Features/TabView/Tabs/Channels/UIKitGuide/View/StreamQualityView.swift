@@ -27,7 +27,7 @@ extension StreamQuality {
     ///
     /// - Returns: A cached `PlatformImage` ready for your UI, or `nil` if the quality is unknown
     ///           (or if the universe decides to throw a tantrum and image rendering fails).
-    var image: PlatformImage? {
+    var image: UIImage? {
         let streamQuality = self
         guard streamQuality != .unknown else {
             return nil
@@ -48,7 +48,7 @@ extension StreamQuality {
     /// The sacred cache where we store our precious rendered images.
     ///
     /// Built once, reused forever (or until the app terminates). This is peak efficiency, folks.
-    private static var cachedImages: [StreamQuality: PlatformImage] = [:]
+    private static var cachedImages: [StreamQuality: UIImage] = [:]
 }
 
 /// A view that renders a stream quality badge with rounded corners and a border.
@@ -61,7 +61,7 @@ extension StreamQuality {
 /// quality text like "HD", "FHD", "4K", etc. Perfect for when you want to
 /// flex about your streaming resolution.
 @MainActor
-class StreamQualityView: PlatformView {
+class StreamQualityView: UIView {
     
     // MARK: - Initialization
     
@@ -106,10 +106,11 @@ class StreamQualityView: PlatformView {
         tag = Self.viewTypeTagId
         
         // Create the label that will show our quality text
-        let label = PlatformUtils.createLabel()
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
         label.font = AppStyle.Fonts.streamQualityFont
         label.textColor = .white
-        label.textValue = streamQuality.name
+        label.text = streamQuality.name
         
         // Set up Auto Layout constraints - padding of 5pt horizontal, 3pt vertical
         // because we're not animals who put text right up against the border
@@ -129,9 +130,9 @@ class StreamQualityView: PlatformView {
         // Same visual result on all platforms, different APIs because... reasons
         layer.cornerRadius = 6
         layer.borderWidth = 1
-        layer.borderColor = PlatformColor.white.cgColor
+        layer.borderColor = UIColor.white.cgColor
         layer.masksToBounds = false
-        self.backgroundColor = PlatformColor.clear
+        self.backgroundColor = .clear
     }
     
     // MARK: - Constants
