@@ -62,7 +62,7 @@ private extension GuideView {
     private func rebuildChannelMap() {
         // Cancel any prior rebuild task if you want to coalesce rapid toggles
         rebuildChannelMapTask?.cancel()
-        let container = DataPersistence.shared.container
+        let container = viewContext.container
         rebuildChannelMapTask = Task.detached {
             do {
                 try await Task.sleep(nanoseconds: debounceNS)

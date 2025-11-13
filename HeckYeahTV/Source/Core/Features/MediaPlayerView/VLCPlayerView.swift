@@ -22,6 +22,7 @@ struct VLCPlayerView: CrossPlatformRepresentable {
     //MARK: - Binding and State
     
     @Environment(\.scenePhase) private var scenePhase
+    @Environment(\.modelContext) private var viewContext
     @Binding var appState: AppStateProvider
 
     private var selectedChannelId: ChannelId? { appState.selectedChannel }
@@ -29,7 +30,7 @@ struct VLCPlayerView: CrossPlatformRepresentable {
     //MARK: - CrossPlatformRepresentable overrides
 
     func makeCoordinator() -> VLCPlayerView.Coordinator {
-        VLCPlayerView.Coordinator()
+        VLCPlayerView.Coordinator(viewContext: viewContext)
     }
     
     func makeView(context: Context) -> PlatformView {
@@ -56,10 +57,14 @@ struct VLCPlayerView: CrossPlatformRepresentable {
     
     @MainActor
     final class Coordinator: NSObject {
+
+        init(viewContext: ModelContext) {
+            self.viewContext = viewContext
+        }
         
         //MARK: - Private API
         
-        private lazy var viewContext = DataPersistence.shared.viewContext
+        private var viewContext: ModelContext
         
         private lazy var mediaPlayer: VLCMediaPlayer = {
             let _player = VLCMediaPlayer()

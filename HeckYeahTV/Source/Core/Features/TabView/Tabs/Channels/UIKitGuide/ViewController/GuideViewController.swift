@@ -84,7 +84,6 @@ class GuideViewController: PlatformViewController {
     
     typealias SectionModel = Int
     private var section: SectionModel = 0
-    private lazy var viewContext = DataPersistence.shared.viewContext
     private var reloadTableViewTask: Task<Void, Never>? = nil
     
     //TODO: Integrate program data into IPTVChannel
@@ -239,6 +238,9 @@ class GuideViewController: PlatformViewController {
     
     // Set by GuideViewRepresentable.Coordinator
     var channelMap: ChannelMap!
+    
+    // Set by GuideViewRepresentable.Coordinator
+    var viewContext: ModelContext!
 }
 
 //MARK: - GuideViewDelegate protocol

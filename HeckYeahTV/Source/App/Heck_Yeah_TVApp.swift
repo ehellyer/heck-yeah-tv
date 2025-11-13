@@ -16,6 +16,7 @@ struct Heck_Yeah_TVApp: App {
     @State private var isBootComplete = false
     @State private var startupTask: Task<Void, Never>? = nil
     @State private var channelMap: ChannelMap = ChannelMap(map: [])
+    @State private var dataPersistence: DataPersistence = DataPersistence.shared
     
     var body: some Scene {
         WindowGroup {
@@ -29,8 +30,8 @@ struct Heck_Yeah_TVApp: App {
                         startupTask?.cancel()
                     }
                 }
-                .modelContainer(DataPersistence.shared.container)
-                .modelContext(DataPersistence.shared.viewContext)
+                .modelContainer(dataPersistence.container)
+                .modelContext(dataPersistence.viewContext)
                 .environment(channelMap)
         }
     }
@@ -57,7 +58,7 @@ struct Heck_Yeah_TVApp: App {
                 logError("\(summary.failures.count) failure(s) in bootstrap data fetch: \(summary.failures)")
             }
             
-            let container = DataPersistence.shared.container
+            let container = dataPersistence.container
             Task.detached(priority: .userInitiated) {
                 let importer = ChannelImporter(container: container)
                 try await importer.importChannels(streams: iptvController.streams, tunerChannels: hdHomeRunController.channels)

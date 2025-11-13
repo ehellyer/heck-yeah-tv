@@ -194,11 +194,11 @@ extension MainAppContentView {
     let mockData = MockDataPersistence(appState: _appState)
     
     MainAppContentView(appState: _appState)
-        .environment(\.modelContext, mockData.context)
+        .modelContext(mockData.context)
         .environment(mockData.channelMap)
         .onAppear {
             _appState.selectedChannel = mockData.channelMap.map[2]
             _appState.isGuideVisible = true
-            
+            _appState.showFavoritesOnly = true
         }
 }

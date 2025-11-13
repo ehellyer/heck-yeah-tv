@@ -7,11 +7,13 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct ChannelsContainer: View {
     
     @Binding var appState: AppStateProvider
     @Environment(ChannelMap.self) private var channelMap
+    @Environment(\.modelContext) private var viewContext
     @FocusState private var isFocused: Bool
     
     @State private var scrollToSelectedAndFocus: Bool = false
@@ -53,7 +55,7 @@ struct ChannelsContainer: View {
 extension ChannelsContainer {
     func rebuildChannelMap() async {
         // Access the @MainActor DataPersistence singleton here
-        let container = DataPersistence.shared.container
+        let container = viewContext.container
         do {
             // ChannelImporter is an actor; its async methods run in its isolation without blocking the main actor.
             let importer = ChannelImporter(container: container)
