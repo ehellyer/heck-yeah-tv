@@ -11,6 +11,10 @@ import SwiftData
 
 struct GuideRow: View {
     let corner: CGFloat = 10
+    let horizontalPadding: CGFloat = 15
+    let verticalPadding: CGFloat = 15
+    let cornerRadius: CGFloat = 20
+    let backgroundColor: Color = Color.gray
     
     @State var channel: IPTVChannel?
     @Binding var appState: AppStateProvider
@@ -28,51 +32,87 @@ struct GuideRow: View {
     }
     
     var body: some View {
-        HStack(spacing: 10) {
+        GeometryReader { geometry in
+            HStack(alignment: .center, spacing: 0) {
 
-            Button {
-                channel?.isFavorite.toggle()
-            } label: {
-                Image(systemName: channel?.isFavorite == true ? "star.fill" : "star")
-                    .foregroundStyle(Color.yellow)
-                    .padding(.horizontal, 7)
-                    .padding(.vertical, 7.5)
-            }
-            
-            Button {
-                appState.selectedChannel = channel?.id
-            } label: {
-                VStack(alignment: .leading, spacing: 2) {
-                    Text(channel?.title ?? "Placeholder")
-                        .font(.headline)
-                        .lineLimit(1)
-                        .truncationMode(.tail)
-                        
-                    GuideSubTitleView(channel: channel)
-                }
-            }
-
-            if (isLandscape) {
                 Button {
-                    // No op
+                    channel?.isFavorite.toggle()
                 } label: {
-                    Text("No guide information")
+                    Image(systemName: channel?.isFavorite == true ? "star.fill" : "star")
+                        .foregroundStyle(Color.yellow)
+                        .padding(.horizontal, 7)
+                        .padding(.vertical, 7.5)
                 }
-                .frame(maxWidth: .infinity, alignment: .center)
-                .contentShape(Rectangle())
-                .disabled(true)
+                .padding(.horizontal, horizontalPadding)
+                .padding(.vertical, verticalPadding)
+                .background(
+                    RoundedRectangle(cornerRadius: cornerRadius)
+                        .fill(backgroundColor)
+                )
+                .padding(.leading, 10)
+                
+                Button {
+                    appState.selectedChannel = channel?.id
+                } label: {
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(channel?.title ?? "Placeholder")
+                            .font(.headline)
+                            .foregroundStyle(.guideForegroundNoFocus)
+                            .lineLimit(1)
+                            .truncationMode(.tail)
+                            
+                        GuideSubTitleView(channel: channel)
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                }
+                .frame(width: isLandscape ? (geometry.size.width * 0.2) : nil)
+                .frame(maxWidth: isLandscape ? nil : .infinity)
+                .padding(.horizontal, horizontalPadding)
+                .padding(.vertical, verticalPadding)
+                .background(
+                    RoundedRectangle(cornerRadius: cornerRadius)
+                        .fill(backgroundColor)
+                )
+                .padding(.leading, 10)
+                
+                if (isLandscape) {
+                    Button {
+                        // No op
+                    } label: {
+                        Text("No guide information")
+                            .foregroundStyle(.guideForegroundNoFocus)
+                            .frame(maxHeight: .infinity)
+                    }
+                    .frame(maxWidth: .infinity)
+                    .contentShape(Rectangle())
+                    .padding(.horizontal, horizontalPadding)
+                    .padding(.vertical, verticalPadding)
+                    .background(
+                        RoundedRectangle(cornerRadius: cornerRadius)
+                            .fill(backgroundColor)
+                    )
+                    .disabled(true)
+                    .padding(.leading, 10)
+                    .padding(.trailing, 10)
+                }
+                
+                if !isLandscape {
+                    Spacer()
+                }
             }
-            Spacer()
-        }
-        .background {
-            if isPlaying {
-                RoundedRectangle(cornerRadius: corner, style: .continuous)
-                    .fill(Color.selectedChannel)
-                    .padding(-5) // Extend effect visually beyond the row (bleed out)
-                    .allowsHitTesting(false)
-                    .accessibilityHidden(true)
+            .fixedSize(horizontal: false, vertical: true)
+            .background {
+                if isPlaying {
+                    RoundedRectangle(cornerRadius: corner, style: .continuous)
+                        .fill(Color.guideSelectedChannelBackground)
+                        .padding(.top, -4)
+                        .padding(.bottom, -4)
+                        .allowsHitTesting(false)
+                        .accessibilityHidden(true)
+                }
             }
         }
+        .fixedSize(horizontal: false, vertical: true)
     }
 }
 
@@ -82,5 +122,8 @@ struct GuideRow: View {
     let mockData = MockDataPersistence(appState: appState)
     GuideRow(channel: mockData.channels[2], appState: $appState)
         //.redacted(reason: .placeholder)
+        .onAppear {
+            appState.selectedChannel = mockData.channels[2].id
+        }
 }
 #endif

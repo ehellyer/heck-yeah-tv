@@ -15,7 +15,7 @@ struct MainAppContentView: View {
     
     @State private var fadeTask: Task<Void, Never>?
     @State private var showPlayPauseButton = false
-    @State private var appState: AppStateProvider = SharedAppState.shared
+    @State var appState: AppStateProvider = SharedAppState.shared
     
     @FocusState var hasFocus: Bool
 
@@ -32,16 +32,13 @@ struct MainAppContentView: View {
                 .allowsHitTesting(false)
                 .focusable(false)
 
-
-            if appState.isGuideVisible {
 #if os(tvOS)
-                // Scope the entire guide UI to the same FocusState
+            if appState.isGuideVisible {
                 TabContainerView(appState: $appState)
                     .transition(.opacity)
                     .background(Color.black.opacity(0.65))
-#endif
             }
-
+#endif
             
             if showPlayPauseButton {
                 PlayPauseBadge()
@@ -90,37 +87,52 @@ struct MainAppContentView: View {
             }
         })
         
-        .sheet(isPresented: $appState.isGuideVisible) {
-            SectionView(appState: $appState)
-                .frame(minWidth: 800, idealWidth: 1200, maxWidth: 1400,
-                       minHeight: 300, idealHeight: 400, maxHeight: 600)
-                .toolbar {
-                    ToolbarItem(placement: .cancellationAction) {
-                        Button("Done") {
-                            appState.isGuideVisible = false
-                        }
-                    }
-                }
-        }
-        
 #endif
         
-#if os(iOS)
+#if !os(tvOS)
+        
         .sheet(isPresented: $appState.isGuideVisible) {
-            SectionView(appState: $appState)
-                .presentationDetents([.fraction(0.5), .large])
-                .presentationDragIndicator(.visible)
-                .presentationBackground(.ultraThinMaterial)
-                .presentationBackgroundInteraction(.enabled(upThrough: .large))
-                .presentationCornerRadius(20)
-                .presentationCompactAdaptation(.sheet)
-                .toolbar {
-                    ToolbarItem(placement: .cancellationAction) {
-                        Button("Done") {
-                            appState.isGuideVisible = false
+            NavigationStack {
+                SectionView(appState: $appState)
+                    .navigationTitle(TabSection.channels.title)
+                    .navigationBarTitleDisplayMode(.inline)
+                    .toolbarBackground(.visible, for: .navigationBar)
+                    .padding(.top, 10)
+                    .toolbar {
+                        ToolbarItem {
+                            Menu {
+                                Picker("Category", selection: $appState.selectedTab) {
+                                    ForEach(TabSection.allCases) { tabSection in
+                                        Text(tabSection.title).tag(tabSection)
+                                    }
+                                }
+                                .pickerStyle(.inline)
+                                
+                                Toggle(isOn: $appState.showFavoritesOnly) {
+                                    Label("Favorites only", systemImage: "star.fill")
+                                }
+                                
+                            } label: {
+                                Label("Filter", systemImage: "slider.horizontal.3")
+                            }
+                        }
+                        ToolbarItem(placement: .cancellationAction) {
+                            Button("Done") {
+                                appState.isGuideVisible = false
+                            }
                         }
                     }
-                }
+            }
+            
+            .presentationDetents([.large])
+            .presentationDragIndicator(.hidden)
+            .interactiveDismissDisabled()
+            .presentationBackgroundInteraction(.enabled)
+            .presentationBackground {
+                Color.black.opacity(0.4)
+                    .ignoresSafeArea()
+            }
+
         }
 #endif
     }
@@ -175,3 +187,18 @@ extension MainAppContentView {
     }
 }
 
+// MARK: - Preview
+
+#Preview("Main View - Start Guide Visible") {
+    @Previewable @State var _appState: any AppStateProvider = MockSharedAppState()
+    let mockData = MockDataPersistence(appState: _appState)
+    
+    MainAppContentView(appState: _appState)
+        .environment(\.modelContext, mockData.context)
+        .environment(mockData.channelMap)
+        .onAppear {
+            _appState.selectedChannel = mockData.channelMap.map[2]
+            _appState.isGuideVisible = true
+            
+        }
+}

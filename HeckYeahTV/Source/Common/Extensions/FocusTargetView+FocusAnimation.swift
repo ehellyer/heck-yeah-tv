@@ -55,7 +55,7 @@ extension FocusTargetView where Self: UIView {
         viewBlock?(UIColor.guideForegroundFocus)
         coordinator.addCoordinatedAnimations({ () -> Void in
             var rotationMatrix = CATransform3DIdentity
-            rotationMatrix.m34 = (1.0 / -1000.0)
+            rotationMatrix.m34 = -0.001 //(1.0 / -1000.0) - Perspective effect based on distance to the views eye (in camera space).
             rotationMatrix = CATransform3DTranslate(rotationMatrix, 0, 0, 0)
             let rotationAndScaleMatrix = CATransform3DScale(rotationMatrix, self.scaleUp, self.scaleUp, 1)
             self.layer.transform = rotationAndScaleMatrix
@@ -77,7 +77,7 @@ extension FocusTargetView where Self: UIView {
     func resignFocusUsingAnimationCoordinator(in context: UIFocusUpdateContext, with coordinator: UIFocusAnimationCoordinator, viewBlock: ViewBlock? = nil) {
         viewBlock?(UIColor.guideForegroundNoFocus)
         coordinator.addCoordinatedAnimations({ () -> Void in
-            self.layer.transform = CATransform3DIdentity            
+            self.layer.transform = CATransform3DIdentity
             if let layer = context.previouslyFocusedView?.layer.sublayers?.first(where: { $0.name == self.selectedLayerName }) {
                 layer.removeFromSuperlayer()
             }

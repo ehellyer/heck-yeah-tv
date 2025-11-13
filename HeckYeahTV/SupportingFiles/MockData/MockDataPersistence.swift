@@ -24,62 +24,37 @@ final class MockDataPersistence {
         let container = try! ModelContainer(for: IPTVChannel.self, configurations: config)
         context = ModelContext(container)
         loadMockData()
-        reloadChannels(showFavoritesOnly: appState.showFavoritesOnly)
+        reloadChannels(appState: appState)
     }
     
-    func reloadChannels(showFavoritesOnly: Bool) {
-        loadChannels(showFavoritesOnly: showFavoritesOnly)
+    func reloadChannels(appState: any AppStateProvider) {
+        loadChannels(appState: appState)
         buildChannelMap()
     }
     
     private func loadMockData() {
         do {
-            struct MockChannel: JSONSerializable {
-                let id: String
-                let sortHint: String
-                let title: String
-                let number: String?
-                let url: URL
-                let logoURL: URL?
-                let quality: StreamQuality
-                let hasDRM: Bool
-                let source: ChannelSource
-                let isFavorite: Bool
-            }
-            
-            // Load mock data from JSON file
+            // Read mock data from JSON file
             let url = Bundle.main.url(forResource: "MockIPTVChannels", withExtension: "json")!
             let data = try Data(contentsOf: url)
             
-            // Decode MockChannel array from JSON file
-            let mockChannels = try [MockChannel].initialize(jsonData: data)
+            // Decode Array<IPTVChannel> from JSON file.
+            let mockChannels = try [IPTVChannel].initialize(jsonData: data)
             
-            // Convert mock channels to IPTVChannel instances
-            for mock in mockChannels {
-                let channel = IPTVChannel(id: mock.id,
-                                          sortHint: mock.sortHint,
-                                          title: mock.title,
-                                          number: mock.number,
-                                          url: mock.url,
-                                          logoURL: mock.logoURL,
-                                          quality: mock.quality,
-                                          hasDRM: mock.hasDRM,
-                                          source: mock.source,
-                                          isFavorite: mock.isFavorite)
-                context.insert(channel)
-            }
+            // Load IPTVChannel instances into in-memory context.
+            mockChannels.forEach(context.insert)
             
             try context.save()
         } catch {
-            logDebug("MOCK UTILITY: Failed to load MockIPTVChannels.json.  Error: \(error)")
+            logDebug("Failed to load MockIPTVChannels.json into SwiftData in-memory context.  Error: \(error)")
         }
     }
     
-    private func loadChannels(showFavoritesOnly: Bool) {
+    private func loadChannels(appState: any AppStateProvider) {
         var channelsDescriptor: FetchDescriptor<IPTVChannel> = FetchDescriptor<IPTVChannel>(
             sortBy: [SortDescriptor(\IPTVChannel.sortHint, order: .forward)]
         )
-        channelsDescriptor.predicate = (showFavoritesOnly ? (#Predicate<IPTVChannel> { $0.isFavorite == true }) : nil)
+        channelsDescriptor.predicate = (appState.showFavoritesOnly ? (#Predicate<IPTVChannel> { $0.isFavorite == true }) : nil)
         self.channels = (try? context.fetch(channelsDescriptor)) ?? []
     }
 

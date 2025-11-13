@@ -14,7 +14,6 @@ struct GuideView: View {
     private let corner: CGFloat = 14
 
     @Binding var appState: AppStateProvider
-    @Binding var scrollToSelected: Bool
     @Environment(\.modelContext) private var viewContext
     @Environment(ChannelMap.self) private var channelMap
     
@@ -25,7 +24,7 @@ struct GuideView: View {
         // Main scrolling content
         ScrollViewReader { proxy in
             ScrollView(.vertical) {
-                LazyVStack(alignment: .leading, spacing: 10) {
+                LazyVStack(alignment: .leading, spacing: 70) {
                     ForEach(0..<channelMap.totalCount, id: \.self) { index in
                         let channelId = channelMap.map[index]
                         GuideRowLazy(channelId: channelId,
@@ -36,14 +35,12 @@ struct GuideView: View {
                     if channelMap.totalCount == 0 {
                         Text("No channels found.")
                             .frame(maxWidth: .infinity)
-                            .padding()
                     }
                 }
-                .padding(.leading, 15)
-                .padding(.trailing, 15)
             }
-            .contentMargins(.vertical, 20)
-            .scrollClipDisabled(false)
+//            .scrollClipDisabled(false)
+//            .scrollContentBackground(.hidden)
+//            .background(Color.red)
             
             .onAppear {
                 scrollToSelected(proxy: proxy)
@@ -55,15 +52,6 @@ struct GuideView: View {
             
             .onChange(of: appState.showFavoritesOnly) { _, _ in
                 rebuildChannelMap()
-            }
-            
-            .onChange(of: scrollToSelected) { oldValue, newValue in
-                // Only updateFocus and scroll when in this state.
-                guard oldValue == false, newValue == true else {
-                    return
-                }
-                scrollToSelected = false
-                scrollToSelected(proxy: proxy)
             }
         }
     }
@@ -126,11 +114,10 @@ private extension GuideView {
 #Preview("GuideView") {
     
     @Previewable @State var appState: AppStateProvider = SharedAppState.shared
-    @Previewable @State var scrollToSelected = false
     
     let mockData = MockDataPersistence(appState: appState)
     
-    GuideView(appState: $appState, scrollToSelected: $scrollToSelected)
+    GuideView(appState: $appState)
         .environment(\.modelContext, mockData.context)
         .environment(mockData.channelMap)
 }

@@ -36,32 +36,36 @@ struct GuideSubTitleView: View {
         HStack(spacing: 8) {
             Text(number)
                 .font(.caption)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(.guideForegroundNoFocus)
                 .lineLimit(1)
-                 .truncationMode(.tail)
+                .truncationMode(.tail)
             
             if let _quality = quality {
                 Text(_quality)
                     .font(.caption2)
+                    .foregroundStyle(.guideForegroundNoFocus)
                     .lineLimit(1)
                     .truncationMode(.tail)
                     .padding(.horizontal, 2)
                     .padding(.vertical, 0)
                     .overlay(
                         RoundedRectangle(cornerRadius: 3)
-                            .stroke(lineWidth: redactionReasons.contains(.placeholder) ? 0 : 1)
+                            .stroke(.guideForegroundNoFocus,
+                                    lineWidth: redactionReasons.contains(.placeholder) ? 0 : 1)
                     )
             }
             if channel?.hasDRM == true {
                 Text("DRM")
                     .font(.caption2)
+                    .foregroundStyle(.guideForegroundNoFocus)
                     .lineLimit(1)
                     .truncationMode(.tail)
                     .padding(.horizontal, 2)
                     .padding(.vertical, 0)
                     .overlay(
                         RoundedRectangle(cornerRadius: 3)
-                            .stroke(lineWidth: redactionReasons.contains(.placeholder) ? 0 : 1)
+                            .stroke(.guideForegroundNoFocus,
+                                    lineWidth: redactionReasons.contains(.placeholder) ? 0 : 1)
                     )
             }
         }

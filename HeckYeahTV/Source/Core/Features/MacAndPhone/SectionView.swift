@@ -12,15 +12,14 @@ import SwiftData
 struct SectionView: View {
     
     @Binding var appState: AppStateProvider
-    @State private var scrollToSelected: Bool = true
     
     var body: some View {
         SectionContentView() {
             
             switch appState.selectedTab {
                 case .channels:
-                    GuideView(appState: $appState,
-                              scrollToSelected: $scrollToSelected)
+                    GuideView(appState: $appState)
+                        .background(Color.clear)
                 case .recents:
                     RecentsView()
                 case .search:
@@ -29,25 +28,7 @@ struct SectionView: View {
                     SettingsView()
             }
         }
-        .toolbar {
-            ToolbarItem {
-                Menu {
-                    Picker("Category", selection: $appState.selectedTab) {
-                        ForEach(TabSection.allCases) { tabSection in
-                            Text(tabSection.title).tag(tabSection)
-                        }
-                    }
-                    .pickerStyle(.inline)
-                    
-                    Toggle(isOn: $appState.showFavoritesOnly) {
-                        Label("Favorites only", systemImage: "star.fill")
-                    }
-                    
-                } label: {
-                    Label("Filter", systemImage: "slider.horizontal.3")
-                }
-            }
-        }
+        .background(Color.clear)
     }
     
 }
