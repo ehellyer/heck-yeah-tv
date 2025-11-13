@@ -94,12 +94,12 @@ struct MainAppContentView: View {
         .sheet(isPresented: $appState.isGuideVisible) {
             NavigationStack {
                 SectionView(appState: $appState)
-                    .navigationTitle(TabSection.channels.title)
+                    .navigationTitle(appState.selectedTab.title)
+                    
 #if !os(macOS)
-                    .navigationBarTitleDisplayMode(.inline)
+                    .navigationBarTitleDisplayMode(.large)
                     .toolbarBackground(.visible, for: .navigationBar)
 #endif
-                    .padding(.top, 10)
                     .toolbar {
                         ToolbarItem {
                             Menu {
@@ -130,11 +130,8 @@ struct MainAppContentView: View {
             .presentationDetents([.large])
             .presentationDragIndicator(.hidden)
             .interactiveDismissDisabled()
-            .presentationBackgroundInteraction(.enabled)
-            .presentationBackground {
-                Color.black.opacity(0.4)
-                    .ignoresSafeArea()
-            }
+            .presentationBackgroundInteraction(.disabled)
+            .presentationBackground(.clear)
 
         }
 #endif

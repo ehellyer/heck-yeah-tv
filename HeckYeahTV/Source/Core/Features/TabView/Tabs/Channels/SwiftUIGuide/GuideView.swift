@@ -11,25 +11,24 @@ import SwiftData
 
 struct GuideView: View {
     
-    private let corner: CGFloat = 14
-
     @Binding var appState: AppStateProvider
     @Environment(\.modelContext) private var viewContext
     @Environment(ChannelMap.self) private var channelMap
-    
     @State private var rebuildChannelMapTask: Task<Void, Never>? = nil
     @State private var scrollToSelectedTask: Task<Void, Never>? = nil
+    private let corner: CGFloat = 14
     
     var body: some View {
-        // Main scrolling content
         ScrollViewReader { proxy in
             ScrollView(.vertical) {
-                LazyVStack(alignment: .leading, spacing: 70) {
+                LazyVStack(alignment: .leading, spacing: 10) {
                     ForEach(0..<channelMap.totalCount, id: \.self) { index in
                         let channelId = channelMap.map[index]
                         GuideRowLazy(channelId: channelId,
                                      appState: $appState)
                         .id(channelId)
+                        .padding(.leading, 5)
+                        .padding(.trailing, 5)
                     }
                     
                     if channelMap.totalCount == 0 {
@@ -38,10 +37,10 @@ struct GuideView: View {
                     }
                 }
             }
-//            .scrollClipDisabled(false)
-//            .scrollContentBackground(.hidden)
-//            .background(Color.red)
-            
+            .scrollClipDisabled(false)
+            .scrollContentBackground(.hidden)
+            .contentMargins(.top, 10)
+            .contentMargins(.bottom, 1)
             .onAppear {
                 scrollToSelected(proxy: proxy)
             }
@@ -57,6 +56,7 @@ struct GuideView: View {
     }
 }
 
+//MARK: - GuideView extension
 
 private extension GuideView {
     private func rebuildChannelMap() {
@@ -111,10 +111,10 @@ private extension GuideView {
     }
 }
 
+//MARK: - PREVIEWS
+
 #Preview("GuideView") {
-    
     @Previewable @State var appState: AppStateProvider = SharedAppState.shared
-    
     let mockData = MockDataPersistence(appState: appState)
     
     GuideView(appState: $appState)

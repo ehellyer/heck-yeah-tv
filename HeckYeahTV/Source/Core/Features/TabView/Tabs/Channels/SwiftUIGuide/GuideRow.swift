@@ -32,87 +32,84 @@ struct GuideRow: View {
     }
     
     var body: some View {
-        GeometryReader { geometry in
-            HStack(alignment: .center, spacing: 0) {
+        HStack(alignment: .center, spacing: 0) {
 
-                Button {
-                    channel?.isFavorite.toggle()
-                } label: {
-                    Image(systemName: channel?.isFavorite == true ? "star.fill" : "star")
-                        .foregroundStyle(channel?.isFavorite == true ? Color.yellow : Color.white)
-                        .padding(.horizontal, 7)
-                        .padding(.vertical, 7.5)
-                }
-                .padding(.horizontal, horizontalPadding)
-                .padding(.vertical, verticalPadding)
-                .background(
-                    RoundedRectangle(cornerRadius: cornerRadius)
-                        .fill(backgroundColor)
-                )
-                .padding(.leading, 10)
-                
-                Button {
-                    appState.selectedChannel = channel?.id
-                } label: {
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text(channel?.title ?? "Placeholder")
-                            .font(.headline)
-                            .foregroundStyle(.guideForegroundNoFocus)
-                            .lineLimit(1)
-                            .truncationMode(.tail)
-                            
-                        GuideSubTitleView(channel: channel)
-                    }
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                }
-                .frame(width: isLandscape ? (geometry.size.width * 0.2) : nil)
-                .frame(maxWidth: isLandscape ? nil : .infinity)
-                .padding(.horizontal, horizontalPadding)
-                .padding(.vertical, verticalPadding)
-                .background(
-                    RoundedRectangle(cornerRadius: cornerRadius)
-                        .fill(backgroundColor)
-                )
-                .padding(.leading, 10)
-                
-                if (isLandscape) {
-                    Button {
-                        // No op
-                    } label: {
-                        Text("No guide information")
-                            .foregroundStyle(.guideForegroundNoFocus)
-                            .frame(maxHeight: .infinity)
-                    }
-                    .frame(maxWidth: .infinity)
-                    .contentShape(Rectangle())
-                    .padding(.horizontal, horizontalPadding)
-                    .padding(.vertical, verticalPadding)
-                    .background(
-                        RoundedRectangle(cornerRadius: cornerRadius)
-                            .fill(backgroundColor)
-                    )
-                    .disabled(true)
-                    .padding(.leading, 10)
-                    .padding(.trailing, 10)
-                }
-                
-                if !isLandscape {
-                    Spacer()
-                }
+            Button {
+                channel?.isFavorite.toggle()
+            } label: {
+                Image(systemName: channel?.isFavorite == true ? "star.fill" : "star")
+                    .foregroundStyle(channel?.isFavorite == true ? Color.yellow : Color.white)
+                    .padding(.horizontal, 20)
+                    .padding(.vertical, 20)
             }
-            .fixedSize(horizontal: false, vertical: true)
-            .background {
-                if isPlaying {
-                    RoundedRectangle(cornerRadius: corner, style: .continuous)
-                        .fill(Color.guideSelectedChannelBackground)
-                        .padding(.top, -4)
-                        .padding(.bottom, -4)
-                        .allowsHitTesting(false)
-                        .accessibilityHidden(true)
+            .frame(maxHeight: .infinity)
+            .background(
+                RoundedRectangle(cornerRadius: cornerRadius)
+                    .fill(backgroundColor)
+            )
+            .padding(.leading, 10)
+            
+            Button {
+                appState.selectedChannel = channel?.id
+            } label: {
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(channel?.title ?? "Placeholder")
+                        .font(.headline)
+                        .foregroundStyle(.guideForegroundNoFocus)
+                        .lineLimit(1)
+                        .truncationMode(.tail)
+                    GuideSubTitleView(channel: channel)
                 }
+                .padding(.horizontal, horizontalPadding)
+                .padding(.vertical, verticalPadding)
+                .frame(maxWidth: .infinity, alignment: .leading)
+            }
+            .frame(width: isLandscape ? 200 : nil)
+            .frame(maxWidth: isLandscape ? nil : .infinity)
+            .frame(maxHeight: .infinity)
+            .background(
+                RoundedRectangle(cornerRadius: cornerRadius)
+                    .fill(backgroundColor)
+            )
+            .padding(.leading, 10)
+            
+            if (isLandscape) {
+                Button {
+                    // No op
+                } label: {
+                    Text("No guide information")
+                        .foregroundStyle(.guideForegroundNoFocus)
+                        .frame(maxHeight: .infinity)
+                }
+                .frame(maxWidth: .infinity)
+                .frame(maxHeight: .infinity)
+                .contentShape(Rectangle())
+                .padding(.horizontal, horizontalPadding)
+                .padding(.vertical, verticalPadding)
+                .background(
+                    RoundedRectangle(cornerRadius: cornerRadius)
+                        .fill(backgroundColor)
+                )
+                .disabled(true)
+                .padding(.leading, 10)
+                .padding(.trailing, 10)
+            }
+            
+            if !isLandscape {
+                Spacer()
             }
         }
         .fixedSize(horizontal: false, vertical: true)
+        .background {
+            if isPlaying {
+                RoundedRectangle(cornerRadius: corner, style: .continuous)
+                    .fill(Color.guideSelectedChannelBackground)
+                    .padding(.top, -4)
+                    .padding(.bottom, -4)
+                    .allowsHitTesting(false)
+                    .accessibilityHidden(true)
+            }
+        }
     }
 }
 

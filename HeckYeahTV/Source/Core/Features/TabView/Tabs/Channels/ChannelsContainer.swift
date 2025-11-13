@@ -49,6 +49,7 @@ struct ChannelsContainer: View {
                     }
                 }
         }
+        .background(Color.clear)
     }
 }
 
