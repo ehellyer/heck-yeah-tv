@@ -38,7 +38,7 @@ struct GuideView: View {
                 }
             }
             .background(.clear)
-            .scrollClipDisabled(false)
+            .scrollClipDisabled(true)
             .scrollContentBackground(.hidden)
             .contentMargins(.top, 10)
             .contentMargins(.bottom, 1)

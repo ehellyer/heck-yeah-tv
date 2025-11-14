@@ -18,27 +18,27 @@ struct MainAppContentView: View {
     @State var appState: AppStateProvider = SharedAppState.shared
     
     @FocusState var hasFocus: Bool
-
+    
     // Focus scopes (Namespace) for isolating focus between guide and activation views
     @Namespace private var activationScope
-
+    
     var body: some View {
         // Alignment required to layout the play/pause button in the bottom left corner.
         ZStack(alignment: .bottomLeading)  {
-         
+            
             VLCPlayerView(appState: $appState)
                 .ignoresSafeArea()
                 .accessibilityHidden(true)
                 .allowsHitTesting(false)
                 .focusable(false)
-
+            
 #if os(tvOS)
             if appState.isGuideVisible {
                 TabContainerView(appState: $appState)
                     .transition(.opacity)
                     .background(Color.black.opacity(0.65))
             }
-                
+            
 #endif
             
             if showPlayPauseButton {
@@ -64,7 +64,7 @@ struct MainAppContentView: View {
             appState.isPlayerPaused.toggle()
         }
 #endif
-
+        
         .onChange(of: appState.isPlayerPaused, { _, newValue in
             updateShowPlayButtonToast(isPlayerPaused: newValue)
         })
@@ -75,64 +75,64 @@ struct MainAppContentView: View {
                 appState.isGuideVisible = false
             }
         })
-
+        
         .onAppear {
             showPlayPauseButton = appState.isPlayerPaused
         }
-
-#if os(macOS)
-        // macOS: arrow keys re-show the guide
-        .background( MacArrowKeyCatcher {
-            withAnimation {
-                appState.isGuideVisible = true
-            }
-        })
-        
-#endif
         
 #if !os(tvOS)
         
-        .sheet(isPresented: $appState.isGuideVisible) {
-            NavigationStack {
-                SectionView(appState: $appState)
-                    .toolbar {
-                        ToolbarItem {
-                            Menu {
-                                Picker("", selection: $appState.selectedTab) {
-                                    ForEach(TabSection.allCases) { tabSection in
-                                        Text(tabSection.title).tag(tabSection)
-                                    }
+        .overlay {
+            if appState.isGuideVisible {
+                VStack(spacing: 0) {
+                    HStack {
+                        Menu {
+                            Picker("", selection: $appState.selectedTab) {
+                                ForEach(TabSection.allCases) { tabSection in
+                                    Text(tabSection.title).tag(tabSection)
                                 }
-                                .pickerStyle(.inline)
-                                .labelsHidden()
-                                
-                                Toggle(isOn: $appState.showFavoritesOnly) {
-                                    Label("Favorites only", systemImage: "star.fill")
-                                }
-                                
-                            } label: {
-                                Label("", systemImage: "slider.horizontal.3")
                             }
+                            .pickerStyle(.inline)
+                            .labelsHidden()
+                            
+                            Toggle(isOn: $appState.showFavoritesOnly) {
+                                Label("Favorites only", systemImage: "star.fill")
+                            }
+                        } label: {
+                            Label("", systemImage: "slider.horizontal.3")
                         }
-                        ToolbarItem(placement: .cancellationAction) {
-                            Button("Done") {
+                        .labelStyle(.iconOnly)
+                        .buttonStyle(.automatic)
+                        .tint(.white.opacity(0.2))
+                        
+                        Spacer()
+                        
+                        Button("Done") {
+                            withAnimation {
                                 appState.isGuideVisible = false
                             }
                         }
-                        
+                        .buttonStyle(.automatic)
+                        .tint(.white.opacity(0.2))
                     }
-                    .navigationTitle(TabSection.channels.title)
-                    
-#if !os(macOS)
-                    .navigationBarTitleDisplayMode(.inline)
-                    .toolbarBackground(Color.clear, for: .navigationBar)
-                    .toolbarBackground(.visible, for: .navigationBar)
-#endif
+                    .overlay {
+                        Text(appState.selectedTab.title)
+                            .font(.headline)
+                            .foregroundStyle(.primary)
+                    }
+                    .padding(EdgeInsets(top: 20, leading: 20, bottom: 20, trailing: 20))
+                    .foregroundStyle(.white)
+                    .background(.ultraThinMaterial)
+                    .zIndex(1)
+                    SectionView(appState: $appState)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                }
+                .transition(
+                    .move(edge: .bottom)
+                    .combined(with: .opacity)
+                )
+                
             }
-            .presentationDetents([.large])
-            .presentationDragIndicator(.hidden)
-            .interactiveDismissDisabled()
-            .presentationBackground(.clear)
         }
 #endif
     }
@@ -189,7 +189,7 @@ extension MainAppContentView {
 
 // MARK: - Preview
 
-#Preview("Main View - Start Guide Visible") {
+#Preview("Main View") {
     @Previewable @State var _appState: any AppStateProvider = MockSharedAppState()
     let mockData = MockDataPersistence(appState: _appState)
     
