@@ -88,7 +88,7 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Source/App/Heck_Yeah_TVApp.swift,
-				"Source/Common/Extensions/NSView+Extension.swift",
+				"Source/Common/Extensions/NSView+AsImage.swift",
 				"Source/Common/Extensions/String+Extension.swift",
 				"Source/Common/Extensions/UserDefaults+Extension.swift",
 				Source/Common/Logging/DebugLogger.swift,
@@ -165,7 +165,7 @@
 		EB2C313A2E5E4E06005CE685 /* Exceptions for "HeckYeahTV" folder in "iOS_HeckYeahTV" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				"Source/Common/Extensions/NSView+Extension.swift",
+				"Source/Common/Extensions/NSView+AsImage.swift",
 				Source/Core/Features/TabView/TabContainerView.swift,
 				Source/Core/Features/TabView/Tabs/Channels/ChannelsContainer.swift,
 				Source/Core/Features/TabView/Tabs/Channels/UIKitGuide/View/ChannelNameView.swift,
@@ -190,7 +190,7 @@
 				Source/App/Heck_Yeah_TVApp.swift,
 				"Source/Common/Extensions/FocusTargetView+FocusAnimation.swift",
 				"Source/Common/Extensions/String+Extension.swift",
-				"Source/Common/Extensions/UIView+Extension.swift",
+				"Source/Common/Extensions/UIView+AsImage.swift",
 				"Source/Common/Extensions/UserDefaults+Extension.swift",
 				Source/Common/Logging/DebugLogger.swift,
 				Source/Common/PlatformRepresentable/CrossPlatformControllerRepresentable.swift,

@@ -14,7 +14,6 @@ struct GuideRow: View {
     let horizontalPadding: CGFloat = 15
     let verticalPadding: CGFloat = 15
     let cornerRadius: CGFloat = 20
-    let backgroundColor: Color = Color.gray
     
     @State var channel: IPTVChannel?
     @Binding var appState: AppStateProvider
@@ -38,6 +37,7 @@ struct GuideRow: View {
                 channel?.isFavorite.toggle()
             } label: {
                 Image(systemName: channel?.isFavorite == true ? "star.fill" : "star")
+                    .scaleEffect(1.5)
                     .foregroundStyle(channel?.isFavorite == true ? Color.yellow : Color.white)
                     .padding(.horizontal, 20)
                     .padding(.vertical, 20)
@@ -45,7 +45,7 @@ struct GuideRow: View {
             .frame(maxHeight: .infinity)
             .background(
                 RoundedRectangle(cornerRadius: cornerRadius)
-                    .fill(backgroundColor)
+                    .fill(.guideBackgroundNoFocus)
             )
             .padding(.leading, 10)
             
@@ -69,7 +69,7 @@ struct GuideRow: View {
             .frame(maxHeight: .infinity)
             .background(
                 RoundedRectangle(cornerRadius: cornerRadius)
-                    .fill(backgroundColor)
+                    .fill(.guideBackgroundNoFocus)
             )
             .padding(.leading, 10)
             
@@ -88,7 +88,7 @@ struct GuideRow: View {
                 .padding(.vertical, verticalPadding)
                 .background(
                     RoundedRectangle(cornerRadius: cornerRadius)
-                        .fill(backgroundColor)
+                        .fill(.guideBackgroundNoFocus)
                 )
                 .disabled(true)
                 .padding(.leading, 10)
@@ -103,7 +103,7 @@ struct GuideRow: View {
         .background {
             if isPlaying {
                 RoundedRectangle(cornerRadius: corner, style: .continuous)
-                    .fill(Color.guideSelectedChannelBackground)
+                    .fill(.guideSelectedChannelBackground)
                     .padding(.top, -4)
                     .padding(.bottom, -4)
                     .allowsHitTesting(false)

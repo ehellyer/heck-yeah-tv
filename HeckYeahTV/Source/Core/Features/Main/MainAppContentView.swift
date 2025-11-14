@@ -38,6 +38,7 @@ struct MainAppContentView: View {
                     .transition(.opacity)
                     .background(Color.black.opacity(0.65))
             }
+                
 #endif
             
             if showPlayPauseButton {
@@ -94,12 +95,6 @@ struct MainAppContentView: View {
         .sheet(isPresented: $appState.isGuideVisible) {
             NavigationStack {
                 SectionView(appState: $appState)
-                    .navigationTitle(appState.selectedTab.title)
-                    
-#if !os(macOS)
-                    .navigationBarTitleDisplayMode(.large)
-                    .toolbarBackground(.visible, for: .navigationBar)
-#endif
                     .toolbar {
                         ToolbarItem {
                             Menu {
@@ -124,15 +119,20 @@ struct MainAppContentView: View {
                                 appState.isGuideVisible = false
                             }
                         }
+                        
                     }
+                    .navigationTitle(TabSection.channels.title)
+                    
+#if !os(macOS)
+                    .navigationBarTitleDisplayMode(.inline)
+                    .toolbarBackground(Color.clear, for: .navigationBar)
+                    .toolbarBackground(.visible, for: .navigationBar)
+#endif
             }
-            
             .presentationDetents([.large])
             .presentationDragIndicator(.hidden)
             .interactiveDismissDisabled()
-            .presentationBackgroundInteraction(.disabled)
             .presentationBackground(.clear)
-
         }
 #endif
     }
@@ -197,7 +197,7 @@ extension MainAppContentView {
         .modelContext(mockData.context)
         .environment(mockData.channelMap)
         .onAppear {
-            _appState.selectedChannel = mockData.channelMap.map[2]
+            _appState.selectedChannel = mockData.channelMap.map[8]
             _appState.isGuideVisible = true
             _appState.showFavoritesOnly = false
         }

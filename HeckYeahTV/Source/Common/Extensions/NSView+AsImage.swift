@@ -1,5 +1,5 @@
 //
-//  NSView+Extension.swift
+//  NSView+AsImage.swift
 //  HeckYeahTV
 //
 //  Created by Ed Hellyer on 11/5/25.
