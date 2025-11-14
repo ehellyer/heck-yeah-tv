@@ -70,6 +70,11 @@ actor ChannelImporter {
     }
     
     func buildChannelMap(showFavoritesOnly: Bool) async throws -> ChannelMap {
+
+        if context.hasChanges {
+            logWarning("Unsaved changes prior to building channel map, saving...")
+            try context.save()
+        }
         
         logDebug("Building Channel Map... 🏳️")
         

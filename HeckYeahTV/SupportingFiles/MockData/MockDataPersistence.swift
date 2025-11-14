@@ -34,16 +34,10 @@ final class MockDataPersistence {
     
     private func loadMockData() {
         do {
-            // Read mock data from JSON file
             let url = Bundle.main.url(forResource: "MockIPTVChannels", withExtension: "json")!
             let data = try Data(contentsOf: url)
-            
-            // Decode Array<IPTVChannel> from JSON file.
             let mockChannels = try [IPTVChannel].initialize(jsonData: data)
-            
-            // Load IPTVChannel instances into in-memory context.
             mockChannels.forEach(context.insert)
-            
             try context.save()
         } catch {
             logDebug("Failed to load MockIPTVChannels.json into SwiftData in-memory context.  Error: \(error)")

@@ -97,6 +97,8 @@ struct MainAppContentView: View {
                             
                             Toggle(isOn: $appState.showFavoritesOnly) {
                                 Label("Favorites only", systemImage: "star.fill")
+                                    .tint(Color.yellow)
+                                    .labelStyle(.titleAndIcon)
                             }
                         } label: {
                             Label("", systemImage: "slider.horizontal.3")
@@ -126,6 +128,7 @@ struct MainAppContentView: View {
                     .zIndex(1)
                     SectionView(appState: $appState)
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        .background(.black.opacity(0.4))
                 }
                 .transition(
                     .move(edge: .bottom)
