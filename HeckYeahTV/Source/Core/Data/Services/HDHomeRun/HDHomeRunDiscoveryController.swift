@@ -17,7 +17,7 @@ final class HDHomeRunDiscoveryController {
     
     //MARK: - Private API
     
-    private var sessionInterface = SessionInterface.sharedInstance
+    private let sessionInterface = SessionInterface.sharedInstance
     // keep-alive off for initial connection. Example: Underlying layer 3/2 changes while app is running, e.g. VPN was on, then turned off or vice versa.
     private var defaultHeaders: [HTTPHeader] = [HTTPHeader.defaultUserAgent,
                                                 HTTPHeader(name: "Accept-Encoding", value: "application/json"),

@@ -13,7 +13,7 @@ import Hellfire
 /// Returns an array of HDHomeRun Devices found on the local network.  Each device will provide it's own details and channel line up URL.
 struct HDHomeRunKeys {
     struct Tuner {
-        static var hdHomeRunDiscoveryURL = URL(string: "https://api.hdhomerun.com/discover")!
+        static let hdHomeRunDiscoveryURL = URL(string: "https://api.hdhomerun.com/discover")!
     }
 }
 

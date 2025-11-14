@@ -11,7 +11,7 @@ import Hellfire
 
 extension UserDefaults {
     
-    fileprivate static var __appInstallIdentifier: String?
+    nonisolated(unsafe) fileprivate static var __appInstallIdentifier: String?
     
     /// Gets the unique app install identifier for this install.  This will change if the app is removed and re-installed.  Persisted into UserDefaults.standard.
     static var appInstallIdentifier: String {

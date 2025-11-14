@@ -141,7 +141,6 @@
 				Source/Core/Features/MediaPlayerView/VLCPlayerView.swift,
 				Source/Core/Features/Shared/GuideRowLoader.swift,
 				Source/Core/Features/TabView/ContentPlaceholder.swift,
-				Source/Core/Features/TabView/Enum/FocusTarget.swift,
 				Source/Core/Features/TabView/Enum/TabSection.swift,
 				Source/Core/Features/TabView/TabActivationView.swift,
 				Source/Core/Features/TabView/Tabs/Channels/ShowFavorites.swift,
@@ -834,6 +833,7 @@
 		};
 		AE7B5C654515C13717B62E77 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
 			files = (
 			);
@@ -851,7 +851,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-macOS_HeckYeahTV/Pods-macOS_HeckYeahTV-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
 		};
 		FF3E370D74D5BBB4D08B0694 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -981,6 +980,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 5CBBA1045CCC45B21067FAF6 /* Pods-macOS_HeckYeahTV.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = "";
@@ -1004,6 +1004,7 @@
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 15.6;
 				MARKETING_VERSION = 1.0;
@@ -1022,6 +1023,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 4464AAFF16E6511C859AB9B9 /* Pods-macOS_HeckYeahTV.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = "";
@@ -1045,6 +1047,7 @@
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 15.6;
 				MARKETING_VERSION = 1.0;

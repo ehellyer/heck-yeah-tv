@@ -79,16 +79,6 @@ private extension GuideView {
                 logError("Error: \(error)")
             }
         }
-
-        // Access the @MainActor DataPersistence singleton here
-    }
-    
-    private var determinedFocusTarget: FocusTarget {
-        if let channelId = appState.selectedChannel {
-            return .guide(channelId: channelId, col: 1)
-        } else {
-            return .favoritesToggle
-        }
     }
     
     private func scrollToSelected(proxy: ScrollViewProxy) {

@@ -41,7 +41,7 @@ internal func logFatal<T>(_ object: @autoclosure () -> T, file: StaticString = #
 
 class DebugLogger {
     
-    static let shared = DebugLogger()
+    nonisolated(unsafe) static let shared = DebugLogger()
     
     /// Describes the level of the log event.
     enum Level: Int {

@@ -12,7 +12,7 @@ import Hellfire
 @MainActor
 final class IPTVController {
     
-    private var sessionInterface = SessionInterface.sharedInstance
+    private let sessionInterface = SessionInterface.sharedInstance
         
     ///MARK: - Internal API - Fetch IPTV Sources
     
