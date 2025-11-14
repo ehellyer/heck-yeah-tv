@@ -105,7 +105,7 @@ struct MainAppContentView: View {
                         }
                         .labelStyle(.iconOnly)
                         .buttonStyle(.automatic)
-                        .tint(.white.opacity(0.2))
+                        .tint(.white)
                         
                         Spacer()
                         
@@ -115,7 +115,7 @@ struct MainAppContentView: View {
                             }
                         }
                         .buttonStyle(.automatic)
-                        .tint(.white.opacity(0.2))
+                        .tint(.white)
                     }
                     .overlay {
                         Text(appState.selectedTab.title)
