@@ -22,6 +22,8 @@ struct MainAppContentView: View {
     // Focus scopes (Namespace) for isolating focus between guide and activation views
     @Namespace private var activationScope
     
+    let guideTransparencyColor: Color = Color.black.opacity(0.65)
+    
     var body: some View {
         // Alignment required to layout the play/pause button in the bottom left corner.
         ZStack(alignment: .bottomLeading)  {
@@ -36,7 +38,7 @@ struct MainAppContentView: View {
             if appState.isGuideVisible {
                 TabContainerView(appState: $appState)
                     .transition(.opacity)
-                    .background(Color.black.opacity(0.65))
+                    .background(guideTransparencyColor)
             }
             
 #endif
@@ -128,7 +130,7 @@ struct MainAppContentView: View {
                     .zIndex(1)
                     SectionView(appState: $appState)
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
-                        .background(.black.opacity(0.4))
+                        .background(guideTransparencyColor)
                 }
                 .transition(
                     .move(edge: .bottom)

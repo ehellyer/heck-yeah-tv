@@ -41,7 +41,7 @@ struct GuideView: View {
             .scrollClipDisabled(true)
             .scrollContentBackground(.hidden)
             .contentMargins(.top, 10)
-            .contentMargins(.bottom, 1)
+            .contentMargins(.bottom, 5)
             .onAppear {
                 scrollToSelected(proxy: proxy)
             }

@@ -10,13 +10,12 @@ import SwiftUI
 import SwiftData
 
 struct GuideRow: View {
-    let corner: CGFloat = 10
-    let horizontalPadding: CGFloat = 15
-    let verticalPadding: CGFloat = 15
+    let internalHzPadding: CGFloat = 15
     let cornerRadius: CGFloat = 20
 
     @State var channel: IPTVChannel?
     @Binding var appState: AppStateProvider
+    @State private var rowWidth: CGFloat = 800 // Default, will update dynamically
 
     private func isHorizontallyCompact(width: CGFloat) -> Bool {
         return width < 600
@@ -30,91 +29,85 @@ struct GuideRow: View {
     }
 
     var body: some View {
-        GeometryReader { geometry in
-            let compact = isHorizontallyCompact(width: geometry.size.width)
+        let compact = isHorizontallyCompact(width: rowWidth)
 
-            HStack(alignment: .center, spacing: 0) {
-
-                Button {
-                    channel?.isFavorite.toggle()
-                    try? channel?.modelContext?.save()
-                } label: {
-                    Image(systemName: channel?.isFavorite == true ? "star.fill" : "star")
-                        .scaleEffect(1.5)
-                        .foregroundStyle(channel?.isFavorite == true ? Color.yellow : Color.white)
-                        .padding(.horizontal, 20)
-                        .padding(.vertical, 20)
-                }
-                .frame(maxHeight: .infinity)
-                .background(
-                    RoundedRectangle(cornerRadius: cornerRadius)
-                        .fill(.guideBackgroundNoFocus)
-                )
-                .padding(.leading, 10)
-
-                Button {
-                    appState.selectedChannel = channel?.id
-                } label: {
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text(channel?.title ?? "Placeholder")
-                            .font(.headline)
-                            .foregroundStyle(.guideForegroundNoFocus)
-                            .lineLimit(1)
-                            .truncationMode(.tail)
-                        GuideSubTitleView(channel: channel)
-                    }
-                    .padding(.horizontal, horizontalPadding)
-                    .padding(.vertical, verticalPadding)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                }
-                .frame(width: !compact ? 200 : nil)
-                .frame(maxWidth: compact ? .infinity : nil)
-                .frame(maxHeight: .infinity)
-                .background(
-                    RoundedRectangle(cornerRadius: cornerRadius)
-                        .fill(.guideBackgroundNoFocus)
-                )
-                .padding(.leading, 10)
-
-                if !compact {
-                    Button {
-                        // No op
-                    } label: {
-                        Text("No guide information")
-                            .foregroundStyle(.guideForegroundNoFocus)
-                            .frame(maxHeight: .infinity)
-                    }
-                    .frame(maxWidth: .infinity)
-                    .frame(maxHeight: .infinity)
-                    .contentShape(Rectangle())
-                    .padding(.horizontal, horizontalPadding)
-                    .padding(.vertical, verticalPadding)
-                    .background(
-                        RoundedRectangle(cornerRadius: cornerRadius)
-                            .fill(.guideBackgroundNoFocus)
-                    )
-                    .disabled(true)
-                    .padding(.leading, 10)
-                    .padding(.trailing, 10)
-                }
-
-                if compact {
-                    Spacer()
-                }
+        HStack(alignment: .center, spacing: 10) {
+            Button {
+                channel?.isFavorite.toggle()
+                try? channel?.modelContext?.save()
+            } label: {
+                Image(systemName: channel?.isFavorite == true ? "star.fill" : "star")
+                    .scaleEffect(1.2)
+                    .foregroundStyle(channel?.isFavorite == true ? Color.yellow : Color.white)
+                    .padding(.horizontal, 20)
+                    .padding(.vertical, 20)
             }
-            .fixedSize(horizontal: false, vertical: true)
-            .background {
-                if isPlaying {
-                    RoundedRectangle(cornerRadius: corner, style: .continuous)
-                        .fill(.guideSelectedChannelBackground)
-                        .padding(.top, -4)
-                        .padding(.bottom, -4)
-                        .allowsHitTesting(false)
-                        .accessibilityHidden(true)
+            .buttonStyle(.borderless)
+            .frame(maxHeight: .infinity)
+            .background(
+                RoundedRectangle(cornerRadius: cornerRadius)
+                    .fill(isPlaying ? .guideSelectedChannelBackground : .guideBackgroundNoFocus)
+            )
+
+            Button {
+                appState.selectedChannel = channel?.id
+            } label: {
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(channel?.title ?? "Placeholder")
+                        .font(.headline)
+                        .foregroundStyle(.guideForegroundNoFocus)
+                        .lineLimit(1)
+                        .truncationMode(.tail)
+                    GuideSubTitleView(channel: channel)
                 }
+                .padding(.horizontal, internalHzPadding)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .background(Color.clear)
+            }
+            .buttonStyle(.borderless)
+            .frame(width: !compact ? 220 : nil)
+            .frame(maxWidth: compact ? .infinity : nil)
+            .frame(maxHeight: .infinity)
+            .background(
+                RoundedRectangle(cornerRadius: cornerRadius)
+                    .fill(isPlaying ? .guideSelectedChannelBackground : .guideBackgroundNoFocus)
+            )
+
+            if !compact {
+                Button {
+                    // No op
+                } label: {
+                    Text("No guide information")
+                        .foregroundStyle(.guideForegroundNoFocus)
+                        .frame(maxHeight: .infinity)
+                        .background(Color.clear)
+                }
+                .frame(maxWidth: .infinity)
+                .frame(maxHeight: .infinity)
+                .background(
+                    RoundedRectangle(cornerRadius: cornerRadius)
+                        .fill(isPlaying ? .guideSelectedChannelBackground : .guideBackgroundNoFocus)
+                )
+                .buttonStyle(.borderless)
+                .disabled(true)
+            }
+
+            if compact {
+                Spacer()
             }
         }
-        .frame(height: 70) // Or any fixed height you wish for the row
+        .background(
+            GeometryReader { proxy in
+                Color.clear
+                    .onAppear { rowWidth = proxy.size.width }
+                    .onChange(of: proxy.size.width) { _, newWidth in
+                        if rowWidth != newWidth {
+                            rowWidth = newWidth
+                        }
+                    }
+            }
+        )
+        .fixedSize(horizontal: false, vertical: true)
     }
 }
 
