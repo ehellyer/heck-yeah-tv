@@ -97,10 +97,12 @@ struct MainAppContentView: View {
                             .pickerStyle(.inline)
                             .labelsHidden()
                             
-                            Toggle(isOn: $appState.showFavoritesOnly) {
-                                Label("Favorites only", systemImage: "star.fill")
-                                    .tint(Color.yellow)
-                                    .labelStyle(.titleAndIcon)
+                            if appState.selectedTab == .channels {
+                                Toggle(isOn: $appState.showFavoritesOnly) {
+                                    Label("Favorites only", systemImage: "star.fill")
+                                        .tint(Color.yellow)
+                                        .labelStyle(.titleAndIcon)
+                                }
                             }
                         } label: {
                             Label("", systemImage: "slider.horizontal.3")
