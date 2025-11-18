@@ -42,12 +42,12 @@ extension UserDefaults {
     }
     
     /// A boolean to indicate to SwiftUI if the Guide TabView should be displayed.
-    static var isGuideVisible: Bool {
+    static var showAppNavigation: Bool {
         get {
-            standard.bool(forKey: AppKeys.SharedAppState.isGuideVisibleKey)
+            standard.bool(forKey: AppKeys.SharedAppState.showAppNavigationKey)
         }
         set {
-            standard.set(newValue, forKey: AppKeys.SharedAppState.isGuideVisibleKey)
+            standard.set(newValue, forKey: AppKeys.SharedAppState.showAppNavigationKey)
         }
     }
     
@@ -82,6 +82,17 @@ extension UserDefaults {
         }
         set {
             standard.set(newValue, forKey: AppKeys.SharedAppState.selectedChannelKey)
+        }
+    }
+    
+    /// Gets or sets the list of recent channels selected.  This is a LIFO list.  0-n  Where 0 is most recent and n is the oldest used.
+    static var recentChannelIds: [ChannelId] {
+        get {
+            let _channelIds: [ChannelId] = standard.array(forKey: AppKeys.SharedAppState.recentChannelIdsKey) as? [ChannelId] ?? []
+            return _channelIds
+        }
+        set {
+            standard.set(newValue, forKey: AppKeys.SharedAppState.recentChannelIdsKey)
         }
     }
 }

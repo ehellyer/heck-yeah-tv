@@ -13,21 +13,30 @@ import Observation
 final class MockSharedAppState: AppStateProvider {
     
     var isPlayerPaused: Bool
-    var isGuideVisible: Bool
+    var showAppNavigation: Bool
     var showFavoritesOnly: Bool
     var selectedTab: TabSection
-    var selectedChannel: ChannelId?
-    
+    var selectedChannel: ChannelId? {
+        didSet {
+            if let channelId = selectedChannel {
+                recentChannelIds = addRecentChannelId(channelId)
+            }
+        }
+    }
+    var recentChannelIds: [ChannelId]
+
     init(isPlayerPaused: Bool = false,
-         isGuideVisible: Bool = false,
+         showAppNavigation: Bool = false,
          showFavoritesOnly: Bool = false,
          selectedTab: TabSection = .channels,
-         selectedChannel: ChannelId? = nil) {
+         selectedChannel: ChannelId? = nil,
+         recentChannelIds: [ChannelId] = []) {
         
         self.isPlayerPaused = isPlayerPaused
-        self.isGuideVisible = isGuideVisible
+        self.showAppNavigation = showAppNavigation
         self.showFavoritesOnly = showFavoritesOnly
         self.selectedTab = selectedTab
         self.selectedChannel = selectedChannel
+        self.recentChannelIds = recentChannelIds
     }
 }

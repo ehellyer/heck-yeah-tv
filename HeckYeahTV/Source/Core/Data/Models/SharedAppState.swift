@@ -9,15 +9,6 @@
 import Foundation
 import Observation
 
-@MainActor
-protocol AppStateProvider {
-    var isPlayerPaused: Bool { get set }
-    var isGuideVisible: Bool { get set }
-    var showFavoritesOnly: Bool { get set }
-    var selectedTab: TabSection { get set }
-    var selectedChannel: ChannelId? { get set }
-}
-
 @MainActor @Observable
 final class SharedAppState: AppStateProvider {
     
@@ -37,14 +28,14 @@ final class SharedAppState: AppStateProvider {
         }
     }
     
-    var isGuideVisible: Bool {
+    var showAppNavigation: Bool {
         get {
-            access(keyPath: \.isGuideVisible)
-            return UserDefaults.isGuideVisible
+            access(keyPath: \.showAppNavigation)
+            return UserDefaults.showAppNavigation
         }
         set {
-            withMutation(keyPath: \.isGuideVisible) {
-                UserDefaults.isGuideVisible = newValue
+            withMutation(keyPath: \.showAppNavigation) {
+                UserDefaults.showAppNavigation = newValue
             }
         }
     }
@@ -80,7 +71,23 @@ final class SharedAppState: AppStateProvider {
         }
         set {
             withMutation(keyPath: \.selectedChannel) {
+                if let channelId = newValue {
+                    recentChannelIds = addRecentChannelId(channelId)
+                }
                 UserDefaults.selectedChannel = newValue
+            }
+        }
+    }
+    
+    /// Gets the list of recent channels selected.  This is a LIFO list.  0-n  Where 0 is most recent and n is the oldest used.
+    private(set) var recentChannelIds: [ChannelId] {
+        get {
+            access(keyPath: \.recentChannelIds)
+            return UserDefaults.recentChannelIds
+        }
+        set {
+            withMutation(keyPath: \.recentChannelIds) {
+                UserDefaults.recentChannelIds = newValue
             }
         }
     }

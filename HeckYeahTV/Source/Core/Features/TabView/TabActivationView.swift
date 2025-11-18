@@ -7,7 +7,6 @@
 //
 
 import SwiftUI
-import SwiftData
 
 struct TabActivationView: View {
 
@@ -17,11 +16,11 @@ struct TabActivationView: View {
         Color.clear
             .frame(maxWidth: .infinity, maxHeight: .infinity) // fill parent
             .accessibilityHidden(true)
-            .focusable(interactions: .activate)
+            .focusable(true, interactions: .activate)
             .contentShape(Rectangle())
             .onTapGesture {
                 withAnimation {
-                    appState.isGuideVisible = true
+                    appState.showAppNavigation = true
                 }
             }
     }

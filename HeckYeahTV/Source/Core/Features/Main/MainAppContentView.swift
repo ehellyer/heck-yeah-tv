@@ -10,20 +10,19 @@ import SwiftUI
 import SwiftData
 
 struct MainAppContentView: View {
-    
-    @Environment(\.scenePhase) private var scenePhase
-    
+
+    @State var appState: AppStateProvider = SharedAppState.shared
+    @FocusState var hasFocus: Bool
+
     @State private var fadeTask: Task<Void, Never>?
     @State private var showPlayPauseButton = false
-    @State var appState: AppStateProvider = SharedAppState.shared
     
-    @FocusState var hasFocus: Bool
-    
+    @Environment(\.scenePhase) private var scenePhase
+
     // Focus scopes (Namespace) for isolating focus between guide and activation views
     @Namespace private var activationScope
-    
-    let guideTransparencyColor: Color = Color.black.opacity(0.65)
-    
+    @Namespace private var guideScope
+
     var body: some View {
         // Alignment required to layout the play/pause button in the bottom left corner.
         ZStack(alignment: .bottomLeading)  {
@@ -35,10 +34,14 @@ struct MainAppContentView: View {
                 .focusable(false)
             
 #if os(tvOS)
-            if appState.isGuideVisible {
+            if appState.showAppNavigation {
                 TabContainerView(appState: $appState)
                     .transition(.opacity)
-                    .background(guideTransparencyColor)
+                    .background(Color.guideTransparency)
+#if os(tvOS)
+                    .focusScope(guideScope)
+#endif
+                    .defaultFocus($hasFocus, true)
             }
             
 #endif
@@ -47,7 +50,7 @@ struct MainAppContentView: View {
                 PlayPauseBadge()
             }
             
-            if not(appState.isGuideVisible) {
+            if not(appState.showAppNavigation) {
                 // Scope the activation view separately
                 TabActivationView(appState: $appState)
 #if os(tvOS)
@@ -72,9 +75,9 @@ struct MainAppContentView: View {
         })
         
         .onChange(of: scenePhase,  { _, newValue in
-            // If app becomes not-active with the guide up, dismiss the guide.
-            if newValue != .active && appState.isGuideVisible {
-                appState.isGuideVisible = false
+            // If app becomes not-active with the app navigation visible, dismiss the app navigation.
+            if newValue != .active && appState.showAppNavigation {
+                appState.showAppNavigation = false
             }
         })
         
@@ -85,7 +88,7 @@ struct MainAppContentView: View {
 #if !os(tvOS)
         
         .overlay {
-            if appState.isGuideVisible {
+            if appState.showAppNavigation {
                 VStack(spacing: 0) {
                     HStack {
                         Menu {
@@ -115,7 +118,7 @@ struct MainAppContentView: View {
                         
                         Button("Done") {
                             withAnimation {
-                                appState.isGuideVisible = false
+                                appState.showAppNavigation = false
                             }
                         }
                         .buttonStyle(.automatic)
@@ -132,7 +135,7 @@ struct MainAppContentView: View {
                     .zIndex(1)
                     SectionView(appState: $appState)
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
-                        .background(guideTransparencyColor)
+                        .background(Color.guideTransparency)
                 }
                 .transition(
                     .move(edge: .bottom)
@@ -141,6 +144,7 @@ struct MainAppContentView: View {
                 
             }
         }
+        
 #endif
     }
 }
@@ -205,7 +209,7 @@ extension MainAppContentView {
         .environment(mockData.channelMap)
         .onAppear {
             _appState.selectedChannel = mockData.channelMap.map[8]
-            _appState.isGuideVisible = true
+            _appState.showAppNavigation = true
             _appState.showFavoritesOnly = false
         }
 }

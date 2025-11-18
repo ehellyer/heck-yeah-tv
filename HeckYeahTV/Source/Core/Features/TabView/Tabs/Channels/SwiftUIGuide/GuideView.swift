@@ -12,16 +12,19 @@ import SwiftData
 struct GuideView: View {
     
     @Binding var appState: AppStateProvider
+    
     @Environment(\.modelContext) private var viewContext
     @Environment(ChannelMap.self) private var channelMap
+    
     @State private var rebuildChannelMapTask: Task<Void, Never>? = nil
     @State private var scrollToSelectedTask: Task<Void, Never>? = nil
+
     private let corner: CGFloat = 14
     
     var body: some View {
         ScrollViewReader { proxy in
             ScrollView(.vertical) {
-                LazyVStack(alignment: .leading, spacing: 10) {
+                LazyVStack(alignment: .leading, spacing: 20) {
                     ForEach(0..<channelMap.totalCount, id: \.self) { index in
                         let channelId = channelMap.map[index]
                         GuideRowLazy(channelId: channelId,
@@ -39,9 +42,11 @@ struct GuideView: View {
             }
             .background(.clear)
             .scrollClipDisabled(true)
-            .scrollContentBackground(.hidden)
             .contentMargins(.top, 10)
             .contentMargins(.bottom, 5)
+#if os(tvOS)
+            .focusSection()
+#endif
             .onAppear {
                 scrollToSelected(proxy: proxy)
             }

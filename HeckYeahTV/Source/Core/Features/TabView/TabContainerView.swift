@@ -23,47 +23,43 @@ struct TabContainerView: View {
             }
         )
     }
-
+    
     var body: some View {
-        VStack(alignment: .leading, spacing: 0) {
-            TabView(selection: selectedTab) {
-                
-                Tab(TabSection.channels.title,
-                    systemImage: TabSection.channels.systemImage,
-                    value: TabSection.channels) {
-                    ChannelsContainer(appState: $appState)
-                        .padding(.leading, -20) // Expand on the left edge to prevent the clipping of the focus effect on the fav toggle view.
-                }
-
-                Tab(TabSection.recents.title,
-                    systemImage: TabSection.recents.systemImage,
-                    value: TabSection.recents) {
-                    RecentsView()
-                }
-                
-                Tab(TabSection.search.title,
-                    systemImage: TabSection.search.systemImage,
-                    value: TabSection.search) {
-                    SearchView()
-                }
-                
-                Tab(TabSection.settings.title,
-                    systemImage: TabSection.settings.systemImage,
-                    value: TabSection.settings) {
-                    SettingsView()
-                }
+        TabView(selection: selectedTab) {
+            
+            Tab(TabSection.channels.title,
+                systemImage: TabSection.channels.systemImage,
+                value: TabSection.channels) {
+                ChannelsContainer(appState: $appState)
+                    .padding(.leading, -20) // Expand on the left edge to prevent the clipping of the focus effect on the fav toggle view.
             }
-            .frame(maxWidth: .infinity)                // Expand TabView to full width
             
-            .background(Color.clear)
+            Tab(TabSection.recents.title,
+                systemImage: TabSection.recents.systemImage,
+                value: TabSection.recents) {
+                RecentsView(appState: $appState)
+            }
             
-            // Support for dismissing the tabview by tapping menu on Siri remote for tvOS.
-            .onExitCommand {
-                withAnimation {
-                    appState.isGuideVisible = false
-                }
+            Tab(TabSection.search.title,
+                systemImage: TabSection.search.systemImage,
+                value: TabSection.search) {
+                SearchView()
+            }
+            
+            Tab(TabSection.settings.title,
+                systemImage: TabSection.settings.systemImage,
+                value: TabSection.settings) {
+                SettingsView()
             }
         }
-        .frame(maxWidth: .infinity)                    // Ensure container also spans full width
+        .frame(maxWidth: .infinity)
+        .background(Color.clear)
+        
+        // Support for dismissing the tabview by tapping menu on Siri remote for tvOS.
+        .onExitCommand {
+            withAnimation {
+                appState.showAppNavigation = false
+            }
+        }
     }
 }

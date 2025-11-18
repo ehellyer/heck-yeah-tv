@@ -21,7 +21,7 @@ struct SectionView: View {
                     GuideView(appState: $appState)
                         .background(Color.clear)
                 case .recents:
-                    RecentsView()
+                    RecentsView(appState: $appState)
                 case .search:
                     SearchView()
                 case .settings:
@@ -36,10 +36,17 @@ struct SectionView: View {
 #if !os(tvOS)
 #Preview("SectionView") {
     @Previewable @State var appState: any AppStateProvider = MockSharedAppState()
-
+    
     let mockData = MockDataPersistence(appState: appState)
-        
-    SectionView(appState: $appState)
+    // Loads up the recents list
+    appState.selectedChannel = mockData.channels[1].id
+    appState.selectedChannel = mockData.channels[3].id
+    appState.selectedChannel = mockData.channels[5].id
+    appState.selectedChannel = mockData.channels[7].id
+    appState.selectedChannel = mockData.channels[9].id
+    appState.selectedTab = .recents
+    
+    return SectionView(appState: $appState)
         .environment(\.modelContext, mockData.context)
         .environment(mockData.channelMap)
 }

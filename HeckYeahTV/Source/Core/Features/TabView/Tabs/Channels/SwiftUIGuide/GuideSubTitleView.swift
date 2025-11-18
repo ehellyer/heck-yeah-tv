@@ -13,14 +13,13 @@ struct GuideSubTitleView: View {
     @Environment(\.redactionReasons) private var redactionReasons
     @State var channel: IPTVChannel?
     
-    var number: String {
+    var number: String? {
         if channel == nil {
             return "Placeholder"
         } else if let _number = channel?.number {
-            let spacer = (channel?.quality.name != nil) ? " " : ""
-            return _number + spacer
+            return _number
         } else {
-            return ""
+            return nil
         }
     }
     
@@ -32,13 +31,21 @@ struct GuideSubTitleView: View {
         }
     }
     
+    var noSubText: Bool {
+        return channel?.number == nil
+            && channel?.quality == nil
+            && (channel?.hasDRM ?? false) == false
+    }
+    
     var body: some View {
         HStack(spacing: 8) {
-            Text(number)
-                .font(.caption)
-                .foregroundStyle(.guideForegroundNoFocus)
-                .lineLimit(1)
-                .truncationMode(.tail)
+            if let _number = number {
+                Text(_number)
+                    .font(.caption)
+                    .foregroundStyle(.guideForegroundNoFocus)
+                    .lineLimit(1)
+                    .truncationMode(.tail)
+            }
             
             if let _quality = quality {
                 Text(_quality)
@@ -68,21 +75,28 @@ struct GuideSubTitleView: View {
                                     lineWidth: redactionReasons.contains(.placeholder) ? 0 : 1)
                     )
             }
+            
+            if noSubText {
+                Text("")
+                    .font(.caption2)
+                    .foregroundStyle(.guideForegroundNoFocus)
+                    .lineLimit(1)
+            }
         }
     }
 }
 
 #Preview("GuideSubTitleView - loads from Mock SwiftData") {
-    @Previewable @State var appState: AppStateProvider =
-    MockSharedAppState(isPlayerPaused: false,
-                       selectedChannel: "chan.movies.001")
+    @Previewable @State var appState: any AppStateProvider = MockSharedAppState()
     
     let mockData = MockDataPersistence(appState: appState)
+    appState.selectedChannel = mockData.channels[0].id
+    appState.selectedChannel = mockData.channels[1].id
+    appState.selectedChannel = mockData.channels[2].id
+    appState.selectedChannel = mockData.channels[3].id
+    appState.selectedChannel = mockData.channels[4].id
     
-    HStack {
-        Spacer()
-        GuideSubTitleView(channel: mockData.channels[2])
-        //.redacted(reason: .placeholder)
-        Spacer()
-    }
+    return GuideSubTitleView(channel: mockData.channels[2])
+    
+    
 }

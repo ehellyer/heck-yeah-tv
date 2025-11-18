@@ -20,16 +20,18 @@ final class GuideRowLoader: ObservableObject {
         task = nil
     }
     
-    func load(channelId: ChannelId, context: ModelContext) {
+    func load(channelId: ChannelId, context: ModelContext, isDebug: Bool = false) {
         task?.cancel()
         task = Task { [weak self] in
             guard let self else { return }
             do {
+                if isDebug {
+                    try await Task.sleep(nanoseconds: 2_000_000_000) //Debug only
+                }
                 let chPredicate = #Predicate<IPTVChannel> { $0.id == channelId }
                 var chDescriptor = FetchDescriptor<IPTVChannel>(predicate: chPredicate)
                 chDescriptor.fetchLimit = 1
                 let model = try context.fetch(chDescriptor).first
-                //try await Task.sleep(nanoseconds: 1_000_000_000) //Debug only
                 try Task.checkCancellation()
                 await MainActor.run {
                     self.channel = model

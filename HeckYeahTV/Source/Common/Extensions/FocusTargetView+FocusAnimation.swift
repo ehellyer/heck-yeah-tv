@@ -23,11 +23,11 @@ protocol FocusTargetView {
 
 extension FocusTargetView where Self: UIView {
     
-    private var scaleUp: CGFloat { return 1.10 }
+    private var scaleUp: CGFloat { return 1.05 }
     private var scaleDown: CGFloat { return 0.95 }
     private var selectedLayerName: String { return "selectedEffectLayer" }
     
-    private func addParallaxMotionEffects(tiltValue: CGFloat = 0.25, panValue: CGFloat = 8.0) {
+    private func addParallaxMotionEffects(tiltValue: CGFloat = 0.25, panValue: CGFloat = 5.0) {
         let yRotation = UIInterpolatingMotionEffect(keyPath: "layer.transform.rotation.y", type: .tiltAlongHorizontalAxis)
         yRotation.minimumRelativeValue = tiltValue
         yRotation.maximumRelativeValue = -tiltValue

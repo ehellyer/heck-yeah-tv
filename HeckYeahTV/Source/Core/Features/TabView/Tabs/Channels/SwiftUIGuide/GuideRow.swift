@@ -11,13 +11,18 @@ import SwiftData
 
 struct GuideRow: View {
     let internalHzPadding: CGFloat = 15
+    let internalVtPadding: CGFloat = 15
     let cornerRadius: CGFloat = 20
-
+    
     @State var channel: IPTVChannel?
     @Binding var appState: AppStateProvider
     @State private var rowWidth: CGFloat = 800 // Default, will update dynamically
-
+    
     private func isHorizontallyCompact(width: CGFloat) -> Bool {
+        // Quick and dirty way to get this view to render correctly when used in Recents on AppleTV.  A better solution needs to be developed.
+        if appState.deviceType == .appleTV {
+            return true
+        }
         return width < 600
     }
     
@@ -27,11 +32,11 @@ struct GuideRow: View {
         }
         return selectedChannelId == channel?.id
     }
-
+    
     var body: some View {
         let compact = isHorizontallyCompact(width: rowWidth)
 
-        HStack(alignment: .center, spacing: 10) {
+        HStack(alignment: .center, spacing: 20) {
             Button {
                 channel?.isFavorite.toggle()
                 try? channel?.modelContext?.save()
@@ -41,37 +46,38 @@ struct GuideRow: View {
                     .foregroundStyle(channel?.isFavorite == true ? Color.yellow : Color.white)
                     .padding(.horizontal, 20)
                     .padding(.vertical, 20)
+                    .frame(maxHeight: .infinity)
             }
-            .buttonStyle(.borderless)
             .frame(maxHeight: .infinity)
-            .background(
-                RoundedRectangle(cornerRadius: cornerRadius)
-                    .fill(isPlaying ? .guideSelectedChannelBackground : .guideBackgroundNoFocus)
-            )
+            .modifier(ButtonBorderStyleModifier(isBordered: appState.deviceType == .appleTV,
+                                                isPlaying: isPlaying,
+                                                cornerRadius: cornerRadius))
 
             Button {
                 appState.selectedChannel = channel?.id
             } label: {
-                VStack(alignment: .leading, spacing: 2) {
-                    Text(channel?.title ?? "Placeholder")
-                        .font(.headline)
-                        .foregroundStyle(.guideForegroundNoFocus)
-                        .lineLimit(1)
-                        .truncationMode(.tail)
-                    GuideSubTitleView(channel: channel)
+                Group {
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(channel?.title ?? "Placeholder")
+                            .font(.headline)
+                            .foregroundStyle(.guideForegroundNoFocus)
+                            .lineLimit(1)
+                            .truncationMode(.tail)
+                        GuideSubTitleView(channel: channel)
+                    }
+                    .padding(.horizontal, internalHzPadding)
+                    .padding(.vertical, internalVtPadding)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .background(Color.clear)
                 }
-                .padding(.horizontal, internalHzPadding)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .background(Color.clear)
             }
-            .buttonStyle(.borderless)
             .frame(width: !compact ? 220 : nil)
             .frame(maxWidth: compact ? .infinity : nil)
             .frame(maxHeight: .infinity)
-            .background(
-                RoundedRectangle(cornerRadius: cornerRadius)
-                    .fill(isPlaying ? .guideSelectedChannelBackground : .guideBackgroundNoFocus)
-            )
+            .modifier(ButtonBorderStyleModifier(isBordered: appState.deviceType == .appleTV,
+                                                isPlaying: isPlaying,
+                                                cornerRadius: cornerRadius))
+
 
             if !compact {
                 Button {
@@ -84,11 +90,9 @@ struct GuideRow: View {
                 }
                 .frame(maxWidth: .infinity)
                 .frame(maxHeight: .infinity)
-                .background(
-                    RoundedRectangle(cornerRadius: cornerRadius)
-                        .fill(isPlaying ? .guideSelectedChannelBackground : .guideBackgroundNoFocus)
-                )
-                .buttonStyle(.borderless)
+                .modifier(ButtonBorderStyleModifier(isBordered: appState.deviceType == .appleTV,
+                                                    isPlaying: isPlaying,
+                                                    cornerRadius: cornerRadius))
                 .disabled(true)
             }
 
@@ -111,9 +115,30 @@ struct GuideRow: View {
     }
 }
 
-#if !os(tvOS)
+struct ButtonBorderStyleModifier: ViewModifier {
+    let isBordered: Bool
+    let isPlaying: Bool
+    let cornerRadius: CGFloat
+    
+    func body(content: Content) -> some View {
+        Group {
+            if isBordered {
+                content.buttonStyle(.bordered)
+            } else {
+                content.buttonStyle(.borderless)
+                    .background(
+                        RoundedRectangle(cornerRadius: cornerRadius)
+                            .fill(isPlaying ? .guideSelectedChannelBackground : .guideBackgroundNoFocus)
+                    )
+            }
+        }
+    }
+}
+
+
 #Preview("GuideRow - loads from Mock SwiftData") {
     @Previewable @State var appState: AppStateProvider = MockSharedAppState()
+    
     let mockData = MockDataPersistence(appState: appState)
     GuideRow(channel: mockData.channels[2], appState: $appState)
         //.redacted(reason: .placeholder)
@@ -121,5 +146,4 @@ struct GuideRow: View {
             appState.selectedChannel = mockData.channels[2].id
         }
 }
-#endif
 
