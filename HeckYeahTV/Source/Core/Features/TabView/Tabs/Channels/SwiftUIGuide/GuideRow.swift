@@ -18,6 +18,15 @@ struct GuideRow: View {
     @Binding var appState: AppStateProvider
     @State private var rowWidth: CGFloat = 800 // Default, will update dynamically
     
+    // Focus tracking for each button
+    @FocusState private var focusedButton: FocusedButton?
+    
+    private enum FocusedButton: Hashable {
+        case favorite
+        case channel
+        case guide
+    }
+    
     private func isHorizontallyCompact(width: CGFloat) -> Bool {
         // Quick and dirty way to get this view to render correctly when used in Recents on AppleTV.  A better solution needs to be developed.
         if appState.deviceType == .appleTV {
@@ -35,8 +44,8 @@ struct GuideRow: View {
     
     var body: some View {
         let compact = isHorizontallyCompact(width: rowWidth)
-
-        HStack(alignment: .center, spacing: 20) {
+        
+        HStack(alignment: .center, spacing: 0) {
             Button {
                 channel?.isFavorite.toggle()
                 try? channel?.modelContext?.save()
@@ -49,18 +58,20 @@ struct GuideRow: View {
                     .frame(maxHeight: .infinity)
             }
             .frame(maxHeight: .infinity)
-            .modifier(ButtonBorderStyleModifier(isBordered: appState.deviceType == .appleTV,
-                                                isPlaying: isPlaying,
-                                                cornerRadius: cornerRadius))
-
+            .focused($focusedButton, equals: .favorite)
+            .buttonStyle(FocusableButtonStyle(isPlaying: isPlaying,
+                                              cornerRadius: cornerRadius,
+                                              isFocused: focusedButton == .favorite))
+            .padding(.trailing, 20)
+            
             Button {
                 appState.selectedChannel = channel?.id
             } label: {
                 Group {
-                    VStack(alignment: .leading, spacing: 2) {
+                    VStack(alignment: .leading, spacing: 10) {
+                        // "Placeholder" is used for .redacted(reason: .placeholder) modifier.
                         Text(channel?.title ?? "Placeholder")
-                            .font(.headline)
-                            .foregroundStyle(.guideForegroundNoFocus)
+                            .font(Font(AppStyle.Fonts.titleFont))
                             .lineLimit(1)
                             .truncationMode(.tail)
                         GuideSubTitleView(channel: channel)
@@ -71,34 +82,36 @@ struct GuideRow: View {
                     .background(Color.clear)
                 }
             }
-            .frame(width: !compact ? 220 : nil)
+            .frame(width: !compact ? 320 : nil)
             .frame(maxWidth: compact ? .infinity : nil)
             .frame(maxHeight: .infinity)
-            .modifier(ButtonBorderStyleModifier(isBordered: appState.deviceType == .appleTV,
-                                                isPlaying: isPlaying,
-                                                cornerRadius: cornerRadius))
-
-
+            .focused($focusedButton, equals: .channel)
+            .buttonStyle(FocusableButtonStyle(isPlaying: isPlaying,
+                                              cornerRadius: cornerRadius,
+                                              isFocused: focusedButton == .channel))
+            .padding(.trailing, 20)
+            
             if !compact {
                 Button {
                     // No op
                 } label: {
                     Text("No guide information")
-                        .foregroundStyle(.guideForegroundNoFocus)
-                        .frame(maxHeight: .infinity)
+                        .font(Font(AppStyle.Fonts.programTitleFont))
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        .padding(.horizontal, internalHzPadding)
+                        .padding(.vertical, internalVtPadding)
                         .background(Color.clear)
                 }
-                .frame(maxWidth: .infinity)
-                .frame(maxHeight: .infinity)
-                .modifier(ButtonBorderStyleModifier(isBordered: appState.deviceType == .appleTV,
-                                                    isPlaying: isPlaying,
-                                                    cornerRadius: cornerRadius))
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .disabled(true)
+                .buttonStyle(FocusableButtonStyle(isPlaying: isPlaying,
+                                                  cornerRadius: cornerRadius,
+                                                  isFocused: focusedButton == .channel))
             }
-
-            if compact {
-                Spacer()
-            }
+            
+//            if compact {
+//                Spacer()
+//            }
         }
         .background(
             GeometryReader { proxy in
@@ -115,35 +128,14 @@ struct GuideRow: View {
     }
 }
 
-struct ButtonBorderStyleModifier: ViewModifier {
-    let isBordered: Bool
-    let isPlaying: Bool
-    let cornerRadius: CGFloat
-    
-    func body(content: Content) -> some View {
-        Group {
-            if isBordered {
-                content.buttonStyle(.bordered)
-            } else {
-                content.buttonStyle(.borderless)
-                    .background(
-                        RoundedRectangle(cornerRadius: cornerRadius)
-                            .fill(isPlaying ? .guideSelectedChannelBackground : .guideBackgroundNoFocus)
-                    )
-            }
-        }
-    }
-}
-
 
 #Preview("GuideRow - loads from Mock SwiftData") {
     @Previewable @State var appState: AppStateProvider = MockSharedAppState()
     
     let mockData = MockDataPersistence(appState: appState)
     GuideRow(channel: mockData.channels[2], appState: $appState)
-        //.redacted(reason: .placeholder)
+    //.redacted(reason: .placeholder)
         .onAppear {
-            appState.selectedChannel = mockData.channels[2].id
+            appState.selectedChannel = mockData.channels[1].id
         }
 }
-

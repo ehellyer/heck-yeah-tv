@@ -20,6 +20,8 @@ typealias PlatformView = NSView
 typealias PlatformViewController = NSViewController
 typealias PlatformFont = NSFont
 typealias PlatformColor = NSColor
+typealias PlatformImage = NSImage
+typealias PlatformLabel = NSTextField
 
 #elseif canImport(UIKit)
 
@@ -31,5 +33,8 @@ typealias PlatformView = UIView
 typealias PlatformViewController = UIViewController
 typealias PlatformFont = UIFont
 typealias PlatformColor = UIColor
+typealias PlatformImage = UIImage
+typealias PlatformLabel = UILabel
 
 #endif
+

@@ -56,54 +56,79 @@ extension NSView {
     /// let highRes = fancyView.asImage(scale: 2.0)
     /// ```
     func asImage(opaque: Bool = false, scale: CGFloat = 0.0) -> NSImage {
-        // Determine the actual scale to use (0.0 means "use screen scale")
-        let imageScale = scale > 0 ? scale : (window?.backingScaleFactor ?? 1.0)
+        self.layoutSubtreeIfNeeded()
         
-        // Calculate pixel dimensions based on scale
-        let pixelSize = NSSize(
-            width: bounds.width * imageScale,
-            height: bounds.height * imageScale
-        )
-        
-        // Create a bitmap representation with appropriate settings
-        guard let bitmapRep = NSBitmapImageRep(
-            bitmapDataPlanes: nil,
-            pixelsWide: Int(pixelSize.width),
-            pixelsHigh: Int(pixelSize.height),
-            bitsPerSample: 8,
-            samplesPerPixel: opaque ? 3 : 4, // RGB or RGBA
-            hasAlpha: !opaque,
-            isPlanar: false,
-            colorSpaceName: .deviceRGB,
-            bytesPerRow: 0,
-            bitsPerPixel: 0
-        ) else {
-            // Fallback to a blank image if bitmap creation fails (shouldn't happen)
+
+        guard let bitmapRep = self.bitmapImageRepForCachingDisplay(in: self.bounds) else {
             return NSImage(size: bounds.size)
         }
         
-        // Set up the graphics context for rendering
-        NSGraphicsContext.saveGraphicsState()
-        let context = NSGraphicsContext(bitmapImageRep: bitmapRep)
-        NSGraphicsContext.current = context
+        self.cacheDisplay(in: self.bounds, to: bitmapRep)
         
-        // Scale the context to match our desired resolution
-        context?.cgContext.scaleBy(x: imageScale, y: imageScale)
-        
-        // Render the layer hierarchy into the context
-        if let layer = layer {
-            layer.render(in: context!.cgContext)
-        } else {
-            // Fallback for non-layer-backed views (you really should enable layers though)
-            cacheDisplay(in: bounds, to: bitmapRep)
+        guard let data = bitmapRep.representation(using: .png, properties: [:]),
+              let image = NSImage(data: data) else {
+            
+            return NSImage(size: bounds.size)
         }
         
-        NSGraphicsContext.restoreGraphicsState()
-        
-        // Create the final NSImage with the bitmap representation
-        let image = NSImage(size: bounds.size)
-        image.addRepresentation(bitmapRep)
-        
         return image
+        
+//        let imageScale: CGFloat = scale > 0 ? scale : (window?.backingScaleFactor ?? 2.0)
+//
+//        // Calculate pixel dimensions based on scale
+//        let pixelSize = NSSize(
+//            width: bounds.width * imageScale,
+//            height: bounds.height * imageScale
+//        )
+//        
+//        // Create a bitmap representation with appropriate settings
+//        guard let bitmapRep = NSBitmapImageRep(
+//            bitmapDataPlanes: nil,
+//            pixelsWide: Int(pixelSize.width),
+//            pixelsHigh: Int(pixelSize.height),
+//            bitsPerSample: 8,
+//            samplesPerPixel: opaque ? 3 : 4, // RGB or RGBA
+//            hasAlpha: !opaque,
+//            isPlanar: false,
+//            colorSpaceName: .deviceRGB,
+//            bytesPerRow: 0,
+//            bitsPerPixel: 0
+//        ) else {
+//            // Fallback to a blank image if bitmap creation fails (shouldn't happen)
+//            return NSImage(size: bounds.size)
+//        }
+//        
+//        // Push graphics context
+//        NSGraphicsContext.saveGraphicsState()
+//        
+//        let context = NSGraphicsContext(bitmapImageRep: bitmapRep)
+//        NSGraphicsContext.current = context
+//        
+//        // Configure high-quality rendering settings
+//        context?.imageInterpolation = .high
+//        context?.shouldAntialias = true
+//        
+//        // Scale the context to match our desired resolution
+//        if let cgContext = context?.cgContext {
+//            cgContext.scaleBy(x: imageScale, y: imageScale)
+//            cgContext.setAllowsAntialiasing(true)
+//            cgContext.setShouldAntialias(true)
+//
+//            // Flip the coordinate system since NSView's draw uses flipped coordinates
+//            cgContext.translateBy(x: 0, y: bounds.height)
+//            cgContext.scaleBy(x: 1, y: -1)
+//            
+//            // Draw the entire view hierarchy
+//            self.displayIgnoringOpacity(bounds, in: context!)
+//        }
+//        
+//        // Pop graphics context
+//        NSGraphicsContext.restoreGraphicsState()
+//        
+//        // Create the final NSImage with the bitmap representation
+//        let image = NSImage(size: bounds.size)
+//        image.addRepresentation(bitmapRep)
+//        
+//        return image
     }
 }

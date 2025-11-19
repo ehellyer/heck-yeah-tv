@@ -6,7 +6,7 @@
 //  Copyright © 2025 Hellyer Multimedia. All rights reserved.
 //
 
-import UIKit
+import SwiftUI
 
 /// Extension that adds image generation capabilities to `StreamQuality` enum values.
 ///
@@ -27,7 +27,7 @@ extension StreamQuality {
     ///
     /// - Returns: A cached `PlatformImage` ready for your UI, or `nil` if the quality is unknown
     ///           (or if the universe decides to throw a tantrum and image rendering fails).
-    var image: UIImage? {
+    var image: PlatformImage? {
         let streamQuality = self
         guard streamQuality != .unknown else {
             return nil
@@ -38,8 +38,17 @@ extension StreamQuality {
             let view = StreamQualityView(streamQuality: self)
             
             // Force layout so Auto Layout does its thing and gives us proper bounds
+#if os(macOS)
+            let fittingSize = view.fittingSize
+            view.frame = CGRect(origin: .zero, size: fittingSize)
+            view.layoutSubtreeIfNeeded()
+            let renderedImage = view.asImage()
+            renderedImage.isTemplate = true
+            image = renderedImage           
+#else
             view.layoutIfNeeded()
             image = view.asImage().withRenderingMode(.alwaysTemplate)
+#endif
             Self.cachedImages[streamQuality] = image
         }
         return image
@@ -48,7 +57,7 @@ extension StreamQuality {
     /// The sacred cache where we store our precious rendered images.
     ///
     /// Built once, reused forever (or until the app terminates). This is peak efficiency, folks.
-    private static var cachedImages: [StreamQuality: UIImage] = [:]
+    private static var cachedImages: [StreamQuality: PlatformImage] = [:]
 }
 
 /// A view that renders a stream quality badge with rounded corners and a border.
@@ -61,7 +70,7 @@ extension StreamQuality {
 /// quality text like "HD", "FHD", "4K", etc. Perfect for when you want to
 /// flex about your streaming resolution.
 @MainActor
-class StreamQualityView: UIView {
+class StreamQualityView: PlatformView {
     
     // MARK: - Initialization
     
@@ -73,10 +82,9 @@ class StreamQualityView: UIView {
     ///
     /// - Parameter streamQuality: The quality level to display. Choose wisely.
     init(streamQuality: StreamQuality) {
-        super.init(frame: CGRect(x: 0, y: 0, width: 300, height: 240))  // Arbitrary size, Auto Layout will fix our mistakes
+        super.init(frame: CGRect(x: 0, y: 0, width: 50, height: 25))  // Arbitrary size, Auto Layout will fix our mistakes
         self.translatesAutoresizingMaskIntoConstraints = false
         self.clipsToBounds = false
-        
         self.commonInit(streamQuality)
     }
     
@@ -103,15 +111,22 @@ class StreamQualityView: UIView {
     /// - Parameter streamQuality: The quality to display in the badge.
     private func commonInit(_ streamQuality: StreamQuality) {
         
-        tag = Self.viewTypeTagId
-        
         // Create the label that will show our quality text
-        let label = UILabel()
+        let label = PlatformLabel()
+        label.frame = self.bounds //Initial size
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = AppStyle.Fonts.streamQualityFont
         label.textColor = .white
+#if os(macOS)
+        label.stringValue = streamQuality.name ?? ""
+        label.isEditable = false
+        label.isSelectable = false
+        label.isBezeled = false
+        label.drawsBackground = false
+        label.alignment = .natural
+#else
         label.text = streamQuality.name
-        
+#endif
         // Set up Auto Layout constraints - padding of 5pt horizontal, 3pt vertical
         // because we're not animals who put text right up against the border
         self.addSubview(label)
@@ -123,16 +138,34 @@ class StreamQualityView: UIView {
         // Tell Auto Layout: "You WILL respect the label's size, no negotiation"
         label.setContentCompressionResistancePriority(.required, for: .vertical)
         label.setContentCompressionResistancePriority(.required, for: .horizontal)
+        label.setContentHuggingPriority(.required, for: .horizontal)
+        label.setContentHuggingPriority(.required, for: .vertical)
         self.setContentCompressionResistancePriority(.required, for: .vertical)
         self.setContentCompressionResistancePriority(.required, for: .horizontal)
+        self.setContentHuggingPriority(.required, for: .horizontal)
+        self.setContentHuggingPriority(.required, for: .vertical)
 
         // Style the container with rounded corners and a border
         // Same visual result on all platforms, different APIs because... reasons
-        layer.cornerRadius = 6
-        layer.borderWidth = 1
-        layer.borderColor = UIColor.white.cgColor
+        
+#if os(macOS)
+        if self.wantsLayer == false { self.wantsLayer = true }
+        layer?.cornerRadius = 6.0
+        layer?.borderWidth = 0.8
+        layer?.borderColor = PlatformColor.white.cgColor
+        layer?.masksToBounds = false
+        layer?.backgroundColor = NSColor.clear.cgColor
+        layer?.contentsScale = 4.0
+        layer?.allowsEdgeAntialiasing = true
+        layer?.minificationFilter = .trilinear
+        
+#else
+        layer.cornerRadius = 6.0
+        layer.borderWidth = 1.0
+        layer.borderColor = PlatformColor.white.cgColor
         layer.masksToBounds = false
         self.backgroundColor = .clear
+#endif
     }
     
     // MARK: - Constants

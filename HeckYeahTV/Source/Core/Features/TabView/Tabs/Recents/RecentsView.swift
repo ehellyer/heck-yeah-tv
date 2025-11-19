@@ -25,9 +25,9 @@ struct RecentsView: View {
                     ForEach(appState.recentChannelIds, id: \.self) { channelId in
                         GuideRowLazy(channelId: channelId,
                                      appState: $appState)
-                            .id(channelId)
-                            .padding(.leading, 5)
-                            .padding(.trailing, 5)
+                        .id(channelId)
+                        .padding(.leading, 5)
+                        .padding(.trailing, 5)
                     }
                     if appState.recentChannelIds.isEmpty {
                         Text("No recent channels.")
@@ -39,7 +39,7 @@ struct RecentsView: View {
             }
             .background(.clear)
             .scrollClipDisabled(true)
-                .contentMargins(.top, 10)
+            .contentMargins(.top, 5)
             .contentMargins(.bottom, 5)
         }
     }

@@ -6,6 +6,8 @@
 //  Copyright © 2025 Hellyer Multimedia. All rights reserved.
 //
 
+import SwiftUI
+
 struct AppStyle {
     struct Fonts {
         static var titleFont: PlatformFont {

@@ -52,7 +52,7 @@ extension FocusTargetView where Self: UIView {
     }
     
     func becomeFocusedUsingAnimationCoordinator(in context: UIFocusUpdateContext, with coordinator: UIFocusAnimationCoordinator, viewBlock: ViewBlock? = nil) {
-        viewBlock?(UIColor.guideForegroundFocus)
+        viewBlock?(UIColor.guideForegroundFocused)
         coordinator.addCoordinatedAnimations({ () -> Void in
             var rotationMatrix = CATransform3DIdentity
             rotationMatrix.m34 = -0.001 //(1.0 / -1000.0) - Perspective effect based on distance to the views eye (in camera space).
@@ -64,7 +64,7 @@ extension FocusTargetView where Self: UIView {
                 let newLayer = CALayer()
                 newLayer.frame = self.bounds
                 newLayer.name = self.selectedLayerName
-                newLayer.backgroundColor = UIColor.guideBackgroundFocus.cgColor
+                newLayer.backgroundColor = UIColor.guideBackgroundFocused.cgColor
                 context.nextFocusedView?.layer.insertSublayer(newLayer, at: 0)
             }
             self.addParallaxMotionEffects()
