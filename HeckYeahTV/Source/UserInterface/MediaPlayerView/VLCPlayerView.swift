@@ -69,7 +69,7 @@ struct VLCPlayerView: CrossPlatformRepresentable {
         private lazy var mediaPlayer: VLCMediaPlayer = {
             let _player = VLCMediaPlayer()
             _player.drawable = self.platformView
-            _player.delegate = nil
+            _player.delegate = nil  //Not yet implemented
             return _player
         }()
         
@@ -134,7 +134,7 @@ struct VLCPlayerView: CrossPlatformRepresentable {
                     "avcodec-hw": "any",                // Prefer hardware decode when possible. (reduce CPU)
                     "drop-late-frames": true,           // This drops frames that are late. (reduce CPU)
                     "skip-frames": true,                // allow frame skipping under pressure (reduce CPU)
-                    "deinterlace": true,                // If needed, turn deinterlace off to reduce CPU.
+                    "deinterlace": true,                // If needed set to false to turn deinterlace off to reduce CPU.
                     "deinterlace-mode": "auto",         // Deinterlace method to use for video processing.
                     "video-filter": "deinterlace"       // This adds post-processing filters to enhance the picture quality, for instance deinterlacing, or distort the video.
                 ])

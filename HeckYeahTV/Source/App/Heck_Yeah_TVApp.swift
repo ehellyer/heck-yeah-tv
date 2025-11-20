@@ -46,9 +46,10 @@ struct Heck_Yeah_TVApp: App {
     @State private var dataPersistence: DataPersistence = DataPersistence.shared
     
     var body: some Scene {
-        WindowGroup {
+#if os(macOS)
+        Window("Heck Yeah TV", id: "main") {
             RootView(isBootComplete: $isBootComplete)
-                
+            
                 .task {
                     startBootstrap()
                 }
@@ -61,6 +62,23 @@ struct Heck_Yeah_TVApp: App {
                 .modelContext(dataPersistence.viewContext)
                 .environment(channelMap)
         }
+#else
+        WindowGroup {
+            RootView(isBootComplete: $isBootComplete)
+            
+                .task {
+                    startBootstrap()
+                }
+                .onChange(of: scenePhase) { _, phase in
+                    if phase != .active {
+                        startupTask?.cancel()
+                    }
+                }
+                .modelContainer(dataPersistence.container)
+                .modelContext(dataPersistence.viewContext)
+                .environment(channelMap)
+        }
+#endif
     }
     
     private func startBootstrap() {
@@ -87,8 +105,16 @@ struct Heck_Yeah_TVApp: App {
             
             let container = dataPersistence.container
             Task.detached(priority: .userInitiated) {
-                let importer = ChannelImporter(container: container)
-                try await importer.importChannels(streams: iptvController.streams, tunerChannels: hdHomeRunController.channels)
+                let importer = Importer(container: container)
+                try await withThrowingTaskGroup(of: Void.self) { group in
+                    group.addTask {
+                        try await importer.importCountries(iptvController.countries)
+                    }
+                    group.addTask {
+                        try await importer.importChannels(streams: iptvController.streams, tunerChannels: hdHomeRunController.channels)
+                    }
+                    try await group.waitForAll()
+                }
                 let cm = try await importer.buildChannelMap(showFavoritesOnly: appState.showFavoritesOnly)
                 await MainActor.run {
                     channelMap = cm

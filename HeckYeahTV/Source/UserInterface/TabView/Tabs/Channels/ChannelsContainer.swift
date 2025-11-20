@@ -58,8 +58,8 @@ extension ChannelsContainer {
         // Access the @MainActor DataPersistence singleton here
         let container = viewContext.container
         do {
-            // ChannelImporter is an actor; its async methods run in its isolation without blocking the main actor.
-            let importer = ChannelImporter(container: container)
+            // Importer is an actor; its async methods run in its isolation without blocking the main actor.
+            let importer = Importer(container: container)
             let cm = try await importer.buildChannelMap(showFavoritesOnly: SharedAppState.shared.showFavoritesOnly)
             await MainActor.run {
                 channelMap.update(with: cm.map)

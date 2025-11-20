@@ -10,5 +10,7 @@ import UIKit
 import SwiftUI
 
 extension UIImage {
-    var asImage: Image { return Image(uiImage: self) }
+    var asImage: Image {
+        return Image(uiImage: self)
+    }
 }

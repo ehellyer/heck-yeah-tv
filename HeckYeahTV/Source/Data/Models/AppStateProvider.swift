@@ -60,19 +60,21 @@ extension AppStateProvider {
 #endif
     }
     
-    /// Add the recently selected channel to the recently selected list.
-    /// - Parameter channelId: The channelId to add.
-    /// - Returns: The updated list of recently selected channels.
+    /// Puts your channel at the front of the line like it's VIP at a nightclub. If it's already in the list, we'll yank it out and shove it to the front anyway because apparently being #4 isn't good enough for you.
+    /// Oh, and if your list gets too long? We'll ruthlessly cut it off at 10 like a bouncer checking IDs. No exceptions.
+    /// - Parameter channelId: The chosen one. The channel that gets to cut in line ahead of everyone else.
+    /// - Returns: Your updated list of recently selected channels, now with 100% more favoritism.
     func addRecentChannelId(_ channelId: ChannelId) -> [ChannelId] {
         var updatedList = recentChannelIds
+        let frontOfTheLineIndex: Int = 0
         if let index = updatedList.firstIndex(of: channelId) {
             updatedList.remove(at: index)
-            updatedList.insert(channelId, at: 0)
+            updatedList.insert(channelId, at: frontOfTheLineIndex)
         } else {
-            updatedList.insert(channelId, at: 0)
+            updatedList.insert(channelId, at: frontOfTheLineIndex)
+            let maxAllowed = 10
+            updatedList = Array(updatedList.prefix(maxAllowed))
         }
-        let maxAllowed = 10
-        let _newRecentsList = Array(updatedList.prefix(maxAllowed))
-        return _newRecentsList
+        return updatedList
     }
 }

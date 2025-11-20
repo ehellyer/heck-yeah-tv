@@ -40,12 +40,6 @@ struct TabContainerView: View {
                 RecentsView(appState: $appState)
             }
             
-            Tab(TabSection.search.title,
-                systemImage: TabSection.search.systemImage,
-                value: TabSection.search) {
-                SearchView()
-            }
-            
             Tab(TabSection.settings.title,
                 systemImage: TabSection.settings.systemImage,
                 value: TabSection.settings) {

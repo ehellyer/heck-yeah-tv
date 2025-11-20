@@ -1,5 +1,5 @@
 //
-//  ChannelImporter.swift
+//  Importer.swift
 //  Heck Yeah TV
 //
 //  Created by Ed Hellyer on 9/30/25.
@@ -9,7 +9,7 @@
 import SwiftUI
 import SwiftData
 
-actor ChannelImporter {
+actor Importer {
     private let context: ModelContext
 
     init(container: ModelContainer) {
@@ -49,24 +49,11 @@ actor ChannelImporter {
                             source: src.sourceHint)
             )
         }
-
-        // update
-//        for model in existing where incomingIDs.contains(model.id) {
-//            if let src = incoming.first(where: { $0.idHint == model.id }) {
-//                model.title    = src.titleHint
-//                model.number   = src.numberHint
-//                model.url      = src.urlHint
-//                model.sortHint = src.sortHint
-//                model.quality  = src.qualityHint
-//                model.hasDRM   = src.hasDRMHint
-//                model.source   = src.sourceHint
-//            }
-//        }
         
         if context.hasChanges {
             try context.save()
         }
-        logDebug("Channel Import Process Completed. Total imported: \(incoming.count) 🏁")
+        logDebug("Channel import process completed. Total imported: \(incoming.count) 🏁")
     }
     
     func buildChannelMap(showFavoritesOnly: Bool) async throws -> ChannelMap {
@@ -89,5 +76,38 @@ actor ChannelImporter {
 
         logDebug("Channel map built.  Total Channels: \(cm.totalCount) 🏁")
         return cm
+    }
+    
+    func importCountries(_ countries : [Country]) async throws {
+        guard !countries.isEmpty else {
+            logWarning("No countries to import, exiting process without changes to local store.")
+            return
+        }
+        
+        logDebug("Country import process starting... 🏳️")
+
+        let existing = try context.fetch(FetchDescriptor<IPTVCountry>())
+        let existingIDs = Set(existing.map(\.code))
+        let incomingIDs = Set(countries.map(\.code))
+        
+        // delete
+        for model in existing where !incomingIDs.contains(model.code) {
+            context.delete(model)
+        }
+        
+        // insert
+        for src in countries where !existingIDs.contains(src.code) {
+            context.insert(
+                IPTVCountry(name: src.name,
+                            code: src.code,
+                            languages: src.languages,
+                            flag: src.flag)
+            )
+        }
+        
+        if context.hasChanges {
+            try context.save()
+        }
+        logDebug("Country import process completed. Total imported: \(countries.count) 🏁")
     }
 }

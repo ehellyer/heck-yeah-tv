@@ -74,7 +74,7 @@ private extension GuideView {
                 try await Task.sleep(nanoseconds: debounceNS)
                 try Task.checkCancellation()
                 
-                let importer = ChannelImporter(container: container)
+                let importer = Importer(container: container)
                 let cm = try await importer.buildChannelMap(showFavoritesOnly: SharedAppState.shared.showFavoritesOnly)
                 await MainActor.run {
                     channelMap.update(with: cm.map)

@@ -100,8 +100,10 @@ final class HDHomeRunDiscoveryController {
         if discoveredDevices.count > 0 {
             summary.mergeSummary(await deviceDetails())
         }
-        if let tuner = devices.first {
-            summary.mergeSummary(await self.channelLineUp(tuner))
+        
+        for device in devices {
+            let _summary = await channelLineUp(device)
+            summary.mergeSummary(_summary)
         }
         logDebug("HDHomeRun discovery completed. 🏁")
         return summary

@@ -17,9 +17,6 @@ enum TabSection: String, CaseIterable, Identifiable, JSONSerializable {
     /// All channels (with on screen toggle for favorites only)
     case channels
     
-    /// Search channels by name, category, country.
-    case search
-    
     /// Settings and things
     case settings
 }
@@ -34,7 +31,6 @@ extension TabSection {
         switch self {
             case .recents: return "Recents"
             case .channels: return "Channels"
-            case .search: return "Search"
             case .settings: return "Settings"
         }
     }
@@ -44,7 +40,6 @@ extension TabSection {
         switch self {
             case .recents: return "clock.fill"
             case .channels: return "list.bullet.rectangle.fill"
-            case .search: return "magnifyingglass"
             case .settings: return "gearshape.fill"
         }
     }

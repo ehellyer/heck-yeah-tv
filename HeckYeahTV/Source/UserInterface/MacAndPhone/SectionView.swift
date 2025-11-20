@@ -22,8 +22,6 @@ struct SectionView: View {
                         .background(Color.clear)
                 case .recents:
                     RecentsView(appState: $appState)
-                case .search:
-                    SearchView()
                 case .settings:
                     SettingsView()
             }
