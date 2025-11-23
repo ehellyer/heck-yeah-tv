@@ -85,7 +85,7 @@ struct Heck_Yeah_TVApp: App {
         // Always ensure guide starts off in the dismissed state when there is a selected channel. Else present the guide.  This prevents a black screen on first startup.
         let appState = SharedAppState.shared
         appState.showAppNavigation = (appState.selectedChannel == nil)
-        
+
         startupTask?.cancel()
         startupTask = Task {
             
@@ -112,6 +112,9 @@ struct Heck_Yeah_TVApp: App {
                     }
                     group.addTask {
                         try await importer.importChannels(streams: iptvController.streams, tunerChannels: hdHomeRunController.channels)
+                    }
+                    group.addTask {
+                        try await importer.importTunerDevices(hdHomeRunController.devices)
                     }
                     try await group.waitForAll()
                 }

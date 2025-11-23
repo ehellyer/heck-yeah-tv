@@ -10,11 +10,13 @@ import Foundation
 import SwiftData
 import Hellfire
 
+typealias CountryCode = String
+
 @Model final class IPTVCountry: JSONSerializable {
-    #Index<IPTVCountry>([\.name])
+    #Index<IPTVCountry>([\.code])
     
     init(name: String,
-         code: String,
+         code: CountryCode,
          languages: [String],
          flag: String) {
         self.name = name
@@ -27,7 +29,7 @@ import Hellfire
     var name: String
     
     /// [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) code of the country
-    var code: String
+    var code: CountryCode
     
     /// List of official languages of the country ([ISO 639-3](https://en.wikipedia.org/wiki/ISO_639-3) code)
     var languages: [String]
@@ -60,7 +62,7 @@ import Hellfire
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.name = try container.decode(String.self, forKey: .name)
-        self.code = try container.decode(String.self, forKey: .code)
+        self.code = try container.decode(CountryCode.self, forKey: .code)
         self.languages = try container.decode([String].self, forKey: .languages)
         self.flag = try container.decode(String.self, forKey: .flag)
     }

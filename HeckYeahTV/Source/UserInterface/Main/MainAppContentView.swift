@@ -52,7 +52,7 @@ struct MainAppContentView: View {
             
             if not(appState.showAppNavigation) {
                 // Scope the activation view separately
-                TabActivationView(appState: $appState)
+                NavigationActivationView(appState: $appState)
 #if os(tvOS)
                     .focusScope(activationScope)
 #endif
@@ -108,9 +108,9 @@ struct MainAppContentView: View {
                                 }
                             }
                         } label: {
-                            Label("", systemImage: "slider.horizontal.3")
+                            Label("Menu", systemImage: "slider.horizontal.3")
                         }
-                        .labelStyle(.iconOnly)
+                        .labelStyle(.titleAndIcon)
                         .buttonStyle(.automatic)
                         .tint(.white)
                         

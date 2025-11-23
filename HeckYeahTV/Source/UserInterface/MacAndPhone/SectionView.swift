@@ -19,11 +19,18 @@ struct SectionView: View {
             switch appState.selectedTab {
                 case .channels:
                     GuideView(appState: $appState)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
                         .background(Color.clear)
+                    
                 case .recents:
                     RecentsView(appState: $appState)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        .background(Color.clear)
+                    
                 case .settings:
-                    SettingsView()
+                    SettingsView(appState: $appState)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        .background(Color.clear)
             }
         }
         .background(Color.clear)

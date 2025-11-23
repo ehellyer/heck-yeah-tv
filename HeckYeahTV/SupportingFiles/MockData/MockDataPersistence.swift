@@ -21,7 +21,7 @@ final class MockDataPersistence {
     init(appState: any AppStateProvider) {
         
         let config = ModelConfiguration(isStoredInMemoryOnly: true)
-        let container = try! ModelContainer(for: IPTVChannel.self, configurations: config)
+        let container = try! ModelContainer(for: IPTVChannel.self, IPTVCountry.self, HDHomeRunServer.self, configurations: config)
         context = ModelContext(container)
         loadMockData()
         reloadChannels(appState: appState)
@@ -34,13 +34,24 @@ final class MockDataPersistence {
     
     private func loadMockData() {
         do {
-            let url = Bundle.main.url(forResource: "MockIPTVChannels", withExtension: "json")!
-            let data = try Data(contentsOf: url)
-            let mockChannels = try [IPTVChannel].initialize(jsonData: data)
+            let channelUrl = Bundle.main.url(forResource: "MockIPTVChannels", withExtension: "json")!
+            let channelData = try Data(contentsOf: channelUrl)
+            let mockChannels = try [IPTVChannel].initialize(jsonData: channelData)
             mockChannels.forEach(context.insert)
+
+            let countryUrl = Bundle.main.url(forResource: "MockCountries", withExtension: "json")!
+            let countryData = try Data(contentsOf: countryUrl)
+            let mockCountries = try [IPTVCountry].initialize(jsonData: countryData)
+            mockCountries.forEach(context.insert)
+
+            let tunerUrl = Bundle.main.url(forResource: "MockTunerDevices", withExtension: "json")!
+            let tunerData = try Data(contentsOf: tunerUrl)
+            let mockTuners = try [HDHomeRunServer].initialize(jsonData: tunerData)
+            mockTuners.forEach(context.insert)
+            
             try context.save()
         } catch {
-            logDebug("Failed to load MockIPTVChannels.json into SwiftData in-memory context.  Error: \(error)")
+            logDebug("Failed to load Mock json into SwiftData in-memory context.  Error: \(error)")
         }
     }
     

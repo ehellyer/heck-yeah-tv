@@ -61,6 +61,17 @@ extension UserDefaults {
         }
     }
 
+    
+    static var selectedCountry: CountryCode? {
+        get {
+            let code: CountryCode? = standard.string(forKey: AppKeys.SharedAppState.selectedCountryKey)
+            return code
+        }
+        set {
+            standard.set(newValue, forKey: AppKeys.SharedAppState.selectedCountryKey)
+        }
+    }
+    
     /// Gets or sets the last tab that was selected.  Defaults to Channels tab for new installation.  Persisted into UserDefaults.standard.
     static var selectedTab: TabSection {
         get {
@@ -93,6 +104,15 @@ extension UserDefaults {
         }
         set {
             standard.set(newValue, forKey: AppKeys.SharedAppState.recentChannelIdsKey)
+        }
+    }
+    
+    static var scanForTuners: Bool {
+        get {
+            standard.bool(forKey: AppKeys.SharedAppState.scanForTunersKey)
+        }
+        set {
+            standard.set(newValue, forKey: AppKeys.SharedAppState.scanForTunersKey)
         }
     }
 }

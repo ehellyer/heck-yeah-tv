@@ -38,12 +38,14 @@ struct TabContainerView: View {
                 systemImage: TabSection.recents.systemImage,
                 value: TabSection.recents) {
                 RecentsView(appState: $appState)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
             
             Tab(TabSection.settings.title,
                 systemImage: TabSection.settings.systemImage,
                 value: TabSection.settings) {
-                SettingsView()
+                SettingsView(appState: $appState)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
         }
         .frame(maxWidth: .infinity)

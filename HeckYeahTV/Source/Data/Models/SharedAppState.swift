@@ -16,6 +16,7 @@ final class SharedAppState: AppStateProvider {
     
     private init() { }
     
+    /// Is the player paused? Spoiler alert: if the video isn't moving, it's paused.
     var isPlayerPaused: Bool {
         get {
             access(keyPath: \.isPlayerPaused)
@@ -28,6 +29,7 @@ final class SharedAppState: AppStateProvider {
         }
     }
     
+    /// Show the navigation UI or go full stealth mode. Your choice.
     var showAppNavigation: Bool {
         get {
             access(keyPath: \.showAppNavigation)
@@ -40,6 +42,7 @@ final class SharedAppState: AppStateProvider {
         }
     }
     
+    /// Only show the good channels. Life's too short for the rest.
     var showFavoritesOnly: Bool {
         get {
             access(keyPath: \.showFavoritesOnly)
@@ -52,6 +55,20 @@ final class SharedAppState: AppStateProvider {
         }
     }
     
+    /// Which country? All of them? None of them? The suspense is killing me.
+    var selectedCountry: CountryCode? {
+        get {
+            access(keyPath: \.selectedCountry)
+            return UserDefaults.selectedCountry
+        }
+        set {
+            withMutation(keyPath: \.selectedCountry) {
+                UserDefaults.selectedCountry = newValue
+            }
+        }
+    }
+    
+    /// Which tab are you pretending to use right now?
     var selectedTab: TabSection {
         get {
             access(keyPath: \.selectedTab)
@@ -64,6 +81,7 @@ final class SharedAppState: AppStateProvider {
         }
     }
     
+    /// The channel you're watching. We're totally not keeping track. (We are.)
     var selectedChannel: ChannelId? {
         get {
             access(keyPath: \.selectedChannel)
@@ -79,7 +97,7 @@ final class SharedAppState: AppStateProvider {
         }
     }
     
-    /// Gets the list of recent channels selected.  This is a LIFO list.  0-n  Where 0 is most recent and n is the oldest used.
+    /// Your channel-surfing shame, preserved forever in a LIFO stack. 0 = your most recent bad decision.
     private(set) var recentChannelIds: [ChannelId] {
         get {
             access(keyPath: \.recentChannelIds)
@@ -88,6 +106,19 @@ final class SharedAppState: AppStateProvider {
         set {
             withMutation(keyPath: \.recentChannelIds) {
                 UserDefaults.recentChannelIds = newValue
+            }
+        }
+    }
+    
+    /// Scan for tuners. It's like a treasure hunt, but for TV hardware you forgot you owned.
+    var scanForTuners: Bool {
+        get {
+            access(keyPath: \.scanForTuners)
+            return UserDefaults.scanForTuners
+        }
+        set {
+            withMutation(keyPath: \.scanForTuners) {
+                UserDefaults.scanForTuners = newValue
             }
         }
     }

@@ -11,8 +11,6 @@ import Foundation
 import UIKit
 #endif
 
-typealias ChannelId = String
-
 enum DeviceType {
     case iPhone
     case iPad
@@ -28,10 +26,12 @@ protocol AppStateProvider {
     var isPlayerPaused: Bool { get set }
     var showAppNavigation: Bool { get set }
     var showFavoritesOnly: Bool { get set }
+    var selectedCountry: CountryCode? { get set }
     var selectedTab: TabSection { get set }
     var selectedChannel: ChannelId? { get set }
     var recentChannelIds: [ChannelId] { get }
     var deviceType: DeviceType { get }
+    var scanForTuners: Bool { get set }
 }
 
 extension AppStateProvider {
@@ -60,7 +60,8 @@ extension AppStateProvider {
 #endif
     }
     
-    /// Puts your channel at the front of the line like it's VIP at a nightclub. If it's already in the list, we'll yank it out and shove it to the front anyway because apparently being #4 isn't good enough for you.
+    /// Puts your channel at the front of the line like it's VIP at a nightclub. If it's already in the list, we'll yank it
+    /// out and shove it to the front anyway because apparently being #4 isn't good enough for you.
     /// Oh, and if your list gets too long? We'll ruthlessly cut it off at 10 like a bouncer checking IDs. No exceptions.
     /// - Parameter channelId: The chosen one. The channel that gets to cut in line ahead of everyone else.
     /// - Returns: Your updated list of recently selected channels, now with 100% more favoritism.
@@ -71,8 +72,8 @@ extension AppStateProvider {
             updatedList.remove(at: index)
             updatedList.insert(channelId, at: frontOfTheLineIndex)
         } else {
-            updatedList.insert(channelId, at: frontOfTheLineIndex)
             let maxAllowed = 10
+            updatedList.insert(channelId, at: frontOfTheLineIndex)
             updatedList = Array(updatedList.prefix(maxAllowed))
         }
         return updatedList

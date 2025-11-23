@@ -21,6 +21,7 @@ struct PlayPauseBadge: View {
                 .font(.headline)
                 .minimumScaleFactor(0.8)
         }
+        .foregroundStyle(Color.white)
         .padding(.horizontal, 14)
         .padding(.vertical, 10)
         .background(
@@ -28,11 +29,11 @@ struct PlayPauseBadge: View {
                 .fill(.ultraThinMaterial)
                 .overlay(
                     RoundedRectangle(cornerRadius: 16, style: .continuous)
-                        .strokeBorder(.white.opacity(0.15))
+                        .strokeBorder(.white.opacity(0.25))
                 )
         )
         
-        .shadow(radius: 8, y: 4)
+        .shadow(color: .black.opacity(0.5), radius: 2, x: 1, y: 1)
 #if os(tvOS)
         .focusable(false)
 #endif
@@ -44,6 +45,6 @@ struct PlayPauseBadge: View {
 }
 
 #Preview {
-    @Previewable @State var appState = MockSharedAppState(isPlayerPaused: false)
+    @Previewable @State var appState = MockSharedAppState(isPlayerPaused: true)
     PlayPauseBadge(appState: appState)
 }

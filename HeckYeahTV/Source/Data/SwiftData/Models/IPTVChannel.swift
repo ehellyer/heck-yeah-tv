@@ -10,6 +10,8 @@ import Foundation
 import SwiftData
 import Hellfire
 
+typealias ChannelId = String
+
 @Model final class IPTVChannel: JSONSerializable {
     #Index<IPTVChannel>([\.sortHint], [\.isFavorite, \.sortHint], [\.id])
 

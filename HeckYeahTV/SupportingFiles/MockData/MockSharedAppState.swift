@@ -15,6 +15,7 @@ final class MockSharedAppState: AppStateProvider {
     var isPlayerPaused: Bool
     var showAppNavigation: Bool
     var showFavoritesOnly: Bool
+    var selectedCountry: CountryCode?
     var selectedTab: TabSection
     var selectedChannel: ChannelId? {
         didSet {
@@ -24,19 +25,24 @@ final class MockSharedAppState: AppStateProvider {
         }
     }
     var recentChannelIds: [ChannelId]
+    var scanForTuners: Bool
 
     init(isPlayerPaused: Bool = false,
          showAppNavigation: Bool = false,
          showFavoritesOnly: Bool = false,
+         selectedCountry: CountryCode? = nil,
          selectedTab: TabSection = .channels,
          selectedChannel: ChannelId? = nil,
-         recentChannelIds: [ChannelId] = []) {
+         recentChannelIds: [ChannelId] = [],
+         scanForTuners: Bool = true) {
         
         self.isPlayerPaused = isPlayerPaused
         self.showAppNavigation = showAppNavigation
         self.showFavoritesOnly = showFavoritesOnly
+        self.selectedCountry = selectedCountry
         self.selectedTab = selectedTab
         self.selectedChannel = selectedChannel
         self.recentChannelIds = recentChannelIds
+        self.scanForTuners = scanForTuners
     }
 }

@@ -110,4 +110,43 @@ actor Importer {
         }
         logDebug("Country import process completed. Total imported: \(countries.count) 🏁")
     }
+    
+    func importTunerDevices(_ devices : [HDHomeRunDevice]) async throws {
+        guard !devices.isEmpty else {
+            logWarning("No devices to import, exiting process without changes to local store.")
+            return
+        }
+        
+        logDebug("Device import process starting... 🏳️")
+        
+        let existing = try context.fetch(FetchDescriptor<HDHomeRunServer>())
+        let existingIDs = Set(existing.map(\.deviceId))
+        let incomingIDs = Set(devices.map(\.deviceId))
+        
+        // delete
+        for model in existing where !incomingIDs.contains(model.deviceId) {
+            context.delete(model)
+        }
+        
+        // insert
+        for src in devices where !existingIDs.contains(src.deviceId) {
+            context.insert(
+                HDHomeRunServer(deviceId: src.deviceId,
+                                friendlyName: src.friendlyName,
+                                modelNumber: src.modelNumber,
+                                firmwareName: src.firmwareName,
+                                firmwareVersion: src.firmwareVersion,
+                                deviceAuth: src.deviceAuth,
+                                baseURL: src.baseURL,
+                                lineupURL: src.lineupURL,
+                                tunerCount: src.tunerCount,
+                                includeChannelLineUp: true)
+            )
+        }
+        
+        if context.hasChanges {
+            try context.save()
+        }
+        logDebug("Device import process completed. Total imported: \(devices.count) 🏁")
+    }
 }
