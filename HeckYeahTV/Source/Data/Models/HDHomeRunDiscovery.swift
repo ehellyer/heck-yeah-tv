@@ -9,12 +9,14 @@
 import Foundation
 import Hellfire
 
+typealias HDHomeRunDeviceId = String
+
 /// HDHomeRunDiscovery - Local network scan for HDHomeRun tuner servers (e.g The little black box with one or more tuners inside).  Returned as an array of `HDHomeRunDiscovery`.
 ///
 /// e.g. [https://api.hdhomerun.com/discover](https://api.hdhomerun.com/discover) -> `[HDHomeRunDiscovery]`
 struct HDHomeRunDiscovery: JSONSerializable, Equatable  {
     
-    var deviceId: String
+    var deviceId: HDHomeRunDeviceId
     var localIP: String
     var baseURL: URL
     var discoverURL: URL

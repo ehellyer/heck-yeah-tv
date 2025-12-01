@@ -16,6 +16,7 @@ final class MockDataPersistence {
     
     private(set) var context: ModelContext
     private(set) var channels: [IPTVChannel] = []
+    private(set) var countries: [IPTVCountry] = []
     private(set) var channelMap: ChannelMap = ChannelMap(map: [])
     
     init(appState: any AppStateProvider) {
@@ -24,11 +25,12 @@ final class MockDataPersistence {
         let container = try! ModelContainer(for: IPTVChannel.self, IPTVCountry.self, HDHomeRunServer.self, configurations: config)
         context = ModelContext(container)
         loadMockData()
-        reloadChannels(appState: appState)
+        reloadMockProperties(appState: appState)
     }
     
-    func reloadChannels(appState: any AppStateProvider) {
+    func reloadMockProperties(appState: any AppStateProvider) {
         loadChannels(appState: appState)
+        loadCountries()
         buildChannelMap()
     }
     
@@ -63,6 +65,14 @@ final class MockDataPersistence {
         self.channels = (try? context.fetch(channelsDescriptor)) ?? []
     }
 
+    private func loadCountries() {
+        let descriptor: FetchDescriptor<IPTVCountry> = FetchDescriptor<IPTVCountry>(
+            sortBy: [SortDescriptor(\IPTVCountry.name, order: .forward)]
+        )
+       
+        self.countries = (try? context.fetch(descriptor)) ?? []
+    }
+    
     private func buildChannelMap() {
         let map: [ChannelId] = channels.map { $0.id }
         channelMap = ChannelMap(map: map)

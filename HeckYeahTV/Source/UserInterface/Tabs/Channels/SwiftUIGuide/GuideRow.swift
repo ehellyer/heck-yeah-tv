@@ -133,9 +133,9 @@ struct GuideRow: View {
     @Previewable @State var appState: AppStateProvider = MockSharedAppState()
     
     let mockData = MockDataPersistence(appState: appState)
-    GuideRow(channel: mockData.channels[2], appState: $appState)
+    GuideRow(channel: mockData.channels[8], appState: $appState)
     //.redacted(reason: .placeholder)
         .onAppear {
-            appState.selectedChannel = mockData.channels[1].id
+            appState.selectedChannel = mockData.channels[7].id
         }
 }

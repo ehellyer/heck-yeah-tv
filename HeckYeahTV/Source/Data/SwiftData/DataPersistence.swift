@@ -8,6 +8,7 @@
 
 import Foundation
 import SwiftData
+import SQLite3
 
 @MainActor
 final class DataPersistence {
@@ -45,8 +46,21 @@ final class DataPersistence {
             storeURL = _storeURL
             logDebug("HeckYeahTV persistent store URL: \(_storeURL.path)")
             
-            let config = ModelConfiguration(url: self.storeURL)
-            container = try ModelContainer(for: IPTVChannel.self, IPTVCountry.self, HDHomeRunServer.self, configurations: config)
+            if Self.isLegacyUnversionedStore(at: _storeURL) {
+                logWarning("Detected legacy unversioned store. Deleting and recreating with versioned schema...")
+                try Self.deletePersistentStore(at: _storeURL)
+                logDebug("Legacy store deleted successfully.")
+            }
+            
+            let schema = Schema(versionedSchema: HeckYeahSchema.self)
+            let modelConfig = ModelConfiguration(schema: schema,
+                                            url: self.storeURL,
+                                            cloudKitDatabase: .none)
+            
+            container = try ModelContainer(for: schema,
+                                           migrationPlan: UpgradeSchemaMigrationPlan.self,
+                                           configurations: [modelConfig])
+            
             viewContext = ModelContext(container)
             viewContext.autosaveEnabled = true
         } catch {
@@ -54,6 +68,49 @@ final class DataPersistence {
         }
     }
 
+    /// Check if the store at the given URL is a legacy unversioned store.
+    /// Returns true if the store exists but doesn't have versioned schema.
+    private static func isLegacyUnversionedStore(at url: URL) -> Bool {
+        guard FileManager.default.fileExists(atPath: url.path) else {
+            return false
+        }
+        
+        var db: OpaquePointer?
+        guard sqlite3_open_v2(url.path, &db, SQLITE_OPEN_READONLY, nil) == SQLITE_OK else {
+            logWarning("Could not open store to check version")
+            return false
+        }
+        defer { sqlite3_close(db) }
+        var statement: OpaquePointer?
+        let query = "SELECT ZVERSION FROM ZSCHEMAVERSION LIMIT 1"
+        
+        // If ZSCHEMAVERSION with column ZVERSION doesn't exist, it's a legacy store.
+        let isLegacyStore = sqlite3_prepare_v2(db, query, -1, &statement, nil) != SQLITE_OK
+        return isLegacyStore
+    }
+    
+    /// Delete the persistent store and all related files (.sqlite, .sqlite-shm, .sqlite-wal)
+    private static func deletePersistentStore(at url: URL) throws {
+        let fileManager = FileManager.default
+        
+        // Delete main store file
+        if fileManager.fileExists(atPath: url.path) {
+            try fileManager.removeItem(at: url)
+        }
+        
+        // Delete WAL file
+        let walURL = url.deletingPathExtension().appendingPathExtension("sqlite-wal")
+        if fileManager.fileExists(atPath: walURL.path) {
+            try fileManager.removeItem(at: walURL)
+        }
+        
+        // Delete SHM file
+        let shmURL = url.deletingPathExtension().appendingPathExtension("sqlite-shm")
+        if fileManager.fileExists(atPath: shmURL.path) {
+            try fileManager.removeItem(at: shmURL)
+        }
+    }
+    
     /// MainActor singleton instance.
     static let shared = DataPersistence()
 

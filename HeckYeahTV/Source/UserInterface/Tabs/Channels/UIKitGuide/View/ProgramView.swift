@@ -146,12 +146,12 @@ extension ProgramView: FocusTargetView {
     override func didUpdateFocus(in context: UIFocusUpdateContext, with coordinator: UIFocusAnimationCoordinator) {
         super.didUpdateFocus(in: context, with: coordinator)
         if (context.nextFocusedView === self) {
-            self.becomeFocusedUsingAnimationCoordinator(in: context, with: coordinator) { [weak self] color in
-                self?.updateViewTintColor(color)
+            self.becomeFocusedUsingAnimationCoordinator(in: context, with: coordinator) { [weak self] foregroundColor, backgroundColor in
+                self?.updateViewTintColor(foregroundColor)
             }
         } else if (context.previouslyFocusedView === self) {
-            self.resignFocusUsingAnimationCoordinator(in: context, with: coordinator) { [weak self] color in
-                self?.updateViewTintColor(color)
+            self.resignFocusUsingAnimationCoordinator(in: context, with: coordinator) { [weak self] foregroundColor, backgroundColor in
+                self?.updateViewTintColor(foregroundColor)
             }
         }
     }

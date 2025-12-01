@@ -163,11 +163,15 @@ class GuideViewController: UIViewController {
     
     private func scrollToSelectedChannel(animated: Bool = true) {
         guard let _channelId = targetChannelId else { return }
-        let index = channelMap?.map.firstIndex(of: _channelId) ?? 0
-        let indexPath = IndexPath(row: index, section: 0)
-        
-        // Focus will be applied in scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView)
-        tableView.scrollToRow(at: indexPath, at: .middle, animated: animated)
+        if let index = channelMap?.map.firstIndex(of: _channelId) {
+            let indexPath = IndexPath(row: index, section: 0)
+            // Focus will be applied in scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView)
+            tableView.scrollToRow(at: indexPath, at: .middle, animated: animated)
+        } else if channelMap?.map.isEmpty == false {
+            //Just scroll to the first item in the list when the target channelId is not found, AND there are channels in the list.
+            let indexPath = IndexPath(row: 0, section: 0)
+            tableView.scrollToRow(at: indexPath, at: .middle, animated: animated)
+        }
     }
     
     //MARK: - Private API - Focus

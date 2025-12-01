@@ -78,7 +78,10 @@ final class HDHomeRunDiscoveryController {
                                      headers: self.defaultHeaders)
         do {
             let response = try await self.sessionInterface.execute(request)
-            self.channels = try [HDHomeRunChannel].initialize(jsonData: response.body)
+
+            // Pass along the deviceId in codingUserInfo so that the deviceId can be passed along into the decoding init of the `HDHomeRunChannel` model.
+            let codingUserInfo: [CodingUserInfoKey : any Sendable] = [CodingUserInfoKey.homeRunDeviceIdKey: tunerServerDevice.deviceId]
+            self.channels = try [HDHomeRunChannel].initialize(jsonData: response.body, codingUserInfo: codingUserInfo)
             summary.successes[tunerServerDevice.lineupURL] = channels.count
         } catch {
             summary.failures[tunerServerDevice.lineupURL] = error

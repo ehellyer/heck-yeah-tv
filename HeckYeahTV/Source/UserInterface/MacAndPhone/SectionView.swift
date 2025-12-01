@@ -28,14 +28,13 @@ struct SectionView: View {
                         .background(Color.clear)
                     
                 case .settings:
-                    SettingsView(appState: $appState)
+                    SettingsContainerView(appState: $appState)
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                         .background(Color.clear)
             }
         }
         .background(Color.clear)
     }
-    
 }
 
 #if !os(tvOS)

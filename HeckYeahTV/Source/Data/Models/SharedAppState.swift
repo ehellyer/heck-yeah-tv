@@ -69,7 +69,7 @@ final class SharedAppState: AppStateProvider {
     }
     
     /// Which tab are you pretending to use right now?
-    var selectedTab: TabSection {
+    var selectedTab: AppSection {
         get {
             access(keyPath: \.selectedTab)
             return UserDefaults.selectedTab

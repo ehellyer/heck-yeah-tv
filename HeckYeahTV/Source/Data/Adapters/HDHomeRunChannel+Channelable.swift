@@ -16,5 +16,5 @@ extension HDHomeRunChannel: Channelable {
     var urlHint: URL { url }
     var qualityHint: StreamQuality { (isHD ? .fhd : .unknown) }
     var hasDRMHint: Bool { hasDRM }
-    var sourceHint: ChannelSource { ChannelSource.homeRunTuner }
+    var sourceHint: ChannelSource { ChannelSource.homeRunTuner(deviceId: deviceId) }
 }

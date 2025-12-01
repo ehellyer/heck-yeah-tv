@@ -22,7 +22,7 @@ struct BootSplashView: View {
     
     @State private var didPlay = false
     @State private var gradientStart = UnitPoint(x: 0, y: 0)
-    @State private var gradientEnd = UnitPoint(x: 1.47, y: 2.5)
+    @State private var gradientEnd = UnitPoint(x: 2, y: 2)
     
     init(title: String = "Heck\u{00A0}Yeah\u{00A0}TV",
          subtitle: String = "Discovering channels...",
@@ -70,54 +70,64 @@ struct BootSplashView: View {
     }
     
     var body: some View {
-        ZStack {
-            LinearGradient(colors: [.mainAppTheme, .black],
-                           startPoint: gradientStart,
-                           endPoint: gradientEnd)
-                .ignoresSafeArea()
-                .onAppear {
-                    animateGradient()
-                }
-            
-            DustyView()
-                .blendMode(.plusLighter)
-                .ignoresSafeArea()
-            
-            VStack(spacing: 16) {
-                Text(title)
-                    .font(.system(size: titleFontSize,
-                                  weight: .heavy,
-                                  design: .rounded))
-                    .foregroundStyle(Color.white.opacity(0.4))
-                    .multilineTextAlignment(.center)
+        GeometryReader { geometry in
+            ZStack {
+                LinearGradient(colors: [.mainAppTheme, .black],
+                               startPoint: gradientStart,
+                               endPoint: gradientEnd)
+                    .ignoresSafeArea()
+                    .onAppear {
+                        animateGradient(viewSize: geometry.size)
+                    }
                 
-                HStack(spacing: 10) {
-                    Text(subtitle)
-                        .font(.system(size: subtitleFontSize,
+                DustyView()
+                    .blendMode(.plusLighter)
+                    .ignoresSafeArea()
+                
+                VStack(spacing: 16) {
+                    Text(title)
+                        .font(.system(size: titleFontSize,
                                       weight: .heavy,
                                       design: .rounded))
-                        .foregroundStyle(Color.white.opacity(0.6))
+                        .foregroundStyle(Color.white.opacity(0.4))
+                        .multilineTextAlignment(.center)
+                    
+                    HStack(spacing: 10) {
+                        Text(subtitle)
+                            .font(.system(size: subtitleFontSize,
+                                          weight: .heavy,
+                                          design: .rounded))
+                            .foregroundStyle(Color.white.opacity(0.6))
+                    }
+                    .accessibilityElement(children: .combine)
+                    .accessibilityLabel("\(title). \(subtitle)")
                 }
-                .accessibilityElement(children: .combine)
-                .accessibilityLabel("\(title). \(subtitle)")
             }
-        }
-        
-        .allowsHitTesting(false)
-        
-        .onAppear {
-            playBootChimeIfNeeded()
+            
+            .allowsHitTesting(false)
+            
+            .onAppear {
+                playBootChimeIfNeeded()
+            }
         }
     }
     
-    private func animateGradient() {
-        let angle = 1.8
-        let distance = 2.0
+    private func animateGradient(viewSize: CGSize) {
+        // Bounding circle diameter
+        let diameter: Double = sqrt(pow(viewSize.width, 2) + pow(viewSize.height, 2))
         
-        let newStartX = 0.5 + cos(angle) * distance
-        let newStartY = 0.5 + sin(angle) * distance
-        let newEndX = 0.5 + cos(angle + .pi) * distance
-        let newEndY = 0.5 + sin(angle + .pi) * distance
+        // Normalize to unit point scale (0-1)
+        let radius: Double = diameter / max(viewSize.width, viewSize.height) / 2
+        
+        let angle: Double = 0
+        let distance: Double = radius * 4
+        let endAngle: Double = .pi
+        
+        // Calculate points on the circumference of the bounding circle
+        let newStartX = (0.5 + cos(angle)) * (distance * 0.5)
+        let newStartY = (0.5 + sin(angle)) *  (distance * 0.5)
+        let newEndX = (0.5 + cos(endAngle)) * distance
+        let newEndY = (0.5 + sin(endAngle)) * distance
         
         withAnimation(.easeOut(duration: 10.0).repeatForever(autoreverses: true)) {
             gradientStart = UnitPoint(x: newStartX, y: newStartY)

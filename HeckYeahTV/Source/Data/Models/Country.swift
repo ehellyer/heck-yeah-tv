@@ -16,7 +16,7 @@ struct Country: JSONSerializable {
     var name: String
     
     /// [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) code of the country
-    var code: String
+    var code: CountryCode
     
     /// List of official languages of the country ([ISO 639-3](https://en.wikipedia.org/wiki/ISO_639-3) code)
     var languages: [String]

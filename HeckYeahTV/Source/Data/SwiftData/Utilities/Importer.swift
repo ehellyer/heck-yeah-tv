@@ -22,37 +22,50 @@ actor Importer {
             logWarning("No channels to import, exiting process without changes to local store.")
             return
         }
-       
+        
         logDebug("Channel Import Process Starting... 🏳️")
-        let existing = try context.fetch(FetchDescriptor<IPTVChannel>())
-
+        
         let incoming: [Channelable] = streams + tunerChannels
-        let existingIDs = Set(existing.map(\.id))
         let incomingIDs = Set(incoming.map(\.idHint))
-
+        
+        let existing = try context.fetch(FetchDescriptor<IPTVChannel>())
+        let existingIDs = Set(existing.map(\.id))
+        
         // delete
         for model in existing where !incomingIDs.contains(model.id) {
             context.delete(model)
         }
-
+        
         // insert
         for src in incoming where !existingIDs.contains(src.idHint) {
             context.insert(
-                IPTVChannel(id: src.idHint,
-                            sortHint: src.sortHint,
-                            title: src.titleHint,
-                            number: src.numberHint,
-                            url: src.urlHint,
-                            logoURL: nil,
-                            quality: src.qualityHint,
-                            hasDRM: src.hasDRMHint,
-                            source: src.sourceHint)
+                IPTVChannel(
+                    id: src.idHint,
+                    sortHint: src.sortHint,
+                    title: src.titleHint,
+                    number: src.numberHint,
+                    url: src.urlHint,
+                    logoURL: nil,
+                    quality: src.qualityHint,
+                    hasDRM: src.hasDRMHint,
+                    source: src.sourceHint
+                )
             )
+        }
+        
+        // update (Only for HDHomeRun channels missing associated deviceId data for source enum).
+        let exitingHomeRunChannels = existing.filter({ $0.source == SchemaV2.ChannelSource.homeRunTuner(deviceId: "") })
+        for channel in exitingHomeRunChannels {
+            // Update the source if it was a placeholder
+            if case .homeRunTuner(let deviceId) = incoming.first(where: { $0.idHint == channel.id })?.sourceHint {
+                channel.source = .homeRunTuner(deviceId: deviceId)
+            }
         }
         
         if context.hasChanges {
             try context.save()
         }
+        
         logDebug("Channel import process completed. Total imported: \(incoming.count) 🏁")
     }
     
@@ -108,6 +121,7 @@ actor Importer {
         if context.hasChanges {
             try context.save()
         }
+        
         logDebug("Country import process completed. Total imported: \(countries.count) 🏁")
     }
     
@@ -144,9 +158,15 @@ actor Importer {
             )
         }
         
+//        // For runtime debug only.  Simulates no tuners in the DB.
+//        for model in existing {
+//            context.delete(model)
+//        }
+        
         if context.hasChanges {
             try context.save()
         }
+        
         logDebug("Device import process completed. Total imported: \(devices.count) 🏁")
     }
 }

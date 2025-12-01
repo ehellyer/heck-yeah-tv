@@ -13,7 +13,7 @@ struct TabContainerView: View {
     
     @Binding var appState: AppStateProvider
     
-    private var selectedTab: Binding<TabSection> {
+    private var selectedTab: Binding<AppSection> {
         Binding(
             get: {
                 appState.selectedTab
@@ -27,24 +27,24 @@ struct TabContainerView: View {
     var body: some View {
         TabView(selection: selectedTab) {
             
-            Tab(TabSection.channels.title,
-                systemImage: TabSection.channels.systemImage,
-                value: TabSection.channels) {
+            Tab(AppSection.channels.title,
+                systemImage: AppSection.channels.systemImage,
+                value: AppSection.channels) {
                 ChannelsContainer(appState: $appState)
                     .padding(.leading, -20) // Expand on the left edge to prevent the clipping of the focus effect on the fav toggle view.
             }
             
-            Tab(TabSection.recents.title,
-                systemImage: TabSection.recents.systemImage,
-                value: TabSection.recents) {
+            Tab(AppSection.recents.title,
+                systemImage: AppSection.recents.systemImage,
+                value: AppSection.recents) {
                 RecentsView(appState: $appState)
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
             
-            Tab(TabSection.settings.title,
-                systemImage: TabSection.settings.systemImage,
-                value: TabSection.settings) {
-                SettingsView(appState: $appState)
+            Tab(AppSection.settings.title,
+                systemImage: AppSection.settings.systemImage,
+                value: AppSection.settings) {
+                SettingsContainerView(appState: $appState)
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
         }

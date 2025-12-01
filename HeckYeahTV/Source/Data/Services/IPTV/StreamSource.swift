@@ -28,8 +28,7 @@ struct StreamSource {
         case timezones
     }
     
-    var summary: FetchSummary = FetchSummary()
-    
+    var summary: FetchSummary = FetchSummary()    
 }
 
 extension StreamSource.Endpoint {

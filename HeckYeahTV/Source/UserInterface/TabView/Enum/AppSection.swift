@@ -1,5 +1,5 @@
 //
-//  TabSection.swift
+//  AppSection.swift
 //  Heck Yeah TV
 //
 //  Created by Ed Hellyer on 8/29/25.
@@ -9,7 +9,7 @@
 import SwiftUI
 import Hellfire
 
-enum TabSection: String, CaseIterable, Identifiable, JSONSerializable {
+enum AppSection: String, CaseIterable, Identifiable, JSONSerializable {
     
     /// Last recently viewed channels (probably max of 10)
     case recents
@@ -21,7 +21,7 @@ enum TabSection: String, CaseIterable, Identifiable, JSONSerializable {
     case settings
 }
 
-extension TabSection {
+extension AppSection {
     
     /// Identifiable id
     var id: String { rawValue }

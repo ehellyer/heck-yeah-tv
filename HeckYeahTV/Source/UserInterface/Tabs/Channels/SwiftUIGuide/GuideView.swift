@@ -41,7 +41,7 @@ struct GuideView: View {
                 }
             }
             .background(.clear)
-            .scrollClipDisabled(true)
+//            .scrollClipDisabled(true)
             .contentMargins(.top, 10)
             .contentMargins(.bottom, 5)
 #if os(tvOS)

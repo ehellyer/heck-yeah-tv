@@ -26,7 +26,7 @@ struct HDHomeRunDevice: JSONSerializable, Equatable {
     let modelNumber: String
     let firmwareName: String
     let firmwareVersion: String
-    let deviceId: String
+    let deviceId: HDHomeRunDeviceId
     let deviceAuth: String
     let baseURL: URL
     let lineupURL: URL

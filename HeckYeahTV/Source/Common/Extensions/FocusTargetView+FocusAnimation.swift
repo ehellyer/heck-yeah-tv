@@ -10,7 +10,7 @@ import UIKit
 
 protocol FocusTargetView {
     
-    typealias ViewBlock = (UIColor) -> Void
+    typealias ViewBlock = (_ foregroundColor: UIColor, _ backgroundColor: UIColor) -> Void
     
     func becomeFocusedUsingAnimationCoordinator(in context: UIFocusUpdateContext, with coordinator: UIFocusAnimationCoordinator, viewBlock: ViewBlock?)
     
@@ -52,7 +52,7 @@ extension FocusTargetView where Self: UIView {
     }
     
     func becomeFocusedUsingAnimationCoordinator(in context: UIFocusUpdateContext, with coordinator: UIFocusAnimationCoordinator, viewBlock: ViewBlock? = nil) {
-        viewBlock?(UIColor.guideForegroundFocused)
+        viewBlock?(UIColor.guideForegroundFocused, UIColor.guideBackgroundFocused)
         coordinator.addCoordinatedAnimations({ () -> Void in
             var rotationMatrix = CATransform3DIdentity
             rotationMatrix.m34 = -0.001 //(1.0 / -1000.0) - Perspective effect based on distance to the views eye (in camera space).
@@ -75,7 +75,7 @@ extension FocusTargetView where Self: UIView {
     }
     
     func resignFocusUsingAnimationCoordinator(in context: UIFocusUpdateContext, with coordinator: UIFocusAnimationCoordinator, viewBlock: ViewBlock? = nil) {
-        viewBlock?(UIColor.guideForegroundNoFocus)
+        viewBlock?(UIColor.guideForegroundNoFocus, UIColor.guideBackgroundNoFocus)
         coordinator.addCoordinatedAnimations({ () -> Void in
             self.layer.transform = CATransform3DIdentity
             if let layer = context.previouslyFocusedView?.layer.sublayers?.first(where: { $0.name == self.selectedLayerName }) {

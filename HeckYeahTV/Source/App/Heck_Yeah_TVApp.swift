@@ -48,44 +48,44 @@ struct Heck_Yeah_TVApp: App {
     var body: some Scene {
 #if os(macOS)
         Window("Heck Yeah TV", id: "main") {
-            RootView(isBootComplete: $isBootComplete)
-            
-                .task {
-                    startBootstrap()
-                }
-                .onChange(of: scenePhase) { _, phase in
-                    if phase != .active {
-                        startupTask?.cancel()
-                    }
-                }
-                .modelContainer(dataPersistence.container)
-                .modelContext(dataPersistence.viewContext)
-                .environment(channelMap)
+            content()
         }
 #else
         WindowGroup {
-            RootView(isBootComplete: $isBootComplete)
-            
-                .task {
-                    startBootstrap()
-                }
-                .onChange(of: scenePhase) { _, phase in
-                    if phase != .active {
-                        startupTask?.cancel()
-                    }
-                }
-                .modelContainer(dataPersistence.container)
-                .modelContext(dataPersistence.viewContext)
-                .environment(channelMap)
+            content()
         }
 #endif
     }
     
+    private func content() -> some View {
+        RootView(isBootComplete: $isBootComplete)
+            .task {
+                startBootstrap()
+            }
+            .onChange(of: scenePhase) { _, phase in
+                if phase != .active {
+                    startupTask?.cancel()
+                }
+            }
+            .modelContainer(dataPersistence.container)
+            .modelContext(dataPersistence.viewContext)
+            .environment(channelMap)
+    }
+    
     private func startBootstrap() {
-        // Always ensure guide starts off in the dismissed state when there is a selected channel. Else present the guide.  This prevents a black screen on first startup.
+        // Always ensure app navigation starts off in the dismissed state when there is a selected channel. Else present the default tab in app navigation.  This prevents a black screen on first startup.
         let appState = SharedAppState.shared
         appState.showAppNavigation = (appState.selectedChannel == nil)
 
+        // Set the default country selection.
+        if appState.selectedCountry == nil
+            , Locale.current.region?.isISORegion == true
+            , (Locale.current.region?.subRegions.count ?? 0) == 0
+            , let identifier = Locale.current.region?.identifier
+        {
+            appState.selectedCountry = identifier
+        }
+        
         startupTask?.cancel()
         startupTask = Task {
             

@@ -16,7 +16,7 @@ final class MockSharedAppState: AppStateProvider {
     var showAppNavigation: Bool
     var showFavoritesOnly: Bool
     var selectedCountry: CountryCode?
-    var selectedTab: TabSection
+    var selectedTab: AppSection
     var selectedChannel: ChannelId? {
         didSet {
             if let channelId = selectedChannel {
@@ -31,7 +31,7 @@ final class MockSharedAppState: AppStateProvider {
          showAppNavigation: Bool = false,
          showFavoritesOnly: Bool = false,
          selectedCountry: CountryCode? = nil,
-         selectedTab: TabSection = .channels,
+         selectedTab: AppSection = .channels,
          selectedChannel: ChannelId? = nil,
          recentChannelIds: [ChannelId] = [],
          scanForTuners: Bool = true) {

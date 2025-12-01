@@ -29,6 +29,9 @@ struct HDHomeRunChannel: JSONSerializable, Equatable {
     /// The audio codec in use for the channel.
     let audioCodec: String?
     
+    /// Used only for identifying the deviceId this channel is served from.
+    let deviceId: HDHomeRunDeviceId
+    
     /// Bool to flag if the channel has digital rights management enabled.
     let hasDRM: Bool
     
@@ -53,6 +56,17 @@ extension HDHomeRunChannel {
         let url = try container.decode(URL.self, forKey: .url)
         self.url = url
         self.id = String.stableHashHex(url.absoluteString, guideNumber)
+
+        //Special case - This deviceId is set in the decoders user info dictionary prior to calling the decode via JSONSerializable .initialize(jsonData:) initializer function.
+        guard let deviceId = decoder.userInfo[CodingUserInfoKey.homeRunDeviceIdKey] as? HDHomeRunDeviceId else {
+            throw DecodingError.dataCorrupted(
+                DecodingError.Context(
+                    codingPath: decoder.codingPath,
+                    debugDescription: "Missing or invalid deviceId data in decoder.userInfo"
+                )
+            )
+        }
+        self.deviceId = deviceId
     }
     
     func encode(to encoder: Encoder) throws {
@@ -61,6 +75,7 @@ extension HDHomeRunChannel {
         try container.encode(guideName, forKey: .guideName)
         try container.encode(videoCodec, forKey: .videoCodec)
         try container.encode(audioCodec, forKey: .audioCodec)
+        try container.encode(deviceId, forKey: .deviceId)
         if hasDRM { try container.encode(1, forKey: .hasDRM) }
         if isHD { try container.encode(1, forKey: .isHD) }
         try container.encode(url, forKey: .url)
@@ -76,8 +91,13 @@ extension HDHomeRunChannel {
         case guideName = "GuideName"
         case videoCodec = "VideoCodec"
         case audioCodec = "AudioCodec"
+        case deviceId
         case hasDRM = "DRM"
         case isHD = "HD"
         case url = "URL"
     }
+}
+
+extension CodingUserInfoKey {
+    static let homeRunDeviceIdKey: CodingUserInfoKey = CodingUserInfoKey(rawValue: "homeRunDeviceIdKey")!
 }

@@ -10,11 +10,11 @@
 		089D175416ADEF60C0354B23 /* Pods_iOS_HeckYeahTV.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76A34A69F5505812676277A2 /* Pods_iOS_HeckYeahTV.framework */; };
 		E2A5EE63B6F0360CFDEA112A /* Pods_tvOS_HeckYeahTV.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4850C4BF6A440A7BD11EC2DD /* Pods_tvOS_HeckYeahTV.framework */; };
 		EB33342E2EC8273700CFAC43 /* Pods_macOS_HeckYeahTV.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB33342D2EC8273700CFAC43 /* Pods_macOS_HeckYeahTV.framework */; };
-		EBC92B472E9D53EC00FF62BC /* Hellfire in Frameworks */ = {isa = PBXBuildFile; productRef = EBC92B462E9D53EC00FF62BC /* Hellfire */; };
-		EBC92B492E9D53F700FF62BC /* Hellfire in Frameworks */ = {isa = PBXBuildFile; productRef = EBC92B482E9D53F700FF62BC /* Hellfire */; };
+		EBB5B3292ED8B9D6004251CB /* Hellfire in Frameworks */ = {isa = PBXBuildFile; productRef = EBB5B3282ED8B9D6004251CB /* Hellfire */; };
+		EBB5B51F2EDD46C4004251CB /* Hellfire in Frameworks */ = {isa = PBXBuildFile; productRef = EBB5B51E2EDD46C4004251CB /* Hellfire */; };
+		EBB5B5212EDD46DC004251CB /* Hellfire in Frameworks */ = {isa = PBXBuildFile; productRef = EBB5B5202EDD46DC004251CB /* Hellfire */; };
 		EBDD3AF72ECE9C160050D08D /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = EBDD3AF62ECE9C160050D08D /* FirebaseAnalytics */; };
 		EBDD3AF92ECE9C160050D08D /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = EBDD3AF82ECE9C160050D08D /* FirebaseCrashlytics */; };
-		EBE03C072E53D665006B7747 /* Hellfire in Frameworks */ = {isa = PBXBuildFile; productRef = EBE03C062E53D665006B7747 /* Hellfire */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -105,12 +105,10 @@
 				Source/Common/Utilities/AppStyle.swift,
 				Source/Common/Utilities/Asset.swift,
 				Source/Data/Adapters/Channelable.swift,
-				Source/Data/Adapters/ChannelSource.swift,
 				Source/Data/Adapters/FetchSummary.swift,
 				"Source/Data/Adapters/HDHomeRunChannel+Channelable.swift",
 				"Source/Data/Adapters/IPStream+Channelable.swift",
-				Source/Data/Adapters/StreamQuality.swift,
-				Source/Data/Adapters/StreamSource.swift,
+				"Source/Data/Adapters/StreamQuality+Extension.swift",
 				Source/Data/Models/AppStateProvider.swift,
 				Source/Data/Models/Country.swift,
 				Source/Data/Models/HDHomeRunChannel.swift,
@@ -131,13 +129,22 @@
 				Source/Data/Models/Timezone.swift,
 				Source/Data/Services/HDHomeRun/HDHomeRunDiscoveryController.swift,
 				Source/Data/Services/IPTV/IPTVController.swift,
+				Source/Data/Services/IPTV/StreamSource.swift,
 				Source/Data/SwiftData/DataPersistence.swift,
+				Source/Data/SwiftData/Migration/UpgradeSchemaMigrationPlan.swift,
+				Source/Data/SwiftData/Migration/V1MigrationData.swift,
 				Source/Data/SwiftData/Models/ChannelMap.swift,
+				Source/Data/SwiftData/Models/ChannelSource.swift,
 				Source/Data/SwiftData/Models/HDHomeRunServer.swift,
 				Source/Data/SwiftData/Models/IPTVChannel.swift,
 				Source/Data/SwiftData/Models/IPTVCountry.swift,
+				Source/Data/SwiftData/Models/SchemaVersion.swift,
+				Source/Data/SwiftData/Models/StreamQuality.swift,
+				Source/Data/SwiftData/Schema/SchemaCurrent.swift,
+				Source/Data/SwiftData/Schema/SchemaV1.swift,
+				Source/Data/SwiftData/Schema/SchemaV2.swift,
+				Source/Data/SwiftData/Utilities/DataChangeTracking.swift,
 				Source/Data/SwiftData/Utilities/Importer.swift,
-				Source/Data/SwiftData/Utilities/SwiftDataChangeTracking.swift,
 				Source/UserInterface/MacAndPhone/SectionContentView.swift,
 				Source/UserInterface/MacAndPhone/SectionView.swift,
 				Source/UserInterface/Main/BootGateView.swift,
@@ -160,9 +167,13 @@
 				Source/UserInterface/Tabs/Channels/UIKitGuide/View/StreamQualityView.swift,
 				Source/UserInterface/Tabs/Recents/RecentsView.swift,
 				Source/UserInterface/Tabs/Settings/CountryPickerView.swift,
-				Source/UserInterface/Tabs/Settings/SettingsFormContent.swift,
+				Source/UserInterface/Tabs/Settings/FocusedToggleStyle.swift,
+				Source/UserInterface/Tabs/Settings/ListButtonStyle.swift,
+				Source/UserInterface/Tabs/Settings/SectionButtonStyle.swift,
+				Source/UserInterface/Tabs/Settings/SectionTextStyle.swift,
+				Source/UserInterface/Tabs/Settings/SettingsContainerView.swift,
 				Source/UserInterface/Tabs/Settings/SettingsView.swift,
-				Source/UserInterface/TabView/Enum/TabSection.swift,
+				Source/UserInterface/TabView/Enum/AppSection.swift,
 				SupportingFiles/AppIconAssets.xcassets,
 				SupportingFiles/AppMediaAssets.xcassets,
 				SupportingFiles/ColorAssets.xcassets,
@@ -213,12 +224,10 @@
 				Source/Common/Utilities/AppStyle.swift,
 				Source/Common/Utilities/Asset.swift,
 				Source/Data/Adapters/Channelable.swift,
-				Source/Data/Adapters/ChannelSource.swift,
 				Source/Data/Adapters/FetchSummary.swift,
 				"Source/Data/Adapters/HDHomeRunChannel+Channelable.swift",
 				"Source/Data/Adapters/IPStream+Channelable.swift",
-				Source/Data/Adapters/StreamQuality.swift,
-				Source/Data/Adapters/StreamSource.swift,
+				"Source/Data/Adapters/StreamQuality+Extension.swift",
 				Source/Data/Models/AppStateProvider.swift,
 				Source/Data/Models/Country.swift,
 				Source/Data/Models/HDHomeRunChannel.swift,
@@ -239,13 +248,22 @@
 				Source/Data/Models/Timezone.swift,
 				Source/Data/Services/HDHomeRun/HDHomeRunDiscoveryController.swift,
 				Source/Data/Services/IPTV/IPTVController.swift,
+				Source/Data/Services/IPTV/StreamSource.swift,
 				Source/Data/SwiftData/DataPersistence.swift,
+				Source/Data/SwiftData/Migration/UpgradeSchemaMigrationPlan.swift,
+				Source/Data/SwiftData/Migration/V1MigrationData.swift,
 				Source/Data/SwiftData/Models/ChannelMap.swift,
+				Source/Data/SwiftData/Models/ChannelSource.swift,
 				Source/Data/SwiftData/Models/HDHomeRunServer.swift,
 				Source/Data/SwiftData/Models/IPTVChannel.swift,
 				Source/Data/SwiftData/Models/IPTVCountry.swift,
+				Source/Data/SwiftData/Models/SchemaVersion.swift,
+				Source/Data/SwiftData/Models/StreamQuality.swift,
+				Source/Data/SwiftData/Schema/SchemaCurrent.swift,
+				Source/Data/SwiftData/Schema/SchemaV1.swift,
+				Source/Data/SwiftData/Schema/SchemaV2.swift,
+				Source/Data/SwiftData/Utilities/DataChangeTracking.swift,
 				Source/Data/SwiftData/Utilities/Importer.swift,
-				Source/Data/SwiftData/Utilities/SwiftDataChangeTracking.swift,
 				Source/UserInterface/Main/BootGateView.swift,
 				Source/UserInterface/Main/BootSplashView.swift,
 				Source/UserInterface/Main/DustyView.swift,
@@ -276,9 +294,13 @@
 				Source/UserInterface/Tabs/Channels/UIKitGuide/ViewController/GuideViewRepresentable.swift,
 				Source/UserInterface/Tabs/Recents/RecentsView.swift,
 				Source/UserInterface/Tabs/Settings/CountryPickerView.swift,
-				Source/UserInterface/Tabs/Settings/SettingsFormContent.swift,
+				Source/UserInterface/Tabs/Settings/FocusedToggleStyle.swift,
+				Source/UserInterface/Tabs/Settings/ListButtonStyle.swift,
+				Source/UserInterface/Tabs/Settings/SectionButtonStyle.swift,
+				Source/UserInterface/Tabs/Settings/SectionTextStyle.swift,
+				Source/UserInterface/Tabs/Settings/SettingsContainerView.swift,
 				Source/UserInterface/Tabs/Settings/SettingsView.swift,
-				Source/UserInterface/TabView/Enum/TabSection.swift,
+				Source/UserInterface/TabView/Enum/AppSection.swift,
 				Source/UserInterface/TabView/TabContainerView.swift,
 				SupportingFiles/AppIconAssets.xcassets,
 				SupportingFiles/AppMediaAssets.xcassets,
@@ -322,7 +344,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				EB33342E2EC8273700CFAC43 /* Pods_macOS_HeckYeahTV.framework in Frameworks */,
-				EBC92B492E9D53F700FF62BC /* Hellfire in Frameworks */,
+				EBB5B5212EDD46DC004251CB /* Hellfire in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -344,10 +366,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				EBE03C072E53D665006B7747 /* Hellfire in Frameworks */,
 				EBDD3AF92ECE9C160050D08D /* FirebaseCrashlytics in Frameworks */,
 				089D175416ADEF60C0354B23 /* Pods_iOS_HeckYeahTV.framework in Frameworks */,
 				EBDD3AF72ECE9C160050D08D /* FirebaseAnalytics in Frameworks */,
+				EBB5B3292ED8B9D6004251CB /* Hellfire in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -369,8 +391,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				EBC92B472E9D53EC00FF62BC /* Hellfire in Frameworks */,
 				E2A5EE63B6F0360CFDEA112A /* Pods_tvOS_HeckYeahTV.framework in Frameworks */,
+				EBB5B51F2EDD46C4004251CB /* Hellfire in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -466,7 +488,7 @@
 			);
 			name = macOS_HeckYeahTV;
 			packageProductDependencies = (
-				EBC92B482E9D53F700FF62BC /* Hellfire */,
+				EBB5B5202EDD46DC004251CB /* Hellfire */,
 			);
 			productName = macOSHeckYeahTV;
 			productReference = EB2C2DB72E5E203A005CE685 /* HeckYeahTV.app */;
@@ -527,9 +549,9 @@
 			);
 			name = iOS_HeckYeahTV;
 			packageProductDependencies = (
-				EBE03C062E53D665006B7747 /* Hellfire */,
 				EBDD3AF62ECE9C160050D08D /* FirebaseAnalytics */,
 				EBDD3AF82ECE9C160050D08D /* FirebaseCrashlytics */,
+				EBB5B3282ED8B9D6004251CB /* Hellfire */,
 			);
 			productName = "Heck Yeah TV";
 			productReference = EBE03BB72E53D421006B7747 /* HeckYeahTV.app */;
@@ -593,7 +615,7 @@
 			);
 			name = tvOS_HeckYeahTV;
 			packageProductDependencies = (
-				EBC92B462E9D53EC00FF62BC /* Hellfire */,
+				EBB5B51E2EDD46C4004251CB /* Hellfire */,
 			);
 			productName = "Heck Yeah TV";
 			productReference = EBE03C172E53D8DE006B7747 /* HeckYeahTV.app */;
@@ -691,8 +713,8 @@
 			mainGroup = EBE03BAE2E53D421006B7747;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				EBC92B452E9D4FF600FF62BC /* XCRemoteSwiftPackageReference "HellfireSwiftPackage" */,
 				EBDD3AF52ECE9C160050D08D /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				EBB5B51B2EDD4661004251CB /* XCRemoteSwiftPackageReference "HellfireSwiftPackage" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = EBE03BB82E53D421006B7747 /* Products */;
@@ -1744,12 +1766,12 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		EBC92B452E9D4FF600FF62BC /* XCRemoteSwiftPackageReference "HellfireSwiftPackage" */ = {
+		EBB5B51B2EDD4661004251CB /* XCRemoteSwiftPackageReference "HellfireSwiftPackage" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/ehellyer/HellfireSwiftPackage";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 4.0.0;
+				minimumVersion = 4.1.0;
 			};
 		};
 		EBDD3AF52ECE9C160050D08D /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
@@ -1763,14 +1785,18 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		EBC92B462E9D53EC00FF62BC /* Hellfire */ = {
+		EBB5B3282ED8B9D6004251CB /* Hellfire */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = EBC92B452E9D4FF600FF62BC /* XCRemoteSwiftPackageReference "HellfireSwiftPackage" */;
 			productName = Hellfire;
 		};
-		EBC92B482E9D53F700FF62BC /* Hellfire */ = {
+		EBB5B51E2EDD46C4004251CB /* Hellfire */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = EBC92B452E9D4FF600FF62BC /* XCRemoteSwiftPackageReference "HellfireSwiftPackage" */;
+			package = EBB5B51B2EDD4661004251CB /* XCRemoteSwiftPackageReference "HellfireSwiftPackage" */;
+			productName = Hellfire;
+		};
+		EBB5B5202EDD46DC004251CB /* Hellfire */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = EBB5B51B2EDD4661004251CB /* XCRemoteSwiftPackageReference "HellfireSwiftPackage" */;
 			productName = Hellfire;
 		};
 		EBDD3AF62ECE9C160050D08D /* FirebaseAnalytics */ = {
@@ -1782,10 +1808,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = EBDD3AF52ECE9C160050D08D /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseCrashlytics;
-		};
-		EBE03C062E53D665006B7747 /* Hellfire */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = Hellfire;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

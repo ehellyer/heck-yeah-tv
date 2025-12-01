@@ -93,7 +93,7 @@ struct MainAppContentView: View {
                     HStack {
                         Menu {
                             Picker("", selection: $appState.selectedTab) {
-                                ForEach(TabSection.allCases) { tabSection in
+                                ForEach(AppSection.allCases) { tabSection in
                                     Text(tabSection.title).tag(tabSection)
                                 }
                             }
