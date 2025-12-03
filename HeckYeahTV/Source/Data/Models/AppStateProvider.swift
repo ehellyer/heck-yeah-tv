@@ -27,8 +27,10 @@ protocol AppStateProvider {
     var showAppNavigation: Bool { get set }
     var showFavoritesOnly: Bool { get set }
     var selectedCountry: CountryCode? { get set }
+    var selectedCategory: CategoryId? { get set }
     var selectedTab: AppSection { get set }
     var selectedChannel: ChannelId? { get set }
+    var searchTerm: String? { get set }
     var recentChannelIds: [ChannelId] { get }
     var deviceType: DeviceType { get }
     var scanForTuners: Bool { get set }

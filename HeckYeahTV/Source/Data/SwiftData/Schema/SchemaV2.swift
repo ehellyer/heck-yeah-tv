@@ -13,10 +13,10 @@ enum SchemaV2: VersionedSchema {
     static let versionIdentifier = Schema.Version(2, 0, 0)
     static var models: [any PersistentModel.Type] {
         [
-            IPTVChannel.self,
+            IPTVChannel.self,                       // Change to ChannelSource.  enum now has associated data for DeviceId.
             IPTVCountry.self,
             HDHomeRunServer.self,
-            HeckYeahSchema.SchemaVersion.self
+            HeckYeahSchema.SchemaVersion.self       // New structure to detect if existing store is unversioned.
         ]
     }
 }

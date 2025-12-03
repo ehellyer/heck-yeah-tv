@@ -10,7 +10,8 @@ import Foundation
 import Hellfire
 
 protocol Channelable {
-    var idHint: String { get }
+    var idHint: ChannelId { get }
+    var originalChannelIdHint: String? { get }
     var sortHint: String { get }
     var titleHint: String { get }
     var numberHint: String? { get }

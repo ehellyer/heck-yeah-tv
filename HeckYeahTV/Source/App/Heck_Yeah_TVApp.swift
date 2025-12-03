@@ -111,14 +111,14 @@ struct Heck_Yeah_TVApp: App {
                         try await importer.importCountries(iptvController.countries)
                     }
                     group.addTask {
-                        try await importer.importChannels(streams: iptvController.streams, tunerChannels: hdHomeRunController.channels)
+                        try await importer.importChannels(channels: iptvController.channels, streams: iptvController.streams, tunerChannels: hdHomeRunController.channels)
                     }
                     group.addTask {
                         try await importer.importTunerDevices(hdHomeRunController.devices)
                     }
                     try await group.waitForAll()
                 }
-                let cm = try await importer.buildChannelMap(showFavoritesOnly: appState.showFavoritesOnly)
+                let cm = try await importer.buildChannelMap(appState: appState)
                 await MainActor.run {
                     channelMap = cm
                     // Update state variable that boot up processes are completed.

@@ -15,16 +15,20 @@ enum UpgradeSchemaMigrationPlan: SchemaMigrationPlan {
     static var schemas: [any VersionedSchema.Type] {
         [
             SchemaV1.self,
-            SchemaV2.self
+            SchemaV2.self,
+            SchemaV3.self
         ]
     }
     
     static var stages: [MigrationStage] {
         [
-            migrateV1toV2
+            migrateV1toV2,
+            migrateV2toV3
         ]
     }
     
+    private static var v1MigrationData: [ChannelId: V1MigrationData] = [:]
+
     static let migrateV1toV2 = MigrationStage.custom(fromVersion: SchemaV1.self,
                                                      toVersion: SchemaV2.self,
                                                      willMigrate: { context in
@@ -37,7 +41,7 @@ enum UpgradeSchemaMigrationPlan: SchemaMigrationPlan {
         
         try v1IPTVChannels.forEach {
             // Source will get set correctly in a post migration step in the Importer.
-            let source: SchemaV2.ChannelSource = (($0.source == SchemaV1.ChannelSource.ipStream) ? SchemaV2.ChannelSource.ipStream : SchemaV2.ChannelSource.homeRunTuner(deviceId: ""))
+            let source: SchemaV2.ChannelSource = $0.source.migrateToV2()
             let sourceData = try source.toJSONData()
             Self.v1MigrationData[$0.id] = V1MigrationData(isFavorite: $0.isFavorite, source: sourceData)
         }
@@ -59,5 +63,6 @@ enum UpgradeSchemaMigrationPlan: SchemaMigrationPlan {
         logDebug("SwiftData: Migrating from SchemaV1 to SchemaV2 complete.")
     })
     
-    private static var v1MigrationData: [ChannelId: V1MigrationData] = [:]
+    static let migrateV2toV3 = MigrationStage.lightweight(fromVersion: SchemaV2.self,
+                                                     toVersion: SchemaV3.self)
 }

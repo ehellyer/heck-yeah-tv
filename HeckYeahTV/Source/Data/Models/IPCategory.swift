@@ -13,7 +13,7 @@ import Hellfire
 struct IPCategory: JSONSerializable {
     
     /// Category Id
-    var categoryId: String
+    var categoryId: CategoryId
     
     /// Name of the category
     var name: String

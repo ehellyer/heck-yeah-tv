@@ -46,18 +46,21 @@ extension HDHomeRunChannel {
     
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
+
         let guideNumber = try container.decode(String.self, forKey: .guideNumber)
+        let url = try container.decode(URL.self, forKey: .url)
+
+        // Stable hash identifier generated over `url` and `guideNumber`.
+        self.id = String.stableHashHex(url.absoluteString, guideNumber)
         self.guideNumber = guideNumber
         self.guideName = try container.decode(String.self, forKey: .guideName)
         self.videoCodec = try container.decodeIfPresent(String.self, forKey: .videoCodec)
         self.audioCodec = try container.decodeIfPresent(String.self, forKey: .audioCodec)
         self.hasDRM = (try container.decodeIfPresent(Int.self, forKey: .hasDRM)) ?? 0 == 1
         self.isHD = (try container.decodeIfPresent(Int.self, forKey: .isHD)) ?? 0 == 1
-        let url = try container.decode(URL.self, forKey: .url)
         self.url = url
-        self.id = String.stableHashHex(url.absoluteString, guideNumber)
 
-        //Special case - This deviceId is set in the decoders user info dictionary prior to calling the decode via JSONSerializable .initialize(jsonData:) initializer function.
+        //Special case - The deviceId is passed in the decoders userInfo dictionary prior to calling the decode using the JSONSerializable initializer function initialize(jsonData: Data?, codingUserInfo: [CodingUserInfoKey : any Sendable]).
         guard let deviceId = decoder.userInfo[CodingUserInfoKey.homeRunDeviceIdKey] as? HDHomeRunDeviceId else {
             throw DecodingError.dataCorrupted(
                 DecodingError.Context(
@@ -71,6 +74,8 @@ extension HDHomeRunChannel {
     
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
+        
+        try container.encode(id, forKey: .id)
         try container.encode(guideNumber, forKey: .guideNumber)
         try container.encode(guideName, forKey: .guideName)
         try container.encode(videoCodec, forKey: .videoCodec)
@@ -79,7 +84,6 @@ extension HDHomeRunChannel {
         if hasDRM { try container.encode(1, forKey: .hasDRM) }
         if isHD { try container.encode(1, forKey: .isHD) }
         try container.encode(url, forKey: .url)
-        try container.encode(id, forKey: .id)
     }
 }
 

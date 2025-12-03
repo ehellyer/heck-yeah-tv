@@ -9,7 +9,10 @@
 // ***************************************************************************************************************************
 // ***************************************************************************************************************************
 //
-// TODO:  This is a temporary implementation that primarily is for printing to the console window for the developer.
+// TODO:    This is a temporary implementation of DebugLogger that primarily is for printing to the console window for the developer.
+//          Future versions will write all messages to a cycling file that can be used for production runtime analysis.
+//
+//          WARNING: NEVER LOG UNPROTECTED SENSITIVE INFORMATION
 //
 // ***************************************************************************************************************************
 // ***************************************************************************************************************************
@@ -45,71 +48,31 @@ class DebugLogger {
     
     /// Describes the level of the log event.
     enum Level: Int {
-        
-        /// Messages logged at level `DebugLogger.Level.debug` __only appear in the console when the app is compiled as non-release configuration.__  This level of logging is
-        /// used for general messages, tagging events, or other telemetry purposes.
-        ///
-        /// All messages to the log function are logged to the diagnostics log file that can be sent from the client to the
-        /// server for remote diagnostics of the application.
         case debug = 1
-        
-        /// Messages logged at level `DebugLogger.Level.information` __only appear in the console when the app is compiled as non-release configuration.__  This level of logging is
-        /// used for general messages, tagging events, or other telemetry purposes.
-        ///
-        /// All messages to the log function are logged to the diagnostics log file that can be sent from the client to the
-        /// server for remote diagnostics of the application.
         case information = 2
-        
-        /// Messages logged at level `DebugLogger.Level.waring` __only appear in the console when the app is compiled as non-release configuration.__  This level of logging is
-        /// used for warnings, such as unexpected states that are not error or fatal exceptions, .
-        ///
-        /// All messages to the log function are logged to the diagnostics log file that can be sent from the client to the
-        /// server for remote diagnostics of the application.
         case warning = 3
-        
-        /// Messages logged at level `DebugLogger.Level.error` __will always be logged to the console.__  This level of logging is
-        /// used for non-fatal runtime errors.
-        ///
-        /// All messages to the log function are logged to the diagnostics log file that can be sent from the client to the
-        /// server for remote diagnostics of the application.
         case error = 4
-        
-        /// Messages logged at level `DebugLogger.Level.fatal` __will always be logged to the console.__  This level of logging is
-        /// used for fatal runtime errors.  The application is terminated after logging at this level.
-        ///
-        /// All messages to the log function are logged to the diagnostics log file that can be sent from the client to the
-        /// server for remote diagnostics of the application.
         case fatal = 5
         
         /// Returns the en-US name of the log level.
         var name: String {
             switch self {
-                case .debug:
-                    return "Debug"
-                case .information:
-                    return "Info"
-                case .warning:
-                    return "Warning"
-                case .error:
-                    return "Error"
-                case .fatal:
-                    return "Fatal"
+                case .debug: return "Debug"
+                case .information: return "Info"
+                case .warning: return "Warning"
+                case .error: return "Error"
+                case .fatal: return "Fatal"
             }
         }
         
         /// Returns the emoji for the level.
         var emoji: String {
             switch self {
-                case .debug:
-                    return "🔧"
-                case .information:
-                    return "📊"
-                case .warning:
-                    return "‼️"
-                case .error:
-                    return "🐛"
-                case .fatal:
-                    return "🧨"
+                case .debug: return "🔧"
+                case .information: return "📊"
+                case .warning: return "‼️"
+                case .error: return "🐛"
+                case .fatal: return "🧨"
             }
         }
     }
@@ -135,7 +98,7 @@ class DebugLogger {
         let emoji = level.emoji
 
 #if DEBUG
-        let consoleLogString = "\(timeStr) l:\(emoji)) q:\(queue) s:\(fileName) \(function) \(line) m:\(message)"
+        let consoleLogString = "\(timeStr) l:\(emoji) q:\(queue) s:\(fileName) \(function) \(line) m:\(message)"
         print(consoleLogString)
 #endif
         //TODO: Log to cycling offline local file for post crash analytics package.

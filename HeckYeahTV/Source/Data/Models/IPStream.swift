@@ -51,15 +51,18 @@ struct IPStream: JSONSerializable {
 extension IPStream {
     init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
+
+        let title = try container.decode(String.self, forKey: .title)
+        let url = try container.decode(URL.self, forKey: .url)
+
+        // Stable hash identifier generated over `url` and `title`.
+        self.id = String.stableHashHex(url.absoluteString, title)
         self.channelId = try container.decodeIfPresent(String.self, forKey: .channelId)
         self.feedId = try container.decodeIfPresent(String.self, forKey: .feedId)
-        let title = try container.decode(String.self, forKey: .title)
         self.title = title
-        let url = try container.decode(URL.self, forKey: .url)
         self.url = url
         self.referrer = try container.decodeIfPresent(String.self, forKey: .referrer)
         self.userAgent = try container.decodeIfPresent(String.self, forKey: .userAgent)
         self.quality = try container.decodeIfPresent(String.self, forKey: .quality)
-        self.id = String.stableHashHex(url.absoluteString, title)
     }
 }

@@ -24,4 +24,3 @@ import Observation
         self.totalCount = map.count
     }
 }
-

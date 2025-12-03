@@ -22,41 +22,46 @@ struct GuideView: View {
     private let corner: CGFloat = 14
     
     var body: some View {
-        ScrollViewReader { proxy in
-            ScrollView(.vertical) {
-                LazyVStack(alignment: .leading, spacing: 20) {
-                    ForEach(0..<channelMap.totalCount, id: \.self) { index in
-                        let channelId = channelMap.map[index]
-                        GuideRowLazy(channelId: channelId,
-                                     appState: $appState)
-                        .id(channelId)
-                        .padding(.leading, 5)
-                        .padding(.trailing, 5)
-                    }
-                    
-                    if channelMap.totalCount == 0 {
-                        Text("No channels found.")
-                            .frame(maxWidth: .infinity)
+        ZStack {
+            ScrollViewReader { proxy in
+                ScrollView(.vertical) {
+                    LazyVStack(alignment: .leading, spacing: 20) {
+                        ForEach(0..<channelMap.totalCount, id: \.self) { index in
+                            let channelId = channelMap.map[index]
+                            GuideRowLazy(channelId: channelId,
+                                         appState: $appState)
+                            .id(channelId)
+                            .padding(.leading, 5)
+                            .padding(.trailing, 5)
+                        }
                     }
                 }
-            }
-            .background(.clear)
-//            .scrollClipDisabled(true)
-            .contentMargins(.top, 10)
-            .contentMargins(.bottom, 5)
+                .background(.clear)
+                .scrollClipDisabled(true )
+                .contentMargins(.top, 10)
+                .contentMargins(.bottom, 5)
 #if os(tvOS)
-            .focusSection()
+                .focusSection()
 #endif
-            .onAppear {
-                scrollToSelected(proxy: proxy)
+                .onAppear {
+                    scrollToSelected(proxy: proxy)
+                }
+                
+                .onChange(of: channelMap.totalCount) { _, _ in
+                    scrollToSelected(proxy: proxy)
+                }
+                
+                .onChange(of: appState.showFavoritesOnly) { _, _ in
+                    rebuildChannelMap()
+                }
             }
             
-            .onChange(of: channelMap.totalCount) { _, _ in
-                scrollToSelected(proxy: proxy)
-            }
-            
-            .onChange(of: appState.showFavoritesOnly) { _, _ in
-                rebuildChannelMap()
+            if channelMap.totalCount == 0 {
+                Text("No channels available")
+                    .frame(maxWidth: .infinity)
+                    .frame(maxHeight: .infinity)
+                    .foregroundStyle(Color.white)
+                    .fontDesign(Font.Design.rounded)
             }
         }
     }
@@ -75,12 +80,12 @@ private extension GuideView {
                 try Task.checkCancellation()
                 
                 let importer = Importer(container: container)
-                let cm = try await importer.buildChannelMap(showFavoritesOnly: SharedAppState.shared.showFavoritesOnly)
+                let cm = try await importer.buildChannelMap(appState: appState)
                 await MainActor.run {
                     channelMap.update(with: cm.map)
                 }
             } catch {
-                //Task may have been cancelled.
+                // Task may have been cancelled.
                 logError("Error: \(error)")
             }
         }
@@ -111,9 +116,13 @@ private extension GuideView {
 
 #Preview("GuideView") {
     @Previewable @State var appState: AppStateProvider = SharedAppState.shared
+    appState.selectedCountry = nil//"US"
+    appState.showFavoritesOnly = false
+    appState.selectedCategory = nil//"movies"
+    
     let mockData = MockDataPersistence(appState: appState)
     
-    GuideView(appState: $appState)
-        .environment(\.modelContext, mockData.context)
-        .environment(mockData.channelMap)
+    return GuideView(appState: $appState)
+            .environment(\.modelContext, mockData.context)
+            .environment(mockData.channelMap)
 }

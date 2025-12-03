@@ -63,6 +63,8 @@ final class DataPersistence {
             
             viewContext = ModelContext(container)
             viewContext.autosaveEnabled = true
+        } catch let error as SwiftDataError {
+            logFatal("Failed to initialize GuideStore: \(error)")
         } catch {
             logFatal("Failed to initialize GuideStore: \(error)")
         }

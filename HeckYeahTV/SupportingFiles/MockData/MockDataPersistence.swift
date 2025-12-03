@@ -17,6 +17,7 @@ final class MockDataPersistence {
     private(set) var context: ModelContext
     private(set) var channels: [IPTVChannel] = []
     private(set) var countries: [IPTVCountry] = []
+    private(set) var categories: [IPTVCategory] = []
     private(set) var channelMap: ChannelMap = ChannelMap(map: [])
     
     init(appState: any AppStateProvider) {
@@ -29,9 +30,10 @@ final class MockDataPersistence {
     }
     
     func reloadMockProperties(appState: any AppStateProvider) {
-        loadChannels(appState: appState)
+        loadChannels()
         loadCountries()
-        buildChannelMap()
+        loadCategories()
+        buildChannelMap(appState: appState)
     }
     
     private func loadMockData() {
@@ -51,17 +53,22 @@ final class MockDataPersistence {
             let mockTuners = try [HDHomeRunServer].initialize(jsonData: tunerData)
             mockTuners.forEach(context.insert)
             
+            let categoriesUrl = Bundle.main.url(forResource: "MockCategories", withExtension: "json")!
+            let categoriesData = try Data(contentsOf: categoriesUrl)
+            let mockCategories = try [IPTVCategory].initialize(jsonData: categoriesData)
+            mockCategories.forEach(context.insert)
+            
+            
             try context.save()
         } catch {
             logDebug("Failed to load Mock json into SwiftData in-memory context.  Error: \(error)")
         }
     }
     
-    private func loadChannels(appState: any AppStateProvider) {
-        var channelsDescriptor: FetchDescriptor<IPTVChannel> = FetchDescriptor<IPTVChannel>(
+    private func loadChannels() {
+        let channelsDescriptor: FetchDescriptor<IPTVChannel> = FetchDescriptor<IPTVChannel>(
             sortBy: [SortDescriptor(\IPTVChannel.sortHint, order: .forward)]
         )
-        channelsDescriptor.predicate = (appState.showFavoritesOnly ? (#Predicate<IPTVChannel> { $0.isFavorite == true }) : nil)
         self.channels = (try? context.fetch(channelsDescriptor)) ?? []
     }
 
@@ -73,7 +80,26 @@ final class MockDataPersistence {
         self.countries = (try? context.fetch(descriptor)) ?? []
     }
     
-    private func buildChannelMap() {
+    private func loadCategories() {
+        let descriptor: FetchDescriptor<IPTVCategory> = FetchDescriptor<IPTVCategory>(
+            sortBy: [SortDescriptor(\IPTVCategory.name, order: .forward)]
+        )
+        
+        self.categories = (try? context.fetch(descriptor)) ?? []
+    }
+    
+    private func buildChannelMap(appState: any AppStateProvider) {
+        let predicate = Importer.predicateBuilder(showFavoritesOnly: appState.showFavoritesOnly,
+                                                  searchText: nil,
+                                                  countryCode: appState.selectedCountry,
+                                                  categoryId: appState.selectedCategory)
+        
+        var channelsDescriptor: FetchDescriptor<IPTVChannel> = FetchDescriptor<IPTVChannel>(
+            sortBy: [SortDescriptor(\IPTVChannel.sortHint, order: .forward)]
+        )
+        channelsDescriptor.predicate = predicate
+        let channels = (try? context.fetch(channelsDescriptor)) ?? []
+        
         let map: [ChannelId] = channels.map { $0.id }
         channelMap = ChannelMap(map: map)
     }

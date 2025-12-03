@@ -68,6 +68,12 @@ final class SharedAppState: AppStateProvider {
         }
     }
     
+    /// Filter by category? Or embrace the chaos of all channels at once?
+    var selectedCategory: CategoryId?
+    
+    /// Filter by channel title search term. Because scrolling through 10,000 channels wasn't tedious enough.
+    var searchTerm: String?
+    
     /// Which tab are you pretending to use right now?
     var selectedTab: AppSection {
         get {

@@ -17,7 +17,7 @@ actor Importer {
         self.context.autosaveEnabled = false
     }
 
-    func importChannels(streams: [IPStream], tunerChannels: [HDHomeRunChannel]) async throws {
+    func importChannels(channels: [IPChannel], streams: [IPStream], tunerChannels: [HDHomeRunChannel]) async throws {
         guard !streams.isEmpty || !tunerChannels.isEmpty else {
             logWarning("No channels to import, exiting process without changes to local store.")
             return
@@ -36,25 +36,37 @@ actor Importer {
             context.delete(model)
         }
         
+        
+        func getCountryAndCategoriesFor(channelId: String?) -> (country: String?, categories: [String]) {
+            guard let channelId else { return (nil, []) }
+            let channel = channels.first(where: { $0.channelId == channelId })
+            return (channel?.country, channel?.categories ?? [])
+        }
+        
         // insert
-        for src in incoming where !existingIDs.contains(src.idHint) {
+        for src in incoming {//where !existingIDs.contains(src.idHint) {
+            
+            let (country, categories) = getCountryAndCategoriesFor(channelId: src.originalChannelIdHint)
             context.insert(
                 IPTVChannel(
                     id: src.idHint,
                     sortHint: src.sortHint,
                     title: src.titleHint,
                     number: src.numberHint,
+                    country: country,
+                    categories: categories,
                     url: src.urlHint,
                     logoURL: nil,
                     quality: src.qualityHint,
                     hasDRM: src.hasDRMHint,
-                    source: src.sourceHint
+                    source: src.sourceHint,
+                    isFavorite: false
                 )
             )
         }
         
         // update (Only for HDHomeRun channels missing associated deviceId data for source enum).
-        let exitingHomeRunChannels = existing.filter({ $0.source == SchemaV2.ChannelSource.homeRunTuner(deviceId: "") })
+        let exitingHomeRunChannels = existing.filter({ $0.source == SchemaV3.ChannelSource.homeRunTuner(deviceId: "") })
         for channel in exitingHomeRunChannels {
             // Update the source if it was a placeholder
             if case .homeRunTuner(let deviceId) = incoming.first(where: { $0.idHint == channel.id })?.sourceHint {
@@ -69,7 +81,7 @@ actor Importer {
         logDebug("Channel import process completed. Total imported: \(incoming.count) 🏁")
     }
     
-    func buildChannelMap(showFavoritesOnly: Bool) async throws -> ChannelMap {
+    func buildChannelMap(appState: AppStateProvider) async throws -> ChannelMap {
 
         if context.hasChanges {
             logWarning("Unsaved changes prior to building channel map, saving...")
@@ -82,13 +94,48 @@ actor Importer {
             sortBy: [SortDescriptor(\IPTVChannel.sortHint, order: .forward)]
         )
         
-        channelsDescriptor.predicate = (showFavoritesOnly ? (#Predicate<IPTVChannel> { $0.isFavorite == true }) : nil)
+        channelsDescriptor.predicate = await Self.predicateBuilder(showFavoritesOnly: appState.showFavoritesOnly,
+                                                                   searchText: appState.searchTerm,
+                                                                   countryCode: appState.selectedCountry,
+                                                                   categoryId: appState.selectedCategory)
+    
         let channels: [IPTVChannel] = try context.fetch(channelsDescriptor)
         let map: [ChannelId] = channels.map { $0.id }
         let cm = ChannelMap(map: map)
 
         logDebug("Channel map built.  Total Channels: \(cm.totalCount) 🏁")
         return cm
+    }
+    
+    
+    static func predicateBuilder(showFavoritesOnly: Bool? = nil,
+                                 searchText: String? = nil,
+                                 countryCode: CountryCode? = nil,
+                                 categoryId: CategoryId? = nil) -> Predicate<IPTVChannel> {
+        
+        var conditions: [Predicate<IPTVChannel>] = []
+        
+        if showFavoritesOnly == true {
+            conditions.append( #Predicate<IPTVChannel> { $0.isFavorite == true })
+        }
+        if let searchText {
+            conditions.append( #Predicate<IPTVChannel> { $0.title.localizedStandardContains(searchText) })
+        }
+        if let countryCode {
+            conditions.append( #Predicate<IPTVChannel> { $0.country == countryCode } )
+        }
+        if let categoryId {
+            conditions.append( #Predicate<IPTVChannel> { $0.categories.contains(categoryId) })
+        }
+        
+        // Combine conditions using '&&' (AND)
+        if conditions.isEmpty {
+            return #Predicate { _ in true } // Return a predicate that always evaluates to true if no conditions
+        } else {
+            return conditions.reduce(#Predicate { _ in true }) { current, next in
+                #Predicate { current.evaluate($0) && next.evaluate($0) }
+            }
+        }
     }
     
     func importCountries(_ countries : [Country]) async throws {
