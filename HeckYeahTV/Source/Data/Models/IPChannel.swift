@@ -12,7 +12,7 @@ import Hellfire
 /// Source: [https://iptv-org.github.io/api/channels.json](https://iptv-org.github.io/api/channels.json)
 struct IPChannel: JSONSerializable {
     
-    /// Unique channel Id
+    /// Unique channel Id of the source data.
     var channelId: String
     
     /// Full name of the channel

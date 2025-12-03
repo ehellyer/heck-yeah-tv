@@ -12,6 +12,10 @@ import Hellfire
 @MainActor
 final class IPTVController {
     
+    deinit {
+        logDebug("Deallocated")
+    }
+    
     private let sessionInterface = SessionInterface.sharedInstance
         
     ///MARK: - Internal API - Fetch IPTV Sources
@@ -39,7 +43,7 @@ final class IPTVController {
                                      timeoutInterval: 10.0,
                                      headers: [HTTPHeader.defaultUserAgent,
                                                HTTPHeader(name: "Accept-Encoding", value: "application/json"),
-                                               HTTPHeader(name: "connection", value: "close")]) // keep-alive off for initial connection.  e.g. VPN was on, then turned off while app was running.
+                                               HTTPHeader(name: "connection", value: "close")]) // keep-alive off for initial connection.  e.g. Avoid situations where VPN was on, then turned off while app was running, a new connection is needed.
         
         let response = try await self.sessionInterface.execute(request)
         let jsonObject = try T.initialize(jsonData: response.body)
@@ -47,14 +51,15 @@ final class IPTVController {
     }
     
     func fetchAll() async -> FetchSummary {
-        logDebug("Discovering IPTV channels... 🏳️")
+        logDebug("Discovering IPTV channels... 🇺🇸")
         var source = StreamSource()
         source.summary.startedAt = Date()
         
         let specs: [AnyLoadSpec] = [
             LoadSpec(.streams, keyPath: \.streams),
             LoadSpec(.channels, keyPath: \.channels),
-            LoadSpec(.countries, keyPath: \.countries)
+            LoadSpec(.countries, keyPath: \.countries),
+            LoadSpec(.logos, keyPath: \.logos)
         ]
         
         // Run everything concurrently; each task returns (endpoint, Result<count, error>)

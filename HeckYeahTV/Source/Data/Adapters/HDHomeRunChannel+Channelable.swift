@@ -10,7 +10,6 @@ import Foundation
 
 extension HDHomeRunChannel: Channelable {
     var idHint: String { id }
-    var originalChannelIdHint: String? { nil }
     var sortHint: String { String.concat(guideNumber, guideName, separator: "::") }
     var titleHint: String { guideName }
     var numberHint: String? { guideNumber }

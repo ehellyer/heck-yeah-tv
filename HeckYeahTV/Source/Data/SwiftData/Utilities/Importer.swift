@@ -17,36 +17,56 @@ actor Importer {
         self.context.autosaveEnabled = false
     }
 
-    func importChannels(channels: [IPChannel], streams: [IPStream], tunerChannels: [HDHomeRunChannel]) async throws {
+    func importChannels(logos: [IPLogo], channels: [IPChannel], streams: [IPStream], tunerChannels: [HDHomeRunChannel]) async throws {
         guard !streams.isEmpty || !tunerChannels.isEmpty else {
             logWarning("No channels to import, exiting process without changes to local store.")
             return
         }
         
-        logDebug("Channel Import Process Starting... 🏳️")
+        logDebug("Channel Import Process Starting... 🇺🇸")
         
         let incoming: [Channelable] = streams + tunerChannels
         let incomingIDs = Set(incoming.map(\.idHint))
         
         let existing = try context.fetch(FetchDescriptor<IPTVChannel>())
         let existingIDs = Set(existing.map(\.id))
+        let existingIDNeedUpdating = Set(existing.filter { $0.country == nil || $0.logoURL == nil }.map(\.id))
         
         // delete
         for model in existing where !incomingIDs.contains(model.id) {
             context.delete(model)
         }
         
+        func getLogoURLFor(_ channel: Channelable) -> URL? {
+            guard let channelId = (channel as? IPStream)?.channelId,
+                  let logo = logos.first(where: { $0.channelId == channelId })
+            else {
+                return nil
+            }
+            let url = URL(string: logo.url)
+            return url
+        }
         
-        func getCountryAndCategoriesFor(channelId: String?) -> (country: String?, categories: [String]) {
-            guard let channelId else { return (nil, []) }
-            let channel = channels.first(where: { $0.channelId == channelId })
-            return (channel?.country, channel?.categories ?? [])
+        func getCountryAndCategoriesFor(_ channel: Channelable) -> (country: String?, categories: [String]) {
+            // If this is a local lan device, set the country code to ANY.
+            if channel is HDHomeRunChannel {
+                return ("ANY", [])
+            }
+            
+            guard let channelId = (channel as? IPStream)?.channelId,
+                  let channel = channels.first(where: { $0.channelId == channelId })
+            else {
+                return (nil, [])
+            }
+            return (channel.country, channel.categories ?? [])
         }
         
         // insert
-        for src in incoming {//where !existingIDs.contains(src.idHint) {
+        for src in incoming where !existingIDs.contains(src.idHint) || existingIDNeedUpdating.contains(src.idHint) {
             
-            let (country, categories) = getCountryAndCategoriesFor(channelId: src.originalChannelIdHint)
+            let (country, categories) = getCountryAndCategoriesFor(src)
+            let logoURL = getLogoURLFor(src)
+
             context.insert(
                 IPTVChannel(
                     id: src.idHint,
@@ -56,7 +76,7 @@ actor Importer {
                     country: country,
                     categories: categories,
                     url: src.urlHint,
-                    logoURL: nil,
+                    logoURL: logoURL,
                     quality: src.qualityHint,
                     hasDRM: src.hasDRMHint,
                     source: src.sourceHint,
@@ -88,7 +108,7 @@ actor Importer {
             try context.save()
         }
         
-        logDebug("Building Channel Map... 🏳️")
+        logDebug("Building Channel Map... 🇺🇸")
         
         var channelsDescriptor: FetchDescriptor<IPTVChannel> = FetchDescriptor<IPTVChannel>(
             sortBy: [SortDescriptor(\IPTVChannel.sortHint, order: .forward)]
@@ -122,7 +142,7 @@ actor Importer {
             conditions.append( #Predicate<IPTVChannel> { $0.title.localizedStandardContains(searchText) })
         }
         if let countryCode {
-            conditions.append( #Predicate<IPTVChannel> { $0.country == countryCode } )
+            conditions.append( #Predicate<IPTVChannel> { $0.country == countryCode || $0.country == "ANY" } ) // "ANY" support local LAN tuners which get returned regardless of current country selection.
         }
         if let categoryId {
             conditions.append( #Predicate<IPTVChannel> { $0.categories.contains(categoryId) })
@@ -144,7 +164,7 @@ actor Importer {
             return
         }
         
-        logDebug("Country import process starting... 🏳️")
+        logDebug("Country import process starting... 🇺🇸")
 
         let existing = try context.fetch(FetchDescriptor<IPTVCountry>())
         let existingIDs = Set(existing.map(\.code))
@@ -178,7 +198,7 @@ actor Importer {
             return
         }
         
-        logDebug("Device import process starting... 🏳️")
+        logDebug("Device import process starting... 🇺🇸")
         
         let existing = try context.fetch(FetchDescriptor<HDHomeRunServer>())
         let existingIDs = Set(existing.map(\.deviceId))

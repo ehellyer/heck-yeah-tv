@@ -29,7 +29,7 @@ class ChannelNameView: UIView {
         layer.cornerRadius = GuideRowCell.viewCornerRadius
         clipsToBounds = true
         addGestureRecognizer(longTapGesture)
-        addChannelInfoStackView()
+        addChannelStackView()
     }
     
     required init?(coder: NSCoder) {
@@ -38,13 +38,26 @@ class ChannelNameView: UIView {
     
     //MARK: - Private API - View Lazy Binding
     
-    private func addChannelInfoStackView() {
-        addSubview(channelInfoStackView)
-        channelInfoStackView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 20).isActive = true
-        trailingAnchor.constraint(equalTo: channelInfoStackView.trailingAnchor, constant: 20).isActive = true
-        channelInfoStackView.topAnchor.constraint(equalTo: self.topAnchor, constant: 20).isActive = true
-        bottomAnchor.constraint(equalTo: channelInfoStackView.bottomAnchor, constant: 20).isActive = true
+    private func addChannelStackView() {
+        addSubview(channelStackView)
+        channelStackView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 20).isActive = true
+        trailingAnchor.constraint(equalTo: channelStackView.trailingAnchor, constant: 20).isActive = true
+        channelStackView.topAnchor.constraint(equalTo: self.topAnchor, constant: 20).isActive = true
+        bottomAnchor.constraint(equalTo: channelStackView.bottomAnchor, constant: 20).isActive = true
     }
+    
+    private lazy var channelStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.axis = .horizontal
+        stackView.spacing = 15
+        stackView.distribution = .fill
+        stackView.setContentCompressionResistancePriority(.required, for: .vertical)
+        stackView.alignment = .center
+        stackView.addArrangedSubview(logoImageView)
+        stackView.addArrangedSubview(channelInfoStackView)
+        return stackView
+    }()
     
     private lazy var channelInfoStackView: UIStackView = {
         let stackView = UIStackView()
@@ -56,7 +69,6 @@ class ChannelNameView: UIView {
         stackView.alignment = .leading
         stackView.addArrangedSubview(titleLabel)
         stackView.addArrangedSubview(subTextStackView)
-//        stackView.addArrangedSubview(logoImageView)
         return stackView
     }()
     
@@ -107,8 +119,8 @@ class ChannelNameView: UIView {
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFit
         imageView.setContentCompressionResistancePriority(.required, for: .horizontal)
-        imageView.widthAnchor.constraint(equalToConstant: 35).isActive = true
-        imageView.heightAnchor.constraint(equalToConstant: 35).isActive = true
+        imageView.widthAnchor.constraint(equalToConstant: 80).isActive = true
+        imageView.heightAnchor.constraint(equalToConstant: 80).isActive = true
         imageView.setContentHuggingPriority(.required, for: .vertical)
         return imageView
     }()
@@ -149,6 +161,8 @@ class ChannelNameView: UIView {
         qualityImageView.tintColor = color
     }
     
+    private lazy var attachmentController = AttachmentController()
+    
     //MARK: - Internal API
     
     weak var delegate: GuideViewDelegate?
@@ -160,6 +174,10 @@ class ChannelNameView: UIView {
         titleLabel.text = channel?.title ?? " "
         numberLabel.text = channel?.number ?? " "
         qualityImageView.image = channel?.quality.image
+        
+        Task {
+            self.logoImageView.image = try? await attachmentController.fetchPlatformImage(channel?.logoURL)
+        }
         
         if qualityImageView.image != nil {
             numberLabel.text = numberLabel.text?.trim()

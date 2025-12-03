@@ -12,7 +12,7 @@ struct AppStyle {
     struct Fonts {
         static var titleFont: PlatformFont {
 #if os(tvOS)
-            .systemFont(ofSize: 34, weight: .semibold)
+            .systemFont(ofSize: 28, weight: .semibold)
 #elseif os(iOS)
             .systemFont(ofSize: 17, weight: .semibold)
 #else
@@ -22,7 +22,7 @@ struct AppStyle {
         
         static var subtitleFont: PlatformFont {
 #if os(tvOS)
-            .systemFont(ofSize: 32)
+            .systemFont(ofSize: 24)
 #elseif os(iOS)
             .systemFont(ofSize: 13)
 #else

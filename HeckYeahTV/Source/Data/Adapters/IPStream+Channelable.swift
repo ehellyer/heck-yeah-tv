@@ -10,7 +10,6 @@ import Foundation
 
 extension IPStream: Channelable {
     var idHint: String { id }
-    var originalChannelIdHint: String? { channelId }
     var sortHint: String { String.concat(title, channelId, separator: "::") }
     var titleHint: String { title }
     var numberHint: String? { channelId }

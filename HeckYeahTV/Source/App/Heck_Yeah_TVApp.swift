@@ -91,7 +91,7 @@ struct Heck_Yeah_TVApp: App {
             
             let hdHomeRunController = HDHomeRunDiscoveryController()
             let iptvController: IPTVController = IPTVController()
-            let summary = FetchSummary()
+            var summary = FetchSummary()
             
             let hdHomeRunSummary = await hdHomeRunController.bootStrapTunerChannelDiscovery()
             let iptvSummary = await iptvController.fetchAll()
@@ -111,7 +111,7 @@ struct Heck_Yeah_TVApp: App {
                         try await importer.importCountries(iptvController.countries)
                     }
                     group.addTask {
-                        try await importer.importChannels(channels: iptvController.channels, streams: iptvController.streams, tunerChannels: hdHomeRunController.channels)
+                        try await importer.importChannels(logos: iptvController.logos, channels: iptvController.channels, streams: iptvController.streams, tunerChannels: hdHomeRunController.channels)
                     }
                     group.addTask {
                         try await importer.importTunerDevices(hdHomeRunController.devices)

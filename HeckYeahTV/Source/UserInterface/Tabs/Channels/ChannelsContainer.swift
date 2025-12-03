@@ -60,7 +60,7 @@ extension ChannelsContainer {
         do {
             // Importer is an actor; its async methods run in its isolation without blocking the main actor.
             let importer = Importer(container: container)
-            let cm = try await importer.buildChannelMap(showFavoritesOnly: SharedAppState.shared.showFavoritesOnly)
+            let cm = try await importer.buildChannelMap(appState: appState)
             await MainActor.run {
                 channelMap.update(with: cm.map)
             }

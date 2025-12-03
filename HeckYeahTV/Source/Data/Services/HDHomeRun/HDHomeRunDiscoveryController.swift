@@ -15,6 +15,10 @@ import Hellfire
 @MainActor
 final class HDHomeRunDiscoveryController {
     
+    deinit {
+        logDebug("Deallocated")
+    }
+    
     //MARK: - Private API
     
     private let sessionInterface = SessionInterface.sharedInstance
@@ -98,8 +102,8 @@ final class HDHomeRunDiscoveryController {
     var channels: [HDHomeRunChannel] = []
     
     func bootStrapTunerChannelDiscovery() async -> FetchSummary {
-        logDebug("Looking for HDHomeRun Tuners and discovering their channels. 🏳️")
-        let summary = await deviceDiscovery()
+        logDebug("Looking for HDHomeRun Tuners and discovering their channels. 🇺🇸")
+        var summary = await deviceDiscovery()
         if discoveredDevices.count > 0 {
             summary.mergeSummary(await deviceDetails())
         }

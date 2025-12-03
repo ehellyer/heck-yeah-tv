@@ -13,10 +13,12 @@ struct GuideRow: View {
     let internalHzPadding: CGFloat = 15
     let internalVtPadding: CGFloat = 15
     let cornerRadius: CGFloat = 20
+    let attachmentController = AttachmentController()
     
     @State var channel: IPTVChannel?
     @Binding var appState: AppStateProvider
     @State private var rowWidth: CGFloat = 800 // Default, will update dynamically
+    @State private var logoImage: Image? = nil
     
     // Focus tracking for each button
     @FocusState private var focusedButton: FocusedButton?
@@ -68,18 +70,29 @@ struct GuideRow: View {
                 appState.selectedChannel = channel?.id
             } label: {
                 Group {
-                    VStack(alignment: .leading, spacing: 10) {
-                        // "Placeholder" is used for .redacted(reason: .placeholder) modifier.
-                        Text(channel?.title ?? "Placeholder")
-                            .font(Font(AppStyle.Fonts.titleFont))
-                            .lineLimit(1)
-                            .truncationMode(.tail)
-                        GuideSubTitleView(channel: channel)
+                    HStack(spacing: 15) {
+                        
+                        if let image = logoImage {
+                            image
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .frame(width: 60, height: 60)
+                        }
+                        
+                        VStack(alignment: .leading, spacing: 10) {
+                            // "Placeholder" is used for .redacted(reason: .placeholder) modifier.
+                            Text(channel?.title ?? "Placeholder")
+                                .font(Font(AppStyle.Fonts.titleFont))
+                                .lineLimit(1)
+                                .truncationMode(.tail)
+                            GuideSubTitleView(channel: channel)
+                        }
                     }
                     .padding(.horizontal, internalHzPadding)
                     .padding(.vertical, internalVtPadding)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .background(Color.clear)
+
                 }
             }
             .frame(width: !compact ? 320 : nil)
@@ -90,6 +103,9 @@ struct GuideRow: View {
                                               cornerRadius: cornerRadius,
                                               isFocused: focusedButton == .channel))
             .padding(.trailing, 20)
+            .task(id: channel?.logoURL) {
+                logoImage = try? await attachmentController.fetchImage(channel?.logoURL)
+            }
             
             if !compact {
                 Button {

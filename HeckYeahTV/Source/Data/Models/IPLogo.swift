@@ -22,10 +22,10 @@ struct IPLogo: JSONSerializable {
     let tags: [String]
     
     /// Image width in pixels (e.g., 1000)
-    let width: Int
+    let width: CGFloat
     
     /// Image height in pixels (e.g., 468)
-    let height: Int
+    let height: CGFloat
     
     /// Image format if specified (one of: PNG, JPEG, SVG, GIF, WebP, AVIF, APNG); otherwise `nil`
     let format: String?
@@ -41,5 +41,21 @@ struct IPLogo: JSONSerializable {
         case height
         case format
         case url
+    }
+    
+    init(from decoder: Decoder) throws {
+        do {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            self.channelId = try container.decode(String.self, forKey: .channelId)
+            self.feedId = try container.decodeIfPresent(String.self, forKey: .feedId)
+            self.tags = try container.decode([String].self, forKey: .tags)
+            self.width = try container.decode(CGFloat.self, forKey: .width)
+            self.height = try container.decode(CGFloat.self, forKey: .height)
+            self.format = try container.decodeIfPresent(String.self, forKey: .format)
+            self.url = try container.decode(String.self, forKey: .url)
+        } catch {
+            logDebug(error)
+            throw error
+        }
     }
 }
