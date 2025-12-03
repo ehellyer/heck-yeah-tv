@@ -13,9 +13,10 @@ class ChannelNameView: UIView {
 
     //MARK: - UIView Overrides
     
-//    deinit {
-//        logDebug("Deallocated")
-//    }
+    deinit {
+        // Cancel any pending image load task
+        imageLoadTask?.cancel()
+    }
 
     convenience init() {
         self.init(frame: .zero)
@@ -154,6 +155,7 @@ class ChannelNameView: UIView {
     //MARK: - Private API
     
     private var channelId: ChannelId?
+    private var imageLoadTask: Task<Void, Never>?
     
     private func updateViewTintColor(_ color: UIColor) {
         titleLabel.textColor = color
@@ -162,6 +164,37 @@ class ChannelNameView: UIView {
     }
     
     private lazy var attachmentController = AttachmentController()
+    
+    private func updateLogoImage(for channel: IPTVChannel?) {
+
+        logoImageView.image = nil
+        logoImageView.tintColor = nil
+
+        imageLoadTask?.cancel()
+        imageLoadTask = Task { [weak self] in
+            guard let self = self,
+                  let channelId = channel?.id
+            else {
+                return
+            }
+            
+            let image = try? await self.attachmentController.fetchPlatformImage(channel?.logoURL)
+
+            //Check task was not cancelled and we are operating on the correct channelId, else just give up and go home.
+            guard !Task.isCancelled, self.channelId == channelId else {
+                return
+            }
+            
+            await MainActor.run {
+                if image == nil {
+                    self.logoImageView.image = UIImage(systemName: "tv.circle.fill")
+                    self.logoImageView.tintColor = .systemGray
+                } else {
+                    self.logoImageView.image = image
+                }
+            }
+        }
+    }
     
     //MARK: - Internal API
     
@@ -175,13 +208,11 @@ class ChannelNameView: UIView {
         numberLabel.text = channel?.number ?? " "
         qualityImageView.image = channel?.quality.image
         
-        Task {
-            self.logoImageView.image = try? await attachmentController.fetchPlatformImage(channel?.logoURL)
-        }
-        
         if qualityImageView.image != nil {
             numberLabel.text = numberLabel.text?.trim()
         }
+        
+        updateLogoImage(for: channel)
     }
 }
 
