@@ -11,6 +11,7 @@ import SwiftData
 
 enum UpgradeSchemaMigrationPlan: SchemaMigrationPlan {
     
+    // Developer Note: V1, V2, V3 are pre-release schema changes.
     
     static var schemas: [any VersionedSchema.Type] {
         [
@@ -35,12 +36,11 @@ enum UpgradeSchemaMigrationPlan: SchemaMigrationPlan {
         
         logDebug("SwiftData: Migrating from SchemaV1 to SchemaV2 starting...")
         
-        //let predicate = #Predicate<SchemaV1.IPTVChannel> { $0.isFavorite == true }
-        let descriptor = FetchDescriptor<SchemaV1.IPTVChannel>()//(predicate: predicate)
+        let descriptor = FetchDescriptor<SchemaV1.IPTVChannel>()
         let v1IPTVChannels: [SchemaV1.IPTVChannel] = try context.fetch(descriptor)
         
         try v1IPTVChannels.forEach {
-            // Source will get set correctly in a post migration step in the Importer.
+            // Source.homeRunTuner(deviceId: "") will have the deviceId set correctly in a post migration step in the SwiftData Importer.
             let source: SchemaV2.ChannelSource = $0.source.migrateToV2()
             let sourceData = try source.toJSONData()
             Self.v1MigrationData[$0.id] = V1MigrationData(isFavorite: $0.isFavorite, source: sourceData)

@@ -14,26 +14,22 @@ struct SectionView: View {
     @Binding var appState: AppStateProvider
     
     var body: some View {
-        SectionContentView() {
-            
-            switch appState.selectedTab {
-                case .channels:
-                    GuideView(appState: $appState)
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
-                        .background(Color.clear)
-                    
-                case .recents:
-                    RecentsView(appState: $appState)
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
-                        .background(Color.clear)
-                    
-                case .settings:
-                    SettingsContainerView(appState: $appState)
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
-                        .background(Color.clear)
-            }
+        switch appState.selectedTab {
+            case .channels:
+                GuideView(appState: $appState)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .background(Color.clear)
+                
+            case .recents:
+                RecentsView(appState: $appState)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .background(Color.clear)
+                
+            case .settings:
+                SettingsContainerView(appState: $appState)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .background(Color.clear)
         }
-        .background(Color.clear)
     }
 }
 
