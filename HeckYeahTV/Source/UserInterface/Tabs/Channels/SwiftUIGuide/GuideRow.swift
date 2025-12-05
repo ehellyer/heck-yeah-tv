@@ -13,12 +13,15 @@ struct GuideRow: View {
     let internalHzPadding: CGFloat = 15
     let internalVtPadding: CGFloat = 15
     let cornerRadius: CGFloat = 20
-    let attachmentController = AttachmentController()
     
     @State var channel: IPTVChannel?
     @Binding var appState: AppStateProvider
     @State private var rowWidth: CGFloat = 800 // Default, will update dynamically
     @State private var logoImage: Image? = nil
+    @State private var imageLoadTask: Task<Void, Never>? = nil
+
+    @Injected(\.attachmentController)
+    private var attachmentController: AttachmentController
     
     // Focus tracking for each button
     @FocusState private var focusedButton: FocusedButton?
@@ -42,6 +45,28 @@ struct GuideRow: View {
             return false
         }
         return selectedChannelId == channel?.id
+    }
+    
+    private func updateLogoImage(for channel: IPTVChannel?) {
+        logoImage = nil
+        let currentChannelId = channel?.id
+        
+        imageLoadTask?.cancel()
+        imageLoadTask = Task {
+            
+            let image = try? await attachmentController.fetchImage(channel?.logoURL)
+            
+            //Check task was not cancelled and we are operating on the correct channelId, else just give up and go home.
+            guard !Task.isCancelled, channel?.id == currentChannelId else {
+                return
+            }
+            
+            if image == nil {
+                logoImage = Image(systemName: "tv.circle.fill")
+            } else {
+                logoImage = image
+            }
+        }
     }
     
     var body: some View {
@@ -103,8 +128,8 @@ struct GuideRow: View {
                                               cornerRadius: cornerRadius,
                                               isFocused: focusedButton == .channel))
             .padding(.trailing, 20)
-            .task(id: channel?.logoURL) {
-                logoImage = try? await attachmentController.fetchImage(channel?.logoURL)
+            .task(id: channel?.id) {
+                updateLogoImage(for: channel)
             }
             
             if !compact {
@@ -147,9 +172,10 @@ struct GuideRow: View {
 
 #Preview("GuideRow - loads from Mock SwiftData") {
     @Previewable @State var appState: AppStateProvider = MockSharedAppState()
-    
+    let attachmentController = AttachmentController()
     let mockData = MockDataPersistence(appState: appState)
-    GuideRow(channel: mockData.channels[8], appState: $appState)
+    GuideRow(channel: mockData.channels[8],
+             appState: $appState)
     //.redacted(reason: .placeholder)
         .onAppear {
             appState.selectedChannel = mockData.channels[7].id

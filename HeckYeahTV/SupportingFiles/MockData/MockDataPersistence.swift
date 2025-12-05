@@ -90,7 +90,7 @@ final class MockDataPersistence {
     
     private func buildChannelMap(appState: any AppStateProvider) {
         let predicate = Importer.predicateBuilder(showFavoritesOnly: appState.showFavoritesOnly,
-                                                  searchText: nil,
+                                                  searchTerm: appState.searchTerm,
                                                   countryCode: appState.selectedCountry,
                                                   categoryId: appState.selectedCategory)
         

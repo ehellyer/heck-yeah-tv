@@ -93,6 +93,10 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Source/App/Heck_Yeah_TVApp.swift,
+				Source/Common/DependencyInjection/AttachmentControllerInjectionConfig.swift,
+				Source/Common/DependencyInjection/PropertyInjection/Injected.swift,
+				Source/Common/DependencyInjection/PropertyInjection/InjectedValues.swift,
+				Source/Common/DependencyInjection/PropertyInjection/InjectionKey.swift,
 				"Source/Common/Extensions/NSImage+AsImage.swift",
 				"Source/Common/Extensions/NSView+AsImage.swift",
 				"Source/Common/Extensions/String+Extension.swift",
@@ -215,6 +219,10 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Source/App/Heck_Yeah_TVApp.swift,
+				Source/Common/DependencyInjection/AttachmentControllerInjectionConfig.swift,
+				Source/Common/DependencyInjection/PropertyInjection/Injected.swift,
+				Source/Common/DependencyInjection/PropertyInjection/InjectedValues.swift,
+				Source/Common/DependencyInjection/PropertyInjection/InjectionKey.swift,
 				"Source/Common/Extensions/FocusTargetView+FocusAnimation.swift",
 				"Source/Common/Extensions/String+Extension.swift",
 				"Source/Common/Extensions/UIImage+AsImage.swift",

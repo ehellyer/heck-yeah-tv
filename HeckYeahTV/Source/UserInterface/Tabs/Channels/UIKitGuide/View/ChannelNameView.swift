@@ -39,6 +39,9 @@ class ChannelNameView: UIView {
     
     //MARK: - Private API - View Lazy Binding
     
+    @Injected(\.attachmentController)
+    private var attachmentController: AttachmentController
+    
     private func addChannelStackView() {
         addSubview(channelStackView)
         channelStackView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 20).isActive = true
@@ -162,8 +165,6 @@ class ChannelNameView: UIView {
         numberLabel.textColor = color
         qualityImageView.tintColor = color
     }
-    
-    private lazy var attachmentController = AttachmentController()
     
     private func updateLogoImage(for channel: IPTVChannel?) {
 

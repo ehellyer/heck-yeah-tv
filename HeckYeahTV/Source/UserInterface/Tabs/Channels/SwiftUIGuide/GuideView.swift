@@ -18,7 +18,7 @@ struct GuideView: View {
     
     @State private var rebuildChannelMapTask: Task<Void, Never>? = nil
     @State private var scrollToSelectedTask: Task<Void, Never>? = nil
-
+    
     private let corner: CGFloat = 14
     
     var body: some View {
@@ -116,9 +116,11 @@ private extension GuideView {
 
 #Preview("GuideView") {
     @Previewable @State var appState: AppStateProvider = SharedAppState.shared
+    
     appState.selectedCountry = nil//"US"
     appState.showFavoritesOnly = false
-    appState.selectedCategory = nil//"movies"
+    appState.selectedCategory = nil//"movies", "education", "comedy", "science", "documentary", "education"
+    appState.searchTerm = "mus"
     
     let mockData = MockDataPersistence(appState: appState)
     

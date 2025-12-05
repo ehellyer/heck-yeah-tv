@@ -1,152 +1,152 @@
 [
     {
-    "id": "auto",
+    "categoryId": "auto",
     "name": "Auto",
-    "description": "Programming related to cars, motorcycles, and other automobiles"
+    "categoryDescription": "Programming related to cars, motorcycles, and other automobiles"
 },
     {
-    "id": "animation",
+    "categoryId": "animation",
     "name": "Animation",
-    "description": "Programming is mostly 2D or 3D animation"
+    "categoryDescription": "Programming is mostly 2D or 3D animation"
 },
     {
-    "id": "business",
+    "categoryId": "business",
     "name": "Business",
-    "description": "Programming related to business"
+    "categoryDescription": "Programming related to business"
 },
     {
-    "id": "classic",
+    "categoryId": "classic",
     "name": "Classic",
-    "description": "Programming is mostly from earlier decades"
+    "categoryDescription": "Programming is mostly from earlier decades"
 },
     {
-    "id": "comedy",
+    "categoryId": "comedy",
     "name": "Comedy",
-    "description": "Programming is mostly comedy"
+    "categoryDescription": "Programming is mostly comedy"
 },
     {
-    "id": "cooking",
+    "categoryId": "cooking",
     "name": "Cooking",
-    "description": "Programs related to cooking or food in general"
+    "categoryDescription": "Programs related to cooking or food in general"
 },
     {
-    "id": "culture",
+    "categoryId": "culture",
     "name": "Culture",
-    "description": "Programming is mostly about art and culture"
+    "categoryDescription": "Programming is mostly about art and culture"
 },
     {
-    "id": "documentary",
+    "categoryId": "documentary",
     "name": "Documentary",
-    "description": "Programming that depicts a person or real-world event"
+    "categoryDescription": "Programming that depicts a person or real-world event"
 },
     {
-    "id": "education",
+    "categoryId": "education",
     "name": "Education",
-    "description": "Programming is intended to be educational"
+    "categoryDescription": "Programming is intended to be educational"
 },
     {
-    "id": "entertainment",
+    "categoryId": "entertainment",
     "name": "Entertainment",
-    "description": "Channels with a variety of entertainment programs"
+    "categoryDescription": "Channels with a variety of entertainment programs"
 },
     {
-    "id": "family",
+    "categoryId": "family",
     "name": "Family",
-    "description": "Programming that is be suitable for all members of a family"
+    "categoryDescription": "Programming that is be suitable for all members of a family"
 },
     {
-    "id": "general",
+    "categoryId": "general",
     "name": "General",
-    "description": "Provides a variety of different programming"
+    "categoryDescription": "Provides a variety of different programming"
 },
     {
-    "id": "interactive",
+    "categoryId": "interactive",
     "name": "Interactive",
-    "description": "Programming that allows viewers to actively engage with the content"
+    "categoryDescription": "Programming that allows viewers to actively engage with the content"
 },
     {
-    "id": "kids",
+    "categoryId": "kids",
     "name": "Kids",
-    "description": "Programming targeted to children"
+    "categoryDescription": "Programming targeted to children"
 },
     {
-    "id": "legislative",
+    "categoryId": "legislative",
     "name": "Legislative",
-    "description": "Programming specific to the operation of government"
+    "categoryDescription": "Programming specific to the operation of government"
 },
     {
-    "id": "lifestyle",
+    "categoryId": "lifestyle",
     "name": "Lifestyle",
-    "description": "Programs related to health, fitness, leisure, fashion, decor, etc."
+    "categoryDescription": "Programs related to health, fitness, leisure, fashion, decor, etc."
 },
     {
-    "id": "movies",
+    "categoryId": "movies",
     "name": "Movies",
-    "description": "Channels that only show movies"
+    "categoryDescription": "Channels that only show movies"
 },
     {
-    "id": "music",
+    "categoryId": "music",
     "name": "Music",
-    "description": "Programming is music or music related"
+    "categoryDescription": "Programming is music or music related"
 },
     {
-    "id": "news",
+    "categoryId": "news",
     "name": "News",
-    "description": "Programming is mostly news"
+    "categoryDescription": "Programming is mostly news"
 },
     {
-    "id": "outdoor",
+    "categoryId": "outdoor",
     "name": "Outdoor",
-    "description": "Programming related to outdoor activities like fishing, hunting, etc."
+    "categoryDescription": "Programming related to outdoor activities like fishing, hunting, etc."
 },
     {
-    "id": "public",
+    "categoryId": "public",
     "name": "Public",
-    "description": "Non-commercial channels that prioritize public service"
+    "categoryDescription": "Non-commercial channels that prioritize public service"
 },
     {
-    "id": "relax",
+    "categoryId": "relax",
     "name": "Relax",
-    "description": "Programming is calm sounding and beautiful views"
+    "categoryDescription": "Programming is calm sounding and beautiful views"
 },
     {
-    "id": "religious",
+    "categoryId": "religious",
     "name": "Religious",
-    "description": "Religious programming"
+    "categoryDescription": "Religious programming"
 },
     {
-    "id": "series",
+    "categoryId": "series",
     "name": "Series",
-    "description": "Science and Technology"
+    "categoryDescription": "Science and Technology"
 },
     {
-    "id": "science",
+    "categoryId": "science",
     "name": "Science",
-    "description": "Channels that only show series"
+    "categoryDescription": "Channels that only show series"
 },
     {
-    "id": "shop",
+    "categoryId": "shop",
     "name": "Shop",
-    "description": "Programming is for shopping"
+    "categoryDescription": "Programming is for shopping"
 },
     {
-    "id": "sports",
+    "categoryId": "sports",
     "name": "Sports",
-    "description": "Programming is sports"
+    "categoryDescription": "Programming is sports"
 },
     {
-    "id": "travel",
+    "categoryId": "travel",
     "name": "Travel",
-    "description": "Programming is travel related"
+    "categoryDescription": "Programming is travel related"
 },
     {
-    "id": "weather",
+    "categoryId": "weather",
     "name": "Weather",
-    "description": "Programming is focused on weather"
+    "categoryDescription": "Programming is focused on weather"
 },
     {
-    "id": "xxx",
+    "categoryId": "xxx",
     "name": "XXX",
-    "description": "Programming is adult oriented and x-rated"
+    "categoryDescription": "Programming is adult oriented and x-rated"
 }
 ]

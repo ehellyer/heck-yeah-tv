@@ -13,7 +13,6 @@ struct GuideRowLazy: View {
     
     let channelId: ChannelId
     @Binding var appState: AppStateProvider
-    
     @Environment(\.modelContext) private var viewContext
     @StateObject private var loader = GuideRowLoader()
     

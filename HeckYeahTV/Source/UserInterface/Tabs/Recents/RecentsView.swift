@@ -17,7 +17,6 @@ struct RecentsView: View {
     @Namespace private var focusNamespace
     @FocusState private var focusedChannelId: String?
     
-    
     var body: some View {
         ScrollViewReader { proxy in
             ScrollView(.vertical) {
@@ -47,7 +46,6 @@ struct RecentsView: View {
 
 #Preview("RecentsView") {
     @Previewable @State var appState: any AppStateProvider = MockSharedAppState()
-    
     let mockData = MockDataPersistence(appState: appState)
     appState.selectedChannel = mockData.channels[0].id
     appState.selectedChannel = mockData.channels[1].id
@@ -59,8 +57,3 @@ struct RecentsView: View {
         .environment(\.modelContext, mockData.context)
         .environment(mockData.channelMap)
 }
-
-
-
-
-

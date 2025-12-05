@@ -61,12 +61,13 @@ actor Importer {
             return (channel.country, channel.categories ?? [])
         }
         
-        // insert
+        // insert (Update or insert)
         for src in incoming where !existingIDs.contains(src.idHint) || existingIDNeedUpdating.contains(src.idHint) {
             
             let (country, categories) = getCountryAndCategoriesFor(src)
             let logoURL = getLogoURLFor(src)
-
+            let isFavorite: Bool = (existing.first(where: { $0.id == src.idHint })?.isFavorite ?? false)
+            
             context.insert(
                 IPTVChannel(
                     id: src.idHint,
@@ -80,7 +81,7 @@ actor Importer {
                     quality: src.qualityHint,
                     hasDRM: src.hasDRMHint,
                     source: src.sourceHint,
-                    isFavorite: false
+                    isFavorite: isFavorite
                 )
             )
         }
@@ -115,7 +116,7 @@ actor Importer {
         )
         
         channelsDescriptor.predicate = await Self.predicateBuilder(showFavoritesOnly: appState.showFavoritesOnly,
-                                                                   searchText: appState.searchTerm,
+                                                                   searchTerm: appState.searchTerm,
                                                                    countryCode: appState.selectedCountry,
                                                                    categoryId: appState.selectedCategory)
     
@@ -129,7 +130,7 @@ actor Importer {
     
     
     static func predicateBuilder(showFavoritesOnly: Bool? = nil,
-                                 searchText: String? = nil,
+                                 searchTerm: String? = nil,
                                  countryCode: CountryCode? = nil,
                                  categoryId: CategoryId? = nil) -> Predicate<IPTVChannel> {
         
@@ -138,8 +139,8 @@ actor Importer {
         if showFavoritesOnly == true {
             conditions.append( #Predicate<IPTVChannel> { $0.isFavorite == true })
         }
-        if let searchText {
-            conditions.append( #Predicate<IPTVChannel> { $0.title.localizedStandardContains(searchText) })
+        if let searchTerm, searchTerm.count > 0 {
+            conditions.append( #Predicate<IPTVChannel> { $0.title.localizedStandardContains(searchTerm) })
         }
         if let countryCode {
             conditions.append( #Predicate<IPTVChannel> { $0.country == countryCode || $0.country == "ANY" } ) // "ANY" support local LAN tuners which get returned regardless of current country selection.
