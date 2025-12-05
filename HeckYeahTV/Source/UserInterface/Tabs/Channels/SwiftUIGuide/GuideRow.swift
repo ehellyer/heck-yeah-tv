@@ -169,10 +169,8 @@ struct GuideRow: View {
     }
 }
 
-
 #Preview("GuideRow - loads from Mock SwiftData") {
     @Previewable @State var appState: AppStateProvider = MockSharedAppState()
-    let attachmentController = AttachmentController()
     let mockData = MockDataPersistence(appState: appState)
     GuideRow(channel: mockData.channels[8],
              appState: $appState)
