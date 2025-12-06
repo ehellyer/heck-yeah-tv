@@ -11,7 +11,7 @@ import SwiftUI
 struct GuideSubTitleView: View {
     
     @Environment(\.redactionReasons) private var redactionReasons
-    @State var channel: IPTVChannel?
+    let channel: IPTVChannel?
     
     var number: String? {
         if channel == nil {
@@ -36,13 +36,6 @@ struct GuideSubTitleView: View {
         }
     }
     
-//    var qualityView: StreamQualityRepresentableView? {
-//        guard let q = channel?.quality else {
-//            return nil
-//        }
-//        return StreamQualityRepresentableView(streamQuality: q)
-//    }
-    
     var noSubText: Bool {
         return channel?.number == nil
         && (channel?.quality ?? .unknown) == .unknown
@@ -62,34 +55,16 @@ struct GuideSubTitleView: View {
                 _qualityImage
             }
 
-//            if let c = channel, c.quality != .unknown, let _qualityImage = qualityView {
-//                _qualityImage
-//            }
-            
-//TODO: EJH - Need to create a dynamic image cache similar to the quality image.
-//            if channel?.hasDRM == true {
-//                Text("DRM")
-//                    .font(Font(AppStyle.Fonts.streamQualityFont))
-//                    .lineLimit(1)
-//                    .truncationMode(.tail)
-//                    .padding(.horizontal, 2)
-//                    .padding(.vertical, 0)
-//                    .overlay(
-//                        RoundedRectangle(cornerRadius: 3)
-//                            .stroke(.guideForegroundNoFocus,
-//                                    lineWidth: redactionReasons.contains(.placeholder) ? 0 : 1)
-//                    )
-//            }
-            
             // If there is no subtext, we want a nbsp to size the label vertically so it does not collapse to zero,
             // but is also still responsive to dynamic text size.
             if noSubText {
-                Text(" ")
+                Text(nbsp)
                     .font(.caption2)
                     .foregroundStyle(.guideForegroundNoFocus)
                     .lineLimit(1)
             }
         }
+        .geometryGroup()
     }
 }
 
@@ -103,5 +78,5 @@ struct GuideSubTitleView: View {
     appState.selectedChannel = mockData.channels[3].id
     appState.selectedChannel = mockData.channels[4].id
     
-    return GuideSubTitleView(channel: mockData.channels[2])
+    return GuideSubTitleView(channel: mockData.channels[1])
 }

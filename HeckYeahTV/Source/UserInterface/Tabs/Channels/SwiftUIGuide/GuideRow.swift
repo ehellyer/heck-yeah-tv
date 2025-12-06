@@ -17,9 +17,9 @@ struct GuideRow: View {
     @State var channel: IPTVChannel?
     @Binding var appState: AppStateProvider
     @State private var rowWidth: CGFloat = 800 // Default, will update dynamically
-    @State private var logoImage: Image? = nil
+    @State private var logoImage: Image = Image(systemName: "tv.circle.fill")
     @State private var imageLoadTask: Task<Void, Never>? = nil
-
+    
     @Injected(\.attachmentController)
     private var attachmentController: AttachmentController
     
@@ -48,24 +48,16 @@ struct GuideRow: View {
     }
     
     private func updateLogoImage(for channel: IPTVChannel?) {
-        logoImage = nil
         let currentChannelId = channel?.id
         
         imageLoadTask?.cancel()
         imageLoadTask = Task {
-            
+            logoImage = Image(systemName: "tv.circle.fill")
             let image = try? await attachmentController.fetchImage(channel?.logoURL)
-            
-            //Check task was not cancelled and we are operating on the correct channelId, else just give up and go home.
-            guard !Task.isCancelled, channel?.id == currentChannelId else {
+            guard !Task.isCancelled, channel?.id == currentChannelId, let image else {
                 return
             }
-            
-            if image == nil {
-                logoImage = Image(systemName: "tv.circle.fill")
-            } else {
-                logoImage = image
-            }
+            logoImage = image
         }
     }
     
@@ -97,12 +89,11 @@ struct GuideRow: View {
                 Group {
                     HStack(spacing: 15) {
                         
-                        if let image = logoImage {
-                            image
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .frame(width: 60, height: 60)
-                        }
+                        logoImage
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: 60, height: 60)
+                            .fixedSize(horizontal: true, vertical: true)
                         
                         VStack(alignment: .leading, spacing: 10) {
                             // "Placeholder" is used for .redacted(reason: .placeholder) modifier.
@@ -117,7 +108,6 @@ struct GuideRow: View {
                     .padding(.vertical, internalVtPadding)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .background(Color.clear)
-
                 }
             }
             .frame(width: !compact ? 320 : nil)

@@ -102,7 +102,7 @@ class AttachmentController {
         guard let attachmentURL else {
             return nil
         }
-        
+
         // Setup the request
         let request = NetworkRequest(url: attachmentURL,
                                      method: .get,

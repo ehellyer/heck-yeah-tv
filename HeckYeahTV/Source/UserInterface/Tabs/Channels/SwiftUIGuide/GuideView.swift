@@ -31,13 +31,13 @@ struct GuideView: View {
                             GuideRowLazy(channelId: channelId,
                                          appState: $appState)
                             .id(channelId)
+                            .frame(height: 90) // Fixed height to prevent jumping
                             .padding(.leading, 5)
                             .padding(.trailing, 5)
                         }
                     }
                 }
                 .background(.clear)
-                .scrollClipDisabled(true )
                 .contentMargins(.top, 10)
                 .contentMargins(.bottom, 5)
 #if os(tvOS)
@@ -120,7 +120,7 @@ private extension GuideView {
     appState.selectedCountry = nil//"US"
     appState.showFavoritesOnly = false
     appState.selectedCategory = nil//"movies", "education", "comedy", "science", "documentary", "education"
-    appState.searchTerm = "mus"
+    appState.searchTerm = nil//"mus"
     
     let mockData = MockDataPersistence(appState: appState)
     

@@ -25,6 +25,9 @@ import SwiftData
 /// Creates a function for not (!).
 let not = (!)
 
+/// Non-breakable space
+let nbsp = "\u{00a0}"
+
 /// Returns the name of the object as a string.
 func stringName<T>(_ object: T) -> String {
     return String(describing: type(of: object))

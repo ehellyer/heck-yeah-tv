@@ -30,7 +30,6 @@ struct GuideRowLazy: View {
         .onAppear {
             loader.load(channelId: channelId, context: viewContext)
         }
-        
         .onDisappear {
             loader.cancel()
         }
@@ -41,7 +40,7 @@ struct GuideRowLazy: View {
     @Previewable @State var appState: AppStateProvider = MockSharedAppState()
     let mockData = MockDataPersistence(appState: appState)
     
-    GuideRowLazy(channelId: mockData.channelMap.map[3],
+    GuideRowLazy(channelId: "wer",//mockData.channelMap.map[6],
                  appState: $appState)
     .environment(\.modelContext, mockData.context)
 }
