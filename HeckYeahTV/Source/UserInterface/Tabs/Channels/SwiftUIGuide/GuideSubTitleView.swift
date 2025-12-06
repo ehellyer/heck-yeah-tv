@@ -36,15 +36,23 @@ struct GuideSubTitleView: View {
         }
     }
     
+    var languagesText: String? {
+        guard let languages = channel?.languages, !languages.isEmpty else {
+            return nil
+        }
+        return languages.first?.uppercased() //.map { $0.uppercased() }.joined(separator: ", ")
+    }
+    
     var noSubText: Bool {
         return channel?.number == nil
         && (channel?.quality ?? .unknown) == .unknown
         && (channel?.hasDRM ?? false) == false
+        && languagesText == nil
     }
     
     var body: some View {
         HStack(spacing: 8) {
-            if let _number = number {
+            if case .homeRunTuner = channel?.source, let _number = number {
                 Text(_number)
                     .font(Font(AppStyle.Fonts.subtitleFont))
                     .lineLimit(1)
@@ -53,6 +61,13 @@ struct GuideSubTitleView: View {
             
             if let _qualityImage = qualityImage {
                 _qualityImage
+            }
+            
+            if let _languagesText = languagesText {
+                Text(_languagesText)
+                    .font(Font(AppStyle.Fonts.subtitleFont))
+                    .lineLimit(1)
+                    .truncationMode(.tail)
             }
 
             // If there is no subtext, we want a nbsp to size the label vertically so it does not collapse to zero,

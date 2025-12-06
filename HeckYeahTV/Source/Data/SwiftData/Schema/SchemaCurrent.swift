@@ -7,7 +7,7 @@
 //
 
 /// Denotes the schema version currently in effect.
-typealias HeckYeahSchema = SchemaV3
+typealias HeckYeahSchema = SchemaV4
 
 /// Unique identifier of a channelId
 typealias ChannelId = String
@@ -18,7 +18,11 @@ typealias CountryCode = String
 /// Unique identifier of a TV stream category
 typealias CategoryId = String
 
-// Model typealias definitions - Models (always point to current schema in in use as defined by HeckYeahSchema typealias)
+/// Unique identifier of a language.
+typealias LanguageCode = String
+
+
+// Model typealias definitions - Models (always point to current schema in use as defined by HeckYeahSchema typealias)
 typealias HDHomeRunServer = HeckYeahSchema.HDHomeRunServer
 typealias IPTVChannel = HeckYeahSchema.IPTVChannel
 typealias IPTVCountry = HeckYeahSchema.IPTVCountry

@@ -50,3 +50,12 @@ extension SchemaV3 {
         case homeRunTuner(deviceId: HDHomeRunDeviceId)
     }
 }
+
+
+extension SchemaV4 {
+    
+    enum ChannelSource: Hashable, Sendable, JSONSerializable {
+        case ipStream
+        case homeRunTuner(deviceId: HDHomeRunDeviceId)
+    }
+}

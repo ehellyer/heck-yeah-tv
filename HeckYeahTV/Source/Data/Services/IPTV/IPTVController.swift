@@ -59,6 +59,7 @@ final class IPTVController {
             LoadSpec(.streams, keyPath: \.streams),
             LoadSpec(.channels, keyPath: \.channels),
             LoadSpec(.countries, keyPath: \.countries),
+            LoadSpec(.feeds, keyPath: \.feeds),
             LoadSpec(.logos, keyPath: \.logos)
         ]
         

@@ -86,6 +86,7 @@ class ChannelNameView: UIView {
         stackView.alignment = .center
         stackView.addArrangedSubview(numberLabel)
         stackView.addArrangedSubview(qualityImageView)
+        stackView.addArrangedSubview(languageLabel)
         return stackView
     }()
     
@@ -98,8 +99,18 @@ class ChannelNameView: UIView {
         label.numberOfLines = 1
         return label
     }()
-    
+
     private lazy var numberLabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = AppStyle.Fonts.subtitleFont
+        label.setContentHuggingPriority(.required, for: .vertical)
+        label.textColor = .white
+        label.numberOfLines = 1
+        return label
+    }()
+    
+    private lazy var languageLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = AppStyle.Fonts.subtitleFont
@@ -163,6 +174,7 @@ class ChannelNameView: UIView {
     private func updateViewTintColor(_ color: UIColor) {
         titleLabel.textColor = color
         numberLabel.textColor = color
+        languageLabel.textColor = color
         qualityImageView.tintColor = color
     }
     
@@ -205,15 +217,32 @@ class ChannelNameView: UIView {
         self.channelId = channel?.id
         backgroundColor = (isPlaying) ? .guideSelectedChannelBackground : .guideBackgroundNoFocus
         
-        titleLabel.text = channel?.title ?? " "
-        numberLabel.text = channel?.number ?? " "
-        qualityImageView.image = channel?.quality.image
+        //Leading Logo
+        updateLogoImage(for: channel)
         
-        if qualityImageView.image != nil {
-            numberLabel.text = numberLabel.text?.trim()
+        // 1st line - Set title label
+        titleLabel.text = channel?.title ?? nbsp  // the nbsp is to maintain label height for layout when title is nil.
+        
+        // 2nd line - Channel Number
+        if case .homeRunTuner = channel?.source {
+            numberLabel.text = channel?.number
+        } else {
+            numberLabel.text = nil
         }
         
-        updateLogoImage(for: channel)
+        // 2nd line - Stream Video Quality
+        qualityImageView.image = channel?.quality.image
+        
+        // 2nd line - Stream Audio Language
+        languageLabel.text = channel?.languages.first?.uppercased() ?? nbsp
+        
+        // Remove the number label if it is nil so the empty label does not take up padding.
+        if numberLabel.text == nil {
+            numberLabel.removeFromSuperview()
+        } else {
+            // A view can have only one parent, so it does not matter if the view is already in the stack view (regardless of index).
+            subTextStackView.insertArrangedSubview(numberLabel, at: 0)
+        }
     }
 }
 

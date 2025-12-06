@@ -71,7 +71,7 @@ struct GuideView: View {
 
 private extension GuideView {
     private func rebuildChannelMap() {
-        // Cancel any prior rebuild task if you want to coalesce rapid toggles
+        // Cancel any prior rebuild task to coalesce rapid toggles
         rebuildChannelMapTask?.cancel()
         let container = viewContext.container
         rebuildChannelMapTask = Task.detached {

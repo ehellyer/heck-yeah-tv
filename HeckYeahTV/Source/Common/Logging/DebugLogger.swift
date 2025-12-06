@@ -9,10 +9,10 @@
 // ***************************************************************************************************************************
 // ***************************************************************************************************************************
 //
-// TODO:    This is a temporary implementation of DebugLogger that primarily is for printing to the console window for the developer.
+// TODO:    This is a temporary implementation of DebugLogger that primarily is for printing to the console window for the developer (Ed).
 //          Future versions will write all messages to a cycling file that can be used for production runtime analysis.
 //
-//          WARNING: NEVER LOG UNPROTECTED SENSITIVE INFORMATION
+//          WARNING: NEVER LOG UNPROTECTED SENSITIVE INFORMATION (I never do this.  - Ed.  🤥)
 //
 // ***************************************************************************************************************************
 // ***************************************************************************************************************************

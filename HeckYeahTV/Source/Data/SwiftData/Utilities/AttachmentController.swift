@@ -108,7 +108,7 @@ class AttachmentController {
                                      method: .get,
                                      cachePolicyType: cachePolicyType,
                                      timeoutInterval: 10.0,
-                                     headers: [HTTPHeader(name: "accept-type", value: "image/png, image/jpeg, image/*;q=0.8")])
+                                     headers: [HTTPHeader(name: "accept-type", value: "image/png, image/jpeg, image/*;q=0.8, */*;q=0.2")])
         
         // Make the call
         let response = try await sessionInterface.execute(request)

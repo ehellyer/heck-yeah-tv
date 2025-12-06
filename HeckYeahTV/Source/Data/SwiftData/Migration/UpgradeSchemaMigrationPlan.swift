@@ -17,19 +17,21 @@ enum UpgradeSchemaMigrationPlan: SchemaMigrationPlan {
         [
             SchemaV1.self,
             SchemaV2.self,
-            SchemaV3.self
+            SchemaV3.self,
+            SchemaV4.self
         ]
     }
     
     static var stages: [MigrationStage] {
         [
             migrateV1toV2,
-            migrateV2toV3
+            migrateV2toV3,
+            migrateV3toV4
         ]
     }
     
     private static var v1MigrationData: [ChannelId: V1MigrationData] = [:]
-
+    
     static let migrateV1toV2 = MigrationStage.custom(fromVersion: SchemaV1.self,
                                                      toVersion: SchemaV2.self,
                                                      willMigrate: { context in
@@ -64,5 +66,8 @@ enum UpgradeSchemaMigrationPlan: SchemaMigrationPlan {
     })
     
     static let migrateV2toV3 = MigrationStage.lightweight(fromVersion: SchemaV2.self,
-                                                     toVersion: SchemaV3.self)
+                                                          toVersion: SchemaV3.self)
+    
+    static let migrateV3toV4 = MigrationStage.lightweight(fromVersion: SchemaV3.self,
+                                                          toVersion: SchemaV4.self)
 }

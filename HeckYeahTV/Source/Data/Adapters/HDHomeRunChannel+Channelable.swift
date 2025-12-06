@@ -14,7 +14,7 @@ extension HDHomeRunChannel: Channelable {
     var titleHint: String { guideName }
     var numberHint: String? { guideNumber }
     var urlHint: URL { url }
-    var qualityHint: StreamQuality { (isHD ? .fhd : .unknown) }
+    var qualityHint: StreamQuality { (isHD ? .fhd : .sd) }
     var hasDRMHint: Bool { hasDRM }
     var sourceHint: ChannelSource { ChannelSource.homeRunTuner(deviceId: deviceId) }
 }

@@ -70,6 +70,7 @@ struct VLCPlayerView: CrossPlatformRepresentable {
             let _player = VLCMediaPlayer()
             _player.drawable = self.platformView
             _player.delegate = nil  //Not yet implemented
+            _player.audio?.volume = 150
             return _player
         }()
         
@@ -102,6 +103,8 @@ struct VLCPlayerView: CrossPlatformRepresentable {
         ///   - channelId: (Optional) The identifier of the channel to play.
         ///   - shouldPause: Intent of the user to pause/resume an active playing stream.
         func updatePlayState(channelId: ChannelId?, shouldPause: Bool) {
+            
+            mediaPlayer.audio?.volume = 150
             
             // Resolve desired channel URL from channelId
             let channelURL: URL? = {

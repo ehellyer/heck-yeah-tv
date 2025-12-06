@@ -17,7 +17,12 @@ actor Importer {
         self.context.autosaveEnabled = false
     }
 
-    func importChannels(logos: [IPLogo], channels: [IPChannel], streams: [IPStream], tunerChannels: [HDHomeRunChannel]) async throws {
+    func importChannels(feeds: [IPFeed],
+                        logos: [IPLogo],
+                        channels: [IPChannel],
+                        streams: [IPStream],
+                        tunerChannels: [HDHomeRunChannel]) async throws {
+        
         guard !streams.isEmpty || !tunerChannels.isEmpty else {
             logWarning("No channels to import, exiting process without changes to local store.")
             return
@@ -30,11 +35,29 @@ actor Importer {
         
         let existing = try context.fetch(FetchDescriptor<IPTVChannel>())
         let existingIDs = Set(existing.map(\.id))
-        let existingIDNeedUpdating = Set(existing.filter { $0.country == nil || $0.logoURL == nil }.map(\.id))
+        //let existingIDNeedUpdating = Set(existing.filter { $0.country == nil || $0.logoURL == nil }.map(\.id))
         
         // delete
         for model in existing where !incomingIDs.contains(model.id) {
             context.delete(model)
+        }
+        
+        func getFormatAndLanguagesFor(_ channel: Channelable) -> (format: HeckYeahSchema.StreamQuality, languages: [String]) {
+            guard let channelId = (channel as? IPStream)?.channelId,
+                  let feed = feeds.first(where: { $0.channelId == channelId })
+            else {
+                return (channel.qualityHint, [])
+            }
+            
+            var format: HeckYeahSchema.StreamQuality = channel.qualityHint
+            if format == .unknown {
+                // If this is an IPStream channel, and quality is unknown, then lets try to get it from the Feed list.
+                format = HeckYeahSchema.StreamQuality.convertToStreamQuality(feed.format)
+            }
+            
+            let languages = feed.languages
+            
+            return (format, languages)
         }
         
         func getLogoURLFor(_ channel: Channelable) -> URL? {
@@ -62,11 +85,12 @@ actor Importer {
         }
         
         // insert (Update or insert)
-        for src in incoming where !existingIDs.contains(src.idHint) || existingIDNeedUpdating.contains(src.idHint) {
+        for src in incoming where !existingIDs.contains(src.idHint) {//}|| existingIDNeedUpdating.contains(src.idHint) {
             
             let (country, categories) = getCountryAndCategoriesFor(src)
             let logoURL = getLogoURLFor(src)
             let isFavorite: Bool = (existing.first(where: { $0.id == src.idHint })?.isFavorite ?? false)
+            let (format, languages) = getFormatAndLanguagesFor(src)
             
             context.insert(
                 IPTVChannel(
@@ -76,24 +100,26 @@ actor Importer {
                     number: src.numberHint,
                     country: country,
                     categories: categories,
+                    languages: languages,
                     url: src.urlHint,
                     logoURL: logoURL,
-                    quality: src.qualityHint,
+                    quality: format,
                     hasDRM: src.hasDRMHint,
                     source: src.sourceHint,
                     isFavorite: isFavorite
                 )
             )
         }
-        
-        // update (Only for HDHomeRun channels missing associated deviceId data for source enum).
-        let exitingHomeRunChannels = existing.filter({ $0.source == SchemaV3.ChannelSource.homeRunTuner(deviceId: "") })
-        for channel in exitingHomeRunChannels {
-            // Update the source if it was a placeholder
-            if case .homeRunTuner(let deviceId) = incoming.first(where: { $0.idHint == channel.id })?.sourceHint {
-                channel.source = .homeRunTuner(deviceId: deviceId)
-            }
-        }
+
+        //TODO:  Delete after dev complete for MVP, prior to RC compile for MVP release.  This code will no longer be needed.
+//        // update (Only for HDHomeRun channels missing associated deviceId data for source enum).
+//        let exitingHomeRunChannels = existing.filter({ $0.source == SchemaV3.ChannelSource.homeRunTuner(deviceId: "") })
+//        for channel in exitingHomeRunChannels {
+//            // Update the source if it was a placeholder
+//            if case .homeRunTuner(let deviceId) = incoming.first(where: { $0.idHint == channel.id })?.sourceHint {
+//                channel.source = .homeRunTuner(deviceId: deviceId)
+//            }
+//        }
         
         if context.hasChanges {
             try context.save()
