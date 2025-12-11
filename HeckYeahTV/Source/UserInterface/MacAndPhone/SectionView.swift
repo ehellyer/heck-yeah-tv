@@ -15,7 +15,7 @@ struct SectionView: View {
     
     var body: some View {
         switch appState.selectedTab {
-            case .channels:
+            case .guide:
                 GuideView(appState: $appState)
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .background(Color.clear)
@@ -24,7 +24,12 @@ struct SectionView: View {
                 RecentsView(appState: $appState)
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .background(Color.clear)
-                
+            
+            case .search:
+                SearchView(appState: $appState)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .background(Color.clear)
+
             case .settings:
                 SettingsContainerView(appState: $appState)
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -39,11 +44,11 @@ struct SectionView: View {
     
     let mockData = MockDataPersistence(appState: appState)
     // Loads up the recents list
-    appState.selectedChannel = mockData.channels[1].id
-    appState.selectedChannel = mockData.channels[3].id
-    appState.selectedChannel = mockData.channels[5].id
-    appState.selectedChannel = mockData.channels[7].id
-    appState.selectedChannel = mockData.channels[9].id
+//    appState.selectedChannel = mockData.channels[1].id
+//    appState.selectedChannel = mockData.channels[3].id
+//    appState.selectedChannel = mockData.channels[5].id
+//    appState.selectedChannel = mockData.channels[7].id
+//    appState.selectedChannel = mockData.channels[9].id
     appState.selectedTab = .recents
     
     return SectionView(appState: $appState)

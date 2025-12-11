@@ -1,152 +1,152 @@
 [
     {
-    "categoryId": "auto",
-    "name": "Auto",
-    "categoryDescription": "Programming related to cars, motorcycles, and other automobiles"
-},
+        "categoryId": "auto",
+        "name": "Auto",
+        "categoryDescription": "Programming related to cars, motorcycles, and other automobiles"
+    },
     {
-    "categoryId": "animation",
-    "name": "Animation",
-    "categoryDescription": "Programming is mostly 2D or 3D animation"
-},
+        "categoryId": "animation",
+        "name": "Animation",
+        "categoryDescription": "Programming is mostly 2D or 3D animation"
+    },
     {
-    "categoryId": "business",
-    "name": "Business",
-    "categoryDescription": "Programming related to business"
-},
+        "categoryId": "business",
+        "name": "Business",
+        "categoryDescription": "Programming related to business"
+    },
     {
-    "categoryId": "classic",
-    "name": "Classic",
-    "categoryDescription": "Programming is mostly from earlier decades"
-},
+        "categoryId": "classic",
+        "name": "Classic",
+        "categoryDescription": "Programming is mostly from earlier decades"
+    },
     {
-    "categoryId": "comedy",
-    "name": "Comedy",
-    "categoryDescription": "Programming is mostly comedy"
-},
+        "categoryId": "comedy",
+        "name": "Comedy",
+        "categoryDescription": "Programming is mostly comedy"
+    },
     {
-    "categoryId": "cooking",
-    "name": "Cooking",
-    "categoryDescription": "Programs related to cooking or food in general"
-},
+        "categoryId": "cooking",
+        "name": "Cooking",
+        "categoryDescription": "Programs related to cooking or food in general"
+    },
     {
-    "categoryId": "culture",
-    "name": "Culture",
-    "categoryDescription": "Programming is mostly about art and culture"
-},
+        "categoryId": "culture",
+        "name": "Culture",
+        "categoryDescription": "Programming is mostly about art and culture"
+    },
     {
-    "categoryId": "documentary",
-    "name": "Documentary",
-    "categoryDescription": "Programming that depicts a person or real-world event"
-},
+        "categoryId": "documentary",
+        "name": "Documentary",
+        "categoryDescription": "Programming that depicts a person or real-world event"
+    },
     {
-    "categoryId": "education",
-    "name": "Education",
-    "categoryDescription": "Programming is intended to be educational"
-},
+        "categoryId": "education",
+        "name": "Education",
+        "categoryDescription": "Programming is intended to be educational"
+    },
     {
-    "categoryId": "entertainment",
-    "name": "Entertainment",
-    "categoryDescription": "Channels with a variety of entertainment programs"
-},
+        "categoryId": "entertainment",
+        "name": "Entertainment",
+        "categoryDescription": "Channels with a variety of entertainment programs"
+    },
     {
-    "categoryId": "family",
-    "name": "Family",
-    "categoryDescription": "Programming that is be suitable for all members of a family"
-},
+        "categoryId": "family",
+        "name": "Family",
+        "categoryDescription": "Programming that is be suitable for all members of a family"
+    },
     {
-    "categoryId": "general",
-    "name": "General",
-    "categoryDescription": "Provides a variety of different programming"
-},
+        "categoryId": "general",
+        "name": "General",
+        "categoryDescription": "Provides a variety of different programming"
+    },
     {
-    "categoryId": "interactive",
-    "name": "Interactive",
-    "categoryDescription": "Programming that allows viewers to actively engage with the content"
-},
+        "categoryId": "interactive",
+        "name": "Interactive",
+        "categoryDescription": "Programming that allows viewers to actively engage with the content"
+    },
     {
-    "categoryId": "kids",
-    "name": "Kids",
-    "categoryDescription": "Programming targeted to children"
-},
+        "categoryId": "kids",
+        "name": "Kids",
+        "categoryDescription": "Programming targeted to children"
+    },
     {
-    "categoryId": "legislative",
-    "name": "Legislative",
-    "categoryDescription": "Programming specific to the operation of government"
-},
+        "categoryId": "legislative",
+        "name": "Legislative",
+        "categoryDescription": "Programming specific to the operation of government"
+    },
     {
-    "categoryId": "lifestyle",
-    "name": "Lifestyle",
-    "categoryDescription": "Programs related to health, fitness, leisure, fashion, decor, etc."
-},
+        "categoryId": "lifestyle",
+        "name": "Lifestyle",
+        "categoryDescription": "Programs related to health, fitness, leisure, fashion, decor, etc."
+    },
     {
-    "categoryId": "movies",
-    "name": "Movies",
-    "categoryDescription": "Channels that only show movies"
-},
+        "categoryId": "movies",
+        "name": "Movies",
+        "categoryDescription": "Channels that only show movies"
+    },
     {
-    "categoryId": "music",
-    "name": "Music",
-    "categoryDescription": "Programming is music or music related"
-},
+        "categoryId": "music",
+        "name": "Music",
+        "categoryDescription": "Programming is music or music related"
+    },
     {
-    "categoryId": "news",
-    "name": "News",
-    "categoryDescription": "Programming is mostly news"
-},
+        "categoryId": "news",
+        "name": "News",
+        "categoryDescription": "Programming is mostly news"
+    },
     {
-    "categoryId": "outdoor",
-    "name": "Outdoor",
-    "categoryDescription": "Programming related to outdoor activities like fishing, hunting, etc."
-},
+        "categoryId": "outdoor",
+        "name": "Outdoor",
+        "categoryDescription": "Programming related to outdoor activities like fishing, hunting, etc."
+    },
     {
-    "categoryId": "public",
-    "name": "Public",
-    "categoryDescription": "Non-commercial channels that prioritize public service"
-},
+        "categoryId": "public",
+        "name": "Public",
+        "categoryDescription": "Non-commercial channels that prioritize public service"
+    },
     {
-    "categoryId": "relax",
-    "name": "Relax",
-    "categoryDescription": "Programming is calm sounding and beautiful views"
-},
+        "categoryId": "relax",
+        "name": "Relax",
+        "categoryDescription": "Programming is calm sounding and beautiful views"
+    },
     {
-    "categoryId": "religious",
-    "name": "Religious",
-    "categoryDescription": "Religious programming"
-},
+        "categoryId": "religious",
+        "name": "Religious",
+        "categoryDescription": "Religious programming"
+    },
     {
-    "categoryId": "series",
-    "name": "Series",
-    "categoryDescription": "Science and Technology"
-},
+        "categoryId": "series",
+        "name": "Series",
+        "categoryDescription": "Science and Technology"
+    },
     {
-    "categoryId": "science",
-    "name": "Science",
-    "categoryDescription": "Channels that only show series"
-},
+        "categoryId": "science",
+        "name": "Science",
+        "categoryDescription": "Channels that only show series"
+    },
     {
-    "categoryId": "shop",
-    "name": "Shop",
-    "categoryDescription": "Programming is for shopping"
-},
+        "categoryId": "shop",
+        "name": "Shop",
+        "categoryDescription": "Programming is for shopping"
+    },
     {
-    "categoryId": "sports",
-    "name": "Sports",
-    "categoryDescription": "Programming is sports"
-},
+        "categoryId": "sports",
+        "name": "Sports",
+        "categoryDescription": "Programming is sports"
+    },
     {
-    "categoryId": "travel",
-    "name": "Travel",
-    "categoryDescription": "Programming is travel related"
-},
+        "categoryId": "travel",
+        "name": "Travel",
+        "categoryDescription": "Programming is travel related"
+    },
     {
-    "categoryId": "weather",
-    "name": "Weather",
-    "categoryDescription": "Programming is focused on weather"
-},
+        "categoryId": "weather",
+        "name": "Weather",
+        "categoryDescription": "Programming is focused on weather"
+    },
     {
-    "categoryId": "xxx",
-    "name": "XXX",
-    "categoryDescription": "Programming is adult oriented and x-rated"
-}
+        "categoryId": "xxx",
+        "name": "XXX",
+        "categoryDescription": "Programming is adult oriented and x-rated"
+    }
 ]

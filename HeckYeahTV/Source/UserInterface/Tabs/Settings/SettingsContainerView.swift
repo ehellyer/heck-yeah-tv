@@ -45,7 +45,6 @@ struct SettingsContainerView: View {
 
 #Preview("SettingsContainerView") {
     @Previewable @State var appState: any AppStateProvider = MockSharedAppState()
-    appState.selectedCountry = "US"
     
     let mockData = MockDataPersistence(appState: appState)
     

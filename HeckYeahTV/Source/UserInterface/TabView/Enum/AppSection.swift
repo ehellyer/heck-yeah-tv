@@ -14,8 +14,11 @@ enum AppSection: String, CaseIterable, Identifiable, JSONSerializable {
     /// Last recently viewed channels (probably max of 10)
     case recents
     
-    /// All channels (with on screen toggle for favorites only)
-    case channels
+    /// All channels (with on screen toggle to show favorites only)
+    case guide
+
+    /// Screen to add favorites by using filters. (select category, use search term, select country, toggle channel as favorite)
+    case search
     
     /// Settings and things
     case settings
@@ -30,8 +33,9 @@ extension AppSection {
     var title: String {
         switch self {
             case .recents: return "Recents"
-            case .channels: return "Channels"
+            case .guide: return "Guide"
             case .settings: return "Settings"
+            case .search: return "Search"
         }
     }
     
@@ -39,8 +43,9 @@ extension AppSection {
     var systemImage: String {
         switch self {
             case .recents: return "clock.fill"
-            case .channels: return "list.bullet.rectangle.fill"
+            case .guide: return "list.bullet.rectangle.fill"
             case .settings: return "gearshape.fill"
+            case .search: return "magnifyingglass"
         }
     }
 }

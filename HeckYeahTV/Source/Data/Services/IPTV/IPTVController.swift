@@ -52,13 +52,14 @@ final class IPTVController {
     
     func fetchAll() async -> FetchSummary {
         logDebug("Discovering IPTV channels... 🇺🇸")
-        var source = StreamSource()
+        var source = IPTVDataSources()
         source.summary.startedAt = Date()
         
         let specs: [AnyLoadSpec] = [
             LoadSpec(.streams, keyPath: \.streams),
             LoadSpec(.channels, keyPath: \.channels),
             LoadSpec(.countries, keyPath: \.countries),
+            LoadSpec(.categories, keyPath: \.categories),
             LoadSpec(.feeds, keyPath: \.feeds),
             LoadSpec(.logos, keyPath: \.logos)
         ]
@@ -98,13 +99,13 @@ final class IPTVController {
 }
 
 protocol AnyLoadSpec {
-    var endpoint: StreamSource.Endpoint { get }
+    var endpoint: IPTVDataSources.Endpoint { get }
     func load(into controller: IPTVController) async throws -> Int
 }
 
 struct LoadSpec<T: JSONSerializable>: AnyLoadSpec {
     
-    init(_ endpoint: StreamSource.Endpoint, keyPath: ReferenceWritableKeyPath<IPTVController, [T]>) {
+    init(_ endpoint: IPTVDataSources.Endpoint, keyPath: ReferenceWritableKeyPath<IPTVController, [T]>) {
         self.endpoint = endpoint
         self.url = endpoint.url
         self.keyPath = keyPath
@@ -113,7 +114,7 @@ struct LoadSpec<T: JSONSerializable>: AnyLoadSpec {
     private let url: URL
     private let keyPath: ReferenceWritableKeyPath<IPTVController, [T]>
     
-    let endpoint: StreamSource.Endpoint
+    let endpoint: IPTVDataSources.Endpoint
     
     /// Fetches, assigns to the controller property, and returns the number of items loaded.
     func load(into controller: IPTVController) async throws -> Int {

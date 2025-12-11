@@ -11,7 +11,7 @@ import SwiftData
 
 struct ShowFavorites: View {
     
-    @Binding var appState: AppStateProvider
+    @Injected(\.swiftDataController) private var swiftDataController: SwiftDataControllable
     var rightSwipeRedirectAction: (() -> Void)?
     
     var body: some View {
@@ -28,12 +28,11 @@ struct ShowFavorites: View {
                 
                 // Button
                 Button {
-                    appState.showFavoritesOnly.toggle()
+                    swiftDataController.showFavoritesOnly.toggle()
                 } label: {
-                    Label(appState.showFavoritesOnly ? "On" : "Off",
-                          systemImage: appState.showFavoritesOnly ? "star.fill" : "star")
+                    Label(swiftDataController.showFavoritesOnly ? "On" : "Off",
+                          systemImage: swiftDataController.showFavoritesOnly ? "star.fill" : "star")
                     .font(.caption)
-                    //.foregroundStyle(appState.showFavoritesOnly ? .yellow : .white)
                     .foregroundStyle(.yellow)
                 }
 #if os(tvOS)

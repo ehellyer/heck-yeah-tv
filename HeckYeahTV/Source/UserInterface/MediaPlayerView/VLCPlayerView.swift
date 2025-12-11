@@ -65,12 +65,13 @@ struct VLCPlayerView: CrossPlatformRepresentable {
         //MARK: - Private API
         
         private var viewContext: ModelContext
+        private let initVolume: Int32 = 120
         
         private lazy var mediaPlayer: VLCMediaPlayer = {
             let _player = VLCMediaPlayer()
             _player.drawable = self.platformView
             _player.delegate = nil  //Not yet implemented
-            _player.audio?.volume = 150
+            _player.audio?.volume = initVolume
             return _player
         }()
         
@@ -103,8 +104,6 @@ struct VLCPlayerView: CrossPlatformRepresentable {
         ///   - channelId: (Optional) The identifier of the channel to play.
         ///   - shouldPause: Intent of the user to pause/resume an active playing stream.
         func updatePlayState(channelId: ChannelId?, shouldPause: Bool) {
-            
-            mediaPlayer.audio?.volume = 150
             
             // Resolve desired channel URL from channelId
             let channelURL: URL? = {
@@ -142,6 +141,7 @@ struct VLCPlayerView: CrossPlatformRepresentable {
                     "video-filter": "deinterlace"       // This adds post-processing filters to enhance the picture quality, for instance deinterlacing, or distort the video.
                 ])
                 mediaPlayer.media = media
+                mediaPlayer.audio?.volume = initVolume
                 
                 if shouldPause {
                     // Do not start playback; remain paused with new media loaded.

@@ -24,4 +24,18 @@ extension StreamQuality {
                 return nil
         }
     }
+    
+    static func convertToStreamQuality(_ format: String) -> StreamQuality {
+        if ["240p", "360p", "480i", "480p", "576i", "576p"].contains(format) {
+            return .sd
+        } else if ["720p", "1080i", "1080p"].contains(format) {
+            return .fhd
+        } else if ["2160i", "2160p"].contains(format) {
+            return .uhd4k
+        } else if ["4320i", "4320p"].contains(format) {
+            return .uhd8k
+        } else {
+            return .unknown
+        }
+    }
 }

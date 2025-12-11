@@ -35,7 +35,7 @@ final class DataPersistence {
             
             // Exclude from backups.  At this time I would prefer to let the store rebuild itself.
             // Users would lose favorite channels and recently played channels, but the channels themselves are
-            // always insert or updated (upserted) into the store on every cold application start.
+            // always upserted into the store on every cold application start or by a manual refresh call.
             var resourceValues = URLResourceValues()
             resourceValues.isExcludedFromBackup = true
             try _rootURL.setResourceValues(resourceValues)
@@ -63,13 +63,23 @@ final class DataPersistence {
             
             viewContext = ModelContext(container)
             viewContext.autosaveEnabled = true
-        } catch let error as SwiftDataError {
-            logFatal("Failed to initialize GuideStore: \(error)")
+            
+            try Self.updateSchemaVersionTable(context: viewContext)
+            
         } catch {
             logFatal("Failed to initialize GuideStore: \(error)")
         }
     }
 
+    // Inserts or updates the schema version number into the model SchemaVersion for debug purposes when looking directly at the store via other dev tools.
+    private static func updateSchemaVersionTable(context: ModelContext) throws {
+        // Causes an insert or update because the SchemaVersion model has an ID property that is determined in the models initializer.
+        context.insert(SchemaVersion())
+        if context.hasChanges {
+            try context.save()
+        }
+    }
+    
     /// Check if the store at the given URL is a legacy unversioned store.
     /// Returns true if the store exists but doesn't have versioned schema.
     private static func isLegacyUnversionedStore(at url: URL) -> Bool {

@@ -7,25 +7,26 @@
 //
 
 /// Denotes the schema version currently in effect.
-typealias HeckYeahSchema = SchemaV4
+typealias HeckYeahSchema = SchemaV1
 
-/// Unique identifier of a channelId
+/// Type used as the unique identifier of a channelId, which is a stable has of URL and 
 typealias ChannelId = String
 
-/// Unique identifier of a country
+/// Type used as the unique identifier of a country
 typealias CountryCode = String
 
-/// Unique identifier of a TV stream category
+/// Type used as the unique identifier of a TV stream category
 typealias CategoryId = String
 
-/// Unique identifier of a language.
+/// Type used as the unique identifier of a language.
 typealias LanguageCode = String
 
-
 // Model typealias definitions - Models (always point to current schema in use as defined by HeckYeahSchema typealias)
+typealias ChannelSource = HeckYeahSchema.ChannelSource
 typealias HDHomeRunServer = HeckYeahSchema.HDHomeRunServer
+typealias IPTVCategory = HeckYeahSchema.IPTVCategory
 typealias IPTVChannel = HeckYeahSchema.IPTVChannel
 typealias IPTVCountry = HeckYeahSchema.IPTVCountry
-typealias IPTVCategory = HeckYeahSchema.IPTVCategory
+typealias IPTVFavorite = HeckYeahSchema.IPTVFavorite
 typealias StreamQuality = HeckYeahSchema.StreamQuality
-typealias ChannelSource = HeckYeahSchema.ChannelSource
+typealias SchemaVersion = HeckYeahSchema.SchemaVersion

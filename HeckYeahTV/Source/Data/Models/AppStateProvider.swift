@@ -7,60 +7,49 @@
 //
 
 import Foundation
-#if canImport(UIKit)
-import UIKit
-#endif
-
-enum DeviceType {
-    case iPhone
-    case iPad
-    case appleTV
-    case mac
-    case vision
-    case watch
-    case unknown
-}
 
 @MainActor
 protocol AppStateProvider {
+    
+    /// Whether the player is currently taking a breather.
+    ///
+    /// When `true`, your video is frozen in time like a dramatic pause in a soap opera.
+    /// When `false`, the show goes on. It's basically the "hold my beer" of video playback states.
     var isPlayerPaused: Bool { get set }
+    
+    /// Controls whether the app navigation is visible or hiding in shame.
+    ///
+    /// Set to `true` when you want users to actually find things in your app.
+    /// Set to `false` when you want a clean, minimalist look (or when you're pretending to be Netflix).
     var showAppNavigation: Bool { get set }
-    var showFavoritesOnly: Bool { get set }
-    var selectedCountry: CountryCode? { get set }
-    var selectedCategory: CategoryId? { get set }
-    var selectedTab: AppSection { get set }
+    
+    /// The channel that's currently getting all the attention.
+    ///
+    /// This is the Taylor Swift of channels — the one everyone's watching right now.
+    /// `nil` means nobody's home and you're staring at a blank screen like it owes you money.
     var selectedChannel: ChannelId? { get set }
-    var searchTerm: String? { get set }
+    
+    /// Your viewing history that follows you around like a digital shadow.
+    ///
+    /// A chronological list of your channel-hopping shame. Perfect for answering the question
+    /// "Wait, what was that channel I was watching 3 clicks ago before I got distracted?"
+    /// Limited to 10 items because nobody needs to remember their entire life story.
     var recentChannelIds: [ChannelId] { get }
-    var deviceType: DeviceType { get }
+    
+    /// Whether the app should actively hunt for tuners on your network.
+    ///
+    /// When `true`, unleashes a digital bloodhound to sniff out every tuner device
+    /// hiding on your LAN. When `false`, your app minds its own business like a polite houseguest.
     var scanForTuners: Bool { get set }
+
+    /// The currently selected tab in your app's navigation.
+    ///
+    /// Because even apps need to organize their lives into sections.
+    /// It's like a filing cabinet, but with more SwiftUI and fewer paper cuts.
+    var selectedTab: AppSection { get set }
 }
 
 extension AppStateProvider {
-    
-    var deviceType: DeviceType {
-        
-#if os(iOS)
-        switch UIDevice.current.userInterfaceIdiom {
-            case .phone:
-                return .iPhone
-            case .pad:
-                return .iPad
-            default:
-                return .unknown
-        }
-#elseif os(tvOS)
-        return .appleTV
-#elseif os(macOS)
-        return .mac
-#elseif os(watchOS)
-        return .watch
-#elseif os(visionOS)
-        return .vision
-#else
-        return .unknown
-#endif
-    }
     
     /// Puts your channel at the front of the line like it's VIP at a nightclub. If it's already in the list, we'll yank it
     /// out and shove it to the front anyway because apparently being #4 isn't good enough for you.

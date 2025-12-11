@@ -12,10 +12,10 @@ import Hellfire
 /// Source: [https://iptv-org.github.io/api/streams.json](https://iptv-org.github.io/api/streams.json)
 struct IPStream: JSONSerializable {
     
-    /// Stable hash id generated on JSON decoding. See init below.
+    /// Stable hash id generated on JSON decoding for ubiquitous unique identifier of a channel regardless of source.  See JSON decoder init below.
     var id: String
     
-    /// Channel Id (e.g., "France3.fr")
+    /// The original source data unique identifier. (e.g., "France3.fr")
     let channelId: String?
     
     /// Feed Id if available; otherwise `nil` (e.g., "NordPasdeCalaisHD")

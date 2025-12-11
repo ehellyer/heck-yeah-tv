@@ -27,9 +27,9 @@ struct TabContainerView: View {
     var body: some View {
         TabView(selection: selectedTab) {
             
-            Tab(AppSection.channels.title,
-                systemImage: AppSection.channels.systemImage,
-                value: AppSection.channels) {
+            Tab(AppSection.guide.title,
+                systemImage: AppSection.guide.systemImage,
+                value: AppSection.guide) {
                 ChannelsContainer(appState: $appState)
                     .padding(.leading, -20) // Expand on the left edge to prevent the clipping of the focus effect on the fav toggle view.
             }
@@ -38,6 +38,13 @@ struct TabContainerView: View {
                 systemImage: AppSection.recents.systemImage,
                 value: AppSection.recents) {
                 RecentsView(appState: $appState)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+            }
+
+            Tab(AppSection.search.title,
+                systemImage: AppSection.search.systemImage,
+                value: AppSection.search) {
+                SearchView(appState: $appState)
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
             

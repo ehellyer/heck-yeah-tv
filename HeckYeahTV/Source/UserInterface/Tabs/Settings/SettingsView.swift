@@ -26,46 +26,10 @@ struct SettingsView: View {
     let titleColor: Color = .white
 #endif
     
-    private var selectedCountryName: String {
-        if let countryCode = appState.selectedCountry,
-           let country = countries.first(where: { $0.code == countryCode }) {
-            return country.name
-        }
-        return "None"
-    }
-    
     @Query(sort: \HDHomeRunServer.deviceId, order: .forward) private var devices: [HDHomeRunServer]
-    @Query(sort: \IPTVCountry.name, order: .forward) private var countries: [IPTVCountry]
     
     var body: some View {
         Form {
-            Section {
-                NavigationLink {
-                    CountryPickerView(
-                        countries: countries,
-                        selectedCountry: $appState.selectedCountry
-                    )
-                } label: {
-                    HStack {
-                        Text("Select a country")
-                        Spacer()
-                        Text(selectedCountryName)
-                    }
-                    .modifier(SectionTextStyle())
-                }
-                
-                
-                //.buttonStyle(SectionButtonStyle())
-            } header: {
-                Text("Country")
-                    .foregroundStyle(titleColor)
-            }
-#if os(tvOS)
-            //.listRowSeparator(.hidden)
-            .listRowBackground(Color.clear)
-            .listRowInsets(EdgeInsets(top: 2, leading: 0, bottom: 2, trailing: 0))
-            
-#endif
             
             Section {
                 HStack {
@@ -210,7 +174,6 @@ struct SettingsView: View {
 #Preview {
     
     @Previewable @State var appState: any AppStateProvider = MockSharedAppState()
-    appState.selectedCountry = "US"
     
     let mockData = MockDataPersistence(appState: appState)
     

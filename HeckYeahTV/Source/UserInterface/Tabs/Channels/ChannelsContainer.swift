@@ -12,18 +12,16 @@ import SwiftData
 struct ChannelsContainer: View {
     
     @Binding var appState: AppStateProvider
-    @Environment(ChannelMap.self) private var channelMap
+    
     @Environment(\.modelContext) private var viewContext
     @FocusState private var isFocused: Bool
     
     @State private var scrollToSelectedAndFocus: Bool = false
-    @State private var rebuildChannelMapTask: Task<Void, Never>? = nil
     
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
             
-            ShowFavorites(appState: $appState,
-                          rightSwipeRedirectAction: {
+            ShowFavorites(rightSwipeRedirectAction: {
                 scrollToSelectedAndFocus = true
             })
             .focusSection()
@@ -34,38 +32,7 @@ struct ChannelsContainer: View {
                 .onAppear {
                     isFocused = true
                 }
-            
-                .onChange(of: appState.showFavoritesOnly) { _, _ in
-                    //Debounce rebuilding of channel map.
-                    rebuildChannelMapTask?.cancel()
-                    rebuildChannelMapTask = Task { @MainActor in
-                        do {
-                            try await Task.sleep(nanoseconds: debounceNS)
-                            try Task.checkCancellation()
-                            await rebuildChannelMap()
-                        } catch {
-                            //Task cancelled.
-                        }
-                    }
-                }
         }
         .background(Color.clear)
-    }
-}
-
-extension ChannelsContainer {
-    func rebuildChannelMap() async {
-        // Access the @MainActor DataPersistence singleton here
-        let container = viewContext.container
-        do {
-            // Importer is an actor; its async methods run in its isolation without blocking the main actor.
-            let importer = Importer(container: container)
-            let cm = try await importer.buildChannelMap(appState: appState)
-            await MainActor.run {
-                channelMap.update(with: cm.map)
-            }
-        } catch {
-            logError("Error: \(error)")
-        }
     }
 }

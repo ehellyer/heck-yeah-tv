@@ -19,6 +19,8 @@ struct MainAppContentView: View {
     
     @Environment(\.scenePhase) private var scenePhase
 
+    @Injected(\.swiftDataController) private var swiftDataController: SwiftDataControllable
+    
     // Focus scopes (Namespace) for isolating focus between guide and activation views
     @Namespace private var activationScope
     @Namespace private var guideScope
@@ -100,8 +102,11 @@ struct MainAppContentView: View {
                             .pickerStyle(.inline)
                             .labelsHidden()
                             
-                            if appState.selectedTab == .channels {
-                                Toggle(isOn: $appState.showFavoritesOnly) {
+                            if appState.selectedTab == .guide {
+                                Toggle(isOn:Binding(
+                                    get: { swiftDataController.showFavoritesOnly },
+                                    set: { swiftDataController.showFavoritesOnly = $0 }
+                                )) {
                                     Label("Favorites only", systemImage: "star.fill")
                                         .tint(Color.yellow)
                                         .labelStyle(.titleAndIcon)
@@ -210,6 +215,5 @@ extension MainAppContentView {
         .onAppear {
             _appState.selectedChannel = mockData.channelMap.map[8]
             _appState.showAppNavigation = true
-            _appState.showFavoritesOnly = false
         }
 }

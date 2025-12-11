@@ -35,7 +35,6 @@ actor Importer {
         
         let existing = try context.fetch(FetchDescriptor<IPTVChannel>())
         let existingIDs = Set(existing.map(\.id))
-        //let existingIDNeedUpdating = Set(existing.filter { $0.country == nil || $0.logoURL == nil }.map(\.id))
         
         // delete
         for model in existing where !incomingIDs.contains(model.id) {
@@ -89,7 +88,6 @@ actor Importer {
             
             let (country, categories) = getCountryAndCategoriesFor(src)
             let logoURL = getLogoURLFor(src)
-            let isFavorite: Bool = (existing.first(where: { $0.id == src.idHint })?.isFavorite ?? false)
             let (format, languages) = getFormatAndLanguagesFor(src)
             
             context.insert(
@@ -105,21 +103,10 @@ actor Importer {
                     logoURL: logoURL,
                     quality: format,
                     hasDRM: src.hasDRMHint,
-                    source: src.sourceHint,
-                    isFavorite: isFavorite
+                    source: src.sourceHint
                 )
             )
         }
-
-        //TODO:  Delete after dev complete for MVP, prior to RC compile for MVP release.  This code will no longer be needed.
-//        // update (Only for HDHomeRun channels missing associated deviceId data for source enum).
-//        let exitingHomeRunChannels = existing.filter({ $0.source == SchemaV3.ChannelSource.homeRunTuner(deviceId: "") })
-//        for channel in exitingHomeRunChannels {
-//            // Update the source if it was a placeholder
-//            if case .homeRunTuner(let deviceId) = incoming.first(where: { $0.idHint == channel.id })?.sourceHint {
-//                channel.source = .homeRunTuner(deviceId: deviceId)
-//            }
-//        }
         
         if context.hasChanges {
             try context.save()
@@ -128,62 +115,7 @@ actor Importer {
         logDebug("Channel import process completed. Total imported: \(incoming.count) 🏁")
     }
     
-    func buildChannelMap(appState: AppStateProvider) async throws -> ChannelMap {
-
-        if context.hasChanges {
-            logWarning("Unsaved changes prior to building channel map, saving...")
-            try context.save()
-        }
-        
-        logDebug("Building Channel Map... 🇺🇸")
-        
-        var channelsDescriptor: FetchDescriptor<IPTVChannel> = FetchDescriptor<IPTVChannel>(
-            sortBy: [SortDescriptor(\IPTVChannel.sortHint, order: .forward)]
-        )
-        
-        channelsDescriptor.predicate = await Self.predicateBuilder(showFavoritesOnly: appState.showFavoritesOnly,
-                                                                   searchTerm: appState.searchTerm,
-                                                                   countryCode: appState.selectedCountry,
-                                                                   categoryId: appState.selectedCategory)
     
-        let channels: [IPTVChannel] = try context.fetch(channelsDescriptor)
-        let map: [ChannelId] = channels.map { $0.id }
-        let cm = ChannelMap(map: map)
-
-        logDebug("Channel map built.  Total Channels: \(cm.totalCount) 🏁")
-        return cm
-    }
-    
-    
-    static func predicateBuilder(showFavoritesOnly: Bool? = nil,
-                                 searchTerm: String? = nil,
-                                 countryCode: CountryCode? = nil,
-                                 categoryId: CategoryId? = nil) -> Predicate<IPTVChannel> {
-        
-        var conditions: [Predicate<IPTVChannel>] = []
-        
-        if showFavoritesOnly == true {
-            conditions.append( #Predicate<IPTVChannel> { $0.isFavorite == true })
-        }
-        if let searchTerm, searchTerm.count > 0 {
-            conditions.append( #Predicate<IPTVChannel> { $0.title.localizedStandardContains(searchTerm) })
-        }
-        if let countryCode {
-            conditions.append( #Predicate<IPTVChannel> { $0.country == countryCode || $0.country == "ANY" } ) // "ANY" support local LAN tuners which get returned regardless of current country selection.
-        }
-        if let categoryId {
-            conditions.append( #Predicate<IPTVChannel> { $0.categories.contains(categoryId) })
-        }
-        
-        // Combine conditions using '&&' (AND)
-        if conditions.isEmpty {
-            return #Predicate { _ in true } // Return a predicate that always evaluates to true if no conditions
-        } else {
-            return conditions.reduce(#Predicate { _ in true }) { current, next in
-                #Predicate { current.evaluate($0) && next.evaluate($0) }
-            }
-        }
-    }
     
     func importCountries(_ countries : [Country]) async throws {
         guard !countries.isEmpty else {
@@ -219,7 +151,40 @@ actor Importer {
         logDebug("Country import process completed. Total imported: \(countries.count) 🏁")
     }
     
-    func importTunerDevices(_ devices : [HDHomeRunDevice]) async throws {
+    func importCategories(_ categories : [IPCategory]) async throws {
+        guard !categories.isEmpty else {
+            logWarning("No categories to import, exiting process without changes to local store.")
+            return
+        }
+        
+        logDebug("Category import process starting... 🇺🇸")
+        
+        let existing = try context.fetch(FetchDescriptor<IPTVCategory>())
+        let existingIDs = Set(existing.map(\.categoryId))
+        let incomingIDs = Set(categories.map(\.categoryId))
+        
+        // delete
+        for model in existing where !incomingIDs.contains(model.categoryId) {
+            context.delete(model)
+        }
+        
+        // insert
+        for src in categories where !existingIDs.contains(src.categoryId) {
+            context.insert(
+                IPTVCategory(categoryId: src.categoryId,
+                             name: src.name,
+                             categoryDescription: src.description)
+            )
+        }
+        
+        if context.hasChanges {
+            try context.save()
+        }
+        
+        logDebug("Categories import process completed. Total imported: \(categories.count) 🏁")
+    }
+    
+    func importTunerDevices(_ devices : [HDHomeRunDevice]) async throws {        
         guard !devices.isEmpty else {
             logWarning("No devices to import, exiting process without changes to local store.")
             return

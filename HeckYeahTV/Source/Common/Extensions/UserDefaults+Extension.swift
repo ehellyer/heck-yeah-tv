@@ -38,23 +38,7 @@ extension UserDefaults {
             }
         }
     }
-    
-    /// A boolean indicating whether to filter the channel list to show only favorite channels.
-    ///
-    /// When enabled, the app will display only channels marked as favorites in the channel guide.
-    /// This setting provides a quick way for users to focus on their preferred channels.
-    /// The value is persisted in `UserDefaults.standard`.
-    ///
-    /// - Returns: `true` if only favorites should be shown, `false` to show all channels.
-    static var showFavoritesOnly: Bool {
-        get {
-            standard.bool(forKey: AppKeys.SharedAppState.showFavoritesOnlyKey)
-        }
-        set {
-            standard.set(newValue, forKey: AppKeys.SharedAppState.showFavoritesOnlyKey)
-        }
-    }
-    
+
     /// A boolean indicating whether the app navigation UI should be visible.
     ///
     /// This property controls the visibility of the main navigation interface, such as tab bars
@@ -87,33 +71,17 @@ extension UserDefaults {
         }
     }
 
-    /// The ISO 3166-1 alpha-2 country code for the currently selected country.
-    ///
-    /// This property stores the user's country selection, which is used to filter available IPTV channels
-    /// by region. The value is persisted in `UserDefaults.standard`.
-    ///
-    /// - Returns: The two-letter country code (e.g., "US", "GB", "CA"), or `nil` if no country is selected.
-    static var selectedCountry: CountryCode? {
-        get {
-            let code: CountryCode? = standard.string(forKey: AppKeys.SharedAppState.selectedCountryKey)
-            return code
-        }
-        set {
-            standard.set(newValue, forKey: AppKeys.SharedAppState.selectedCountryKey)
-        }
-    }
-    
     /// The app section (tab) that was last selected by the user.
     ///
     /// This property stores the user's last active tab to restore navigation state across
-    /// app launches. For new installations, this defaults to the Channels tab.
+    /// app launches. For new installations, this defaults to the Guide tab.
     /// The value is persisted in `UserDefaults.standard`.
     ///
-    /// - Returns: The last selected `AppSection`, or `.channels` for new installations.
+    /// - Returns: The last selected `AppSection`, or `.guide` for new installations.
     static var selectedTab: AppSection {
         get {
             let _data: Data? = standard.data(forKey: AppKeys.SharedAppState.selectedTabKey)
-            let _lastTab: AppSection = (try? AppSection.initialize(jsonData: _data)) ?? AppSection.channels //Channels tab is default for new install
+            let _lastTab: AppSection = (try? AppSection.initialize(jsonData: _data)) ?? AppSection.guide //Guide tab is default for new install
             return _lastTab
         }
         set {
@@ -170,6 +138,56 @@ extension UserDefaults {
         }
         set {
             standard.set(newValue, forKey: AppKeys.SharedAppState.scanForTunersKey)
+        }
+    }
+    
+    //MARK: - These persistent stored properties are some of the filter criteria that determine what channels should be visible.
+    
+    /// A boolean indicating whether to filter the channel list to show only favorite channels.
+    ///
+    /// When enabled, the app will display only channels marked as favorites in the channel guide.
+    /// This setting provides a quick way for users to focus on their preferred channels.
+    /// The value is persisted in `UserDefaults.standard`.
+    ///
+    /// - Returns: `true` if only favorites should be shown, `false` to show all channels.
+    static var showFavoritesOnly: Bool {
+        get {
+            standard.bool(forKey: AppKeys.SharedAppState.showFavoritesOnlyKey)
+        }
+        set {
+            standard.set(newValue, forKey: AppKeys.SharedAppState.showFavoritesOnlyKey)
+        }
+    }
+    
+    /// The ISO 3166-1 alpha-2 country code for the currently selected country.
+    ///
+    /// This property stores the user's country selection, which is used to filter available IPTV channels
+    /// by region. The value is persisted in `UserDefaults.standard`.
+    ///
+    /// - Returns: The two-letter country code (e.g., "US", "GB", "CA"), or `nil` if no country is selected.
+    static var selectedCountry: CountryCode {
+        get {
+            guard let _countryCode: CountryCode = standard.string(forKey: AppKeys.SharedAppState.selectedCountryKey) else {
+
+                var defaultCode: CountryCode
+                
+                if Locale.current.region?.isISORegion == true && (Locale.current.region?.subRegions.count ?? 0) == 0
+                    , let identifier = Locale.current.region?.identifier {
+                    
+                    defaultCode = identifier
+                } else {
+                    defaultCode = "US" //Hard final default to US
+                }
+                
+                // Set the initial default country selection.
+                standard.set(defaultCode, forKey: AppKeys.SharedAppState.selectedCountryKey)
+                return defaultCode
+            }
+            
+            return _countryCode
+        }
+        set {
+            standard.set(newValue, forKey: AppKeys.SharedAppState.selectedCountryKey)
         }
     }
 }

@@ -45,7 +45,6 @@ struct Heck_Yeah_TVApp: App {
     @Environment(\.scenePhase) private var scenePhase
     @State private var isBootComplete = false
     @State private var startupTask: Task<Void, Never>? = nil
-    @State private var channelMap: ChannelMap = ChannelMap(map: [])
     @State private var dataPersistence: DataPersistence = DataPersistence.shared
     
     var body: some Scene {
@@ -72,7 +71,6 @@ struct Heck_Yeah_TVApp: App {
             }
             .modelContainer(dataPersistence.container)
             .modelContext(dataPersistence.viewContext)
-            .environment(channelMap)
     }
     
     private func startBootstrap() {
@@ -80,15 +78,6 @@ struct Heck_Yeah_TVApp: App {
         let appState = SharedAppState.shared
         appState.showAppNavigation = (appState.selectedChannel == nil)
 
-        // Set the default country selection.
-        if appState.selectedCountry == nil
-            , Locale.current.region?.isISORegion == true
-            , (Locale.current.region?.subRegions.count ?? 0) == 0
-            , let identifier = Locale.current.region?.identifier
-        {
-            appState.selectedCountry = identifier
-        }
-        
         startupTask?.cancel()
         startupTask = Task {
             
@@ -123,11 +112,13 @@ struct Heck_Yeah_TVApp: App {
                     group.addTask {
                         try await importer.importTunerDevices(hdHomeRunController.devices)
                     }
+                    group.addTask {
+                        try await importer.importCategories(iptvController.categories)
+                    }
                     try await group.waitForAll()
                 }
-                let cm = try await importer.buildChannelMap(appState: appState)
+                
                 await MainActor.run {
-                    channelMap = cm
                     // Update state variable that boot up processes are completed.
                     isBootComplete = true
                 }

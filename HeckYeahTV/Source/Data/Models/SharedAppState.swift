@@ -42,38 +42,6 @@ final class SharedAppState: AppStateProvider {
         }
     }
     
-    /// Only show the good channels. Life's too short for the rest.
-    var showFavoritesOnly: Bool {
-        get {
-            access(keyPath: \.showFavoritesOnly)
-            return UserDefaults.showFavoritesOnly
-        }
-        set {
-            withMutation(keyPath: \.showFavoritesOnly) {
-                UserDefaults.showFavoritesOnly = newValue
-            }
-        }
-    }
-    
-    /// Which country? All of them? None of them? The suspense is killing me.
-    var selectedCountry: CountryCode? {
-        get {
-            access(keyPath: \.selectedCountry)
-            return UserDefaults.selectedCountry
-        }
-        set {
-            withMutation(keyPath: \.selectedCountry) {
-                UserDefaults.selectedCountry = newValue
-            }
-        }
-    }
-    
-    /// Filter by category? Or embrace the chaos of all channels at once?
-    var selectedCategory: CategoryId?
-    
-    /// Filter by channel title search term. Because scrolling through 10,000 channels wasn't tedious enough.
-    var searchTerm: String?
-    
     /// Which tab are you pretending to use right now?
     var selectedTab: AppSection {
         get {
