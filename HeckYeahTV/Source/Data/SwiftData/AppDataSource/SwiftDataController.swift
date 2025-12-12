@@ -13,20 +13,32 @@ import Observation
 @MainActor @Observable
 final class SwiftDataController: SwiftDataControllable {
 
-    init() {
-        let _viewContext = DataPersistence.shared.viewContext
-        self.viewContext = _viewContext
-        try? self.bootStrap()
-    }
+    //MARK: - SwiftDataController lifecycle
     
     deinit {
         rebuildTask?.cancel()
     }
+    
+    init() {
+
+        self.viewContext = DataPersistence.shared.viewContext
+        
+//        self.selectedCountry = selectedCountry
+//        self.selectedCategory = selectedCategory
+//        self.showFavoritesOnly = showFavoritesOnly
+//        self.searchTerm = searchTerm
+        
+        try? self.bootStrap()
+    }
+    
+    //MARK: - Internal API - SwiftDataControllable implementation Properties
+    
+    private(set) var guideChannelMap: ChannelMap = ChannelMap(map: [])
+    
+    //MARK: - Internal API - SwiftDataControllable implementation Functions
 
     func toggleFavorite(for channelId: ChannelId) {
-        
         let context = self.viewContext
-        
         do {
             let predicate = #Predicate<IPTVFavorite> { $0.id == channelId }
             var descriptor = FetchDescriptor<IPTVFavorite>(predicate: predicate)
@@ -45,9 +57,7 @@ final class SwiftDataController: SwiftDataControllable {
     }
     
     func isFavorite(channelId: ChannelId) -> Bool {
-        
         let context = self.viewContext
-        
         do {
             let predicate = #Predicate<IPTVFavorite> { $0.id == channelId }
             var descriptor = FetchDescriptor<IPTVFavorite>(predicate: predicate)
@@ -66,7 +76,9 @@ final class SwiftDataController: SwiftDataControllable {
                                  categoryId: CategoryId? = nil) -> Predicate<IPTVChannel> {
         
         var conditions: [Predicate<IPTVChannel>] = []
-        
+
+        conditions.append( #Predicate<IPTVChannel> { $0.country == countryCode || $0.country == "ANY" }) // "ANY" support local LAN tuners which get returned regardless of current country selection.
+
         if let favoriteIds, !favoriteIds.isEmpty {
             conditions.append(#Predicate<IPTVChannel> { channel in
                 favoriteIds.contains(channel.id)
@@ -75,9 +87,6 @@ final class SwiftDataController: SwiftDataControllable {
         if let searchTerm, searchTerm.count > 0 {
             conditions.append( #Predicate<IPTVChannel> { $0.title.localizedStandardContains(searchTerm) })
         }
-        //if let countryCode {
-            conditions.append( #Predicate<IPTVChannel> { $0.country == countryCode || $0.country == "ANY" }) // "ANY" support local LAN tuners which get returned regardless of current country selection.
-        //}
 //        if let categoryId {
 //            conditions.append( #Predicate<IPTVChannel> { $0.categories.contains(categoryId) })
 //        }
@@ -93,6 +102,64 @@ final class SwiftDataController: SwiftDataControllable {
         }
     }
     
+    //MARK: - Internal API - ChannelFilterable implementation Properties
+    
+    /// Only show the good channels. Life's too short for the rest.
+    var showFavoritesOnly: Bool {
+        get {
+            access(keyPath: \.showFavoritesOnly)
+            return UserDefaults.showFavoritesOnly
+        }
+        set {
+            if showFavoritesOnly != newValue {
+                Task { @MainActor in
+                    await scheduleChannelMapRebuild()
+                }
+            }
+            withMutation(keyPath: \.showFavoritesOnly) {
+                UserDefaults.showFavoritesOnly = newValue
+            }
+        }
+    }
+    
+    /// Which country? All of them? None of them? The suspense is killing me.
+    var selectedCountry: CountryCode {
+        get {
+            access(keyPath: \.selectedCountry)
+            return UserDefaults.selectedCountry
+        }
+        set {
+            if selectedCountry != newValue {
+                Task { @MainActor in
+                    await scheduleChannelMapRebuild()
+                }
+            }
+            withMutation(keyPath: \.selectedCountry) {
+                UserDefaults.selectedCountry = newValue
+            }
+        }
+    }
+    
+    /// Filter by category? Or embrace the chaos of all channels at once?
+    var selectedCategory: CategoryId? {
+        didSet {
+            guard selectedCategory != oldValue else { return }
+            Task { @MainActor in
+                await scheduleChannelMapRebuild()
+            }
+        }
+    }
+    
+    /// Filter by channel title search term. Because scrolling through 10,000 channels wasn't tedious enough.
+    var searchTerm: String? {
+        didSet {
+            guard searchTerm != oldValue else { return }
+            Task { @MainActor in
+                await scheduleChannelMapRebuild()
+            }
+        }
+    }
+    
     //MARK: - Private API Properties
     
     @ObservationIgnored
@@ -101,17 +168,16 @@ final class SwiftDataController: SwiftDataControllable {
     @ObservationIgnored
     private var rebuildTask: Task<Void, Never>?
 
-    //MARK: - Private API - Bootstrapping.
-    
+    @ObservationIgnored
     private var bootstrapStarted: Bool = false
+    
+    //MARK: - Private API - Functions
     
     private func bootStrap() throws {
         guard bootstrapStarted == false else { return }
         bootstrapStarted = true
         try rebuildChannelMap()
     }
-    
-    //MARK: - Private API Debounced Channel Map Rebuilding
     
     /// Schedules a channel map rebuild with debouncing to prevent excessive rebuilds.
     ///
@@ -175,67 +241,5 @@ final class SwiftDataController: SwiftDataControllable {
         self.guideChannelMap = ChannelMap(map: map)
         
         logDebug("Channel map built.  Total Channels: \(map.count) 🏁")
-    }
-
-    //MARK: - Internal API - guide channel map
-    
-    private(set) var guideChannelMap: ChannelMap = ChannelMap(map: [])
-    
-    //MARK: - Internal API - Channel Filter Provider implementation
-    
-    /// Only show the good channels. Life's too short for the rest.
-    var showFavoritesOnly: Bool {
-        get {
-            access(keyPath: \.showFavoritesOnly)
-            return UserDefaults.showFavoritesOnly
-        }
-        set {
-            if showFavoritesOnly != newValue {
-                Task { @MainActor in
-                    await scheduleChannelMapRebuild()
-                }
-            }
-            withMutation(keyPath: \.showFavoritesOnly) {
-                UserDefaults.showFavoritesOnly = newValue
-            }
-        }
-    }
-    
-    /// Which country? All of them? None of them? The suspense is killing me.
-    var selectedCountry: CountryCode {
-        get {
-            access(keyPath: \.selectedCountry)
-            return UserDefaults.selectedCountry
-        }
-        set {
-            if selectedCountry != newValue {
-                Task { @MainActor in
-                    await scheduleChannelMapRebuild()
-                }
-            }
-            withMutation(keyPath: \.selectedCountry) {
-                UserDefaults.selectedCountry = newValue
-            }
-        }
-    }
-    
-    /// Filter by category? Or embrace the chaos of all channels at once?
-    var selectedCategory: CategoryId? {
-        didSet {
-            guard selectedCategory != oldValue else { return }
-            Task { @MainActor in
-                await scheduleChannelMapRebuild()
-            }
-        }
-    }
-
-    /// Filter by channel title search term. Because scrolling through 10,000 channels wasn't tedious enough.
-    var searchTerm: String? {
-        didSet {
-            guard searchTerm != oldValue else { return }
-            Task { @MainActor in
-                await scheduleChannelMapRebuild()
-            }
-        }
     }
 }

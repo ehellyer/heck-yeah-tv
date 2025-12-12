@@ -26,16 +26,22 @@ extension StreamQuality {
     }
     
     static func convertToStreamQuality(_ format: String) -> StreamQuality {
-        if ["240p", "360p", "480i", "480p", "576i", "576p"].contains(format) {
-            return .sd
-        } else if ["720p", "1080i", "1080p"].contains(format) {
-            return .fhd
-        } else if ["2160i", "2160p"].contains(format) {
-            return .uhd4k
-        } else if ["4320i", "4320p"].contains(format) {
-            return .uhd8k
-        } else {
+        // Extract the numeric value (e.g., "1080p" -> 1080)
+        guard let resolution = Int(format.filter { $0.isNumber }) else {
             return .unknown
+        }
+        
+        switch resolution {
+            case 0..<720:
+                return .sd
+            case 720..<2160:
+                return .fhd
+            case 2160..<4320:
+                return .uhd4k
+            case 4320...:
+                return .uhd8k
+            default:
+                return .unknown
         }
     }
 }

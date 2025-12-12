@@ -13,16 +13,32 @@ import Observation
 @MainActor @Observable
 final class MockSwiftDataController: SwiftDataControllable {
     
-    init(viewContext: ModelContext) {
-        self.viewContext = viewContext
-        self.selectedCountry = "US"
-        
-        try? self.bootStrap()
-    }
+    //MARK: - SwiftDataController lifecycle
     
     deinit {
         rebuildTask?.cancel()
     }
+
+    init(viewContext: ModelContext,
+         selectedCountry: CountryCode = "US",
+         selectedCategory: CategoryId? = nil,
+         showFavoritesOnly: Bool = false,
+         searchTerm: String? = nil) {
+
+        self.viewContext = viewContext
+        self.selectedCountry = selectedCountry
+        self.selectedCategory = selectedCategory
+        self.showFavoritesOnly = showFavoritesOnly
+        self.searchTerm = searchTerm
+        
+        try? self.bootStrap()
+    }
+    
+    //MARK: - Internal API - SwiftDataControllable implementation Properties
+    
+    private(set) var guideChannelMap: ChannelMap = ChannelMap(map: [])
+    
+    //MARK: - Internal API - SwiftDataControllable implementation Functions
     
     func toggleFavorite(for channelId: ChannelId) {
         let context = self.viewContext
@@ -69,6 +85,47 @@ final class MockSwiftDataController: SwiftDataControllable {
                                              categoryId:  categoryId)
     }
     
+    //MARK: - Internal API - ChannelFilterable implementation Properties
+    
+    var showFavoritesOnly: Bool = false {
+        didSet {
+            guard showFavoritesOnly != oldValue else { return }
+            scheduleChannelMapRebuild()
+        }
+    }
+    
+    var selectedCountry: CountryCode {
+        didSet {
+            guard selectedCountry != oldValue else { return }
+            scheduleChannelMapRebuild()
+        }
+    }
+    
+    var selectedCategory: CategoryId? {
+        didSet {
+            guard selectedCategory != oldValue else { return }
+            scheduleChannelMapRebuild()
+        }
+    }
+    
+    var searchTerm: String? {
+        didSet {
+            guard searchTerm != oldValue else { return }
+            scheduleChannelMapRebuild()
+        }
+    }
+    
+    //MARK: - Internal API Functions for Preview
+    
+    func fetchChannel(at index: Int) -> IPTVChannel {
+        let channelId = guideChannelMap.map[index]
+        let predicate = #Predicate<IPTVChannel> { $0.id == channelId }
+        var descriptor = FetchDescriptor<IPTVChannel>(predicate: predicate)
+        descriptor.fetchLimit = 1
+        let channel = try! viewContext.fetch(descriptor).first!
+        return channel
+    }
+    
     //MARK: - Private API Properties
     
     @ObservationIgnored
@@ -77,9 +134,10 @@ final class MockSwiftDataController: SwiftDataControllable {
     @ObservationIgnored
     private var rebuildTask: Task<Void, Never>?
     
-    //MARK: - Private API - Bootstrapping.
-    
+    @ObservationIgnored
     private var bootstrapStarted: Bool = false
+    
+    //MARK: - Private API - Functions
     
     private func bootStrap() throws {
         guard bootstrapStarted == false else { return }
@@ -87,8 +145,6 @@ final class MockSwiftDataController: SwiftDataControllable {
         try rebuildChannelMap()
     }
 
-    //MARK: - Debounced Channel Map Rebuilding
-    
     /// Schedules a channel map rebuild with debouncing to prevent excessive rebuilds.
     ///
     /// This method cancels any pending rebuild and schedules a new one after a 300ms delay.
@@ -149,39 +205,5 @@ final class MockSwiftDataController: SwiftDataControllable {
         self.guideChannelMap = ChannelMap(map: map)
     
         logDebug("Channel map built.  Total Channels: \(map.count) 🏁")
-    }
-    
-    //MARK: - Driver that determines what channels should be currently available in the guide.
-    
-    private(set) var guideChannelMap: ChannelMap = ChannelMap(map: [])
-    
-    //MARK: - Channel Filter Provider implementation
-    
-    var showFavoritesOnly: Bool = false {
-        didSet {
-            guard showFavoritesOnly != oldValue else { return }
-            scheduleChannelMapRebuild()
-        }
-    }
-    
-    var selectedCountry: CountryCode {
-        didSet {
-            guard selectedCountry != oldValue else { return }
-            scheduleChannelMapRebuild()
-        }
-    }
-    
-    var selectedCategory: CategoryId? {
-        didSet {
-            guard selectedCategory != oldValue else { return }
-            scheduleChannelMapRebuild()
-        }
-    }
-    
-    var searchTerm: String? {
-        didSet {
-            guard searchTerm != oldValue else { return }
-            scheduleChannelMapRebuild()
-        }
     }
 }

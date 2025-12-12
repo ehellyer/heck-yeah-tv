@@ -15,7 +15,6 @@ import Hellfire
 final class MockDataPersistence {
     
     private(set) var context: ModelContext
-    private(set) var channelMap: ChannelMap = ChannelMap(map: [])
     
     init(appState: any AppStateProvider) {
         

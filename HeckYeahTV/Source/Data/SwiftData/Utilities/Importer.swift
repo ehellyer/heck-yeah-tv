@@ -84,7 +84,7 @@ actor Importer {
         }
         
         // insert (Update or insert)
-        for src in incoming where !existingIDs.contains(src.idHint) {//}|| existingIDNeedUpdating.contains(src.idHint) {
+        for src in incoming where !existingIDs.contains(src.idHint) {
             
             let (country, categories) = getCountryAndCategoriesFor(src)
             let logoURL = getLogoURLFor(src)
@@ -114,8 +114,6 @@ actor Importer {
         
         logDebug("Channel import process completed. Total imported: \(incoming.count) 🏁")
     }
-    
-    
     
     func importCountries(_ countries : [Country]) async throws {
         guard !countries.isEmpty else {

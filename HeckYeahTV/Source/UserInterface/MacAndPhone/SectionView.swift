@@ -43,16 +43,24 @@ struct SectionView: View {
     @Previewable @State var appState: any AppStateProvider = MockSharedAppState()
     
     let mockData = MockDataPersistence(appState: appState)
-    // Loads up the recents list
-//    appState.selectedChannel = mockData.channels[1].id
-//    appState.selectedChannel = mockData.channels[3].id
-//    appState.selectedChannel = mockData.channels[5].id
-//    appState.selectedChannel = mockData.channels[7].id
-//    appState.selectedChannel = mockData.channels[9].id
+    
+    // Override the injected SwiftDataController
+    let swiftController = MockSwiftDataController(viewContext: mockData.context)
+    InjectedValues[\.swiftDataController] = swiftController
+    
+    //Select recent list tab
     appState.selectedTab = .recents
+    
+    // Loads up the recents list
+    appState.selectedChannel = swiftController.guideChannelMap.map[1]
+    appState.selectedChannel = swiftController.guideChannelMap.map[3]
+    appState.selectedChannel = swiftController.guideChannelMap.map[5]
+    appState.selectedChannel = swiftController.guideChannelMap.map[7]
+    appState.selectedChannel = swiftController.guideChannelMap.map[9]
+    appState.selectedChannel = swiftController.guideChannelMap.map[11]
     
     return SectionView(appState: $appState)
         .environment(\.modelContext, mockData.context)
-        .environment(mockData.channelMap)
+
 }
 #endif

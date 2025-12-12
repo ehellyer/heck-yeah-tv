@@ -16,7 +16,7 @@ struct GuideRow: View {
     
     @State var channel: IPTVChannel?
     @Binding var appState: AppStateProvider
-    @State var hideGuideInfo: Bool = true
+    @State var hideGuideInfo: Bool
     @State private var rowWidth: CGFloat = 800 // Default, will update dynamically
     @State private var logoImage: Image = Image(systemName: "tv.circle.fill")
     @State private var imageLoadTask: Task<Void, Never>? = nil
@@ -202,12 +202,20 @@ struct GuideRow: View {
 }
 
 #Preview("GuideRow - loads from Mock SwiftData") {
-//    @Previewable @State var appState: AppStateProvider = MockSharedAppState()
-//    let mockData = MockDataPersistence(appState: appState)
-//    GuideRow(channel: mockData.channels[8],
-//             appState: $appState)
-//    //.redacted(reason: .placeholder)
-//        .onAppear {
-//            appState.selectedChannel = mockData.channels[7].id
-//        }
+    @Previewable @State var appState: AppStateProvider = MockSharedAppState()
+    let mockData = MockDataPersistence(appState: appState)
+    
+    let swiftController = MockSwiftDataController(viewContext: mockData.context)
+    InjectedValues[\.swiftDataController] = swiftController
+    
+    let channel = swiftController.fetchChannel(at: 6)
+    let selectedChannelId = swiftController.guideChannelMap.map[7]
+    
+     return GuideRow(channel: channel,
+                    appState: $appState,
+                    hideGuideInfo: true)
+    //.redacted(reason: .placeholder)
+        .onAppear {
+            appState.selectedChannel = selectedChannelId
+        }
 }

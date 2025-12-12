@@ -23,20 +23,7 @@ extension IPStream: Channelable {
             return .unknown
         }
         
-        if quality.contains("480") {
-            //(680x480)
-            return .sd
-        } else if quality.contains("720") || quality.contains("1080") {
-            //(1920x1080)
-            return .fhd
-        } else if quality.contains("2160") {
-            //(3840x2160)
-            return .uhd4k
-        } else if quality.contains("4320") {
-            //(7680x4320)
-            return .uhd8k
-        }
-        
-        return .unknown
+        let q = StreamQuality.convertToStreamQuality(quality)
+        return q
     }
 }

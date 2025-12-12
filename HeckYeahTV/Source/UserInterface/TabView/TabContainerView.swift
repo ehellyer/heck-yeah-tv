@@ -66,3 +66,11 @@ struct TabContainerView: View {
         }
     }
 }
+
+#if os(tvOS)
+#Preview {
+    @Previewable @State var appState: AppStateProvider = MockSharedAppState()
+    
+    TabContainerView(appState: $appState)
+}
+#endif

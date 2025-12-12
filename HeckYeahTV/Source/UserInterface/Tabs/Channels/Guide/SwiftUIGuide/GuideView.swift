@@ -21,6 +21,7 @@ struct GuideView: View {
     @State private var scrollToSelectedTask: Task<Void, Never>? = nil
     
     private let corner: CGFloat = 14
+    private let hideGuideInfo: Bool = false
     
     var body: some View {
         ZStack {
@@ -30,7 +31,8 @@ struct GuideView: View {
                         ForEach(0..<swiftDataController.guideChannelMap.totalCount, id: \.self) { index in
                             let channelId = swiftDataController.guideChannelMap.map[index]
                             GuideRowLazy(channelId: channelId,
-                                         appState: $appState)
+                                         appState: $appState,
+                                         hideGuideInfo: hideGuideInfo)
                             .id(channelId)
                             .frame(height: 90) // Fixed height to prevent jumping
                             .padding(.leading, 5)
@@ -92,21 +94,16 @@ private extension GuideView {
 
 //MARK: - PREVIEWS
 
+#if !os(tvOS)
 #Preview("GuideView") {
-
-
     @Previewable @State var appState: AppStateProvider = SharedAppState.shared
     let mockData = MockDataPersistence(appState: appState)
 
     let swiftController = MockSwiftDataController(viewContext: mockData.context)
-    swiftController.selectedCountry = "US"
-    swiftController.showFavoritesOnly = false
-//    swiftController.selectedCategory = "movies" // education comedy science documentary education
-//    swiftController.searchTerm = nil//"mus"
-//
     InjectedValues[\.swiftDataController] = swiftController
 
     return GuideView(appState: $appState)
         .environment(\.modelContext, mockData.context)
-        .environment(mockData.channelMap)
+ 
 }
+#endif
