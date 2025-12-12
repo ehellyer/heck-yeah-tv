@@ -159,7 +159,6 @@ class GuideViewController: UIViewController {
     }
     
     private func toggleFavorite(id: ChannelId) throws {
-        swiftDataController.toggleFavorite(for: id)
         reloadVisibleRows()
     }
 

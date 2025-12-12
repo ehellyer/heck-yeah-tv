@@ -20,7 +20,6 @@ final class SwiftDataController: SwiftDataControllable {
     }
     
     init() {
-
         self.viewContext = DataPersistence.shared.viewContext
         
 //        self.selectedCountry = selectedCountry
@@ -31,64 +30,36 @@ final class SwiftDataController: SwiftDataControllable {
         try? self.bootStrap()
     }
     
-    //MARK: - Internal API - SwiftDataControllable implementation Properties
+    //MARK: - Internal API - SwiftDataControllable implementation
     
     private(set) var guideChannelMap: ChannelMap = ChannelMap(map: [])
     
-    //MARK: - Internal API - SwiftDataControllable implementation Functions
-
-    func toggleFavorite(for channelId: ChannelId) {
-        let context = self.viewContext
-        do {
-            let predicate = #Predicate<IPTVFavorite> { $0.id == channelId }
-            var descriptor = FetchDescriptor<IPTVFavorite>(predicate: predicate)
-            descriptor.fetchLimit = 1
-            if let fav: IPTVFavorite = try context.fetch(descriptor).first {
-                fav.isFavorite.toggle()
-            } else {
-                context.insert(IPTVFavorite(id: channelId, isFavorite: true))
-            }
-            if context.hasChanges {
-                try context.save()
-            }
-        } catch {
-            logError("Unable to fetch favorite for channelId: \(channelId)")
-        }
-    }
-    
-    func isFavorite(channelId: ChannelId) -> Bool {
-        let context = self.viewContext
-        do {
-            let predicate = #Predicate<IPTVFavorite> { $0.id == channelId }
-            var descriptor = FetchDescriptor<IPTVFavorite>(predicate: predicate)
-            descriptor.fetchLimit = 1
-            let favChannel = try context.fetch(descriptor).first
-            return favChannel?.isFavorite ?? false
-        } catch {
-            logError("Unable to fetch favorite for channelId: \(channelId)")
-            return false
-        }
-    }
-    
-    static func predicateBuilder(favoriteIds: Set<ChannelId>? = nil,
-                                 searchTerm: String? = nil,
+    static func predicateBuilder(showFavoritesOnly: Bool,
+                                 searchTerm: String?,
                                  countryCode: CountryCode,
-                                 categoryId: CategoryId? = nil) -> Predicate<IPTVChannel> {
+                                 categoryId: CategoryId?) -> Predicate<IPTVChannel> {
         
         var conditions: [Predicate<IPTVChannel>] = []
 
         conditions.append( #Predicate<IPTVChannel> { $0.country == countryCode || $0.country == "ANY" }) // "ANY" support local LAN tuners which get returned regardless of current country selection.
 
-        if let favoriteIds, !favoriteIds.isEmpty {
-            conditions.append(#Predicate<IPTVChannel> { channel in
-                favoriteIds.contains(channel.id)
-            })
+        if showFavoritesOnly {
+            conditions.append(#Predicate<IPTVChannel> { $0.favorite != nil && $0.favorite?.isFavorite == true })
         }
+        
         if let searchTerm, searchTerm.count > 0 {
             conditions.append( #Predicate<IPTVChannel> { $0.title.localizedStandardContains(searchTerm) })
         }
+        
 //        if let categoryId {
-//            conditions.append( #Predicate<IPTVChannel> { $0.categories.contains(categoryId) })
+//            let nsPredicate = NSPredicate(format: "SUBQUERY(categories, $category, $category == %@).@count > 0", categoryId) as Predicate<IPTVChannel>
+//            
+//            let fetchDescriptor = FetchDescriptor<IPTVChannel>(predicate: nsPredicate as Predicate<IPTVChannel>)
+//            
+//            let predicate =  Predicate<IPTVChannel>(predicate: nsPredicate)
+//            conditions.append( #Predicate<IPTVChannel> { channel in
+//                channel.categories.contains(where: { $0 == categoryId })
+//            })
 //        }
         
         // Combine conditions using '&&' (AND)
@@ -219,16 +190,7 @@ final class SwiftDataController: SwiftDataControllable {
             sortBy: [SortDescriptor(\IPTVChannel.sortHint, order: .forward)]
         )
         
-        var favoriteIds: Set<ChannelId>? = nil
-        if showFavoritesOnly == true {
-            let favoritesDescriptor = FetchDescriptor<IPTVFavorite>(
-                predicate: #Predicate { $0.isFavorite == true }
-            )
-            let favorites = try context.fetch(favoritesDescriptor)
-            favoriteIds = Set(favorites.map(\.id))
-        }
-        
-        let predicate: Predicate<IPTVChannel> = Self.predicateBuilder(favoriteIds: favoriteIds,
+        let predicate: Predicate<IPTVChannel> = Self.predicateBuilder(showFavoritesOnly: showFavoritesOnly,
                                                                       searchTerm: searchTerm,
                                                                       countryCode: selectedCountry,
                                                                       categoryId: selectedCategory)

@@ -14,11 +14,7 @@ protocol SwiftDataControllable: ChannelFilterable {
     
     var guideChannelMap: ChannelMap { get }
     
-    func toggleFavorite(for channelId: ChannelId)
-    
-    func isFavorite(channelId: ChannelId) -> Bool
-    
-    static func predicateBuilder(favoriteIds: Set<ChannelId>?,
+    static func predicateBuilder(showFavoritesOnly: Bool,
                                  searchTerm: String?,
                                  countryCode: CountryCode,
                                  categoryId: CategoryId?) -> Predicate<IPTVChannel>

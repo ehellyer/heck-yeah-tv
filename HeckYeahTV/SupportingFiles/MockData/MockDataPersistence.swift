@@ -48,6 +48,16 @@ final class MockDataPersistence {
             let categoriesData = try Data(contentsOf: categoriesUrl)
             let mockCategories = try [IPTVCategory].initialize(jsonData: categoriesData)
             mockCategories.forEach(context.insert)
+
+            let favoritesUrl = Bundle.main.url(forResource: "MockFavorites", withExtension: "json")!
+            let favoritesData = try Data(contentsOf: favoritesUrl)
+            let mockFavorites = try [IPTVFavorite].initialize(jsonData: favoritesData)
+            mockFavorites.forEach(context.insert)
+            
+            mockFavorites.forEach { fav in
+                mockChannels.first(where: { $0.id == fav.id })?.favorite = fav
+            }
+            
             
             try context.save()
             logDebug("MockDataPersistence Init completed: Mock data loaded into in-memory store.")

@@ -84,9 +84,21 @@ class FavoriteToggleView: UIView {
             case .ended, .changed, .cancelled, .failed:
                 onTapUpFocusEffect()
 
-                if gesture.state == .ended, let channelId {
-                    delegate?.toggleFavoriteChannel(channelId)
+                if gesture.state == .ended, let channel {
+                    if channel.favorite != nil {
+                        channel.favorite?.isFavorite.toggle()
+                    } else {
+                        channel.favorite = IPTVFavorite(id: channel.id, isFavorite: true)
+                    }
+                    
+                    if channel.modelContext?.hasChanges ?? false == true {
+                        try? channel.modelContext?.save()
+                    }
+                    
+                    //Got to notify VC so the rows can be refreshed.
+                    self.delegate?.toggleFavoriteChannel(channel.id)
                 }
+                
             default:
                 break
         }
@@ -100,7 +112,7 @@ class FavoriteToggleView: UIView {
     
     //MARK: - Private API
 
-    private var channelId: ChannelId?
+    private var channel: IPTVChannel?
     
     @Injected(\.swiftDataController)
     private var swiftDataController: SwiftDataControllable
@@ -118,11 +130,9 @@ class FavoriteToggleView: UIView {
     weak var delegate: GuideViewDelegate?
 
     func configure(with channel: IPTVChannel?, isPlaying: Bool) {
-        self.channelId = channel?.id
-        var isFavorite: Bool = false
-        if let _channelId = channel?.id {
-            isFavorite = swiftDataController.isFavorite(channelId: _channelId)
-        }
+        self.channel = channel
+
+        let isFavorite: Bool = channel?.favorite?.isFavorite ?? false
         
         backgroundColor = (isPlaying) ? .guideSelectedChannelBackground : .guideBackgroundNoFocus
 

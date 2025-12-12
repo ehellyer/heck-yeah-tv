@@ -33,6 +33,7 @@ actor Importer {
         let incoming: [Channelable] = streams + tunerChannels
         let incomingIDs = Set(incoming.map(\.idHint))
         
+        let existingFavorites = try context.fetch(FetchDescriptor<IPTVFavorite>(predicate: #Predicate<IPTVFavorite> { $0.isFavorite == true }))
         let existing = try context.fetch(FetchDescriptor<IPTVChannel>())
         let existingIDs = Set(existing.map(\.id))
         
@@ -69,6 +70,11 @@ actor Importer {
             return url
         }
         
+        func getFavoriteReferenceFor(_ channel: Channelable) -> IPTVFavorite? {
+            let channelId = channel.idHint
+            return existingFavorites.first(where: { $0.id == channelId })
+        }
+        
         func getCountryAndCategoriesFor(_ channel: Channelable) -> (country: String?, categories: [String]) {
             // If this is a local lan device, set the country code to ANY.
             if channel is HDHomeRunChannel {
@@ -88,6 +94,7 @@ actor Importer {
             
             let (country, categories) = getCountryAndCategoriesFor(src)
             let logoURL = getLogoURLFor(src)
+            let favorite: IPTVFavorite? = getFavoriteReferenceFor(src)
             let (format, languages) = getFormatAndLanguagesFor(src)
             
             context.insert(
@@ -103,7 +110,8 @@ actor Importer {
                     logoURL: logoURL,
                     quality: format,
                     hasDRM: src.hasDRMHint,
-                    source: src.sourceHint
+                    source: src.sourceHint,
+                    favorite: favorite
                 )
             )
         }

@@ -34,52 +34,17 @@ final class MockSwiftDataController: SwiftDataControllable {
         try? self.bootStrap()
     }
     
-    //MARK: - Internal API - SwiftDataControllable implementation Properties
+    //MARK: - Internal API - SwiftDataControllable implementation
     
     private(set) var guideChannelMap: ChannelMap = ChannelMap(map: [])
     
-    //MARK: - Internal API - SwiftDataControllable implementation Functions
-    
-    func toggleFavorite(for channelId: ChannelId) {
-        let context = self.viewContext
-        do {
-            let predicate = #Predicate<IPTVFavorite> { $0.id == channelId }
-            var descriptor = FetchDescriptor<IPTVFavorite>(predicate: predicate)
-            descriptor.fetchLimit = 1
-            if let fav: IPTVFavorite = try context.fetch(descriptor).first {
-                fav.isFavorite.toggle()
-            } else {
-                context.insert(IPTVFavorite(id: channelId, isFavorite: true))
-            }
-            if context.hasChanges {
-                try context.save()
-            }
-        } catch {
-            logError("Unable to fetch favorite for channelId: \(channelId)")
-        }
-    }
-    
-    func isFavorite(channelId: ChannelId) -> Bool {
-        let context = self.viewContext
-        do {
-            let predicate = #Predicate<IPTVFavorite> { $0.id == channelId }
-            var descriptor = FetchDescriptor<IPTVFavorite>(predicate: predicate)
-            descriptor.fetchLimit = 1
-            let favChannel = try context.fetch(descriptor).first
-            return favChannel?.isFavorite ?? false
-        } catch {
-            logError("Unable to fetch favorite for channelId: \(channelId)")
-            return false
-        }
-    }
-    
-    static func predicateBuilder(favoriteIds: Set<ChannelId>?,
+    static func predicateBuilder(showFavoritesOnly: Bool,
                                  searchTerm: String?,
                                  countryCode: CountryCode,
                                  categoryId: CategoryId?) -> Predicate<IPTVChannel> {
         
         // Keeping the predicate builder code in the same spot for now.  (Less maintenance)  Change if needed.
-        SwiftDataController.predicateBuilder(favoriteIds: favoriteIds,
+        SwiftDataController.predicateBuilder(showFavoritesOnly: showFavoritesOnly,
                                              searchTerm: searchTerm,
                                              countryCode: countryCode,
                                              categoryId:  categoryId)
@@ -185,16 +150,7 @@ final class MockSwiftDataController: SwiftDataControllable {
             sortBy: [SortDescriptor(\IPTVChannel.sortHint, order: .forward)]
         )
         
-        var favoriteIds: Set<ChannelId>? = nil
-        if showFavoritesOnly == true {
-            let favoritesDescriptor = FetchDescriptor<IPTVFavorite>(
-                predicate: #Predicate { $0.isFavorite == true }
-            )
-            let favorites = try context.fetch(favoritesDescriptor)
-            favoriteIds = Set(favorites.map(\.id))
-        }
-        
-        channelsDescriptor.predicate = Self.predicateBuilder(favoriteIds: favoriteIds,
+        channelsDescriptor.predicate = Self.predicateBuilder(showFavoritesOnly: showFavoritesOnly,
                                                              searchTerm: searchTerm,
                                                              countryCode: selectedCountry,
                                                              categoryId:  selectedCategory)

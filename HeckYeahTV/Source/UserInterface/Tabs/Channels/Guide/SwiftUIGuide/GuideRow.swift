@@ -20,16 +20,18 @@ struct GuideRow: View {
     @State private var rowWidth: CGFloat = 800 // Default, will update dynamically
     @State private var logoImage: Image = Image(systemName: "tv.circle.fill")
     @State private var imageLoadTask: Task<Void, Never>? = nil
-    @State private var favorite: IPTVFavorite?
     
     @Environment(\.modelContext) private var modelContext
     
-    private var isFavoriteChannel: Bool {
-        return favorite?.isFavorite ?? false
-    }
-    
     @Injected(\.attachmentController)
     private var attachmentController: AttachmentController
+
+    @Injected(\.swiftDataController)
+    private var swiftDataController: SwiftDataControllable
+    
+    private var isFavoriteChannel: Bool {
+        return channel?.favorite?.isFavorite ?? false
+    }
     
     // Focus tracking for each button
     @FocusState private var focusedButton: FocusedButton?
@@ -57,7 +59,6 @@ struct GuideRow: View {
     
     private func updateLogoImage(for channel: IPTVChannel?) {
         let currentChannelId = channel?.id
-        
         imageLoadTask?.cancel()
         imageLoadTask = Task {
             logoImage = Image(systemName: "tv.circle.fill")
@@ -69,40 +70,16 @@ struct GuideRow: View {
         }
     }
     
-    private func fetchOrCreateFavorite() {
-        guard let channelId = channel?.id else { return }
-        
-        do {
-            let predicate = #Predicate<IPTVFavorite> { $0.id == channelId }
-            var descriptor = FetchDescriptor<IPTVFavorite>(predicate: predicate)
-            descriptor.fetchLimit = 1
-            
-            if let existingFavorite = try modelContext.fetch(descriptor).first {
-                favorite = existingFavorite
-            } else {
-                // Create a new favorite with isFavorite = false
-                let newFavorite = IPTVFavorite(id: channelId, isFavorite: false)
-                modelContext.insert(newFavorite)
-                try modelContext.save()
-                favorite = newFavorite
-            }
-        } catch {
-            logError("Failed to fetch or create favorite for channelId: \(channelId) - \(error)")
-        }
-    }
-    
     var body: some View {
         let compact = isHorizontallyCompact(width: rowWidth)
         
         HStack(alignment: .center, spacing: 0) {
             Button {
-                if let fav = favorite {
-                    fav.isFavorite.toggle()
-                    do {
-                        try modelContext.save()
-                    } catch {
-                        logError("Failed to save favorite state: \(error)")
-                    }
+                guard let channel else { return }
+                if channel.favorite != nil {
+                    channel.favorite?.isFavorite.toggle()
+                } else {
+                    channel.favorite = IPTVFavorite(id: channel.id, isFavorite: true)
                 }
             } label: {
                 Image(systemName: isFavoriteChannel ? "star.fill" : "star")
@@ -175,10 +152,6 @@ struct GuideRow: View {
                                                   cornerRadius: cornerRadius,
                                                   isFocused: focusedButton == .channel))
             }
-            
-//            if compact {
-//                Spacer()
-//            }
         }
         .background(
             GeometryReader { proxy in
@@ -192,12 +165,6 @@ struct GuideRow: View {
             }
         )
         .fixedSize(horizontal: false, vertical: true)
-        .onAppear {
-            fetchOrCreateFavorite()
-        }
-        .onChange(of: channel?.id) { _, _ in
-            fetchOrCreateFavorite()
-        }
     }
 }
 

@@ -47,13 +47,13 @@ struct GuideView: View {
                 .focusSection()
 #endif
                 .onAppear {
+                    swiftDataController.selectedCategory = "movies"
                     scrollToSelected(proxy: proxy)
                 }
                 
                 .onChange(of: swiftDataController.guideChannelMap.totalCount) { _, _ in
                     scrollToSelected(proxy: proxy)
                 }
-
             }
             
             if swiftDataController.guideChannelMap.totalCount == 0 {
@@ -99,7 +99,11 @@ private extension GuideView {
     @Previewable @State var appState: AppStateProvider = SharedAppState.shared
     let mockData = MockDataPersistence(appState: appState)
 
-    let swiftController = MockSwiftDataController(viewContext: mockData.context)
+    let swiftController = MockSwiftDataController(viewContext: mockData.context,
+                                                  selectedCountry: "US",
+                                                  selectedCategory: "movies",
+                                                  showFavoritesOnly: false,
+                                                  searchTerm: nil)
     InjectedValues[\.swiftDataController] = swiftController
 
     return GuideView(appState: $appState)

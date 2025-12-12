@@ -26,7 +26,8 @@ extension SchemaV1 {
              logoURL: URL?,
              quality: StreamQuality,
              hasDRM: Bool,
-             source: ChannelSource) {
+             source: ChannelSource,
+             favorite: IPTVFavorite? = nil) {
             self.id = id
             self.sortHint = sortHint
             self.title = title
@@ -39,6 +40,7 @@ extension SchemaV1 {
             self.quality = quality
             self.hasDRM = hasDRM
             self.source = source
+            self.favorite = favorite
         }
         
         @Attribute(.unique)
@@ -54,7 +56,10 @@ extension SchemaV1 {
         var quality: StreamQuality
         var hasDRM: Bool
         var source: ChannelSource
-
+        
+        // Relationship to favorite status (nullify on delete to preserve favorite when channel is deleted)
+        @Relationship(deleteRule: .nullify, inverse: \IPTVFavorite.channel)
+        var favorite: IPTVFavorite?
         
         // MARK: JSONSerializable Implementation
         //
@@ -76,6 +81,7 @@ extension SchemaV1 {
             case quality
             case hasDRM
             case source
+            // Note: 'favorite' relationship is not included in JSON serialization
         }
         
         func encode(to encoder: Encoder) throws {

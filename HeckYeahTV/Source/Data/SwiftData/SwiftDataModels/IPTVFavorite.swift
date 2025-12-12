@@ -16,16 +16,22 @@ extension SchemaV1 {
         #Index<IPTVFavorite>([\.isFavorite, \.id], [\.id])
 
         init(id: ChannelId,
-             isFavorite: Bool) {
+             isFavorite: Bool,
+             channel: IPTVChannel? = nil) {
             self.id = id
             self.isFavorite = isFavorite
+            self.channel = channel
         }
         
         /// The stable hash that is the unique identifier of the channel that has been added to favorites.
+        @Attribute(.unique)
         var id: ChannelId
 
         /// Returns the current favorite state of the channel.
         var isFavorite: Bool
+        
+        /// Optional relationship back to the channel (if it exists)
+        var channel: IPTVChannel?
         
         // MARK: - JSONSerializable Implementation
         //
@@ -37,6 +43,7 @@ extension SchemaV1 {
         enum CodingKeys: String, CodingKey {
             case id
             case isFavorite
+            // Note: 'channel' relationship is not included in JSON serialization
         }
         
         func encode(to encoder: Encoder) throws {
