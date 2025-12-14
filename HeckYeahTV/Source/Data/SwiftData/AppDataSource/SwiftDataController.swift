@@ -51,16 +51,11 @@ final class SwiftDataController: SwiftDataControllable {
             conditions.append( #Predicate<IPTVChannel> { $0.title.localizedStandardContains(searchTerm) })
         }
         
-//        if let categoryId {
-//            let nsPredicate = NSPredicate(format: "SUBQUERY(categories, $category, $category == %@).@count > 0", categoryId) as Predicate<IPTVChannel>
-//            
-//            let fetchDescriptor = FetchDescriptor<IPTVChannel>(predicate: nsPredicate as Predicate<IPTVChannel>)
-//            
-//            let predicate =  Predicate<IPTVChannel>(predicate: nsPredicate)
-//            conditions.append( #Predicate<IPTVChannel> { channel in
-//                channel.categories.contains(where: { $0 == categoryId })
-//            })
-//        }
+        if let categoryId {
+            conditions.append( #Predicate<IPTVChannel> { channel in
+                channel.categories.contains(where: { $0.categoryId == categoryId })
+            })
+        }
         
         // Combine conditions using '&&' (AND)
         if conditions.isEmpty {

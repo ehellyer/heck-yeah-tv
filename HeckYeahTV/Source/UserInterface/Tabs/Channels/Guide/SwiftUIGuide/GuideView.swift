@@ -47,7 +47,6 @@ struct GuideView: View {
                 .focusSection()
 #endif
                 .onAppear {
-                    swiftDataController.selectedCategory = "movies"
                     scrollToSelected(proxy: proxy)
                 }
                 
@@ -101,9 +100,9 @@ private extension GuideView {
 
     let swiftController = MockSwiftDataController(viewContext: mockData.context,
                                                   selectedCountry: "US",
-                                                  selectedCategory: "movies",
+                                                  selectedCategory: "news",
                                                   showFavoritesOnly: false,
-                                                  searchTerm: nil)
+                                                  searchTerm: "Lo")
     InjectedValues[\.swiftDataController] = swiftController
 
     return GuideView(appState: $appState)

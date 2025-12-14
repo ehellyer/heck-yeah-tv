@@ -16,7 +16,8 @@ extension IPStream: Channelable {
     var urlHint: URL { url }
     var qualityHint: StreamQuality { qualityHint(quality) }
     var hasDRMHint: Bool { false }
-    var sourceHint: ChannelSource { ChannelSource.ipStream }
+    var sourceHint: ChannelSource { ChannelSourceType.ipStream.rawValue }
+    var deviceIdHint: HDHomeRunDeviceId? { nil }
     
     private func qualityHint(_ quality: String?) -> StreamQuality {
         guard let quality else {

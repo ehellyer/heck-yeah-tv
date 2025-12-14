@@ -21,8 +21,10 @@ typealias CategoryId = String
 /// Type used as the unique identifier of a language.
 typealias LanguageCode = String
 
+/// Type used as the source of the channel
+typealias ChannelSource = String
+
 // Model typealias definitions - Models (always point to current schema in use as defined by HeckYeahSchema typealias)
-typealias ChannelSource = HeckYeahSchema.ChannelSource
 typealias HDHomeRunServer = HeckYeahSchema.HDHomeRunServer
 typealias IPTVCategory = HeckYeahSchema.IPTVCategory
 typealias IPTVChannel = HeckYeahSchema.IPTVChannel

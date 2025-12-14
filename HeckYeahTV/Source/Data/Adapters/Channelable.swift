@@ -18,4 +18,5 @@ protocol Channelable {
     var qualityHint: StreamQuality { get }
     var hasDRMHint: Bool { get }
     var sourceHint: ChannelSource { get }
+    var deviceIdHint: HDHomeRunDeviceId? { get }
 }

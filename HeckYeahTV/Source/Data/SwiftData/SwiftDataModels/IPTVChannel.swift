@@ -20,14 +20,15 @@ extension SchemaV1 {
              title: String,
              number: String?,
              country: CountryCode?,
-             categories: [CategoryId],
+             categories: [IPTVCategory],
              languages: [LanguageCode],
              url: URL,
              logoURL: URL?,
              quality: StreamQuality,
              hasDRM: Bool,
              source: ChannelSource,
-             favorite: IPTVFavorite? = nil) {
+             deviceId: HDHomeRunDeviceId?,
+             favorite: IPTVFavorite?) {
             self.id = id
             self.sortHint = sortHint
             self.title = title
@@ -40,6 +41,7 @@ extension SchemaV1 {
             self.quality = quality
             self.hasDRM = hasDRM
             self.source = source
+            self.deviceId = deviceId
             self.favorite = favorite
         }
         
@@ -48,14 +50,19 @@ extension SchemaV1 {
         var sortHint: String
         var title: String
         var number: String?
-        var country: CountryCode? = nil
-        var categories: [CategoryId] = []
+        var country: CountryCode?
+        
+        // Many-to-many relationship with categories
+        @Relationship(deleteRule: .nullify)
+        var categories: [IPTVCategory] = []
+        
         var languages: [LanguageCode] = []
         var url: URL
         var logoURL: URL?
         var quality: StreamQuality
         var hasDRM: Bool
         var source: ChannelSource
+        var deviceId: HDHomeRunDeviceId?
         
         // Relationship to favorite status (nullify on delete to preserve favorite when channel is deleted)
         @Relationship(deleteRule: .nullify, inverse: \IPTVFavorite.channel)
@@ -81,6 +88,7 @@ extension SchemaV1 {
             case quality
             case hasDRM
             case source
+            case deviceId
             // Note: 'favorite' relationship is not included in JSON serialization
         }
         
@@ -98,6 +106,7 @@ extension SchemaV1 {
             try container.encode(quality, forKey: .quality)
             try container.encode(hasDRM, forKey: .hasDRM)
             try container.encode(source, forKey: .source)
+            try container.encode(deviceId, forKey: .deviceId)
         }
         
         init(from decoder: Decoder) throws {
@@ -107,13 +116,14 @@ extension SchemaV1 {
             self.title = try container.decode(String.self, forKey: .title)
             self.number = try container.decodeIfPresent(String.self, forKey: .number)
             self.country = try container.decodeIfPresent(CountryCode.self, forKey: .country)
-            self.categories = try container.decode([CategoryId].self, forKey: .categories)
+            self.categories = try container.decodeIfPresent([IPTVCategory].self, forKey: .categories) ?? []
             self.languages = try container.decode([LanguageCode].self, forKey: .languages)
             self.url = try container.decode(URL.self, forKey: .url)
             self.logoURL = try container.decodeIfPresent(URL.self, forKey: .logoURL)
             self.quality = try container.decode(StreamQuality.self, forKey: .quality)
             self.hasDRM = try container.decode(Bool.self, forKey: .hasDRM)
             self.source = try container.decode(ChannelSource.self, forKey: .source)
+            self.deviceId = try container.decodeIfPresent(HDHomeRunDeviceId.self, forKey: .deviceId)
         }
     }
 }

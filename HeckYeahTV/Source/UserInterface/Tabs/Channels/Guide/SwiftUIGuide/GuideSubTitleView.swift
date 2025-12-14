@@ -52,7 +52,7 @@ struct GuideSubTitleView: View {
     
     var body: some View {
         HStack(spacing: 8) {
-            if case .homeRunTuner = channel?.source, let _number = number {
+            if channel?.source == ChannelSourceType.homeRunTuner.rawValue, let _number = number {
                 Text(_number)
                     .font(Font(AppStyle.Fonts.subtitleFont))
                     .lineLimit(1)

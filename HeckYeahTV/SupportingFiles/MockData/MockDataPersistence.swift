@@ -44,6 +44,7 @@ final class MockDataPersistence {
             let mockTuners = try [HDHomeRunServer].initialize(jsonData: tunerData)
             mockTuners.forEach(context.insert)
             
+            //Dev Note: IPTVChannel & IPTVCategory M:M relationships are setup in the MockIPTVChannels.json file.
             let categoriesUrl = Bundle.main.url(forResource: "MockCategories", withExtension: "json")!
             let categoriesData = try Data(contentsOf: categoriesUrl)
             let mockCategories = try [IPTVCategory].initialize(jsonData: categoriesData)
@@ -54,10 +55,10 @@ final class MockDataPersistence {
             let mockFavorites = try [IPTVFavorite].initialize(jsonData: favoritesData)
             mockFavorites.forEach(context.insert)
             
+            //Setup favorite relationships
             mockFavorites.forEach { fav in
                 mockChannels.first(where: { $0.id == fav.id })?.favorite = fav
             }
-            
             
             try context.save()
             logDebug("MockDataPersistence Init completed: Mock data loaded into in-memory store.")

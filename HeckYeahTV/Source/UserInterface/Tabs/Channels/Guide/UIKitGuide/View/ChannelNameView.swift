@@ -225,7 +225,7 @@ class ChannelNameView: UIView {
         titleLabel.text = channel?.title ?? nbsp  // the nbsp is to maintain label height for layout when title is nil.
         
         // 2nd line - Channel Number
-        if case .homeRunTuner = channel?.source {
+        if channel?.source == ChannelSourceType.homeRunTuner.rawValue {
             numberLabel.text = channel?.number
         } else {
             numberLabel.text = nil

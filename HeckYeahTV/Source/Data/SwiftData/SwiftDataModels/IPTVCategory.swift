@@ -12,6 +12,7 @@ import Hellfire
 extension SchemaV1 {
     
     @Model final class IPTVCategory: JSONSerializable {
+        #Index<IPTVCategory>([\.categoryId])
         
         init(categoryId: String, name: String, categoryDescription: String) {
             self.categoryId = categoryId
@@ -28,6 +29,10 @@ extension SchemaV1 {
         /// Short description of the category
         var categoryDescription: String
         
+        /// Channels that belong to this category (many-to-many relationship)
+        @Relationship(deleteRule: .nullify, inverse: \IPTVChannel.categories)
+        var channels: [IPTVChannel]? = []
+        
         // MARK: JSONSerializable Implementation
         //
         // JSONSerializable implementation not automatically synthesized due to a conflict with SwiftData @Model automatic synthesis of certain behaviors.
@@ -39,6 +44,7 @@ extension SchemaV1 {
             case categoryId
             case name
             case categoryDescription
+            // Note: 'channels' relationship is not included in JSON serialization
         }
         
         func encode(to encoder: Encoder) throws {
