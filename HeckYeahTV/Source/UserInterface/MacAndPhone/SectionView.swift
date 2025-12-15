@@ -25,8 +25,8 @@ struct SectionView: View {
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .background(Color.clear)
             
-            case .search:
-                SearchView(appState: $appState)
+            case .filter:
+                FilterView(appState: $appState)
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .background(Color.clear)
 

@@ -41,10 +41,10 @@ struct TabContainerView: View {
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
 
-            Tab(AppSection.search.title,
-                systemImage: AppSection.search.systemImage,
-                value: AppSection.search) {
-                SearchView(appState: $appState)
+            Tab(AppSection.filter.title,
+                systemImage: AppSection.filter.systemImage,
+                value: AppSection.filter) {
+                FilterView(appState: $appState)
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
             

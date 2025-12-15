@@ -18,6 +18,27 @@ struct CategoryPickerView: View {
     var body: some View {
         ScrollViewReader { proxy in
             List {
+                // None option
+                Button {
+                    selectedCategory = nil
+                    dismiss()
+                } label: {
+                    HStack {
+                        Text("None")
+                            .fontWeight(selectedCategory == nil ? .semibold : .regular)
+                        Spacer()
+                        if selectedCategory == nil {
+                            Image(systemName: "checkmark")
+                        }
+                    }
+                }
+                .buttonStyle(ListButtonStyle())
+                .id("none-option")
+#if !os(tvOS)
+                .listRowSeparator(.hidden)
+#endif
+                .listRowBackground(Color.clear)
+                
                 ForEach(categories, id: \.name) { category in
                     Button {
                         selectedCategory = category.categoryId

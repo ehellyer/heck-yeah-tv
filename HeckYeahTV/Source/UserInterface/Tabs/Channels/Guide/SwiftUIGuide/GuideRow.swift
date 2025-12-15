@@ -26,8 +26,7 @@ struct GuideRow: View {
     @Injected(\.attachmentController)
     private var attachmentController: AttachmentController
 
-    @Injected(\.swiftDataController)
-    private var swiftDataController: SwiftDataControllable
+    @State private var swiftDataController: SwiftDataControllable = InjectedValues[\.swiftDataController]
     
     private var isFavoriteChannel: Bool {
         return channel?.favorite?.isFavorite ?? false
@@ -94,7 +93,7 @@ struct GuideRow: View {
             .buttonStyle(FocusableButtonStyle(isPlaying: isPlaying,
                                               cornerRadius: cornerRadius,
                                               isFocused: focusedButton == .favorite))
-            .padding(.trailing, 20)
+            .padding(.trailing, 15)
             
             Button {
                 appState.selectedChannel = channel?.id
@@ -130,7 +129,6 @@ struct GuideRow: View {
             .buttonStyle(FocusableButtonStyle(isPlaying: isPlaying,
                                               cornerRadius: cornerRadius,
                                               isFocused: focusedButton == .channel))
-            .padding(.trailing, 20)
             .task(id: channel?.id) {
                 updateLogoImage(for: channel)
             }
@@ -147,6 +145,7 @@ struct GuideRow: View {
                         .background(Color.clear)
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .padding(.leading, 15)
                 .disabled(true)
                 .buttonStyle(FocusableButtonStyle(isPlaying: isPlaying,
                                                   cornerRadius: cornerRadius,
@@ -180,7 +179,7 @@ struct GuideRow: View {
     
      return GuideRow(channel: channel,
                     appState: $appState,
-                    hideGuideInfo: true)
+                    hideGuideInfo: false)
     //.redacted(reason: .placeholder)
         .onAppear {
             appState.selectedChannel = selectedChannelId

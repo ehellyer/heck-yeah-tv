@@ -143,10 +143,5 @@
         "categoryId": "weather",
         "name": "Weather",
         "categoryDescription": "Programming is focused on weather"
-    },
-    {
-        "categoryId": "xxx",
-        "name": "XXX",
-        "categoryDescription": "Programming is adult oriented and x-rated"
     }
 ]

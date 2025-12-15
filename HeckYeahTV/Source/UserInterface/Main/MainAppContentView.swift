@@ -19,7 +19,7 @@ struct MainAppContentView: View {
     
     @Environment(\.scenePhase) private var scenePhase
 
-    @Injected(\.swiftDataController) private var swiftDataController: SwiftDataControllable
+    @State private var swiftDataController: SwiftDataControllable = InjectedValues[\.swiftDataController]
     
     // Focus scopes (Namespace) for isolating focus between guide and activation views
     @Namespace private var activationScope

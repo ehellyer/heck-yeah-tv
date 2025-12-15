@@ -15,7 +15,7 @@ struct GuideView: View {
     
     @Environment(\.modelContext) private var viewContext
     
-    @Injected(\.swiftDataController) var swiftDataController: SwiftDataControllable
+    @State private var swiftDataController: SwiftDataControllable = InjectedValues[\.swiftDataController]
     
     @State private var rebuildChannelMapTask: Task<Void, Never>? = nil
     @State private var scrollToSelectedTask: Task<Void, Never>? = nil
@@ -27,7 +27,7 @@ struct GuideView: View {
         ZStack {
             ScrollViewReader { proxy in
                 ScrollView(.vertical) {
-                    LazyVStack(alignment: .leading, spacing: 20) {
+                    LazyVStack(alignment: .leading, spacing: 15) {
                         ForEach(0..<swiftDataController.guideChannelMap.totalCount, id: \.self) { index in
                             let channelId = swiftDataController.guideChannelMap.map[index]
                             GuideRowLazy(channelId: channelId,
@@ -35,14 +35,15 @@ struct GuideView: View {
                                          hideGuideInfo: hideGuideInfo)
                             .id(channelId)
                             .frame(height: 90) // Fixed height to prevent jumping
-                            .padding(.leading, 5)
-                            .padding(.trailing, 5)
+                            .padding(.leading, 10)
+                            .padding(.trailing, 10)
                         }
                     }
                 }
                 .background(.clear)
                 .contentMargins(.top, 10)
                 .contentMargins(.bottom, 5)
+                .scrollIndicators(.visible)
 #if os(tvOS)
                 .focusSection()
 #endif
@@ -100,9 +101,9 @@ private extension GuideView {
 
     let swiftController = MockSwiftDataController(viewContext: mockData.context,
                                                   selectedCountry: "US",
-                                                  selectedCategory: "news",
+                                                  selectedCategory: nil,//"news",
                                                   showFavoritesOnly: false,
-                                                  searchTerm: "Lo")
+                                                  searchTerm: nil)//"Lo")
     InjectedValues[\.swiftDataController] = swiftController
 
     return GuideView(appState: $appState)
