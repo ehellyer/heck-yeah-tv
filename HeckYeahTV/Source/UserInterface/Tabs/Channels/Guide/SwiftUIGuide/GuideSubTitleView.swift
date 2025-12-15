@@ -54,7 +54,7 @@ struct GuideSubTitleView: View {
         HStack(spacing: 8) {
             if channel?.source == ChannelSourceType.homeRunTuner.rawValue, let _number = number {
                 Text(_number)
-                    .font(Font(AppStyle.Fonts.subtitleFont))
+                    .font(.caption2)
                     .lineLimit(1)
                     .truncationMode(.tail)
             }
@@ -65,7 +65,7 @@ struct GuideSubTitleView: View {
             
             if let _languagesText = languagesText {
                 Text(_languagesText)
-                    .font(Font(AppStyle.Fonts.subtitleFont))
+                    .font(.caption2)
                     .lineLimit(1)
                     .truncationMode(.tail)
             }
@@ -84,14 +84,13 @@ struct GuideSubTitleView: View {
 }
 
 #Preview("GuideSubTitleView - loads from Mock SwiftData") {
-//    @Previewable @State var appState: any AppStateProvider = MockSharedAppState()
-//    
-//    let mockData = MockDataPersistence(appState: appState)
-//    appState.selectedChannel = mockData.channels[0].id
-//    appState.selectedChannel = mockData.channels[1].id
-//    appState.selectedChannel = mockData.channels[2].id
-//    appState.selectedChannel = mockData.channels[3].id
-//    appState.selectedChannel = mockData.channels[4].id
-//    
-//    return GuideSubTitleView(channel: mockData.channels[1])
+    @Previewable @State var appState: AppStateProvider = MockSharedAppState()
+    let mockData = MockDataPersistence(appState: appState)
+    
+    let swiftController = MockSwiftDataController(viewContext: mockData.context)
+    InjectedValues[\.swiftDataController] = swiftController
+    
+    let channel = swiftController.fetchChannel(at: 7)
+    
+    return GuideSubTitleView(channel: channel)
 }

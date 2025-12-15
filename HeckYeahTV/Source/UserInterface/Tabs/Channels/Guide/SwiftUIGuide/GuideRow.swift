@@ -110,7 +110,7 @@ struct GuideRow: View {
                         VStack(alignment: .leading, spacing: 10) {
                             // "Placeholder" is used for .redacted(reason: .placeholder) modifier.
                             Text(channel?.title ?? "Placeholder")
-                                .font(Font(AppStyle.Fonts.titleFont))
+                                .font(.title3)
                                 .lineLimit(1)
                                 .truncationMode(.tail)
                             GuideSubTitleView(channel: channel)
@@ -138,7 +138,7 @@ struct GuideRow: View {
                     // No op
                 } label: {
                     Text("No guide information")
-                        .font(Font(AppStyle.Fonts.programTitleFont))
+                        .font(.title3)
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                         .padding(.horizontal, internalHzPadding)
                         .padding(.vertical, internalVtPadding)

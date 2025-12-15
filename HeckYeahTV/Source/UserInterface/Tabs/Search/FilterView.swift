@@ -39,11 +39,7 @@ struct FilterView: View {
             VStack(spacing: 0) {
                 // Filter Section Header
                 VStack(alignment: .leading, spacing: 12) {
-                    Text("Filters")
-                        .font(.title2)
-                        .fontWeight(.bold)
-                    
-                    // Country Filter Card
+                     // Country Filter Card
                     NavigationLink {
                         CountryPickerView(
                             countries: countries,
@@ -138,10 +134,10 @@ struct FilterView: View {
                     .padding(.top, 4)
                 }
                 .padding()
-                .background {
-                    Rectangle()
-                        .fill(.ultraThinMaterial)
-                }
+//                .background {
+//                    Rectangle()
+//                        .fill(.ultraThinMaterial)
+//                }
                 
                 Divider()
                 

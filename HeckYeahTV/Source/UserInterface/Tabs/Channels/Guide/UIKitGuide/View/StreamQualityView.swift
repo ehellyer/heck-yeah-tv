@@ -32,6 +32,16 @@ extension StreamQuality {
         guard streamQuality != .unknown else {
             return nil
         }
+        
+        // Check if we need to invalidate cache based on content size category
+#if !os(macOS)
+        let currentCategory = UIApplication.shared.preferredContentSizeCategory
+        if Self.lastContentSizeCategory != currentCategory {
+            Self.cachedImages.removeAll()
+            Self.lastContentSizeCategory = currentCategory
+        }
+#endif
+        
         var image = Self.cachedImages[streamQuality]
         // If cache-miss, create a new image and cache it.
         if image == nil {
@@ -56,8 +66,13 @@ extension StreamQuality {
     
     /// The sacred cache where we store our precious rendered images.
     ///
-    /// Built once, reused forever (or until the app terminates). This is peak efficiency, folks.
+    /// Built once, reused forever (or until the app terminates or Dynamic Type changes).
     private static var cachedImages: [StreamQuality: PlatformImage] = [:]
+    
+    /// Tracks the last content size category to detect Dynamic Type changes.
+#if !os(macOS)
+    private static var lastContentSizeCategory: UIContentSizeCategory = UIApplication.shared.preferredContentSizeCategory
+#endif
 }
 
 /// A view that renders a stream quality badge with rounded corners and a border.
@@ -115,7 +130,17 @@ class StreamQualityView: PlatformView {
         let label = PlatformLabel()
         label.frame = self.bounds //Initial size
         label.translatesAutoresizingMaskIntoConstraints = false
+        
+        // Make font responsive to Dynamic Type
+#if os(macOS)
         label.font = AppStyle.Fonts.streamQualityFont
+#else
+        let baseFont = AppStyle.Fonts.streamQualityFont
+        let metrics = UIFontMetrics(forTextStyle: .caption1)
+        label.font = metrics.scaledFont(for: baseFont)
+        label.adjustsFontForContentSizeCategory = true
+#endif
+        
         label.textColor = .white
 #if os(macOS)
         label.stringValue = streamQuality.name ?? ""
