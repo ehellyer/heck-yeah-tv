@@ -98,6 +98,10 @@ struct Heck_Yeah_TVApp: App {
             let container = dataPersistence.container
             Task.detached(priority: .userInitiated) {
                 let importer = Importer(container: container)
+                
+                //Must go first.
+                try await importer.importCategories(iptvController.categories)
+                
                 try await withThrowingTaskGroup(of: Void.self) { group in
                     group.addTask {
                         try await importer.importCountries(iptvController.countries)
@@ -111,9 +115,6 @@ struct Heck_Yeah_TVApp: App {
                     }
                     group.addTask {
                         try await importer.importTunerDevices(hdHomeRunController.devices)
-                    }
-                    group.addTask {
-                        try await importer.importCategories(iptvController.categories)
                     }
                     try await group.waitForAll()
                 }
