@@ -35,8 +35,8 @@ struct GuideView: View {
                                          hideGuideInfo: hideGuideInfo)
                             .id(channelId)
                             .frame(height: 90) // Fixed height to prevent jumping
-                            .padding(.leading, 10)
-                            .padding(.trailing, 10)
+                            //.padding(.leading, 10)
+                            //.padding(.trailing, 10)
                         }
                     }
                 }
@@ -57,11 +57,26 @@ struct GuideView: View {
             }
             
             if swiftDataController.guideChannelMap.totalCount == 0 {
-                Text("No channels available")
+                
+                if swiftDataController.showFavoritesOnly {
+                    
+                } else {
+                    VStack(spacing: 12) {
+                        Image(systemName: "tv.slash")
+                            .font(.system(size: 48))
+                            .foregroundStyle(.tertiary)
+                        Text("No channels match criteria")
+                            .font(.headline)
+                            .foregroundStyle(.secondary)
+                        Text("Try adjusting your filters")
+                            .font(.subheadline)
+                            .foregroundStyle(.tertiary)
+                    }
                     .frame(maxWidth: .infinity)
-                    .frame(maxHeight: .infinity)
-                    .foregroundStyle(Color.white)
-                    .fontDesign(Font.Design.rounded)
+                    .padding(.vertical, 60)
+                    .focusable(false)
+
+                }
             }
         }
     }

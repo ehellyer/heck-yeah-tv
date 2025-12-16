@@ -11,7 +11,7 @@ import SwiftData
 import SQLite3
 
 @MainActor
-final class DataPersistence {
+final class SwiftDataStack {
 
     /// Private init due to shared singleton instance.
     private init() {
@@ -124,7 +124,7 @@ final class DataPersistence {
     }
     
     /// MainActor singleton instance.
-    static let shared = DataPersistence()
+    static let shared = SwiftDataStack()
 
     /// Model Container.
     let container: ModelContainer

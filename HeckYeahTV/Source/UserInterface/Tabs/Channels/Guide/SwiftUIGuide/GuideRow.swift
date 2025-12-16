@@ -28,25 +28,17 @@ struct GuideRow: View {
 
     @State private var swiftDataController: SwiftDataControllable = InjectedValues[\.swiftDataController]
     
-    private var isFavoriteChannel: Bool {
-        return channel?.favorite?.isFavorite ?? false
-    }
-    
     // Focus tracking for each button
     @FocusState private var focusedButton: FocusedButton?
-    
+
     private enum FocusedButton: Hashable {
         case favorite
         case channel
         case guide
     }
     
-    private func isHorizontallyCompact(width: CGFloat) -> Bool {
-        // Behave as compact when showing recents view.  This prevents the guide info to the right.
-        if hideGuideInfo {
-            return true
-        }
-        return width < 600
+    private var isFavoriteChannel: Bool {
+        return channel?.favorite?.isFavorite ?? false
     }
     
     private var isPlaying: Bool {
@@ -54,6 +46,14 @@ struct GuideRow: View {
             return false
         }
         return selectedChannelId == channel?.id
+    }
+
+    private func isHorizontallyCompact(width: CGFloat) -> Bool {
+        // Behave as compact when showing recents view.  This prevents the guide info to the right.
+        if hideGuideInfo {
+            return true
+        }
+        return width < 600
     }
     
     private func updateLogoImage(for channel: IPTVChannel?) {
@@ -72,7 +72,7 @@ struct GuideRow: View {
     var body: some View {
         let compact = isHorizontallyCompact(width: rowWidth)
         
-        HStack(alignment: .center, spacing: 0) {
+        HStack(alignment: .center, spacing: 15) {
             Button {
                 guard let channel else { return }
                 if channel.favorite != nil {
@@ -82,48 +82,56 @@ struct GuideRow: View {
                 }
             } label: {
                 Image(systemName: isFavoriteChannel ? "star.fill" : "star")
+#if os(tvOS)
                     .scaleEffect(1.2)
+#else
+                    .scaleEffect(1.5)
+#endif
                     .foregroundStyle(isFavoriteChannel ? Color.yellow : Color.white)
-                    .padding(.horizontal, 20)
-                    .padding(.vertical, 20)
+                    .frame(width: 70)
                     .frame(maxHeight: .infinity)
             }
-            .frame(maxHeight: .infinity)
             .focused($focusedButton, equals: .favorite)
             .buttonStyle(FocusableButtonStyle(isPlaying: isPlaying,
                                               cornerRadius: cornerRadius,
                                               isFocused: focusedButton == .favorite))
-            .padding(.trailing, 15)
             
             Button {
                 appState.selectedChannel = channel?.id
             } label: {
                 Group {
-                    HStack(spacing: 15) {
+                    HStack(alignment: .center, spacing: 20) {
                         
                         logoImage
                             .resizable()
                             .aspectRatio(contentMode: .fit)
                             .frame(width: 60, height: 60)
-                            .fixedSize(horizontal: true, vertical: true)
+                            .fixedSize(horizontal: true, vertical: false)
                         
-                        VStack(alignment: .leading, spacing: 10) {
+                        VStack(alignment: .leading, spacing: 2) {
                             // "Placeholder" is used for .redacted(reason: .placeholder) modifier.
                             Text(channel?.title ?? "Placeholder")
-                                .font(.title3)
+                                .font(AppStyle.Fonts.gridRowFont)
                                 .lineLimit(1)
                                 .truncationMode(.tail)
+                            
                             GuideSubTitleView(channel: channel)
                         }
                     }
                     .padding(.horizontal, internalHzPadding)
-                    .padding(.vertical, internalVtPadding)
+                    //.padding(.vertical, internalVtPadding)
                     .frame(maxWidth: .infinity, alignment: .leading)
+                    .frame(maxHeight: .infinity)
                     .background(Color.clear)
                 }
             }
-            .frame(width: !compact ? 320 : nil)
-            .frame(maxWidth: compact ? .infinity : nil)
+            #if os(tvOS)
+            .frame(minWidth: 420)
+            #else
+            .frame(minWidth: 280)
+            #endif
+//            .frame(width: !compact ? 420 : nil)
+            .frame(maxWidth: .infinity)
             .frame(maxHeight: .infinity)
             .focused($focusedButton, equals: .channel)
             .buttonStyle(FocusableButtonStyle(isPlaying: isPlaying,
@@ -138,20 +146,21 @@ struct GuideRow: View {
                     // No op
                 } label: {
                     Text("No guide information")
-                        .font(.title3)
+                        .font(AppStyle.Fonts.gridRowFont)
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                         .padding(.horizontal, internalHzPadding)
                         .padding(.vertical, internalVtPadding)
                         .background(Color.clear)
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .padding(.leading, 15)
+                .layoutPriority(1)
                 .disabled(true)
                 .buttonStyle(FocusableButtonStyle(isPlaying: isPlaying,
                                                   cornerRadius: cornerRadius,
                                                   isFocused: focusedButton == .channel))
             }
         }
+        .frame(height: 90)
         .background(
             GeometryReader { proxy in
                 Color.clear
@@ -174,8 +183,8 @@ struct GuideRow: View {
     let swiftController = MockSwiftDataController(viewContext: mockData.context)
     InjectedValues[\.swiftDataController] = swiftController
     
-    let channel = swiftController.fetchChannel(at: 6)
-    let selectedChannelId = swiftController.guideChannelMap.map[7]
+    let channel = swiftController.fetchChannel(at: 7)
+    let selectedChannelId = swiftController.guideChannelMap.map[0]
     
      return GuideRow(channel: channel,
                     appState: $appState,

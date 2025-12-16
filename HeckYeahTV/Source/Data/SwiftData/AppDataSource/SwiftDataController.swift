@@ -20,13 +20,7 @@ final class SwiftDataController: SwiftDataControllable {
     }
     
     init() {
-        self.viewContext = DataPersistence.shared.viewContext
-        
-//        self.selectedCountry = selectedCountry
-//        self.selectedCategory = selectedCategory
-//        self.showFavoritesOnly = showFavoritesOnly
-//        self.searchTerm = searchTerm
-        
+        self.viewContext = SwiftDataStack.shared.viewContext
         try? self.bootStrap()
     }
     

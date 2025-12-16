@@ -54,7 +54,7 @@ struct GuideSubTitleView: View {
         HStack(spacing: 8) {
             if channel?.source == ChannelSourceType.homeRunTuner.rawValue, let _number = number {
                 Text(_number)
-                    .font(.caption2)
+                    .font(AppStyle.Fonts.gridRowFont)
                     .lineLimit(1)
                     .truncationMode(.tail)
             }
@@ -65,7 +65,7 @@ struct GuideSubTitleView: View {
             
             if let _languagesText = languagesText {
                 Text(_languagesText)
-                    .font(.caption2)
+                    .font(AppStyle.Fonts.gridRowFont)
                     .lineLimit(1)
                     .truncationMode(.tail)
             }

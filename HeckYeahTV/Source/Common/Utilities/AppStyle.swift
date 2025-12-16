@@ -10,6 +10,17 @@ import SwiftUI
 
 struct AppStyle {
     struct Fonts {
+        
+        static var gridRowFont: Font {
+#if os(tvOS)
+            .subheadline
+#else
+            .title3
+#endif
+            
+        }
+        
+        
         static var titleFont: PlatformFont {
 #if os(tvOS)
             .systemFont(ofSize: 28, weight: .semibold)

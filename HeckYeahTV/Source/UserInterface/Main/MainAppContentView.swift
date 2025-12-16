@@ -138,7 +138,12 @@ struct MainAppContentView: View {
                     .foregroundStyle(.white)
                     .background(.ultraThinMaterial)
                     .zIndex(1)
+                    
+                    
                     SectionView(appState: $appState)
+#if os(macOS)
+                        .padding()
+#endif
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                         .background(Color.guideTransparency)
                 }
@@ -214,7 +219,7 @@ extension MainAppContentView {
     let swiftController = MockSwiftDataController(viewContext: mockData.context)
     InjectedValues[\.swiftDataController] = swiftController
     
-    let selectedChannelId = swiftController.guideChannelMap.map[0]
+    let selectedChannelId = swiftController.guideChannelMap.map[1]
     
     return MainAppContentView(appState: _appState)
         .modelContext(mockData.context)

@@ -10,7 +10,7 @@ import Foundation
 import SwiftData
 import Hellfire
 
-/// Builds an IN-MEMORY mock DataPersistence for previews.
+/// Builds an IN-MEMORY mock SwiftDataStack for previews.
 @MainActor
 final class MockDataPersistence {
     

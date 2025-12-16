@@ -18,14 +18,12 @@ struct RecentsView: View {
     var body: some View {
         ScrollViewReader { proxy in
             ScrollView(.vertical) {
-                LazyVStack(alignment: .leading, spacing: 20) {
+                LazyVStack(alignment: .leading, spacing: 15) {
                     ForEach(appState.recentChannelIds, id: \.self) { channelId in
                         GuideRowLazy(channelId: channelId,
                                      appState: $appState,
                                      hideGuideInfo: true)
                         .id(channelId)
-                        .padding(.leading, 5)
-                        .padding(.trailing, 5)
                     }
                     if appState.recentChannelIds.isEmpty {
                         Text("No recent channels.")
@@ -44,15 +42,30 @@ struct RecentsView: View {
 }
 
 #Preview("RecentsView") {
-//    @Previewable @State var appState: any AppStateProvider = MockSharedAppState()
-//    let mockData = MockDataPersistence(appState: appState)
-//    appState.selectedChannel = mockData.channels[0].id
-//    appState.selectedChannel = mockData.channels[1].id
-//    appState.selectedChannel = mockData.channels[2].id
-//    appState.selectedChannel = mockData.channels[3].id
-//    appState.selectedChannel = mockData.channels[4].id
-//
-//    return RecentsView(appState: $appState)
-//        .environment(\.modelContext, mockData.context)
-//        .environment(mockData.channelMap)
+    @Previewable @State var appState: AppStateProvider = SharedAppState.shared
+    let mockData = MockDataPersistence(appState: appState)
+
+    let swiftController = MockSwiftDataController(viewContext: mockData.context,
+                                                  selectedCountry: "US",
+                                                  selectedCategory: nil,//"news",
+                                                  showFavoritesOnly: false,
+                                                  searchTerm: nil)//"Lo")
+    InjectedValues[\.swiftDataController] = swiftController
+
+    appState.selectedChannel = swiftController.guideChannelMap.map[0]
+    appState.selectedChannel = swiftController.guideChannelMap.map[1]
+    appState.selectedChannel = swiftController.guideChannelMap.map[2]
+    appState.selectedChannel = swiftController.guideChannelMap.map[3]
+    appState.selectedChannel = swiftController.guideChannelMap.map[4]
+    appState.selectedChannel = swiftController.guideChannelMap.map[5]
+    appState.selectedChannel = swiftController.guideChannelMap.map[6]
+    appState.selectedChannel = swiftController.guideChannelMap.map[7]
+    appState.selectedChannel = swiftController.guideChannelMap.map[8]
+    appState.selectedChannel = swiftController.guideChannelMap.map[9]
+    appState.selectedChannel = swiftController.guideChannelMap.map[10]
+    appState.selectedChannel = swiftController.guideChannelMap.map[11]
+    appState.selectedChannel = swiftController.guideChannelMap.map[12]
+    
+    return RecentsView(appState: $appState)
+        .environment(\.modelContext, mockData.context)
 }

@@ -45,7 +45,7 @@ struct Heck_Yeah_TVApp: App {
     @Environment(\.scenePhase) private var scenePhase
     @State private var isBootComplete = false
     @State private var startupTask: Task<Void, Never>? = nil
-    @State private var dataPersistence: DataPersistence = DataPersistence.shared
+    @State private var dataPersistence: SwiftDataStack = SwiftDataStack.shared
     
     var body: some Scene {
 #if os(macOS)
