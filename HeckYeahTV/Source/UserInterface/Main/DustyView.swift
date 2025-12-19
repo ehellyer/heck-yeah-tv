@@ -29,7 +29,7 @@ struct DustyView: View {
                     let seedSin = sin(seed)
                     
                     // Very slow, gentle movement
-                    let moveSpeed = 0.08 + (seedSin.magnitude) 
+                    let moveSpeed = 0.08 + abs(seedSin)
                     
                     // Starting position more randomly distributed across screen
                     let startX = (randomX * 0.5 + 0.5) * size.width

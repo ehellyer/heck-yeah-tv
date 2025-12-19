@@ -177,8 +177,13 @@ struct SettingsView: View {
     
     let mockData = MockDataPersistence(appState: appState)
     
-    return SettingsView(appState: $appState)
-        .environment(\.modelContext, mockData.context)
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Color.black)
+    
+    return TVPreviewView() {
+        SettingsView(appState: $appState)
+            .environment(\.modelContext, mockData.context)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .background(Color.black)
+    }
+    
+    
 }

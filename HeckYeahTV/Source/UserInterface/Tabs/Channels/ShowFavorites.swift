@@ -42,13 +42,7 @@ struct ShowFavorites: View {
                         rightSwipeRedirectAction?()
                     }
                 }
-                // Add move handling to prevent automatic focus finding
-                .onExitCommand {
-                    // Block automatic exit behavior that might interfere
-                }
 #endif
-                
-                // Space the remainder
                 Spacer()
             }
             .padding(.horizontal, 20)
@@ -56,3 +50,8 @@ struct ShowFavorites: View {
     }
 }
 
+#Preview {
+    return TVPreviewView() {
+        ShowFavorites()
+    }
+}

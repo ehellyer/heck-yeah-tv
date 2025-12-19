@@ -50,7 +50,7 @@ final class MockSwiftDataController: SwiftDataControllable {
                                              categoryId:  categoryId)
     }
     
-    //MARK: - Internal API - ChannelFilterable implementation Properties
+    //MARK: - Internal API - ChannelFilterable implementation Properties (Observable)
     
     var showFavoritesOnly: Bool = false {
         didSet {
@@ -90,6 +90,19 @@ final class MockSwiftDataController: SwiftDataControllable {
         let channel = try! viewContext.fetch(descriptor).first!
         return channel
     }
+    
+    func categories() -> [IPTVCategory] {
+        let descriptor = FetchDescriptor<IPTVCategory>(sortBy: [SortDescriptor(\IPTVCategory.name, order: .forward)])
+        let _categories = try! viewContext.fetch(descriptor)
+        return _categories
+    }
+
+    func countries() -> [IPTVCountry] {
+        let descriptor = FetchDescriptor<IPTVCountry>(sortBy: [SortDescriptor(\IPTVCountry.name, order: .forward)])
+        let _countries = try! viewContext.fetch(descriptor)
+        return _countries
+    }
+
     
     //MARK: - Private API Properties
     

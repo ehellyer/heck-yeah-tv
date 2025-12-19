@@ -58,6 +58,7 @@ struct TabContainerView: View {
         .frame(maxWidth: .infinity)
         .background(Color.clear)
         
+        
         // Support for dismissing the tabview by tapping menu on Siri remote for tvOS.
         .onExitCommand {
             withAnimation {
@@ -69,8 +70,16 @@ struct TabContainerView: View {
 
 #if os(tvOS)
 #Preview {
-    @Previewable @State var appState: AppStateProvider = MockSharedAppState()
+    @Previewable @State var _appState: any AppStateProvider = MockSharedAppState()
+    let mockData = MockDataPersistence(appState: _appState)
     
-    TabContainerView(appState: $appState)
+    // Override the injected SwiftDataController
+    let swiftController = MockSwiftDataController(viewContext: mockData.context)
+    InjectedValues[\.swiftDataController] = swiftController
+    
+    return TVPreviewView() {
+        TabContainerView(appState: $_appState)
+            .modelContext(mockData.context)
+    }
 }
 #endif

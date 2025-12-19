@@ -98,8 +98,8 @@
 				Source/Common/DependencyInjection/DependancyInjectionCore/InjectionKey.swift,
 				Source/Common/DependencyInjection/InjectedAttachmentController/AttachmentControllerInjectionKey.swift,
 				Source/Common/DependencyInjection/InjectedSwiftDataController/SwiftDataControllerInjectionKey.swift,
-				"Source/Common/Extensions/NSImage+AsImage.swift",
 				"Source/Common/Extensions/NSView+AsImage.swift",
+				"Source/Common/Extensions/PlatformImage+AsImage.swift",
 				"Source/Common/Extensions/String+Extension.swift",
 				"Source/Common/Extensions/UserDefaults+Extension.swift",
 				Source/Common/Logging/DebugLogger.swift,
@@ -173,6 +173,7 @@
 				Source/UserInterface/Tabs/Channels/ShowFavorites.swift,
 				Source/UserInterface/Tabs/Filter/CategoryPickerView.swift,
 				Source/UserInterface/Tabs/Filter/CountryPickerView.swift,
+				Source/UserInterface/Tabs/Filter/FilterButtonStyle.swift,
 				Source/UserInterface/Tabs/Filter/FilterView.swift,
 				Source/UserInterface/Tabs/Filter/ListButtonStyle.swift,
 				Source/UserInterface/Tabs/Recents/RecentsView.swift,
@@ -194,13 +195,13 @@
 				SupportingFiles/MockData/MockSharedAppState.swift,
 				SupportingFiles/MockData/MockSwiftDataController.swift,
 				SupportingFiles/MockData/MockTunerDevices.json,
+				SupportingFiles/MockPreviewView/TVPreviewView.swift,
 			);
 			target = EB2C2DB62E5E203A005CE685 /* macOS_HeckYeahTV */;
 		};
 		EB2C313A2E5E4E06005CE685 /* Exceptions for "HeckYeahTV" folder in "iOS_HeckYeahTV" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				"Source/Common/Extensions/NSImage+AsImage.swift",
 				"Source/Common/Extensions/NSView+AsImage.swift",
 				Source/UserInterface/Tabs/Channels/ChannelsContainer.swift,
 				Source/UserInterface/Tabs/Channels/Guide/UIKitGuide/View/ChannelNameView.swift,
@@ -229,8 +230,8 @@
 				Source/Common/DependencyInjection/InjectedAttachmentController/AttachmentControllerInjectionKey.swift,
 				Source/Common/DependencyInjection/InjectedSwiftDataController/SwiftDataControllerInjectionKey.swift,
 				"Source/Common/Extensions/FocusTargetView+FocusAnimation.swift",
+				"Source/Common/Extensions/PlatformImage+AsImage.swift",
 				"Source/Common/Extensions/String+Extension.swift",
-				"Source/Common/Extensions/UIImage+AsImage.swift",
 				"Source/Common/Extensions/UIView+AsImage.swift",
 				"Source/Common/Extensions/UserDefaults+Extension.swift",
 				Source/Common/Logging/DebugLogger.swift,
@@ -312,6 +313,7 @@
 				Source/UserInterface/Tabs/Channels/ShowFavorites.swift,
 				Source/UserInterface/Tabs/Filter/CategoryPickerView.swift,
 				Source/UserInterface/Tabs/Filter/CountryPickerView.swift,
+				Source/UserInterface/Tabs/Filter/FilterButtonStyle.swift,
 				Source/UserInterface/Tabs/Filter/FilterView.swift,
 				Source/UserInterface/Tabs/Filter/ListButtonStyle.swift,
 				Source/UserInterface/Tabs/Recents/RecentsView.swift,
@@ -334,6 +336,7 @@
 				SupportingFiles/MockData/MockSharedAppState.swift,
 				SupportingFiles/MockData/MockSwiftDataController.swift,
 				SupportingFiles/MockData/MockTunerDevices.json,
+				SupportingFiles/MockPreviewView/TVPreviewView.swift,
 			);
 			target = EBE03C162E53D8DE006B7747 /* tvOS_HeckYeahTV */;
 		};

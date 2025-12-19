@@ -1,0 +1,21 @@
+{
+  "images" : [
+    {
+      "filename" : "TViPhoneLandscape.png",
+      "idiom" : "iphone"
+    },
+    {
+      "filename" : "TViPhonePortrait.png",
+      "idiom" : "iphone",
+      "width-class" : "compact"
+    },
+    {
+      "filename" : "AppleTVScreenShot.png",
+      "idiom" : "tv"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

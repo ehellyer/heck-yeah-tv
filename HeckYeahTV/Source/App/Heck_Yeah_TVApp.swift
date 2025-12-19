@@ -39,6 +39,10 @@ func stringName<T>(_ object: T) -> String {
 /// the the task to be cancelled because it was replaced by a similar subsequent task.
 let debounceNS: UInt64 = 10_000_000 //0.01 seconds
 
+
+let settleTime: UInt64 = 100_000_000 //0.1 seconds
+
+
 @main
 struct Heck_Yeah_TVApp: App {
     

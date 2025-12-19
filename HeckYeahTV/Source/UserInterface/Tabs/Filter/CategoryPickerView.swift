@@ -14,68 +14,54 @@ struct CategoryPickerView: View {
     @Binding var selectedCategory: CategoryId?
     
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.colorScheme) private var colorScheme
     
     var body: some View {
         ScrollViewReader { proxy in
             List {
-                // None option
-                Button {
+                ListButtonRow(title: "None",
+                              isSelected: selectedCategory == nil) {
                     selectedCategory = nil
                     dismiss()
-                } label: {
-                    HStack {
-                        Text("None")
-                            .fontWeight(selectedCategory == nil ? .semibold : .regular)
-                        Spacer()
-                        if selectedCategory == nil {
-                            Image(systemName: "checkmark")
-                        }
-                    }
-                }
-                .buttonStyle(ListButtonStyle())
-                .id("none-option")
-#if !os(tvOS)
-                .listRowSeparator(.hidden)
-#endif
-                .listRowBackground(Color.clear)
+                }.id("none-option")
                 
                 ForEach(categories, id: \.name) { category in
-                    Button {
+                    ListButtonRow(title: category.name,
+                                  isSelected: selectedCategory == category.categoryId) {
                         selectedCategory = category.categoryId
                         dismiss()
-                    } label: {
-                        HStack {
-                            Text(category.name)
-                            Spacer()
-                            if selectedCategory == category.categoryId {
-                                Image(systemName: "checkmark")
-                            }
-                        }
-                    }
-                    .buttonStyle(ListButtonStyle())
-                    .id(category.categoryId)
-#if !os(tvOS)
-                    .listRowSeparator(.hidden)
-#endif
-                    .listRowBackground(Color.clear)
+                    }.id(category.categoryId)
                 }
             }
-#if !os(tvOS)
-            .scrollContentBackground(.hidden)
-#endif
             .listStyle(.plain)
-#if os(tvOS)
-            .toolbarColorScheme(.dark)
-            .foregroundStyle(.white)
-            .foregroundColor(.white)
-            .tint(.white)
-            .accentColor(.white)
+#if !os(tvOS)
+            .scrollContentBackground(.visible)
 #endif
-            
-            .navigationTitle("Select a category")
+            .background(Color.clear)
+            .toolbar {
+                ToolbarItem(placement: .principal) {
+                    Text("Select Category")
+                        .font(.largeTitle)
+                        .fontWeight(.semibold)
+                        .foregroundColor({
+#if os(tvOS)
+                            return .white
+#else
+                            return colorScheme == .dark ? .white : .black
+#endif
+                        }())
+                }
+            }
+            .toolbarColorScheme(.dark, for: .navigationBar)
+            .toolbarTitleDisplayMode(.inline)
+            .preferredColorScheme(.dark)
             .onAppear {
                 if let selectedCategory {
-                    proxy.scrollTo(selectedCategory, anchor: .center)
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                        withAnimation {
+                            proxy.scrollTo(selectedCategory, anchor: .center)
+                        }
+                    }
                 }
             }
 #if os(tvOS)
@@ -87,15 +73,29 @@ struct CategoryPickerView: View {
     }
 }
 
+
 #Preview {
-    @Previewable @State var appState: any AppStateProvider = MockSharedAppState()
+    @Previewable @State var appState: AppStateProvider = MockSharedAppState()
+    @Previewable @State var categoryId: CategoryId? = "auto"
+    let mockData = MockDataPersistence(appState: appState)
     
-//    let mockData = MockDataPersistence(appState: appState)
-//    
-//    return NavigationStack {
-//        CategoryPickerView(
-//            categories: mockData.categories,
-//            selectedCategory: .constant("culture")
-//        )
-//    }
+    let swiftDataController = MockSwiftDataController(viewContext: mockData.context,
+                                                      selectedCategory: categoryId!)
+    InjectedValues[\.swiftDataController] = swiftDataController
+    
+    let categories = swiftDataController.categories()
+    
+    return ZStack {
+        TVPreviewView() {
+            NavigationStack {
+                CategoryPickerView(
+                    categories: categories,
+                    selectedCategory: Binding(
+                        get: { swiftDataController.selectedCategory },
+                        set: { swiftDataController.selectedCategory = $0 }
+                    )
+                )
+            }
+        }
+    }
 }

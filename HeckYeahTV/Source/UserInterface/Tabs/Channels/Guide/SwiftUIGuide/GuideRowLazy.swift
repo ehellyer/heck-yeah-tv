@@ -48,8 +48,10 @@ struct GuideRowLazy: View {
     
     let channelId = swiftController.guideChannelMap.map[6]
 
-    return GuideRowLazy(channelId: channelId,
-                        appState: $appState,
-                        hideGuideInfo: true)
+    return TVPreviewView() {
+        GuideRowLazy(channelId: channelId,
+                     appState: $appState,
+                     hideGuideInfo: true)
         .environment(\.modelContext, mockData.context)
+    }
 }

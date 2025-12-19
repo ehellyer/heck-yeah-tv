@@ -9,17 +9,21 @@
 import SwiftUI
 
 struct AppStyle {
+    
+    static var cornerRadius: CGFloat {
+        return 20
+    }
+    
     struct Fonts {
         
         static var gridRowFont: Font {
 #if os(tvOS)
             .subheadline
 #else
-            .title3
+            .body
 #endif
             
         }
-        
         
         static var titleFont: PlatformFont {
 #if os(tvOS)

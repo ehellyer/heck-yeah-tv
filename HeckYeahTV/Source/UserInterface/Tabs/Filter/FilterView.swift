@@ -36,24 +36,25 @@ struct FilterView: View {
     
     var body: some View {
         NavigationStack {
-            VStack(spacing: 0) {
-                // Filter Section Header
-                VStack(alignment: .leading, spacing: 12) {
-                     // Country Filter Card
-                    NavigationLink {
-                        CountryPickerView(
-                            countries: countries,
-                            selectedCountry: Binding(
-                                get: { swiftDataController.selectedCountry },
-                                set: { swiftDataController.selectedCountry = $0 }
-                            )
+            
+            VStack(alignment: .leading, spacing: 20) {
+                
+                // Country Filter Card
+                NavigationLink {
+                    CountryPickerView(
+                        countries: countries,
+                        selectedCountry: Binding(
+                            get: { swiftDataController.selectedCountry },
+                            set: { swiftDataController.selectedCountry = $0 }
                         )
-                    } label: {
+                    )
+                } label: {
+                    Group {
                         HStack {
                             Image(systemName: "globe")
                                 .font(.title3)
                                 .foregroundStyle(.blue)
-                                
+                                .padding(.leading, 10)
                             
                             VStack(alignment: .leading) {
                                 Text("Country")
@@ -72,30 +73,27 @@ struct FilterView: View {
                                 .fontWeight(.semibold)
                                 .foregroundColor(.secondary)
                         }
-                        .padding()
-                        .background {
-                            RoundedRectangle(cornerRadius: 12)
-                                .fill(.background)
-                                .shadow(color: .black.opacity(0.05), radius: 2, x: 0, y: 1)
-                        }
                     }
-                    .buttonStyle(.plain)
-                    
-                    // Category Filter Card
-                    NavigationLink {
-                        CategoryPickerView(
-                            categories: categories,
-                            selectedCategory: Binding(
-                                get: { swiftDataController.selectedCategory },
-                                set: { swiftDataController.selectedCategory = $0 }
-                            )
+                }
+                .buttonStyle(FilterButtonStyle())
+                
+                
+                // Category Filter Card
+                NavigationLink {
+                    CategoryPickerView(
+                        categories: categories,
+                        selectedCategory: Binding(
+                            get: { swiftDataController.selectedCategory },
+                            set: { swiftDataController.selectedCategory = $0 }
                         )
-                    } label: {
+                    )
+                } label: {
+                    Group {
                         HStack {
                             Image(systemName: "square.grid.2x2")
                                 .font(.title3)
                                 .foregroundStyle(.purple)
-                                
+                                .padding(.leading, 10)
                             
                             VStack(alignment: .leading) {
                                 Text("Category")
@@ -114,27 +112,25 @@ struct FilterView: View {
                                 .fontWeight(.semibold)
                                 .foregroundColor(Color.secondary)
                         }
-                        .padding()
-                        .background {
-                            RoundedRectangle(cornerRadius: 12)
-                                .fill(.background)
-                                .shadow(color: .black.opacity(0.05), radius: 2, x: 0, y: 1)
-                        }
                     }
-                    .buttonStyle(.plain)
-                    // Results count
-                    HStack {
-                        Text("\(swiftDataController.guideChannelMap.map.count) channels")
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-                        Spacer()
-                    }
-                    .padding(.horizontal)
-                    .padding(.top)
-
                 }
-                .padding()
+                .buttonStyle(FilterButtonStyle())
+                
+                // Results count
+                HStack {
+                    Text("\(swiftDataController.guideChannelMap.map.count) channels in guide")
+                        .font(.caption)
+#if os(tvOS)
+                        .foregroundStyle(.white)
+#else
+                        .foregroundStyle(.secondary)
+#endif
+                    Spacer()
+                }
+                .padding(.horizontal)
+                .padding(.top)
             }
+            .padding()
             Spacer()
         }
     }
@@ -143,6 +139,9 @@ struct FilterView: View {
 #Preview("FilterView") {
     @Previewable @State var appState: any AppStateProvider = MockSharedAppState()
     let mockData = MockDataPersistence(appState: appState)
+    
+    @FocusState var categoryFocused: Bool
+    
     
     // Override the injected SwiftDataController
     let swiftController = MockSwiftDataController(viewContext: mockData.context,
@@ -156,6 +155,14 @@ struct FilterView: View {
     //Select recent list tab
     appState.selectedTab = .filter
     
-    return FilterView(appState: $appState)
-        .environment(\.modelContext, mockData.context)
+    return TVPreviewView() {
+        FilterView(appState: $appState)
+            .modelContext(mockData.context)
+            .onAppear {
+                // Trigger focus on first button
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                    
+                }
+            }
+    }
 }

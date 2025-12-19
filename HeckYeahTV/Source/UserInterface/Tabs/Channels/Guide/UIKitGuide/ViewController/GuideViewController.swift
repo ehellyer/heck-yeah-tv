@@ -167,7 +167,7 @@ class GuideViewController: UIViewController {
         let selectedChannel = appState?.selectedChannel
         
         cells.forEach { cell in
-            let channelId = cell.channelId ?? "666" // Will never be "666", but safer than force unwrap.
+            let channelId = cell.channelId ?? "666" // "666" will never be a valid channelId, but that is ok and safer than force unwrap.
             let isPlaying = selectedChannel == channelId
             if isPlaying {
                 self.targetFocusView = cell.channelNameView
@@ -279,7 +279,7 @@ extension GuideViewController: GuideViewDelegate {
 extension GuideViewController: UITableViewDataSource {
 
     func numberOfSections(in tableView: UITableView) -> Int {
-        return min(swiftDataController.guideChannelMap.totalCount, 1)
+        return min(swiftDataController.guideChannelMap.totalCount, 1) //Clamp to 0 or 1
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -289,10 +289,10 @@ extension GuideViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let guideRowCell = tableView.dequeueReusableCell(withIdentifier: GuideRowCell.identifier, for: indexPath) as! GuideRowCell
         let channelId = swiftDataController.guideChannelMap.map[indexPath.row]
-        let isPlaying = (appState.selectedChannel != nil && channelId == appState.selectedChannel)
+        let isPlaying = (channelId == appState.selectedChannel)
         guideRowCell.configure(with: channelId,
                                isPlaying: isPlaying,
-                               programs: [],//((indexPath.row % 2 == 0) ? self.channelPrograms : []),
+                               programs: [],
                                viewContext: viewContext)
         guideRowCell.delegate = self
         return guideRowCell

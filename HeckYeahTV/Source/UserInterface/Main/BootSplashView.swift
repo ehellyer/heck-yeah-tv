@@ -85,6 +85,15 @@ struct BootSplashView: View {
                     .ignoresSafeArea()
                 
                 VStack(spacing: 16) {
+                    Image(systemName: "tv")
+                        .resizable()
+                        .scaledToFill()
+                        .foregroundStyle(Color.white.opacity(0.4))
+#if os(tvOS)
+                        .frame(width: 200, height: 200)
+#else
+                        .frame(width: 100, height: 100)
+#endif
                     Text(title)
                         .font(.system(size: titleFontSize,
                                       weight: .heavy,

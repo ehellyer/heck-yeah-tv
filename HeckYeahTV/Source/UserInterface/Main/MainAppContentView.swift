@@ -214,12 +214,11 @@ extension MainAppContentView {
     @Previewable @State var _appState: any AppStateProvider = MockSharedAppState()
     let mockData = MockDataPersistence(appState: _appState)
     
-    
     // Override the injected SwiftDataController
     let swiftController = MockSwiftDataController(viewContext: mockData.context)
     InjectedValues[\.swiftDataController] = swiftController
     
-    let selectedChannelId = swiftController.guideChannelMap.map[1]
+    let selectedChannelId = swiftController.guideChannelMap.map[3]
     
     return MainAppContentView(appState: _appState)
         .modelContext(mockData.context)

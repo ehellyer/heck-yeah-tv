@@ -27,28 +27,26 @@ struct GuideView: View {
         ZStack {
             ScrollViewReader { proxy in
                 ScrollView(.vertical) {
-                    LazyVStack(alignment: .leading, spacing: 15) {
-                        ForEach(0..<swiftDataController.guideChannelMap.totalCount, id: \.self) { index in
-                            let channelId = swiftDataController.guideChannelMap.map[index]
+                    LazyVStack(alignment: .leading) {
+                        ForEach(swiftDataController.guideChannelMap.map, id: \.self) { channelId in
                             GuideRowLazy(channelId: channelId,
                                          appState: $appState,
                                          hideGuideInfo: hideGuideInfo)
                             .id(channelId)
-                            .frame(height: 90) // Fixed height to prevent jumping
-                            //.padding(.leading, 10)
-                            //.padding(.trailing, 10)
                         }
                     }
                 }
                 .background(.clear)
-                .contentMargins(.top, 10)
+                .contentMargins(.top, 5)
                 .contentMargins(.bottom, 5)
                 .scrollIndicators(.visible)
 #if os(tvOS)
                 .focusSection()
 #endif
                 .onAppear {
-                    scrollToSelected(proxy: proxy)
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
+                        scrollToSelected(proxy: proxy)
+                    }
                 }
                 
                 .onChange(of: swiftDataController.guideChannelMap.totalCount) { _, _ in
@@ -95,9 +93,7 @@ private extension GuideView {
                 try Task.checkCancellation()
                 
                 if let channelId = appState.selectedChannel {
-                    if let index = swiftDataController.guideChannelMap.map.firstIndex(of: channelId) {
-                        proxy.scrollTo(index, anchor: .center)
-                    }
+                    proxy.scrollTo(channelId, anchor: .center)
                 }
             } catch {
                 //Task may have been cancelled.
@@ -113,16 +109,17 @@ private extension GuideView {
 #Preview("GuideView") {
     @Previewable @State var appState: AppStateProvider = SharedAppState.shared
     let mockData = MockDataPersistence(appState: appState)
-
-    let swiftController = MockSwiftDataController(viewContext: mockData.context,
-                                                  selectedCountry: "US",
-                                                  selectedCategory: nil,//"news",
-                                                  showFavoritesOnly: false,
-                                                  searchTerm: nil)//"Lo")
-    InjectedValues[\.swiftDataController] = swiftController
-
-    return GuideView(appState: $appState)
-        .environment(\.modelContext, mockData.context)
- 
+    
+    let swiftDataController = MockSwiftDataController(viewContext: mockData.context,
+                                                      selectedCountry: "US",
+                                                      selectedCategory: nil,//"news",
+                                                      showFavoritesOnly: false,
+                                                      searchTerm: nil)//"Lo")
+    InjectedValues[\.swiftDataController] = swiftDataController
+    
+    return TVPreviewView() {
+        GuideView(appState: $appState)
+            .environment(\.modelContext, mockData.context)
+    }
 }
 #endif

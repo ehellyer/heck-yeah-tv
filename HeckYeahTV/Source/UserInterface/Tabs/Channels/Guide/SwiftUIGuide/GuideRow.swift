@@ -12,7 +12,7 @@ import SwiftData
 struct GuideRow: View {
     let internalHzPadding: CGFloat = 15
     let internalVtPadding: CGFloat = 15
-    let cornerRadius: CGFloat = 20
+    let cornerRadius: CGFloat = AppStyle.cornerRadius
     
     @State var channel: IPTVChannel?
     @Binding var appState: AppStateProvider
@@ -105,7 +105,14 @@ struct GuideRow: View {
                         logoImage
                             .resizable()
                             .aspectRatio(contentMode: .fit)
+                        
+#if os(tvOS)
+                            .frame(width: 70, height: 70)
+#else
                             .frame(width: 60, height: 60)
+#endif
+
+                        
                             .fixedSize(horizontal: true, vertical: false)
                         
                         VStack(alignment: .leading, spacing: 2) {
@@ -125,12 +132,12 @@ struct GuideRow: View {
                     .background(Color.clear)
                 }
             }
-            #if os(tvOS)
-            .frame(minWidth: 420)
-            #else
+
+#if os(tvOS)
+            .frame(minWidth: 470)
+#else
             .frame(minWidth: 280)
-            #endif
-//            .frame(width: !compact ? 420 : nil)
+#endif
             .frame(maxWidth: .infinity)
             .frame(maxHeight: .infinity)
             .focused($focusedButton, equals: .channel)
@@ -160,7 +167,12 @@ struct GuideRow: View {
                                                   isFocused: focusedButton == .channel))
             }
         }
-        .frame(height: 90)
+#if os(tvOS)
+        .frame(height: 100)
+#else
+        .frame(height: 80)
+#endif
+        
         .background(
             GeometryReader { proxy in
                 Color.clear
@@ -183,14 +195,17 @@ struct GuideRow: View {
     let swiftController = MockSwiftDataController(viewContext: mockData.context)
     InjectedValues[\.swiftDataController] = swiftController
     
-    let channel = swiftController.fetchChannel(at: 7)
+    let channel = swiftController.fetchChannel(at: 8)
     let selectedChannelId = swiftController.guideChannelMap.map[0]
     
-     return GuideRow(channel: channel,
-                    appState: $appState,
-                    hideGuideInfo: false)
-    //.redacted(reason: .placeholder)
+    
+    return TVPreviewView() {
+        GuideRow(channel: channel,
+                 appState: $appState,
+                 hideGuideInfo: false)
+        //.redacted(reason: .placeholder)
         .onAppear {
             appState.selectedChannel = selectedChannelId
         }
+    }
 }

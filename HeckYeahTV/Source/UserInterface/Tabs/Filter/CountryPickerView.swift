@@ -9,10 +9,12 @@
 import SwiftUI
 
 struct CountryPickerView: View {
+    
     let countries: [IPTVCountry]
     @Binding var selectedCountry: CountryCode
     
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.colorScheme) private var colorScheme
     
     @State private var searchText = ""
     
@@ -28,47 +30,30 @@ struct CountryPickerView: View {
         ScrollViewReader { proxy in
             List {
                 ForEach(filteredCountries, id: \.code) { country in
-                    Button {
+                    ListButtonRow(title: country.name,
+                                  isSelected: selectedCountry == country.code) {
                         selectedCountry = country.code
                         dismiss()
-                    } label: {
-                        HStack {
-                            Text(country.name)
-                            Spacer()
-                            if selectedCountry == country.code {
-                                Image(systemName: "checkmark")
-                            }
-                        }
                     }
-                    .buttonStyle(ListButtonStyle())
-                    .id(country.code)
-#if !os(tvOS)
-                    .listRowSeparator(.hidden)
-#endif
-                    .listRowBackground(Color.clear)
+                                  .id(country.code)
                 }
             }
-#if !os(tvOS)
-            .scrollContentBackground(.hidden)
-#endif
-            .listStyle(.plain)
-
-            .searchable(text: $searchText, placement: .automatic, prompt: "Search countries")
-#if os(tvOS)
-            .toolbarColorScheme(.dark)
-            .foregroundStyle(.white)
-            .foregroundColor(.white)
-            .tint(.white)
-            .accentColor(.white)
-#endif
             
-            .navigationTitle("Select a country")
+            .listStyle(.plain)
+#if !os(tvOS)
+            .scrollContentBackground(.visible)
+#endif
+            .background(Color.clear)
+            .preferredColorScheme(.dark)
+            .toolbarColorScheme(.dark, for: .navigationBar)
+            .foregroundStyle(.white)
+            .tint(.white)
+            .searchable(text: $searchText,
+                        placement: .automatic,
+                        prompt: "Search countries")
+
             .onAppear {
-                proxy.scrollTo(selectedCountry, anchor: .center)
-            }
-            .onChange(of: searchText) { oldValue, newValue in
-                // Scroll to selected item when search is cleared
-                if newValue.isEmpty {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                     withAnimation {
                         proxy.scrollTo(selectedCountry, anchor: .center)
                     }
@@ -83,20 +68,29 @@ struct CountryPickerView: View {
     }
 }
 
+
 #Preview {
-    @Previewable @State var appState: any AppStateProvider = MockSharedAppState()
+    @Previewable @State var appState: AppStateProvider = MockSharedAppState()
+    @Previewable @State var countryCode: CountryCode = "AL"
+    let mockData = MockDataPersistence(appState: appState)
     
-//    UISearchBar.appearance().tintColor = .white
-//    UITextField.appearance(whenContainedInInstancesOf: [UISearchBar.self]).textColor = .white
-//    UITextField.appearance().textColor = .white
-//    UITextField.appearance().tintColor = .white
+    let swiftDataController = MockSwiftDataController(viewContext: mockData.context,
+                                                      selectedCountry: countryCode)
+    InjectedValues[\.swiftDataController] = swiftDataController
     
-//    let mockData = MockDataPersistence(appState: appState)
-//    
-//    return NavigationStack {
-//        CountryPickerView(
-//            countries: mockData.countries,
-//            selectedCountry: .constant("US")
-//        )
-//    }
+    let countries = swiftDataController.countries()
+    
+    return ZStack {
+        TVPreviewView() {
+            NavigationStack {
+                CountryPickerView(
+                    countries: countries,
+                    selectedCountry: Binding(
+                        get: { swiftDataController.selectedCountry },
+                        set: { swiftDataController.selectedCountry = $0 }
+                    )
+                )
+            }
+        }
+    }
 }
