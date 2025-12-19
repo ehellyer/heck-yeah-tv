@@ -41,24 +41,22 @@ struct CountryPickerView: View {
             
             .listStyle(.plain)
 #if !os(tvOS)
-            .scrollContentBackground(.visible)
+            .scrollContentBackground(.hidden)
 #endif
             .background(Color.clear)
             .preferredColorScheme(.dark)
             .toolbarColorScheme(.dark, for: .automatic)
             .foregroundStyle(.white)
             .tint(.white)
+            .onAppear {
+                DispatchQueue.main.asyncAfter(deadline: .now() + settleTime) {
+                    proxy.scrollTo(selectedCountry, anchor: .center)
+                }
+            }
             .searchable(text: $searchText,
                         placement: .automatic,
                         prompt: "Search countries")
 
-            .onAppear {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                    withAnimation {
-                        proxy.scrollTo(selectedCountry, anchor: .center)
-                    }
-                }
-            }
 #if os(tvOS)
             .onExitCommand {
                 dismiss()

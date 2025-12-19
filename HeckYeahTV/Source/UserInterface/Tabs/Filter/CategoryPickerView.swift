@@ -35,7 +35,7 @@ struct CategoryPickerView: View {
             }
             .listStyle(.plain)
 #if !os(tvOS)
-            .scrollContentBackground(.visible)
+            .scrollContentBackground(.hidden)
 #endif
             .background(Color.clear)
             .toolbar {
@@ -57,10 +57,8 @@ struct CategoryPickerView: View {
             .preferredColorScheme(.dark)
             .onAppear {
                 if let selectedCategory {
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                        withAnimation {
-                            proxy.scrollTo(selectedCategory, anchor: .center)
-                        }
+                    DispatchQueue.main.asyncAfter(deadline: .now() + settleTime) {
+                        proxy.scrollTo(selectedCategory, anchor: .center)
                     }
                 }
             }

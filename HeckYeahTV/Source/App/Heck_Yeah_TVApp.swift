@@ -40,7 +40,8 @@ func stringName<T>(_ object: T) -> String {
 let debounceNS: UInt64 = 10_000_000 //0.01 seconds
 
 
-let settleTime: UInt64 = 100_000_000 //0.1 seconds
+/// A TimeInterval of 0.2 seconds
+let settleTime: TimeInterval = TimeInterval(0.2) //0.2 seconds
 
 
 @main

@@ -29,12 +29,12 @@ struct ListButtonRow: View {
                 
                 Spacer()
                 
-                if isSelected {
-                    Image(systemName: "checkmark.circle.fill")
-                        .font(.body.weight(.bold))
-                        .foregroundStyle(textColor)
-                        .symbolRenderingMode(.hierarchical)
-                }
+//                if isSelected {
+//                    Image(systemName: "checkmark.circle.fill")
+//                        .font(.body.weight(.bold))
+//                        .foregroundStyle(textColor)
+//                        .symbolRenderingMode(.hierarchical)
+//                }
             }
             .padding(.vertical, rowVerticalPadding)
             .padding(.horizontal, rowHorizontalPadding)
