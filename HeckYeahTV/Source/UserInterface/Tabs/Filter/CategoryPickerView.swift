@@ -52,7 +52,7 @@ struct CategoryPickerView: View {
                         }())
                 }
             }
-            .toolbarColorScheme(.dark, for: .navigationBar)
+            .toolbarColorScheme(.dark, for: .automatic)
             .toolbarTitleDisplayMode(.inline)
             .preferredColorScheme(.dark)
             .onAppear {

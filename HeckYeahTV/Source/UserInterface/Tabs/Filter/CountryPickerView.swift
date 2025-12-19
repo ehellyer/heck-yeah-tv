@@ -45,7 +45,7 @@ struct CountryPickerView: View {
 #endif
             .background(Color.clear)
             .preferredColorScheme(.dark)
-            .toolbarColorScheme(.dark, for: .navigationBar)
+            .toolbarColorScheme(.dark, for: .automatic)
             .foregroundStyle(.white)
             .tint(.white)
             .searchable(text: $searchText,
