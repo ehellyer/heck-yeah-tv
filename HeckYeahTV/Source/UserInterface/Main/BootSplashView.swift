@@ -23,9 +23,10 @@ struct BootSplashView: View {
     @State private var didPlay = false
     @State private var gradientStart = UnitPoint(x: 0, y: 0)
     @State private var gradientEnd = UnitPoint(x: 2, y: 2)
+    @State private var dotCount = 0
     
     init(title: String = "Heck\u{00A0}Yeah\u{00A0}TV",
-         subtitle: String = "Discovering channels...",
+         subtitle: String = "Discovering channels",
          autoPlaySound: Bool = true,
          soundName: String = "soft-startup-sound",
          soundExt: String = "mp3") {
@@ -101,12 +102,19 @@ struct BootSplashView: View {
                         .foregroundStyle(Color.white.opacity(0.4))
                         .multilineTextAlignment(.center)
                     
-                    HStack(spacing: 10) {
+                    HStack(spacing: 0) {
                         Text(subtitle)
                             .font(.system(size: subtitleFontSize,
                                           weight: .heavy,
                                           design: .rounded))
                             .foregroundStyle(Color.white.opacity(0.6))
+                        
+                        Text(String(repeating: ".", count: dotCount))
+                            .font(.system(size: subtitleFontSize,
+                                          weight: .heavy,
+                                          design: .rounded))
+                            .foregroundStyle(Color.white.opacity(0.6))
+                            .frame(width: subtitleFontSize * 1.5, alignment: .leading)
                     }
                     .accessibilityElement(children: .combine)
                     .accessibilityLabel("\(title). \(subtitle)")
@@ -117,6 +125,16 @@ struct BootSplashView: View {
             
             .onAppear {
                 playBootChimeIfNeeded()
+                startDotAnimation(dots: 3)
+            }
+        }
+    }
+    
+    private func startDotAnimation(dots: Int) {
+        let maxDotCount = dots + 1
+        Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) { _ in
+            withAnimation {
+                dotCount = (dotCount + 1) % maxDotCount
             }
         }
     }

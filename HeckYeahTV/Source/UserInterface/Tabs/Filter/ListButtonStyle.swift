@@ -28,13 +28,6 @@ struct ListButtonRow: View {
                     .minimumScaleFactor(0.8)
                 
                 Spacer()
-                
-//                if isSelected {
-//                    Image(systemName: "checkmark.circle.fill")
-//                        .font(.body.weight(.bold))
-//                        .foregroundStyle(textColor)
-//                        .symbolRenderingMode(.hierarchical)
-//                }
             }
             .padding(.vertical, rowVerticalPadding)
             .padding(.horizontal, rowHorizontalPadding)
@@ -46,7 +39,6 @@ struct ListButtonRow: View {
         .listRowSeparator(.hidden)
 #endif
         .listRowBackground(Color.clear)
-        //.animation(.spring(response: 0.3, dampingFraction: 0.7), value: isSelected)
     }
     
     private var textColor: Color {
