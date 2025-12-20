@@ -26,6 +26,27 @@ struct FilterView: View {
         return "None"
     }
     
+    private var selectedCountryBinding: Binding<CountryCode> {
+        Binding(
+            get: { swiftDataController.selectedCountry },
+            set: { swiftDataController.selectedCountry = $0 }
+        )
+    }
+    
+    private var selectedCategoryBinding: Binding<CategoryId?> {
+        Binding(
+            get: { swiftDataController.selectedCategory },
+            set: { swiftDataController.selectedCategory = $0 }
+        )
+    }
+
+    private var showFavoritesOnlyBinding: Binding<Bool> {
+        Binding(
+            get: { swiftDataController.showFavoritesOnly },
+            set: { swiftDataController.showFavoritesOnly = $0 }
+        )
+    }
+    
     private var selectedCategoryName: String {
         if let categoryCode = swiftDataController.selectedCategory,
            let category = categories.first(where: { $0.categoryId == categoryCode }) {
@@ -39,14 +60,13 @@ struct FilterView: View {
             
             VStack(alignment: .leading, spacing: 20) {
                 
+                Text("Apply Filters to effect channels visible in the global channels screen.")
+                
                 // Country Filter Card
                 NavigationLink {
                     CountryPickerView(
                         countries: countries,
-                        selectedCountry: Binding(
-                            get: { swiftDataController.selectedCountry },
-                            set: { swiftDataController.selectedCountry = $0 }
-                        )
+                        selectedCountry: selectedCountryBinding
                     )
                 } label: {
                     Group {
@@ -82,10 +102,7 @@ struct FilterView: View {
                 NavigationLink {
                     CategoryPickerView(
                         categories: categories,
-                        selectedCategory: Binding(
-                            get: { swiftDataController.selectedCategory },
-                            set: { swiftDataController.selectedCategory = $0 }
-                        )
+                        selectedCategory: selectedCategoryBinding
                     )
                 } label: {
                     Group {
@@ -111,6 +128,38 @@ struct FilterView: View {
                                 .font(.footnote)
                                 .fontWeight(.semibold)
                                 .foregroundColor(Color.secondary)
+                        }
+                    }
+                }
+                .buttonStyle(FilterButtonStyle())
+                
+                
+                Button {
+                    showFavoritesOnlyBinding.wrappedValue.toggle()
+                } label: {
+                    Group {
+                        HStack {
+                            
+                            Image(systemName: showFavoritesOnlyBinding.wrappedValue ? "star.fill" : "star")
+                                .font(.title3)
+                                .foregroundStyle(.yellow)
+                                .padding(.leading, 10)
+                            
+                            VStack(alignment: .leading) {
+                                Text("Favorites")
+                                    .font(.subheadline)
+                                    .foregroundColor(.secondary)
+                                Text("Show Favorites Only")
+                                    .font(.body)
+                                    .fontWeight(.medium)
+                                    .foregroundColor(.primary)
+                            }
+                            
+                            Spacer()
+                            
+                            Text(showFavoritesOnlyBinding.wrappedValue ? "On" : "Off")
+                                .font(.body)
+                                .foregroundColor(.primary)
                         }
                     }
                 }
@@ -146,9 +195,9 @@ struct FilterView: View {
     // Override the injected SwiftDataController
     let swiftController = MockSwiftDataController(viewContext: mockData.context,
                                                   selectedCountry: "US",
-                                                  selectedCategory: nil,//"news",
+                                                  selectedCategory: "weather",
                                                   showFavoritesOnly: false,
-                                                  searchTerm: nil)//"Lo")
+                                                  searchTerm: nil)
     
     InjectedValues[\.swiftDataController] = swiftController
     

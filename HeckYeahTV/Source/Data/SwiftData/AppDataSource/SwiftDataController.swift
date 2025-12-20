@@ -102,10 +102,18 @@ final class SwiftDataController: SwiftDataControllable {
     
     /// Filter by category? Or embrace the chaos of all channels at once?
     var selectedCategory: CategoryId? {
-        didSet {
-            guard selectedCategory != oldValue else { return }
-            Task { @MainActor in
-                await scheduleChannelMapRebuild()
+        get {
+            access(keyPath: \.selectedCategory)
+            return UserDefaults.selectedCategory
+        }
+        set {
+            if selectedCategory != newValue {
+                Task { @MainActor in
+                    await scheduleChannelMapRebuild()
+                }
+            }
+            withMutation(keyPath: \.selectedCategory) {
+                UserDefaults.selectedCategory = newValue
             }
         }
     }
@@ -127,15 +135,10 @@ final class SwiftDataController: SwiftDataControllable {
     
     @ObservationIgnored
     private var rebuildTask: Task<Void, Never>?
-
-    @ObservationIgnored
-    private var bootstrapStarted: Bool = false
     
     //MARK: - Private API - Functions
     
     private func bootStrap() throws {
-        guard bootstrapStarted == false else { return }
-        bootstrapStarted = true
         try rebuildChannelMap()
     }
     

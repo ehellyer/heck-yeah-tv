@@ -41,7 +41,7 @@ let debounceNS: UInt64 = 10_000_000 //0.01 seconds
 
 
 /// A TimeInterval of 0.2 seconds
-let settleTime: TimeInterval = TimeInterval(0.2) //0.2 seconds
+let settleTime: TimeInterval = TimeInterval(0.2)
 
 
 @main

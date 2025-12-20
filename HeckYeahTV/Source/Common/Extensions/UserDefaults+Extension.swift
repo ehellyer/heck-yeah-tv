@@ -141,7 +141,7 @@ extension UserDefaults {
         }
     }
     
-    //MARK: - These persistent stored properties are some of the filter criteria that determine what channels should be visible.
+    //MARK: - These persistent stored properties of filter criteria that are used when building a personalized guide.
     
     /// A boolean indicating whether to filter the channel list to show only favorite channels.
     ///
@@ -188,6 +188,23 @@ extension UserDefaults {
         }
         set {
             standard.set(newValue, forKey: AppKeys.SharedAppState.selectedCountryKey)
+        }
+    }
+    
+    
+    /// The unique identifier of the currently selected content category.
+    ///
+    /// This property stores the user's category selection, which is used to filter available IPTV channels
+    /// by content type (e.g., "news", "sports", "entertainment"). When set to `nil`, no category filter
+    /// is applied. The value is persisted in `UserDefaults.standard`.
+    ///
+    /// - Returns: The category identifier string, or `nil` if no category filter is active.
+    static var selectedCategory: CategoryId? {
+        get {
+            standard.string(forKey: AppKeys.SharedAppState.selectedCategoryKey)
+        }
+        set {
+            standard.set(newValue, forKey: AppKeys.SharedAppState.selectedCategoryKey)
         }
     }
 }

@@ -56,14 +56,18 @@ struct AppKeys {
     }
     
     struct SharedAppState {
+
         static let showAppNavigationKey = "SharedAppState.showAppNavigationKey"
-        static let showFavoritesOnlyKey = "SharedAppState.showFavoritesOnlyKey"
         static let isPlayerPausedKey = "SharedAppState.isPlayerPausedKey"
         static let recentlyPlayedKey = "SharedAppState.recentlyPlayedKey"
-        static let selectedCountryKey = "SharedAppState.selectedCountryKey"
         static let selectedTabKey = "SharedAppState.selectedTabKey"
         static let selectedChannelKey = "SharedAppState.selectedChannelKey"
         static let recentChannelIdsKey = "SharedAppState.recentChannelIdsKey"
         static let scanForTunersKey = "SharedAppState.scanForTunersKey"
+
+        // Search parameter keys
+        static let selectedCountryKey = "SharedAppState.selectedCountryKey"
+        static let selectedCategoryKey = "SharedAppState.selectedCategoryKey"
+        static let showFavoritesOnlyKey = "SharedAppState.showFavoritesOnlyKey"
     }
 }
