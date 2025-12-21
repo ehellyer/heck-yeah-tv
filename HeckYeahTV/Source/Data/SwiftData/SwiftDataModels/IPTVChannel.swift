@@ -68,6 +68,10 @@ extension SchemaV1 {
         @Relationship(deleteRule: .nullify, inverse: \IPTVFavorite.channel)
         var favorite: IPTVFavorite?
         
+        // Many-to-many relationship with guides (nullify on delete to preserve guides when channel is deleted)
+        @Relationship(deleteRule: .nullify)
+        var guides: [Guide] = []
+        
         // MARK: JSONSerializable Implementation
         //
         // JSONSerializable implementation not automatically synthesized due to a conflict with SwiftData @Model automatic synthesis of certain behaviors.

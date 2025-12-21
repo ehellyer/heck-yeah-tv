@@ -10,6 +10,27 @@ import Foundation
 import SwiftData
 import Hellfire
 
+/// Errors that can occur during mock data loading
+enum MockDataPersistenceError: LocalizedError {
+    case fileNotFound(fileName: String, extension: String)
+    case dataLoadingFailed(fileName: String, underlyingError: Error)
+    case contextSaveFailed(underlyingError: Error)
+    case invalidData(fileName: String, reason: String)
+    
+    var errorDescription: String? {
+        switch self {
+        case .fileNotFound(let fileName, let ext):
+            return "File not found: \(fileName).\(ext)"
+        case .dataLoadingFailed(let fileName, let error):
+            return "Failed to load data from \(fileName): \(error.localizedDescription)"
+        case .contextSaveFailed(let error):
+            return "Failed to save mock data context: \(error.localizedDescription)"
+        case .invalidData(let fileName, let reason):
+            return "Invalid data in \(fileName): \(reason)"
+        }
+    }
+}
+
 /// Builds an IN-MEMORY mock SwiftDataStack for previews.
 @MainActor
 final class MockDataPersistence {
@@ -26,44 +47,64 @@ final class MockDataPersistence {
         loadMockData()
     }
     
+    private func loadMockDataFromFile<T: JSONSerializable>(fileName: String, ext: String) throws -> T {
+        guard let url = Bundle.main.url(forResource: fileName, withExtension: ext) else {
+            logDebug("Failed to load \(fileName).\(ext).  Exiting.")
+            throw MockDataPersistenceError.fileNotFound(fileName: fileName, extension: ext)
+        }
+        
+        do {
+            let data = try Data(contentsOf: url)
+            let models = try T.initialize(jsonData: data)
+            return models
+        } catch {
+            throw MockDataPersistenceError.dataLoadingFailed(fileName: "\(fileName).\(ext)", underlyingError: error)
+        }
+    }
+    
     private func loadMockData() {
         do {
             logDebug("MockDataPersistence Init starting...")
-            let channelUrl = Bundle.main.url(forResource: "MockIPTVChannels", withExtension: "json")!
-            let channelData = try Data(contentsOf: channelUrl)
-            let mockChannels = try [IPTVChannel].initialize(jsonData: channelData)
+
+            let mockChannels: [IPTVChannel] = try loadMockDataFromFile(fileName: "MockIPTVChannels", ext: "json")
             mockChannels.forEach(context.insert)
-
-            let countryUrl = Bundle.main.url(forResource: "MockCountries", withExtension: "json")!
-            let countryData = try Data(contentsOf: countryUrl)
-            let mockCountries = try [IPTVCountry].initialize(jsonData: countryData)
+            logDebug("\(mockChannels.count) channels loaded")
+            
+            let mockCountries: [IPTVCountry] = try loadMockDataFromFile(fileName: "MockCountries", ext: "json")
             mockCountries.forEach(context.insert)
-
-            let tunerUrl = Bundle.main.url(forResource: "MockTunerDevices", withExtension: "json")!
-            let tunerData = try Data(contentsOf: tunerUrl)
-            let mockTuners = try [HDHomeRunServer].initialize(jsonData: tunerData)
+            logDebug("\(mockCountries.count) countries loaded")
+            
+            let mockTuners: [HDHomeRunServer] = try loadMockDataFromFile(fileName: "MockTunerDevices", ext: "json")
             mockTuners.forEach(context.insert)
+            logDebug("\(mockTuners.count) tuners loaded")
             
             //Dev Note: IPTVChannel & IPTVCategory M:M relationships are setup in the MockIPTVChannels.json file.
-            let categoriesUrl = Bundle.main.url(forResource: "MockCategories", withExtension: "json")!
-            let categoriesData = try Data(contentsOf: categoriesUrl)
-            let mockCategories = try [IPTVCategory].initialize(jsonData: categoriesData)
+            let mockCategories: [IPTVCategory] = try loadMockDataFromFile(fileName: "MockCategories", ext: "json")
             mockCategories.forEach(context.insert)
-
-            let favoritesUrl = Bundle.main.url(forResource: "MockFavorites", withExtension: "json")!
-            let favoritesData = try Data(contentsOf: favoritesUrl)
-            let mockFavorites = try [IPTVFavorite].initialize(jsonData: favoritesData)
+            logDebug("\(mockCategories.count) categories loaded")
+            
+            let mockFavorites: [IPTVFavorite] = try loadMockDataFromFile(fileName: "MockFavorites", ext: "json")
             mockFavorites.forEach(context.insert)
+            logDebug("\(mockFavorites.count) favorites loaded")
             
             //Setup favorite relationships
             mockFavorites.forEach { fav in
                 mockChannels.first(where: { $0.id == fav.id })?.favorite = fav
             }
+
+            //Dev note: IPTVChannel & Guide M:M relationships are setup in the MockGuide.json file.
+            let mockGuides: [Guide] = try loadMockDataFromFile(fileName: "MockGuides", ext: "json")
+            mockGuides.forEach(context.insert)
+            logDebug("\(mockGuides.count) guides loaded")
             
-            try context.save()
-            logDebug("MockDataPersistence Init completed: Mock data loaded into in-memory store.")
+            do {
+                try context.save()
+                logDebug("MockDataPersistence Init completed: Mock data loaded into in-memory store.")
+            } catch {
+                throw MockDataPersistenceError.contextSaveFailed(underlyingError: error)
+            }
         } catch {
-            logDebug("Failed to load Mock json into SwiftData in-memory context.  Error: \(error)")
+            logDebug("Failed to load Mock json into SwiftData in-memory context.  Error: \(error.localizedDescription)")
         }
     }
 }
