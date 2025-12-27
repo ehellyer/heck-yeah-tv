@@ -43,8 +43,8 @@ struct ChannelsContainer: View {
     @Previewable @State  var isFocused: Bool = false
     @Previewable @State var categoryId: CategoryId? = nil
     
-    let mockData = MockDataPersistence(appState: appState)
-    
+    // Override the injected SwiftDataController
+    let mockData = MockDataPersistence()
     let swiftDataController = MockSwiftDataController(viewContext: mockData.context)
     InjectedValues[\.swiftDataController] = swiftDataController
     

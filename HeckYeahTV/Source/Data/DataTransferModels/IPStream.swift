@@ -13,7 +13,7 @@ import Hellfire
 struct IPStream: JSONSerializable {
     
     /// Stable hash id generated on JSON decoding for ubiquitous unique identifier of a channel regardless of source.  See JSON decoder init below.
-    var id: String
+    let id: String
     
     /// The original source data unique identifier. (e.g., "France3.fr")
     let channelId: String?

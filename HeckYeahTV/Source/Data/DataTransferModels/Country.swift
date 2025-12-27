@@ -13,14 +13,14 @@ import Hellfire
 struct Country: JSONSerializable {
     
     /// Name of the country
-    var name: String
+    let name: String
     
     /// [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) code of the country
-    var code: CountryCode
+    let code: CountryCode
     
     /// List of official languages of the country ([ISO 639-3](https://en.wikipedia.org/wiki/ISO_639-3) code)
-    var languages: [String]
+    let languages: [String]
     
     /// Country flag emoji
-    var flag: String
+    let flag: String
 }

@@ -59,9 +59,7 @@ struct FilterView: View {
         NavigationStack {
             
             VStack(alignment: .leading, spacing: 20) {
-                
-                Text("Apply Filters to effect channels visible in the global channels screen.")
-                
+                                
                 // Country Filter Card
                 NavigationLink {
                     CountryPickerView(
@@ -133,7 +131,7 @@ struct FilterView: View {
                 }
                 .buttonStyle(FilterButtonStyle())
                 
-                
+                // Favorite Filter Card
                 Button {
                     showFavoritesOnlyBinding.wrappedValue.toggle()
                 } label: {
@@ -165,7 +163,7 @@ struct FilterView: View {
                 }
                 .buttonStyle(FilterButtonStyle())
                 
-                // Results count
+                // Count of channels matching criteria label.
                 HStack {
                     Text("\(swiftDataController.guideChannelMap.map.count) channels in guide")
                         .font(.caption)
@@ -187,19 +185,13 @@ struct FilterView: View {
 
 #Preview("FilterView") {
     @Previewable @State var appState: any AppStateProvider = MockSharedAppState()
-    let mockData = MockDataPersistence(appState: appState)
-    
-    @FocusState var categoryFocused: Bool
     
     
     // Override the injected SwiftDataController
-    let swiftController = MockSwiftDataController(viewContext: mockData.context,
-                                                  selectedCountry: "US",
-                                                  selectedCategory: "weather",
-                                                  showFavoritesOnly: false,
-                                                  searchTerm: nil)
-    
-    InjectedValues[\.swiftDataController] = swiftController
+    let mockData = MockDataPersistence()
+    let swiftDataController = MockSwiftDataController(viewContext: mockData.context)
+    InjectedValues[\.swiftDataController] = swiftDataController
+
     
     //Select recent list tab
     appState.selectedTab = .filter
@@ -207,11 +199,5 @@ struct FilterView: View {
     return TVPreviewView() {
         FilterView(appState: $appState)
             .modelContext(mockData.context)
-            .onAppear {
-                // Trigger focus on first button
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                    
-                }
-            }
     }
 }

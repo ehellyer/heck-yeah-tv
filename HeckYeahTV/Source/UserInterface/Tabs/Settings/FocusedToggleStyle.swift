@@ -55,7 +55,6 @@ struct FocusedToggleStyle: ToggleStyle {
 
                     .frame(width: width, height: height, alignment: .center)
             }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
             .padding()
             .background(
                 Capsule()
@@ -77,13 +76,17 @@ struct FocusedToggleStyle: ToggleStyle {
 
 #Preview("ToggleView") {
     
-    @Previewable @State var toggleIsOn: Bool = false
+    @Previewable @State var toggle1IsOn: Bool = false
+    @Previewable @State var toggle2IsOn: Bool = true
+    @Previewable @State var toggle3IsOn: Bool = false
     
     VStack {
-        Spacer()
-        Toggle("Toggle View", isOn: $toggleIsOn)
+        Toggle("Toggle View 1", isOn: $toggle1IsOn)
             .toggleStyle(FocusedToggleStyle())
-        Spacer()
+        Toggle("Toggle View 2", isOn: $toggle2IsOn)
+            .toggleStyle(FocusedToggleStyle())
+        Toggle("Toggle View 3", isOn: $toggle3IsOn)
+            .toggleStyle(FocusedToggleStyle())
     }
     .padding()
  

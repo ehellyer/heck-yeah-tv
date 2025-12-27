@@ -44,7 +44,6 @@ struct CountryPickerView: View {
             .scrollContentBackground(.hidden)
 #endif
             .background(Color.clear)
-            .preferredColorScheme(.dark)
             .toolbarColorScheme(.dark, for: .automatic)
             .foregroundStyle(.white)
             .tint(.white)
@@ -70,10 +69,10 @@ struct CountryPickerView: View {
 #Preview {
     @Previewable @State var appState: AppStateProvider = MockSharedAppState()
     @Previewable @State var countryCode: CountryCode = "AL"
-    let mockData = MockDataPersistence(appState: appState)
-    
-    let swiftDataController = MockSwiftDataController(viewContext: mockData.context,
-                                                      selectedCountry: countryCode)
+
+    // Override the injected SwiftDataController
+    let mockData = MockDataPersistence()
+    let swiftDataController = MockSwiftDataController(viewContext: mockData.context)
     InjectedValues[\.swiftDataController] = swiftDataController
     
     let countries = swiftDataController.countries()

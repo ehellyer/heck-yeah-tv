@@ -188,16 +188,20 @@ struct GuideRow: View {
     }
 }
 
+
+
+
 #Preview("GuideRow - loads from Mock SwiftData") {
     @Previewable @State var appState: AppStateProvider = MockSharedAppState()
-    let mockData = MockDataPersistence(appState: appState)
+
+    // Override the injected SwiftDataController
+    let mockData = MockDataPersistence()
+    let swiftDataController = MockSwiftDataController(viewContext: mockData.context)
+    InjectedValues[\.swiftDataController] = swiftDataController
+
     
-    let swiftController = MockSwiftDataController(viewContext: mockData.context)
-    InjectedValues[\.swiftDataController] = swiftController
-    
-    let channel = swiftController.fetchChannel(at: 8)
-    let selectedChannelId = swiftController.guideChannelMap.map[0]
-    
+    let channel = swiftDataController.fetchChannel(at: 8)
+    let selectedChannelId = swiftDataController.guideChannelMap.map[0]
     
     return TVPreviewView() {
         GuideRow(channel: channel,

@@ -10,8 +10,6 @@ import SwiftUI
 
 struct SectionButtonStyle: ButtonStyle {
     
-    
-    
     @Environment(\.isFocused) var isFocused: Bool
     
     func makeBody(configuration: Configuration) -> some View {

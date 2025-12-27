@@ -12,8 +12,7 @@ import Hellfire
 /// HDHomeRunDiscoveryController
 ///
 /// e.g. [https://api.hdhomerun.com/discover](https://api.hdhomerun.com/discover)
-@MainActor
-final class HDHomeRunDiscoveryController {
+actor HDHomeRunDiscoveryController {
     
     deinit {
         logDebug("Deallocated")
@@ -21,8 +20,8 @@ final class HDHomeRunDiscoveryController {
     
     //MARK: - Private API
     
-    private let sessionInterface = SessionInterface.sharedInstance
-    // keep-alive off for initial connection. Example: Underlying layer 3/2 changes while app is running, e.g. VPN was on, then turned off or vice versa.
+    private let sessionInterface: SessionInterface = SessionInterface.sharedInstance
+    // keep-alive off for this request. Example: Underlying layer 3/2 changes while app is running, e.g. VPN was on, then turned off or vice versa.
     private var defaultHeaders: [HTTPHeader] = [HTTPHeader.defaultUserAgent,
                                                 HTTPHeader(name: "Accept-Encoding", value: "application/json"),
                                                 HTTPHeader(name: "connection", value: "close")

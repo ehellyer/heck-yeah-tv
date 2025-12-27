@@ -13,8 +13,8 @@ import Hellfire
 struct Language: JSONSerializable {
     
     /// Language name
-    var name: String
+    let name: String
     
     /// [ISO 639-3](https://en.wikipedia.org/wiki/ISO_639-3) code of the language
-    var code: String
+    let code: String
 }

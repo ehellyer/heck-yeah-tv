@@ -41,26 +41,27 @@ struct SectionView: View {
 #if !os(tvOS)
 #Preview("SectionView") {
     @Previewable @State var appState: any AppStateProvider = MockSharedAppState()
-    
-    let mockData = MockDataPersistence(appState: appState)
-    
+   
     // Override the injected SwiftDataController
-    let swiftController = MockSwiftDataController(viewContext: mockData.context)
-    InjectedValues[\.swiftDataController] = swiftController
+    let mockData = MockDataPersistence()
+    let swiftDataController = MockSwiftDataController(viewContext: mockData.context)
+    InjectedValues[\.swiftDataController] = swiftDataController
     
     //Select recent list tab
     appState.selectedTab = .recents
     
-    // Loads up the recents list
-    appState.selectedChannel = swiftController.guideChannelMap.map[1]
-    appState.selectedChannel = swiftController.guideChannelMap.map[3]
-    appState.selectedChannel = swiftController.guideChannelMap.map[5]
-    appState.selectedChannel = swiftController.guideChannelMap.map[7]
-    appState.selectedChannel = swiftController.guideChannelMap.map[9]
-    appState.selectedChannel = swiftController.guideChannelMap.map[11]
-    
-    return SectionView(appState: $appState)
-        .environment(\.modelContext, mockData.context)
-
+    return TVPreviewView() {
+        SectionView(appState: $appState)
+            .environment(\.modelContext, mockData.context)
+            .onAppear() {
+                    // Loads up the recents list
+                    appState.selectedChannel = swiftDataController.guideChannelMap.map[1]
+                    appState.selectedChannel = swiftDataController.guideChannelMap.map[3]
+                    appState.selectedChannel = swiftDataController.guideChannelMap.map[5]
+                    appState.selectedChannel = swiftDataController.guideChannelMap.map[7]
+                    appState.selectedChannel = swiftDataController.guideChannelMap.map[9]
+                    appState.selectedChannel = swiftDataController.guideChannelMap.map[11]
+            }
+    }
 }
 #endif

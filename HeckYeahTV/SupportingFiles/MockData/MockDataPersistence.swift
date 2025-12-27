@@ -37,7 +37,7 @@ final class MockDataPersistence {
     
     private(set) var context: ModelContext
     
-    init(appState: any AppStateProvider) {
+    init() {
         
         let schema = Schema(versionedSchema: HeckYeahSchema.self)
         

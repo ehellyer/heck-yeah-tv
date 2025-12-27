@@ -9,8 +9,8 @@
 import Foundation
 import Hellfire
 
-@MainActor
-final class IPTVController {
+/// Source API:  [https://github.com/iptv-org/api](https://github.com/iptv-org/api)
+actor IPTVController {
     
     deinit {
         logDebug("Deallocated")
@@ -20,21 +20,18 @@ final class IPTVController {
         
     ///MARK: - Internal API - Fetch IPTV Sources
     
-    var blocklists: [IPBlocklist] = []
     var categories: [IPCategory] = []
     var channels: [IPChannel] = []
     var countries: [Country] = []
     var feeds: [IPFeed] = []
-    var guides: [IPGuide] = []
-    var languages: [Language] = []
     var logos: [IPLogo] = []
-    var regions: [Region] = []
     var streams: [IPStream] = []
-    var subdivisions: [Subdivision] = []
-    var timezones: [Timezone] = []
-
-    /// Result of network and country filters and a join between Channels and Streams.
-    var filteredChannels: [IPChannel] = []
+//    var blocklists: [IPBlocklist] = []
+//    var guides: [IPGuide] = []
+//    var languages: [Language] = []
+//    var regions: [Region] = []
+//    var subdivisions: [Subdivision] = []
+//    var timezones: [Timezone] = []
     
     func fetchList<T: JSONSerializable>(url: URL) async throws -> T {
         // keep-alive off for initial connection. Example: Underlying layer 3/2 changes while app is running, e.g. VPN was on, then turned off or vice versa.
@@ -56,12 +53,12 @@ final class IPTVController {
         source.summary.startedAt = Date()
         
         let specs: [AnyLoadSpec] = [
-            LoadSpec(.streams, keyPath: \.streams),
-            LoadSpec(.channels, keyPath: \.channels),
-            LoadSpec(.countries, keyPath: \.countries),
-            LoadSpec(.categories, keyPath: \.categories),
-            LoadSpec(.feeds, keyPath: \.feeds),
-            LoadSpec(.logos, keyPath: \.logos)
+            LoadSpec(.streams) { controller, items in controller.streams = items },
+            LoadSpec(.channels) { controller, items in controller.channels = items },
+            LoadSpec(.countries) { controller, items in controller.countries = items },
+            LoadSpec(.categories) { controller, items in controller.categories = items },
+            LoadSpec(.feeds) { controller, items in controller.feeds = items },
+            LoadSpec(.logos) { controller, items in controller.logos = items }
         ]
         
         // Run everything concurrently; each task returns (endpoint, Result<count, error>)
@@ -100,26 +97,27 @@ final class IPTVController {
 
 protocol AnyLoadSpec {
     var endpoint: IPTVDataSources.Endpoint { get }
-    func load(into controller: IPTVController) async throws -> Int
+    func load(into controller: isolated IPTVController) async throws -> Int
 }
 
 struct LoadSpec<T: JSONSerializable>: AnyLoadSpec {
     
-    init(_ endpoint: IPTVDataSources.Endpoint, keyPath: ReferenceWritableKeyPath<IPTVController, [T]>) {
+    init(_ endpoint: IPTVDataSources.Endpoint, 
+         setter: @escaping (isolated IPTVController, [T]) -> Void) {
         self.endpoint = endpoint
         self.url = endpoint.url
-        self.keyPath = keyPath
+        self.setter = setter
     }
     
     private let url: URL
-    private let keyPath: ReferenceWritableKeyPath<IPTVController, [T]>
+    private let setter: (isolated IPTVController, [T]) -> Void
     
     let endpoint: IPTVDataSources.Endpoint
     
     /// Fetches, assigns to the controller property, and returns the number of items loaded.
-    func load(into controller: IPTVController) async throws -> Int {
+    func load(into controller: isolated IPTVController) async throws -> Int {
         let items: [T] = try await controller.fetchList(url: url)
-        controller[keyPath: keyPath] = items
+        setter(controller, items)
         return items.count
     }
 }

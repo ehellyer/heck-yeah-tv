@@ -85,12 +85,14 @@ struct GuideSubTitleView: View {
 
 #Preview("GuideSubTitleView - loads from Mock SwiftData") {
     @Previewable @State var appState: AppStateProvider = MockSharedAppState()
-    let mockData = MockDataPersistence(appState: appState)
     
-    let swiftController = MockSwiftDataController(viewContext: mockData.context)
-    InjectedValues[\.swiftDataController] = swiftController
-    
-    let channel = swiftController.fetchChannel(at: 7)
+    // Override the injected SwiftDataController
+    let mockData = MockDataPersistence()
+    let swiftDataController = MockSwiftDataController(viewContext: mockData.context)
+    InjectedValues[\.swiftDataController] = swiftDataController
+
+    let channel = swiftDataController.fetchChannel(at: 7)
     
     return GuideSubTitleView(channel: channel)
+        //.redacted(reason: .placeholder)
 }

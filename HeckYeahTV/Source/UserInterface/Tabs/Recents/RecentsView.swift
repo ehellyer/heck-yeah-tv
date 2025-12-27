@@ -16,59 +16,79 @@ struct RecentsView: View {
     @FocusState private var focusedChannelId: String?
     
     var body: some View {
-        ScrollViewReader { proxy in
-            ScrollView(.vertical) {
-                LazyVStack(alignment: .leading) {
-                    ForEach(appState.recentChannelIds, id: \.self) { channelId in
-                        GuideRowLazy(channelId: channelId,
-                                     appState: $appState,
-                                     hideGuideInfo: true)
-                        .id(channelId)
+        ZStack {
+            ScrollViewReader { proxy in
+                ScrollView(.vertical) {
+                    LazyVStack(alignment: .leading) {
+                        ForEach(appState.recentChannelIds, id: \.self) { channelId in
+                            GuideRowLazy(channelId: channelId,
+                                         appState: $appState,
+                                         hideGuideInfo: true)
+                            .id(channelId)
+                        }
                     }
-                    if appState.recentChannelIds.isEmpty {
-                        Text("No recent channels.")
-                            .frame(maxWidth: .infinity)
-                            .padding()
-                            .focusable(false)
+                }
+                .scrollClipDisabled(true)
+                .background(.clear)
+                .contentMargins(.top, 5)
+                .contentMargins(.bottom, 5)
+                .scrollIndicators(.visible)
+                .onAppear() {
+                    if let firstChannelId = appState.recentChannelIds.first {
+                        focusedChannelId = firstChannelId
+                        DispatchQueue.main.asyncAfter(deadline: .now() + settleTime) {
+                            proxy.scrollTo(appState.recentChannelIds.first ?? "")
+                        }
                     }
                 }
             }
-            .scrollClipDisabled(true)
-            .background(.clear)
-            .contentMargins(.top, 5)
-            .contentMargins(.bottom, 5)
-            .scrollIndicators(.visible)
+
+            
+            if appState.recentChannelIds.isEmpty {
+                VStack(alignment: .center, spacing: 12) {
+                    Image(systemName: "tv.slash")
+                        .font(.system(size: 48))
+                        .foregroundStyle(.tertiary)
+                    Text("No recently selected channels")
+                        .font(.headline)
+                        .foregroundStyle(.secondary)
+                    Text("Go to the guide to find and select channels")
+                        .font(.subheadline)
+                        .foregroundStyle(.tertiary)
+                }
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 60)
+                .focusable(false)
+            }
         }
     }
 }
 
 #Preview("RecentsView") {
-    @Previewable @State var appState: AppStateProvider = SharedAppState.shared
-    let mockData = MockDataPersistence(appState: appState)
+    @Previewable @State var appState: AppStateProvider = MockSharedAppState()
 
-    let swiftController = MockSwiftDataController(viewContext: mockData.context,
-                                                  selectedCountry: "US",
-                                                  selectedCategory: nil,//"news",
-                                                  showFavoritesOnly: false,
-                                                  searchTerm: nil)//"Lo")
-    InjectedValues[\.swiftDataController] = swiftController
-
-    appState.selectedChannel = swiftController.guideChannelMap.map[0]
-    appState.selectedChannel = swiftController.guideChannelMap.map[1]
-    appState.selectedChannel = swiftController.guideChannelMap.map[2]
-    appState.selectedChannel = swiftController.guideChannelMap.map[3]
-    appState.selectedChannel = swiftController.guideChannelMap.map[4]
-    appState.selectedChannel = swiftController.guideChannelMap.map[5]
-    appState.selectedChannel = swiftController.guideChannelMap.map[6]
-    appState.selectedChannel = swiftController.guideChannelMap.map[7]
-    appState.selectedChannel = swiftController.guideChannelMap.map[8]
-    appState.selectedChannel = swiftController.guideChannelMap.map[9]
-    appState.selectedChannel = swiftController.guideChannelMap.map[10]
-    appState.selectedChannel = swiftController.guideChannelMap.map[11]
-    appState.selectedChannel = swiftController.guideChannelMap.map[8]
+    // Override the injected SwiftDataController
+    let mockData = MockDataPersistence()
+    let swiftDataController = MockSwiftDataController(viewContext: mockData.context)
+    InjectedValues[\.swiftDataController] = swiftDataController
     
     return TVPreviewView() {
         RecentsView(appState: $appState)
             .environment(\.modelContext, mockData.context)
+            .onAppear() {
+                // Load some recent channels
+                appState.selectedChannel = swiftDataController.guideChannelMap.map[0]
+                appState.selectedChannel = swiftDataController.guideChannelMap.map[1]
+                appState.selectedChannel = swiftDataController.guideChannelMap.map[2]
+                appState.selectedChannel = swiftDataController.guideChannelMap.map[3]
+                appState.selectedChannel = swiftDataController.guideChannelMap.map[4]
+                appState.selectedChannel = swiftDataController.guideChannelMap.map[5]
+                appState.selectedChannel = swiftDataController.guideChannelMap.map[6]
+                appState.selectedChannel = swiftDataController.guideChannelMap.map[7]
+                appState.selectedChannel = swiftDataController.guideChannelMap.map[9]
+                appState.selectedChannel = swiftDataController.guideChannelMap.map[10]
+                appState.selectedChannel = swiftDataController.guideChannelMap.map[11]
+                appState.selectedChannel = swiftDataController.guideChannelMap.map[8]
+            }
     }
 }

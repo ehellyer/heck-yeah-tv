@@ -26,6 +26,7 @@ struct SettingsView: View {
     let titleColor: Color = .white
 #endif
     
+    @Query private var iptvChannels: [IPTVChannel]
     @Query(sort: \HDHomeRunServer.deviceId, order: .forward) private var devices: [HDHomeRunServer]
     
     var body: some View {
@@ -37,7 +38,7 @@ struct SettingsView: View {
                         .modifier(SectionTextStyle())
                     Spacer()
                     if not(isUpdatingIPTVChannels) {
-                        Text("13,600")
+                        Text("\(iptvChannels.count)")
                             .modifier(SectionTextStyle())
                     }
                 }
@@ -172,18 +173,15 @@ struct SettingsView: View {
 }
 
 #Preview {
-    
     @Previewable @State var appState: any AppStateProvider = MockSharedAppState()
     
-    let mockData = MockDataPersistence(appState: appState)
-    
+    // Override the injected SwiftDataController
+    let mockData = MockDataPersistence()
+    let swiftDataController = MockSwiftDataController(viewContext: mockData.context)
+    InjectedValues[\.swiftDataController] = swiftDataController
     
     return TVPreviewView() {
         SettingsView(appState: $appState)
-            .environment(\.modelContext, mockData.context)
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .background(Color.black)
+            .modelContext(mockData.context)
     }
-    
-    
 }

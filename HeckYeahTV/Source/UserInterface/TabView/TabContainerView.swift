@@ -71,11 +71,11 @@ struct TabContainerView: View {
 #if os(tvOS)
 #Preview {
     @Previewable @State var _appState: any AppStateProvider = MockSharedAppState()
-    let mockData = MockDataPersistence(appState: _appState)
     
     // Override the injected SwiftDataController
-    let swiftController = MockSwiftDataController(viewContext: mockData.context)
-    InjectedValues[\.swiftDataController] = swiftController
+    let mockData = MockDataPersistence()
+    let swiftDataController = MockSwiftDataController(viewContext: mockData.context)
+    InjectedValues[\.swiftDataController] = swiftDataController
     
     return TVPreviewView() {
         TabContainerView(appState: $_appState)

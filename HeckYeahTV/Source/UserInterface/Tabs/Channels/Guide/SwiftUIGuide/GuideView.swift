@@ -56,9 +56,7 @@ struct GuideView: View {
             
             if swiftDataController.guideChannelMap.totalCount == 0 {
                 
-                if swiftDataController.showFavoritesOnly {
-                    
-                } else {
+                if not(swiftDataController.showFavoritesOnly) {
                     VStack(spacing: 12) {
                         Image(systemName: "tv.slash")
                             .font(.system(size: 48))
@@ -107,19 +105,16 @@ private extension GuideView {
 
 #if !os(tvOS)
 #Preview("GuideView") {
-    @Previewable @State var appState: AppStateProvider = SharedAppState.shared
-    let mockData = MockDataPersistence(appState: appState)
-    
-    let swiftDataController = MockSwiftDataController(viewContext: mockData.context,
-                                                      selectedCountry: "US",
-                                                      selectedCategory: nil,//"news",
-                                                      showFavoritesOnly: false,
-                                                      searchTerm: nil)//"Lo")
+    @Previewable @State var appState: AppStateProvider = MockSharedAppState()
+
+    // Override the injected SwiftDataController
+    let mockData = MockDataPersistence()
+    let swiftDataController = MockSwiftDataController(viewContext: mockData.context)
     InjectedValues[\.swiftDataController] = swiftDataController
     
     return TVPreviewView() {
         GuideView(appState: $appState)
-            .environment(\.modelContext, mockData.context)
+            .modelContext(mockData.context)
     }
 }
 #endif

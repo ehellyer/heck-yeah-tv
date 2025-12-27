@@ -54,7 +54,6 @@ struct CategoryPickerView: View {
             }
             .toolbarColorScheme(.dark, for: .automatic)
             .toolbarTitleDisplayMode(.inline)
-            .preferredColorScheme(.dark)
             .onAppear {
                 if let selectedCategory {
                     DispatchQueue.main.asyncAfter(deadline: .now() + settleTime) {
@@ -75,7 +74,7 @@ struct CategoryPickerView: View {
 #Preview {
     @Previewable @State var appState: AppStateProvider = MockSharedAppState()
     @Previewable @State var categoryId: CategoryId? = "auto"
-    let mockData = MockDataPersistence(appState: appState)
+    let mockData = MockDataPersistence()
     
     let swiftDataController = MockSwiftDataController(viewContext: mockData.context,
                                                       selectedCategory: categoryId!)

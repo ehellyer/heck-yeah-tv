@@ -1,30 +1,5 @@
 [
     {
-        "id": "chan.preview.001",
-        "sortHint": "0001",
-        "title": "Preview Channel",
-        "number": "Channel 121",
-        "country": "US",
-        "categories": [
-            {
-                "categoryId": "general",
-                "name": "General",
-                "categoryDescription": "Provides a variety of different programming"
-            },
-            {
-                "categoryId": "entertainment",
-                "name": "Entertainment",
-                "categoryDescription": "Channels with a variety of entertainment programs"
-            }
-        ],
-        "languages": ["eng"],
-        "url": "https://example.com/stream.m3u8",
-        "logoURL": "https://i.imgur.com/aR5q6mA.png",
-        "quality": {"fhd":{}},
-        "hasDRM": false,
-        "source": "ipStream"
-    },
-    {
         "id": "chan.music.001",
         "sortHint": "0002",
         "title": "Music Videos HD",

@@ -13,46 +13,46 @@ import Hellfire
 struct IPChannel: JSONSerializable {
     
     /// Unique channel Id of the source data.
-    var channelId: String
+    let channelId: String
     
     /// Full name of the channel
-    var name: String
+    let name: String
     
     /// List of alternative channel names
-    var altNames: [String]?
+    let altNames: [String]?
     
     /// Name of the network operating the channel
-    var network: String?
+    let network: String?
     
     /// Name of the network operating the channel
-    var owners: [String]?
+    let owners: [String]?
     
     /// Country code from which the broadcast is transmitted ([ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2))
-    var country: String
+    let country: String
     
     /// Code of the subdivision (e.g., provinces or states) from which the broadcast is transmitted ([ISO 3166-2](https://en.wikipedia.org/wiki/ISO_3166-2))
-    var subdivision: String?
+    let subdivision: String?
     
     /// Name of the city from which the broadcast is transmitted
-    var city: String?
+    let city: String?
     
     /// List of categories to which this channel belongs
-    var categories: [String]?
+    let categories: [String]?
     
     /// Indicates whether the channel broadcasts adult content
-    var isNsfw: Bool
+    let isNsfw: Bool
     
     /// Launch date of the channel (YYYY-MM-DD)
-    var launched: String?
+    let launched: String?
     
     /// Date on which the channel closed (YYYY-MM-DD)
-    var closed: String?
+    let closed: String?
     
     /// The ID of the channel that this channel was replaced by
-    var replacedBy: String?
+    let replacedBy: String?
     
     /// Official website URL
-    var website: String?
+    let website: String?
     
     private enum CodingKeys: String, CodingKey {
         case channelId = "id"

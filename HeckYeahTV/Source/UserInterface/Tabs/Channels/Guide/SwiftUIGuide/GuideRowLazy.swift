@@ -41,17 +41,19 @@ struct GuideRowLazy: View {
 
 #Preview("GuideRowLazy") {
     @Previewable @State var appState: AppStateProvider = MockSharedAppState()
-    let mockData = MockDataPersistence(appState: appState)
+
+    // Override the injected SwiftDataController
+    let mockData = MockDataPersistence()
+    let swiftDataController = MockSwiftDataController(viewContext: mockData.context)
+    InjectedValues[\.swiftDataController] = swiftDataController
     
-    let swiftController = MockSwiftDataController(viewContext: mockData.context)
-    InjectedValues[\.swiftDataController] = swiftController
-    
-    let channelId = swiftController.guideChannelMap.map[6]
+    let channelId = swiftDataController.guideChannelMap.map[6]
 
     return TVPreviewView() {
         GuideRowLazy(channelId: channelId,
                      appState: $appState,
                      hideGuideInfo: true)
-        .environment(\.modelContext, mockData.context)
+            .modelContext(mockData.context)
+            //.redacted(reason: .placeholder)
     }
 }

@@ -13,13 +13,13 @@ import Hellfire
 struct IPCategory: JSONSerializable {
     
     /// Category Id
-    var categoryId: CategoryId
+    let categoryId: CategoryId
     
     /// Name of the category
-    var name: String
+    let name: String
     
     /// Short description of the category
-    var description: String
+    let description: String
     
     private enum CodingKeys: String, CodingKey {
         case categoryId = "id"

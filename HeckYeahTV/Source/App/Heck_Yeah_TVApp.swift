@@ -86,48 +86,25 @@ struct Heck_Yeah_TVApp: App {
         startupTask?.cancel()
         startupTask = Task {
             
-            let hdHomeRunController = HDHomeRunDiscoveryController()
-            let iptvController: IPTVController = IPTVController()
-            var summary = FetchSummary()
+            let container = dataPersistence.container
             
-            let hdHomeRunSummary = await hdHomeRunController.bootStrapTunerChannelDiscovery()
-            let iptvSummary = await iptvController.fetchAll()
-            summary.mergeSummary(hdHomeRunSummary)
-            summary.mergeSummary(iptvSummary)
-            
-            // TODO: Log summary for collection, analysis and diagnostics.
-            if summary.failures.count > 0 {
-                logError("\(summary.failures.count) failure(s) in bootstrap data fetch: \(summary.failures)")
+            await withTaskGroup(of: Void.self) { group in
+                
+                group.addTask {
+                    let scanForTuners = await appState.scanForTuners
+                    let hdTunerImporter = HDHomeRunImporter(container: container, scanForTuners: scanForTuners)
+                    let _ = try? await hdTunerImporter.load()
+                }
+                
+                group.addTask {
+                    let iptvImporter = IPTVImporter(container: container)
+                    let _ = try? await iptvImporter.load()
+                }
             }
             
-            let container = dataPersistence.container
-            Task.detached(priority: .userInitiated) {
-                let importer = Importer(container: container)
-                
-                //Must go first.
-                try await importer.importCategories(iptvController.categories)
-                
-                try await withThrowingTaskGroup(of: Void.self) { group in
-                    group.addTask {
-                        try await importer.importCountries(iptvController.countries)
-                    }
-                    group.addTask {
-                        try await importer.importChannels(feeds: iptvController.feeds,
-                                                          logos: iptvController.logos,
-                                                          channels: iptvController.channels,
-                                                          streams: iptvController.streams,
-                                                          tunerChannels: hdHomeRunController.channels)
-                    }
-                    group.addTask {
-                        try await importer.importTunerDevices(hdHomeRunController.devices)
-                    }
-                    try await group.waitForAll()
-                }
-                
-                await MainActor.run {
-                    // Update state variable that boot up processes are completed.
-                    isBootComplete = true
-                }
+            await MainActor.run {
+                // Update state variable that boot up processes are completed.
+                isBootComplete = true
             }
         }
     }

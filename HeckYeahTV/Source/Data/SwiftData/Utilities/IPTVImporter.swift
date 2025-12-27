@@ -1,5 +1,5 @@
 //
-//  Importer.swift
+//  IPTVImporter.swift
 //  Heck Yeah TV
 //
 //  Created by Ed Hellyer on 9/30/25.
@@ -9,29 +9,16 @@
 import SwiftUI
 import SwiftData
 
-actor Importer {
+actor IPTVImporter {
     
     init(container: ModelContainer) {
         self.context = ModelContext(container)
         self.context.autosaveEnabled = false
     }
-
+    
     private var batchCount: Int = 0
     private let batchSize: Int = 3000
     private let context: ModelContext
-    
-    private lazy var existingFavorites: [ChannelId: IPTVFavorite] = {
-        do {
-            let favs = try context.fetch(FetchDescriptor<IPTVFavorite>(predicate: #Predicate<IPTVFavorite> { $0.isFavorite == true }))
-            let existingFavs = favs.reduce(into: [:]) { result, fav in
-                result[fav.id] = fav
-            }
-            return existingFavs
-        } catch {
-            logDebug("Unable to fetch existing favorites.")
-            return [:]
-        }
-    }()
     
     private lazy var existingCategories: [IPTVCategory] = {
         do {
@@ -41,7 +28,7 @@ actor Importer {
             return []
         }
     }()
-
+    
     private func iptvChannel(for channelId: ChannelId) -> IPTVChannel? {
         do {
             let predicate: Predicate<IPTVChannel> = #Predicate { $0.id == channelId }
@@ -54,76 +41,31 @@ actor Importer {
         }
     }
     
-    func importChannels(feeds: [IPFeed],
-                        logos: [IPLogo],
-                        channels: [IPChannel],
-                        streams: [IPStream],
-                        tunerChannels: [HDHomeRunChannel]) async throws {
+    private func importChannels(feeds: [IPFeed],
+                                logos: [IPLogo],
+                                channels: [IPChannel],
+                                streams: [IPStream]) async throws {
         
-        //Clean up the streams, remove duplicates
+        //Clean up the streams, remove streams with duplicate identifiers (due to real duplicates in the source)
         var streams = streams
         let remove = Array(Dictionary(grouping: streams, by: \.id).filter({ $1.count > 1 }).keys)
         streams.removeAll(where: { remove.contains($0.id) })
         
-        //Clean up the streams, remove streams without channel and feed identifiers.
+        //Clean up the streams, remove streams without channel and feed identifiers.  (We can't build the relational data on the stream for filtering without these)
         streams = streams.filter( { $0.channelId != nil && $0.feedId != nil })
         
         //Delete all existing channels, faster than upsert.  (We preserve favorites).
-        try context.delete(model: IPTVChannel.self, where: #Predicate { _ in true })
+        let channelSource: String = ChannelSourceType.ipStream.rawValue
+        try context.delete(model: IPTVChannel.self, where: #Predicate { channel in channel.source == channelSource })
         if context.hasChanges {
             try context.save()
         }
         
-        try await withThrowingTaskGroup(of: Void.self) { group in
-            group.addTask {
-                try await self.importHDHRChannels(tunerChannels: tunerChannels)
-            }
-            group.addTask {
-                try await self.importIPChannels(ipFeeds: feeds,
-                                                ipLogos: logos,
-                                                ipChannels: channels,
-                                                ipStreams: streams)
-            }
-            try await group.waitForAll()
-        }
-    }
-
-    private func importHDHRChannels(tunerChannels: [Channelable]) async throws {
-        //Dev Note: Here `Channelable` is `HDHomeRunChannel`
+        try await self.importIPChannels(ipFeeds: feeds,
+                                        ipLogos: logos,
+                                        ipChannels: channels,
+                                        ipStreams: streams)
         
-        guard !tunerChannels.isEmpty else {
-            logWarning("No HDHomeRun channels to import.")
-            return
-        }
-        
-        logDebug("HDHomeRun channel import process Starting  (incoming: \(tunerChannels.count))... 🇺🇸")
-
-        for src in tunerChannels {
-            let newChannel = IPTVChannel(
-                id: src.idHint,
-                sortHint: src.sortHint,
-                title: src.titleHint,
-                number: src.numberHint,
-                country: "ANY",
-                categories: [],
-                languages: [],
-                url: src.urlHint,
-                logoURL: nil,
-                quality: src.qualityHint,
-                hasDRM: src.hasDRMHint,
-                source: src.sourceHint,
-                deviceId: src.deviceIdHint,
-                favorite: self.existingFavorites[src.idHint]
-            )
-            
-            context.insert(newChannel)
-        }
-
-        if context.hasChanges {
-            try context.save()
-        }
-        
-        logDebug("HDHomeRun channel import process completed  Total imported: \(tunerChannels.count)... 🏁")
     }
     
     private func importIPChannels(ipFeeds: [IPFeed],
@@ -138,7 +80,7 @@ actor Importer {
         }
         
         logDebug("IP channel import process Starting  (incoming: \(ipStreams.count))... 🇺🇸")
-
+        
         //Build import indexes
         let feeds: [ChannelId: (StreamQuality, [LanguageCode])] = ipFeeds.reduce(into: [:]) { result, feed in
             result[feed.channelId] = (StreamQuality.convertToStreamQuality(feed.format), feed.languages)
@@ -149,7 +91,24 @@ actor Importer {
         let ipChannels: [ChannelId: (CountryCode, [IPTVCategory]?)] = ipChannels.reduce(into: [:]) { result, channel in
             result[channel.channelId] = (channel.country, self.existingCategories.filter( { channel.categories?.contains($0.categoryId) == true }))
         }
-
+        
+        let existingFavorites: [ChannelId: IPTVFavorite] = {
+            do {
+                let channelSource: String = ChannelSourceType.ipStream.rawValue
+                let favs = try context.fetch(FetchDescriptor<IPTVFavorite>(predicate: #Predicate<IPTVFavorite> {
+                    $0.channel?.source == channelSource
+                    && $0.isFavorite == true
+                }))
+                let existingFavs = favs.reduce(into: [:]) { result, fav in
+                    result[fav.id] = fav
+                }
+                return existingFavs
+            } catch {
+                logDebug("Unable to fetch existing favorites.")
+                return [:]
+            }
+        }()
+        
 //        var descriptor = FetchDescriptor<IPTVChannel>()
 //        descriptor.propertiesToFetch = [\.id]
 //        let models = try context.fetch(descriptor)
@@ -157,7 +116,7 @@ actor Importer {
         
         // insert
         for src in ipStreams { //where !existingIds.contains(src.idHint) {
-                        
+            
             let iptvChannelId: String? = (src as! IPStream).channelId
             
             let feed = (iptvChannelId == nil) ? nil : feeds[iptvChannelId!]
@@ -184,7 +143,7 @@ actor Importer {
                 hasDRM: src.hasDRMHint,
                 source: src.sourceHint,
                 deviceId: src.deviceIdHint,
-                favorite: self.existingFavorites[src.idHint]
+                favorite: existingFavorites[src.idHint]
             )
             
             context.insert(newChannel)
@@ -204,7 +163,7 @@ actor Importer {
         logDebug("Channel import process completed. Total imported: \(ipStreams.count) 🏁")
     }
     
-    func importCountries(_ countries: [Country]) async throws {
+    private func importCountries(_ countries: [Country]) async throws {
         guard !countries.isEmpty else {
             logWarning("No countries to import, exiting process without changes to local store.")
             return
@@ -229,17 +188,17 @@ actor Importer {
         logDebug("Country import process completed. Total imported: \(countries.count) 🏁")
     }
     
-    func importCategories(_ categories: [IPCategory]) async throws {
+    private func importCategories(_ categories: [IPCategory]) async throws {
         guard !categories.isEmpty else {
             logWarning("No categories to import, exiting process without changes to local store.")
             return
         }
-
+        
         // No smut category.
         let categories = categories.filter({ $0.categoryId != "xxx" })
         
         logDebug("Category import process starting... 🇺🇸")
-
+        
         // insert or update
         for src in categories {
             context.insert(
@@ -256,58 +215,42 @@ actor Importer {
         logDebug("Categories import process completed. Total imported: \(categories.count) 🏁")
     }
     
-    func importTunerDevices(_ devices: [HDHomeRunDevice]) async throws {
-        guard !devices.isEmpty else {
-            logWarning("No devices to import, exiting process without changes to local store.")
-            return
+    func load() async throws -> FetchSummary {
+        var summary = FetchSummary()
+        
+        let iptvController: IPTVController = IPTVController()
+        
+        let iptvSummary = await iptvController.fetchAll()
+        summary.mergeSummary(iptvSummary)
+        
+        if summary.failures.count > 0 {
+            logError("\(summary.failures.count) failure(s) in bootstrap data fetch: \(summary.failures)")
         }
         
-        logDebug("Device import process starting... 🇺🇸")
-        
-        let existingHDHomeRunServers: [HDHomeRunServer] = {
-            do {
-                var descriptor = FetchDescriptor<HDHomeRunServer>()
-                descriptor.propertiesToFetch = [\.deviceId]
-                return try context.fetch(descriptor)
-            } catch {
-                logDebug("Unable to fetch existing `HDHomeRunServer`.")
-                return []
+        // These two can be inserted concurrently.  Categories must complete prior to the channels import.
+        try await withThrowingTaskGroup(of: Void.self) { group in
+            group.addTask {
+                let countries = await iptvController.countries
+                try await self.importCountries(countries)
             }
-        }()
-        
-        let existingIDs = Set(existingHDHomeRunServers.map(\.deviceId))
-        let incomingIDs = Set(devices.map(\.deviceId))
-        
-        // delete
-        for model in existingHDHomeRunServers where !incomingIDs.contains(model.deviceId) {
-            context.delete(model)
+            group.addTask {
+                let categories = await iptvController.categories
+                try await self.importCategories(categories)
+            }
+            
+            try await group.waitForAll()
         }
         
-        // insert
-        for src in devices where !existingIDs.contains(src.deviceId) {
-            context.insert(
-                HDHomeRunServer(deviceId: src.deviceId,
-                                friendlyName: src.friendlyName,
-                                modelNumber: src.modelNumber,
-                                firmwareName: src.firmwareName,
-                                firmwareVersion: src.firmwareVersion,
-                                deviceAuth: src.deviceAuth,
-                                baseURL: src.baseURL,
-                                lineupURL: src.lineupURL,
-                                tunerCount: src.tunerCount,
-                                includeChannelLineUp: true)
-            )
-        }
+        let feeds = await iptvController.feeds
+        let logos = await iptvController.logos
+        let channels = await iptvController.channels
+        let streams = await iptvController.streams
         
-//        // For runtime debug only.  Simulates no tuners in the DB.
-//        for model in existing {
-//            context.delete(model)
-//        }
+        try await self.importChannels(feeds: feeds,
+                                      logos: logos,
+                                      channels: channels,
+                                      streams: streams)
         
-        if context.hasChanges {
-            try context.save()
-        }
-        
-        logDebug("Device import process completed. Total imported: \(devices.count) 🏁")
+        return summary
     }
 }

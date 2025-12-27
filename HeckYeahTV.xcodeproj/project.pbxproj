@@ -114,28 +114,28 @@
 				"Source/Data/Adapters/IPStream+Channelable.swift",
 				"Source/Data/Adapters/StreamQuality+Extension.swift",
 				Source/Data/DataControllers/AttachmentController.swift,
-				Source/Data/Models/AppStateProvider.swift,
-				Source/Data/Models/ChannelMap.swift,
-				Source/Data/Models/Country.swift,
-				Source/Data/Models/HDHomeRunChannel.swift,
-				Source/Data/Models/HDHomeRunDevice.swift,
-				Source/Data/Models/HDHomeRunDiscovery.swift,
-				Source/Data/Models/IPBlocklist.swift,
-				Source/Data/Models/IPCategory.swift,
-				Source/Data/Models/IPChannel.swift,
-				Source/Data/Models/IPFeed.swift,
-				Source/Data/Models/IPGuide.swift,
-				Source/Data/Models/IPLogo.swift,
-				Source/Data/Models/IPStream.swift,
-				Source/Data/Models/Language.swift,
-				Source/Data/Models/Program.swift,
-				Source/Data/Models/Region.swift,
-				Source/Data/Models/SharedAppState.swift,
-				Source/Data/Models/Subdivision.swift,
-				Source/Data/Models/Timezone.swift,
+				Source/Data/DataTransferModels/ChannelMap.swift,
+				Source/Data/DataTransferModels/Country.swift,
+				Source/Data/DataTransferModels/HDHomeRunChannel.swift,
+				Source/Data/DataTransferModels/HDHomeRunDevice.swift,
+				Source/Data/DataTransferModels/HDHomeRunDiscovery.swift,
+				Source/Data/DataTransferModels/IPBlocklist.swift,
+				Source/Data/DataTransferModels/IPCategory.swift,
+				Source/Data/DataTransferModels/IPChannel.swift,
+				Source/Data/DataTransferModels/IPFeed.swift,
+				Source/Data/DataTransferModels/IPGuide.swift,
+				Source/Data/DataTransferModels/IPLogo.swift,
+				Source/Data/DataTransferModels/IPStream.swift,
+				Source/Data/DataTransferModels/Language.swift,
+				Source/Data/DataTransferModels/Program.swift,
+				Source/Data/DataTransferModels/Region.swift,
+				Source/Data/DataTransferModels/Subdivision.swift,
+				Source/Data/DataTransferModels/Timezone.swift,
 				Source/Data/Services/HDHomeRun/HDHomeRunDiscoveryController.swift,
 				Source/Data/Services/IPTV/IPTVController.swift,
 				Source/Data/Services/IPTV/IPTVDataSources.swift,
+				Source/Data/SharedAppState/AppStateProvider.swift,
+				Source/Data/SharedAppState/SharedAppState.swift,
 				Source/Data/SwiftData/AppDataSource/ChannelFilterable.swift,
 				Source/Data/SwiftData/AppDataSource/SwiftDataControllable.swift,
 				Source/Data/SwiftData/AppDataSource/SwiftDataController.swift,
@@ -153,7 +153,8 @@
 				Source/Data/SwiftData/SwiftDataModels/StreamQuality.swift,
 				Source/Data/SwiftData/SwiftDataStack.swift,
 				Source/Data/SwiftData/Utilities/DataChangeTracking.swift,
-				Source/Data/SwiftData/Utilities/Importer.swift,
+				Source/Data/SwiftData/Utilities/HDHomeRunImporter.swift,
+				Source/Data/SwiftData/Utilities/IPTVImporter.swift,
 				Source/UserInterface/MacAndPhone/SectionView.swift,
 				Source/UserInterface/Main/BootGateView.swift,
 				Source/UserInterface/Main/BootSplashView.swift,
@@ -248,28 +249,28 @@
 				"Source/Data/Adapters/IPStream+Channelable.swift",
 				"Source/Data/Adapters/StreamQuality+Extension.swift",
 				Source/Data/DataControllers/AttachmentController.swift,
-				Source/Data/Models/AppStateProvider.swift,
-				Source/Data/Models/ChannelMap.swift,
-				Source/Data/Models/Country.swift,
-				Source/Data/Models/HDHomeRunChannel.swift,
-				Source/Data/Models/HDHomeRunDevice.swift,
-				Source/Data/Models/HDHomeRunDiscovery.swift,
-				Source/Data/Models/IPBlocklist.swift,
-				Source/Data/Models/IPCategory.swift,
-				Source/Data/Models/IPChannel.swift,
-				Source/Data/Models/IPFeed.swift,
-				Source/Data/Models/IPGuide.swift,
-				Source/Data/Models/IPLogo.swift,
-				Source/Data/Models/IPStream.swift,
-				Source/Data/Models/Language.swift,
-				Source/Data/Models/Program.swift,
-				Source/Data/Models/Region.swift,
-				Source/Data/Models/SharedAppState.swift,
-				Source/Data/Models/Subdivision.swift,
-				Source/Data/Models/Timezone.swift,
+				Source/Data/DataTransferModels/ChannelMap.swift,
+				Source/Data/DataTransferModels/Country.swift,
+				Source/Data/DataTransferModels/HDHomeRunChannel.swift,
+				Source/Data/DataTransferModels/HDHomeRunDevice.swift,
+				Source/Data/DataTransferModels/HDHomeRunDiscovery.swift,
+				Source/Data/DataTransferModels/IPBlocklist.swift,
+				Source/Data/DataTransferModels/IPCategory.swift,
+				Source/Data/DataTransferModels/IPChannel.swift,
+				Source/Data/DataTransferModels/IPFeed.swift,
+				Source/Data/DataTransferModels/IPGuide.swift,
+				Source/Data/DataTransferModels/IPLogo.swift,
+				Source/Data/DataTransferModels/IPStream.swift,
+				Source/Data/DataTransferModels/Language.swift,
+				Source/Data/DataTransferModels/Program.swift,
+				Source/Data/DataTransferModels/Region.swift,
+				Source/Data/DataTransferModels/Subdivision.swift,
+				Source/Data/DataTransferModels/Timezone.swift,
 				Source/Data/Services/HDHomeRun/HDHomeRunDiscoveryController.swift,
 				Source/Data/Services/IPTV/IPTVController.swift,
 				Source/Data/Services/IPTV/IPTVDataSources.swift,
+				Source/Data/SharedAppState/AppStateProvider.swift,
+				Source/Data/SharedAppState/SharedAppState.swift,
 				Source/Data/SwiftData/AppDataSource/ChannelFilterable.swift,
 				Source/Data/SwiftData/AppDataSource/SwiftDataControllable.swift,
 				Source/Data/SwiftData/AppDataSource/SwiftDataController.swift,
@@ -287,7 +288,8 @@
 				Source/Data/SwiftData/SwiftDataModels/StreamQuality.swift,
 				Source/Data/SwiftData/SwiftDataStack.swift,
 				Source/Data/SwiftData/Utilities/DataChangeTracking.swift,
-				Source/Data/SwiftData/Utilities/Importer.swift,
+				Source/Data/SwiftData/Utilities/HDHomeRunImporter.swift,
+				Source/Data/SwiftData/Utilities/IPTVImporter.swift,
 				Source/UserInterface/Main/BootGateView.swift,
 				Source/UserInterface/Main/BootSplashView.swift,
 				Source/UserInterface/Main/DustyView.swift,
@@ -1087,6 +1089,7 @@
 				INFOPLIST_KEY_CFBundleDisplayName = "Heck Yeah TV";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.entertainment";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2025 Hellyer Multimedia. All rights reserved.";
+				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "$(PRODUCT_NAME) would like to access your local network to discover HDHomeRun network TV tuners.";
 				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1129,6 +1132,7 @@
 				INFOPLIST_KEY_CFBundleDisplayName = "Heck Yeah TV";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.entertainment";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2025 Hellyer Multimedia. All rights reserved.";
+				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "$(PRODUCT_NAME) would like to access your local network to discover HDHomeRun network TV tuners.";
 				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited)";
 				MACOSX_DEPLOYMENT_TARGET = 15.6;
@@ -1384,6 +1388,7 @@
 				INFOPLIST_KEY_CFBundleDisplayName = "Heck Yeah TV";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.entertainment";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2025 Hellyer Multimedia. All rights reserved.";
+				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "$(PRODUCT_NAME) would like to access your local network to discover HDHomeRun network TV tuners.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -1428,6 +1433,7 @@
 				INFOPLIST_KEY_CFBundleDisplayName = "Heck Yeah TV";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.entertainment";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2025 Hellyer Multimedia. All rights reserved.";
+				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "$(PRODUCT_NAME) would like to access your local network to discover HDHomeRun network TV tuners.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -1554,6 +1560,7 @@
 				INFOPLIST_KEY_CFBundleDisplayName = "Heck Yeah TV";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.entertainment";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2025 Hellyer Multimedia. All rights reserved.";
+				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "$(PRODUCT_NAME) would like to access your local network to discover HDHomeRun network TV tuners.";
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UIRequiredDeviceCapabilities = arm64;
 				INFOPLIST_KEY_UIUserInterfaceStyle = Automatic;
@@ -1594,6 +1601,7 @@
 				INFOPLIST_KEY_CFBundleDisplayName = "Heck Yeah TV";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.entertainment";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2025 Hellyer Multimedia. All rights reserved.";
+				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "$(PRODUCT_NAME) would like to access your local network to discover HDHomeRun network TV tuners.";
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UIRequiredDeviceCapabilities = arm64;
 				INFOPLIST_KEY_UIUserInterfaceStyle = Automatic;

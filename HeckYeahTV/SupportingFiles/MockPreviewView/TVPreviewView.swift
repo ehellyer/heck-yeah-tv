@@ -9,12 +9,18 @@
 import SwiftUI
 
 struct TVPreviewView<T: View>: View {
+
+    init(contentView: @escaping () -> T) {
+        logDebug("Init Starting")
+        self.contentView = contentView
+    }
     
-    let contentView: () -> T
+    private let contentView: () -> T
+
     
     var body: some View {
         ZStack {
-            // Simulated TV stream background for previews
+            // Simulated TV stream background for previews (Image has versions for device and orientations.)
             Color.clear
                 .overlay(
                     Image("PreviewTVScreenShot")

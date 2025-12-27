@@ -16,11 +16,11 @@ typealias HDHomeRunDeviceId = String
 /// e.g. [https://api.hdhomerun.com/discover](https://api.hdhomerun.com/discover) -> `[HDHomeRunDiscovery]`
 struct HDHomeRunDiscovery: JSONSerializable, Equatable  {
     
-    var deviceId: HDHomeRunDeviceId
-    var localIP: String
-    var baseURL: URL
-    var discoverURL: URL
-    var lineupURL: URL
+    let deviceId: HDHomeRunDeviceId
+    let localIP: String
+    let baseURL: URL
+    let discoverURL: URL
+    let lineupURL: URL
 }
 
 extension HDHomeRunDiscovery {
