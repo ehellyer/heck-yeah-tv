@@ -101,9 +101,6 @@ class GuideViewController: UIViewController {
     private var reloadTableViewTask: Task<Void, Never>? = nil
     private var searchDebounceTask: Task<Void, Never>? = nil
     
-    //TODO: Integrate program data into IPTVChannel
-    private var channelPrograms: [Program] = Program.mockPrograms()
-
     private var targetChannelId: ChannelId? {
         return appState.selectedChannel ?? swiftDataController.guideChannelMap.map.first
     }

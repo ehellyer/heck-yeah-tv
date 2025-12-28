@@ -10,6 +10,8 @@
 		089D175416ADEF60C0354B23 /* Pods_iOS_HeckYeahTV.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76A34A69F5505812676277A2 /* Pods_iOS_HeckYeahTV.framework */; };
 		E2A5EE63B6F0360CFDEA112A /* Pods_tvOS_HeckYeahTV.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4850C4BF6A440A7BD11EC2DD /* Pods_tvOS_HeckYeahTV.framework */; };
 		EB33342E2EC8273700CFAC43 /* Pods_macOS_HeckYeahTV.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB33342D2EC8273700CFAC43 /* Pods_macOS_HeckYeahTV.framework */; };
+		EB35E3122F00781200D31894 /* MobileVLCKit.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB35E3112F00781200D31894 /* MobileVLCKit.xcframework */; };
+		EB35E3132F00781200D31894 /* MobileVLCKit.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = EB35E3112F00781200D31894 /* MobileVLCKit.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		EBB5B3292ED8B9D6004251CB /* Hellfire in Frameworks */ = {isa = PBXBuildFile; productRef = EBB5B3282ED8B9D6004251CB /* Hellfire */; };
 		EBB5B51F2EDD46C4004251CB /* Hellfire in Frameworks */ = {isa = PBXBuildFile; productRef = EBB5B51E2EDD46C4004251CB /* Hellfire */; };
 		EBB5B5212EDD46DC004251CB /* Hellfire in Frameworks */ = {isa = PBXBuildFile; productRef = EBB5B5202EDD46DC004251CB /* Hellfire */; };
@@ -62,6 +64,20 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		EB35E3142F00781200D31894 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				EB35E3132F00781200D31894 /* MobileVLCKit.xcframework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		054AB03F510D838EFFB350DD /* Pods-iOS_HeckYeahTV.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-iOS_HeckYeahTV.release.xcconfig"; path = "Target Support Files/Pods-iOS_HeckYeahTV/Pods-iOS_HeckYeahTV.release.xcconfig"; sourceTree = "<group>"; };
 		4850C4BF6A440A7BD11EC2DD /* Pods_tvOS_HeckYeahTV.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_tvOS_HeckYeahTV.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -77,6 +93,8 @@
 		EB2C2DCE2E5E203C005CE685 /* macOS_HeckYeahTVUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = macOS_HeckYeahTVUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		EB3334292EC826E500CFAC43 /* VLCKit.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = VLCKit.xcframework; path = Pods/VLCKit/VLCKit.xcframework; sourceTree = "<group>"; };
 		EB33342D2EC8273700CFAC43 /* Pods_macOS_HeckYeahTV.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Pods_macOS_HeckYeahTV.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		EB35E30D2F0077B500D31894 /* Pods_iOS_HeckYeahTV.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Pods_iOS_HeckYeahTV.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		EB35E3112F00781200D31894 /* MobileVLCKit.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = MobileVLCKit.xcframework; path = Pods/MobileVLCKit/MobileVLCKit.xcframework; sourceTree = "<group>"; };
 		EBC92B4A2E9D5FFA00FF62BC /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		EBE03BB72E53D421006B7747 /* HeckYeahTV.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HeckYeahTV.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EBE03BC42E53D423006B7747 /* iOS_HeckYeahTVTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = iOS_HeckYeahTVTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -410,6 +428,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EB35E3122F00781200D31894 /* MobileVLCKit.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -478,6 +497,8 @@
 		EBE03C812E53E5DC006B7747 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				EB35E3112F00781200D31894 /* MobileVLCKit.xcframework */,
+				EB35E30D2F0077B500D31894 /* Pods_iOS_HeckYeahTV.framework */,
 				EB33342D2EC8273700CFAC43 /* Pods_macOS_HeckYeahTV.framework */,
 				EB3334292EC826E500CFAC43 /* VLCKit.xcframework */,
 				76A34A69F5505812676277A2 /* Pods_iOS_HeckYeahTV.framework */,
@@ -597,6 +618,7 @@
 				EBE03BC02E53D423006B7747 /* Sources */,
 				EBE03BC12E53D423006B7747 /* Frameworks */,
 				EBE03BC22E53D423006B7747 /* Resources */,
+				EB35E3142F00781200D31894 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -1475,7 +1497,7 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Heck_Yeah_TV.app/Heck_Yeah_TV";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/HeckYeahTV.app/HeckYeahTV";
 				TVOS_DEPLOYMENT_TARGET = 18.6;
 			};
 			name = Debug;
@@ -1496,7 +1518,7 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Heck_Yeah_TV.app/Heck_Yeah_TV";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/HeckYeahTV.app/HeckYeahTV";
 				TVOS_DEPLOYMENT_TARGET = 18.6;
 			};
 			name = Release;
