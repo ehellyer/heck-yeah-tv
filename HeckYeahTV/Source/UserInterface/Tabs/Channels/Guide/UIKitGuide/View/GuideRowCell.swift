@@ -76,11 +76,11 @@ class GuideRowCell: UITableViewCell {
         programsLoader.$programs
             .receive(on: DispatchQueue.main)
             .sink { [weak self] programs in
-                guard let self, channelId == programs?.first?.channelId else { return }
+                guard let self, channelId == channel?.id else { return }
                 self.programs = programs
                 self.updateProgramsDisplay(with: channel?.id, isPlaying: isPlaying)
             }
-            .store(in: &channelLoaderBindings)
+            .store(in: &programsLoaderBindings)
     }
         
     //MARK: - Private API - Lazy view binding
