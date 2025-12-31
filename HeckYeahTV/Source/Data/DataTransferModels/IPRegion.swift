@@ -1,5 +1,5 @@
 //
-//  Region.swift
+//  IPRegion.swift
 //  Heck Yeah TV
 //
 //  Created by Ed Hellyer on 8/11/25.
@@ -10,7 +10,7 @@ import Foundation
 import Hellfire
 
 /// Source: [https://iptv-org.github.io/api/regions.json](https://iptv-org.github.io/api/regions.json)
-struct Region: JSONSerializable {
+struct IPRegion: JSONSerializable {
     
     /// Code of the region (e.g., "MAGHREB")
     let code: String

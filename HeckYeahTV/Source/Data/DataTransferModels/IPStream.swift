@@ -15,7 +15,7 @@ struct IPStream: JSONSerializable {
     /// Stable hash id generated on JSON decoding for ubiquitous unique identifier of a channel regardless of source.  See JSON decoder init below.
     let id: String
     
-    /// The original source data unique identifier. (e.g., "France3.fr")
+    /// Unique channel Id of the source data. (e.g., "France3.fr")
     let channelId: String?
     
     /// Feed Id if available; otherwise `nil` (e.g., "NordPasdeCalaisHD")
@@ -36,7 +36,15 @@ struct IPStream: JSONSerializable {
     /// Maximum stream quality (e.g., "720p"), if specified
     let quality: String?
     
-    private enum CodingKeys: String, CodingKey {
+    /// URL for the channel logo.  Set after object has been decoded.  The logo comes from a separate route.
+    var logoURL: URL?
+}
+
+//MARK: - JSONSerializable customization
+
+extension IPStream {
+    
+    enum CodingKeys: String, CodingKey {
         case id
         case channelId = "channel"
         case feedId = "feed"
@@ -45,24 +53,28 @@ struct IPStream: JSONSerializable {
         case referrer
         case userAgent = "user_agent"
         case quality
+        case logoURL
     }
-}
-
-extension IPStream {
+    
     init(from decoder: any Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-
-        let title = try container.decode(String.self, forKey: .title)
-        let url = try container.decode(URL.self, forKey: .url)
-
-        // Stable hash identifier generated over `url` and `title`.
-        self.id = String.stableHashHex(url.absoluteString, title)
-        self.channelId = try container.decodeIfPresent(String.self, forKey: .channelId)
-        self.feedId = try container.decodeIfPresent(String.self, forKey: .feedId)
-        self.title = title
-        self.url = url
-        self.referrer = try container.decodeIfPresent(String.self, forKey: .referrer)
-        self.userAgent = try container.decodeIfPresent(String.self, forKey: .userAgent)
-        self.quality = try container.decodeIfPresent(String.self, forKey: .quality)
+        do {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            let title = try container.decode(String.self, forKey: .title)
+            let url = try container.decode(URL.self, forKey: .url)
+            
+            // Stable hash identifier generated over `url` and `title`.
+            self.id = String.stableHashHex(url.absoluteString, title)
+            self.channelId = try container.decodeIfPresent(String.self, forKey: .channelId)
+            self.feedId = try container.decodeIfPresent(String.self, forKey: .feedId)
+            self.title = title
+            self.url = url
+            self.referrer = try container.decodeIfPresent(String.self, forKey: .referrer)
+            self.userAgent = try container.decodeIfPresent(String.self, forKey: .userAgent)
+            self.quality = try container.decodeIfPresent(String.self, forKey: .quality)
+            self.logoURL = try container.decodeIfPresent(URL.self, forKey: .logoURL)
+        } catch {
+            logDebug(error)
+            throw error
+        }
     }
 }

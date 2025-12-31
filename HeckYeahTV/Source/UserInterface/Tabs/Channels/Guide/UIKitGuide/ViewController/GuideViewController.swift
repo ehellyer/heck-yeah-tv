@@ -102,7 +102,7 @@ class GuideViewController: UIViewController {
     private var searchDebounceTask: Task<Void, Never>? = nil
     
     private var targetChannelId: ChannelId? {
-        return appState.selectedChannel ?? swiftDataController.guideChannelMap.map.first
+        return appState.selectedChannel ?? swiftDataController.channelBundleMap.map.first
     }
     
 //    private func setupSearchController() {
@@ -129,22 +129,18 @@ class GuideViewController: UIViewController {
         
         withObservationTracking({
             // Access the property we care about. This registers the dependency.
-            _ = swiftDataController.guideChannelMap.totalCount
+            _ = swiftDataController.channelBundleMap.mapCount
         }, onChange: { [weak self] in
             // Called when any accessed observed property in the tracking block changes.
             Task { @MainActor [weak self] in
                 self?.reloadTableViewTask?.cancel()
                 self?.reloadTableViewTask = Task { @MainActor [weak self] in
-                    do {
-                        //Debounce the observation.
-                        try await Task.sleep(nanoseconds: debounceNS)
-                        try Task.checkCancellation()
-                        self?.tableView.reloadData()
-                        self?.scrollToSelectedChannel()
-                        self?.setupAppStateObservation()
-                    } catch {
-                        //Do nothing, task was cancelled.
-                    }
+                    //Debounce the observation.
+                    try? await Task.sleep(nanoseconds: debounceNS)
+                    guard !Task.isCancelled else { return }
+                    self?.tableView.reloadData()
+                    self?.scrollToSelectedChannel()
+                    self?.setupAppStateObservation()
                 }
             }
         })
@@ -169,17 +165,19 @@ class GuideViewController: UIViewController {
             if isPlaying {
                 self.targetFocusView = cell.channelNameView
             }
-            cell.configure(with: channelId, isPlaying: isPlaying, programs: [], viewContext: viewContext)
+            cell.configure(with: channelId,
+                           isPlaying: isPlaying,
+                           viewContext: viewContext)
         }
     }
     
     private func scrollToSelectedChannel(animated: Bool = true) {
         guard let _channelId = targetChannelId else { return }
-        if let index = swiftDataController.guideChannelMap.map.firstIndex(of: _channelId) {
+        if let index = swiftDataController.channelBundleMap.map.firstIndex(of: _channelId) {
             let indexPath = IndexPath(row: index, section: 0)
             // Focus will be applied in scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView)
             tableView.scrollToRow(at: indexPath, at: .middle, animated: animated)
-        } else if swiftDataController.guideChannelMap.map.isEmpty == false {
+        } else if swiftDataController.channelBundleMap.map.isEmpty == false {
             //Just scroll to the first item in the list when the target channelId is not found, AND there are channels in the list.
             let indexPath = IndexPath(row: 0, section: 0)
             tableView.scrollToRow(at: indexPath, at: .middle, animated: animated)
@@ -276,20 +274,19 @@ extension GuideViewController: GuideViewDelegate {
 extension GuideViewController: UITableViewDataSource {
 
     func numberOfSections(in tableView: UITableView) -> Int {
-        return min(swiftDataController.guideChannelMap.totalCount, 1) //Clamp to 0 or 1
+        return min(swiftDataController.channelBundleMap.mapCount, 1) //Clamp to 0 or 1
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return swiftDataController.guideChannelMap.totalCount
+        return swiftDataController.channelBundleMap.mapCount
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let guideRowCell = tableView.dequeueReusableCell(withIdentifier: GuideRowCell.identifier, for: indexPath) as! GuideRowCell
-        let channelId = swiftDataController.guideChannelMap.map[indexPath.row]
+        let channelId = swiftDataController.channelBundleMap.map[indexPath.row]
         let isPlaying = (channelId == appState.selectedChannel)
         guideRowCell.configure(with: channelId,
                                isPlaying: isPlaying,
-                               programs: [],
                                viewContext: viewContext)
         guideRowCell.delegate = self
         return guideRowCell

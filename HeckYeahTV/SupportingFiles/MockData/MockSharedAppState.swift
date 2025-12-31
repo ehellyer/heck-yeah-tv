@@ -24,13 +24,16 @@ final class MockSharedAppState: AppStateProvider {
     }
     var recentChannelIds: [ChannelId]
     var scanForTuners: Bool
-
+    var selectedChannelBundle: ChannelBundleId
+    
+    
     init(isPlayerPaused: Bool = false,
          showAppNavigation: Bool = false,
          selectedTab: AppSection = .guide,
          selectedChannel: ChannelId? = nil,
          recentChannelIds: [ChannelId] = [],
-         scanForTuners: Bool = true) {
+         scanForTuners: Bool = true,
+         selectedChannelBundle: ChannelBundleId = AppKeys.Application.defaultChannelBundleId) {
         
         self.isPlayerPaused = isPlayerPaused
         self.showAppNavigation = showAppNavigation
@@ -38,5 +41,6 @@ final class MockSharedAppState: AppStateProvider {
         self.selectedChannel = selectedChannel
         self.recentChannelIds = recentChannelIds
         self.scanForTuners = scanForTuners
+        self.selectedChannelBundle = selectedChannelBundle
     }
 }

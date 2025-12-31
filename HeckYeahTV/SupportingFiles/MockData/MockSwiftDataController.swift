@@ -31,17 +31,22 @@ final class MockSwiftDataController: SwiftDataControllable {
         self.showFavoritesOnly = showFavoritesOnly
         self.searchTerm = searchTerm
         
+        let descriptor = FetchDescriptor<Channel>()
+        self.totalChannelCount = (try? viewContext.fetchCount(descriptor)) ?? 0
+
         try? self.bootStrap()
     }
     
     //MARK: - Internal API - SwiftDataControllable implementation
     
-    private(set) var guideChannelMap: ChannelMap = ChannelMap(map: [])
+    private(set) var totalChannelCount: Int
+
+    private(set) var channelBundleMap: ChannelBundleMap = ChannelBundleMap(id: UserDefaults.selectedChannelBundle, map: [])
     
     static func predicateBuilder(showFavoritesOnly: Bool,
                                  searchTerm: String?,
                                  countryCode: CountryCode,
-                                 categoryId: CategoryId?) -> Predicate<IPTVChannel> {
+                                 categoryId: CategoryId?) -> Predicate<Channel> {
         
         // Keeping the predicate builder code in the same spot for now.  (Less maintenance)  Change if needed.
         SwiftDataController.predicateBuilder(showFavoritesOnly: showFavoritesOnly,
@@ -55,50 +60,50 @@ final class MockSwiftDataController: SwiftDataControllable {
     var showFavoritesOnly: Bool = false {
         didSet {
             guard showFavoritesOnly != oldValue else { return }
-            scheduleChannelMapRebuild()
+            scheduleChannelBundleMapRebuild()
         }
     }
     
     var selectedCountry: CountryCode {
         didSet {
             guard selectedCountry != oldValue else { return }
-            scheduleChannelMapRebuild()
+            scheduleChannelBundleMapRebuild()
         }
     }
     
     var selectedCategory: CategoryId? {
         didSet {
             guard selectedCategory != oldValue else { return }
-            scheduleChannelMapRebuild()
+            scheduleChannelBundleMapRebuild()
         }
     }
     
     var searchTerm: String? {
         didSet {
             guard searchTerm != oldValue else { return }
-            scheduleChannelMapRebuild()
+            scheduleChannelBundleMapRebuild()
         }
     }
     
     //MARK: - Internal API Functions for Preview
     
-    func fetchChannel(at index: Int) -> IPTVChannel {
-        let channelId = guideChannelMap.map[index]
-        let predicate = #Predicate<IPTVChannel> { $0.id == channelId }
-        var descriptor = FetchDescriptor<IPTVChannel>(predicate: predicate)
+    func fetchChannel(at index: Int) -> Channel {
+        let channelId = channelBundleMap.map[index]
+        let predicate = #Predicate<Channel> { $0.id == channelId }
+        var descriptor = FetchDescriptor<Channel>(predicate: predicate)
         descriptor.fetchLimit = 1
         let channel = try! viewContext.fetch(descriptor).first!
         return channel
     }
     
-    func categories() -> [IPTVCategory] {
-        let descriptor = FetchDescriptor<IPTVCategory>(sortBy: [SortDescriptor(\IPTVCategory.name, order: .forward)])
+    func categories() -> [ProgramCategory] {
+        let descriptor = FetchDescriptor<ProgramCategory>(sortBy: [SortDescriptor(\ProgramCategory.name, order: .forward)])
         let _categories = try! viewContext.fetch(descriptor)
         return _categories
     }
 
-    func countries() -> [IPTVCountry] {
-        let descriptor = FetchDescriptor<IPTVCountry>(sortBy: [SortDescriptor(\IPTVCountry.name, order: .forward)])
+    func countries() -> [Country] {
+        let descriptor = FetchDescriptor<Country>(sortBy: [SortDescriptor(\Country.name, order: .forward)])
         let _countries = try! viewContext.fetch(descriptor)
         return _countries
     }
@@ -120,14 +125,14 @@ final class MockSwiftDataController: SwiftDataControllable {
     private func bootStrap() throws {
         guard bootstrapStarted == false else { return }
         bootstrapStarted = true
-        try rebuildChannelMap()
+        try rebuildChannelBundleMap()
     }
 
     /// Schedules a channel map rebuild with debouncing to prevent excessive rebuilds.
     ///
     /// This method cancels any pending rebuild and schedules a new one after a 300ms delay.
     /// The delay is particularly useful for search term changes where users are actively typing.
-    private func scheduleChannelMapRebuild() {
+    private func scheduleChannelBundleMapRebuild() {
         // Cancel any existing rebuild task
         rebuildTask?.cancel()
         
@@ -135,20 +140,18 @@ final class MockSwiftDataController: SwiftDataControllable {
         rebuildTask = Task { @MainActor in
             // Wait for debounce period (300ms is a sweet spot for search-as-you-type)
             try? await Task.sleep(for: .milliseconds(300))
-            
-            // Check if task was cancelled during sleep
             guard !Task.isCancelled else { return }
             
             // Rebuild the channel map with current filter values
             do {
-                try rebuildChannelMap()
+                try rebuildChannelBundleMap()
             } catch {
                 logError("Failed to rebuild channel map: \(error)")
             }
         }
     }
     
-    private func rebuildChannelMap() throws {
+    private func rebuildChannelBundleMap() throws {
         
         let context = self.viewContext
         
@@ -159,8 +162,8 @@ final class MockSwiftDataController: SwiftDataControllable {
         
         logDebug("Building Channel Map... 🇺🇸")
         
-        var channelsDescriptor: FetchDescriptor<IPTVChannel> = FetchDescriptor<IPTVChannel>(
-            sortBy: [SortDescriptor(\IPTVChannel.sortHint, order: .forward)]
+        var channelsDescriptor: FetchDescriptor<Channel> = FetchDescriptor<Channel>(
+            sortBy: [SortDescriptor(\Channel.sortHint, order: .forward)]
         )
         
         channelsDescriptor.predicate = Self.predicateBuilder(showFavoritesOnly: showFavoritesOnly,
@@ -168,10 +171,10 @@ final class MockSwiftDataController: SwiftDataControllable {
                                                              countryCode: selectedCountry,
                                                              categoryId:  selectedCategory)
         
-        let channels: [IPTVChannel] = try context.fetch(channelsDescriptor)
+        let channels: [Channel] = try context.fetch(channelsDescriptor)
         let map: [ChannelId] = channels.map { $0.id }
         
-        self.guideChannelMap = ChannelMap(map: map)
+        self.channelBundleMap = ChannelBundleMap(id: UserDefaults.selectedChannelBundle, map: map)
     
         logDebug("Channel map built.  Total Channels: \(map.count) 🏁")
     }

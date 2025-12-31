@@ -10,7 +10,7 @@ import SwiftUI
 
 struct CountryPickerView: View {
     
-    let countries: [IPTVCountry]
+    let countries: [Country]
     @Binding var selectedCountry: CountryCode
     
     @Environment(\.dismiss) private var dismiss
@@ -18,7 +18,7 @@ struct CountryPickerView: View {
     
     @State private var searchText = ""
     
-    private var filteredCountries: [IPTVCountry] {
+    private var filteredCountries: [Country] {
         if searchText.isEmpty {
             return countries
         } else {
@@ -30,7 +30,8 @@ struct CountryPickerView: View {
         ScrollViewReader { proxy in
             List {
                 ForEach(filteredCountries, id: \.code) { country in
-                    ListButtonRow(title: country.name,
+                    ListButtonRow(emoji: country.flag,
+                                  title: country.name,
                                   isSelected: selectedCountry == country.code) {
                         selectedCountry = country.code
                         dismiss()
@@ -68,24 +69,27 @@ struct CountryPickerView: View {
 
 #Preview {
     @Previewable @State var appState: AppStateProvider = MockSharedAppState()
-    @Previewable @State var countryCode: CountryCode = "AL"
 
     // Override the injected SwiftDataController
-    let mockData = MockDataPersistence()
+    let mockData = MockSwiftDataStack()
     let swiftDataController = MockSwiftDataController(viewContext: mockData.context)
     InjectedValues[\.swiftDataController] = swiftDataController
     
     let countries = swiftDataController.countries()
+    
+    var selectedCountryBinding: Binding<CountryCode> {
+        Binding(
+            get: { swiftDataController.selectedCountry },
+            set: { swiftDataController.selectedCountry = $0 }
+        )
+    }
     
     return ZStack {
         TVPreviewView() {
             NavigationStack {
                 CountryPickerView(
                     countries: countries,
-                    selectedCountry: Binding(
-                        get: { swiftDataController.selectedCountry },
-                        set: { swiftDataController.selectedCountry = $0 }
-                    )
+                    selectedCountry: selectedCountryBinding
                 )
             }
         }

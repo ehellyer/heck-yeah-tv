@@ -1,5 +1,5 @@
 //
-//  IPTVCountry.swift
+//  Country.swift
 //  HeckYeahTV
 //
 //  Created by Ed Hellyer on 11/30/25.
@@ -12,8 +12,8 @@ import Hellfire
 
 extension SchemaV1 {
     
-    @Model final class IPTVCountry: JSONSerializable {
-        #Index<IPTVCountry>([\.code])
+    @Model final class Country: JSONSerializable {
+        #Index<Country>([\.code])
         
         init(name: String,
              code: CountryCode,

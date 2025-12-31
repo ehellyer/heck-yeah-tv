@@ -1,5 +1,5 @@
 //
-//  Timezone.swift
+//  IPTimezone.swift
 //  Heck Yeah TV
 //
 //  Created by Ed Hellyer on 8/11/25.
@@ -10,9 +10,9 @@ import Foundation
 import Hellfire
 
 /// Source: [https://iptv-org.github.io/api/timezones.json](https://iptv-org.github.io/api/timezones.json)
-struct Timezone: JSONSerializable {
+struct IPTimezone: JSONSerializable {
     
-    /// Timezone Id from the tz database (e.g., "Europe/London")
+    /// IPTimezone Id from the tz database (e.g., "Europe/London")
     let id: String
     
     /// UTC offset for this time zone (e.g., "+00:00")
@@ -20,8 +20,12 @@ struct Timezone: JSONSerializable {
     
     /// List of countries included in this time zone ([ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2))
     let countries: [String]
-    
-    private enum CodingKeys: String, CodingKey {
+}
+
+//MARK: - JSONSerializable customization
+
+extension IPTimezone {
+    enum CodingKeys: String, CodingKey {
         case id
         case utcOffset = "utc_offset"
         case countries

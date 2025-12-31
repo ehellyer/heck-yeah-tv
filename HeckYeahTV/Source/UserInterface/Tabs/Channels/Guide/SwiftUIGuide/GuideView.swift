@@ -17,7 +17,7 @@ struct GuideView: View {
     
     @State private var swiftDataController: SwiftDataControllable = InjectedValues[\.swiftDataController]
     
-    @State private var rebuildChannelMapTask: Task<Void, Never>? = nil
+    @State private var rebuildChannelBundleMapTask: Task<Void, Never>? = nil
     @State private var scrollToSelectedTask: Task<Void, Never>? = nil
     
     private let corner: CGFloat = 14
@@ -28,7 +28,7 @@ struct GuideView: View {
             ScrollViewReader { proxy in
                 ScrollView(.vertical) {
                     LazyVStack(alignment: .leading) {
-                        ForEach(swiftDataController.guideChannelMap.map, id: \.self) { channelId in
+                        ForEach(swiftDataController.channelBundleMap.map, id: \.self) { channelId in
                             GuideRowLazy(channelId: channelId,
                                          appState: $appState,
                                          hideGuideInfo: hideGuideInfo)
@@ -49,12 +49,12 @@ struct GuideView: View {
                     }
                 }
                 
-                .onChange(of: swiftDataController.guideChannelMap.totalCount) { _, _ in
+                .onChange(of: swiftDataController.channelBundleMap.mapCount) { _, _ in
                     scrollToSelected(proxy: proxy)
                 }
             }
             
-            if swiftDataController.guideChannelMap.totalCount == 0 {
+            if swiftDataController.channelBundleMap.mapCount == 0 {
                 
                 if not(swiftDataController.showFavoritesOnly) {
                     VStack(spacing: 12) {
@@ -86,16 +86,11 @@ private extension GuideView {
         // Avoid multiple consecutive calls by cancelling the previous task.
         scrollToSelectedTask?.cancel()
         scrollToSelectedTask = Task { @MainActor in
-            do {
-                try await Task.sleep(nanoseconds: debounceNS)
-                try Task.checkCancellation()
-                
-                if let channelId = appState.selectedChannel {
-                    proxy.scrollTo(channelId, anchor: .center)
-                }
-            } catch {
-                //Task may have been cancelled.
-                logError("Error: \(error)")
+            try? await Task.sleep(nanoseconds: debounceNS)
+            guard !Task.isCancelled else { return }
+            
+            if let channelId = appState.selectedChannel {
+                proxy.scrollTo(channelId, anchor: .center)
             }
         }
     }
@@ -108,7 +103,7 @@ private extension GuideView {
     @Previewable @State var appState: AppStateProvider = MockSharedAppState()
 
     // Override the injected SwiftDataController
-    let mockData = MockDataPersistence()
+    let mockData = MockSwiftDataStack()
     let swiftDataController = MockSwiftDataController(viewContext: mockData.context)
     InjectedValues[\.swiftDataController] = swiftDataController
     

@@ -11,8 +11,8 @@ import Hellfire
 
 extension SchemaV1 {
     
-    @Model final class IPTVCategory: JSONSerializable {
-        #Index<IPTVCategory>([\.categoryId])
+    @Model final class ProgramCategory: JSONSerializable {
+        #Index<ProgramCategory>([\.categoryId])
         
         init(categoryId: String, name: String, categoryDescription: String) {
             self.categoryId = categoryId
@@ -30,8 +30,8 @@ extension SchemaV1 {
         var categoryDescription: String
         
         /// Channels that belong to this category (many-to-many relationship)
-        @Relationship(deleteRule: .nullify, inverse: \IPTVChannel.categories)
-        var channels: [IPTVChannel]? = []
+        @Relationship(deleteRule: .nullify, inverse: \Channel.categories)
+        var channels: [Channel]? = []
         
         // MARK: JSONSerializable Implementation
         //

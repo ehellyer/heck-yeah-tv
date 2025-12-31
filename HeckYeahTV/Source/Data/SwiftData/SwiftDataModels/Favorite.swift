@@ -1,5 +1,5 @@
 //
-//  IPTVFavorite.swift
+//  Favorite.swift
 //  HeckYeahTV
 //
 //  Created by Ed Hellyer on 12/8/25.
@@ -12,12 +12,12 @@ import Hellfire
 
 extension SchemaV1 {
 
-    @Model final class IPTVFavorite: JSONSerializable {
-        #Index<IPTVFavorite>([\.isFavorite, \.id], [\.id])
+    @Model final class Favorite: JSONSerializable {
+        #Index<Favorite>([\.isFavorite, \.id], [\.id])
 
         init(id: ChannelId,
              isFavorite: Bool,
-             channel: IPTVChannel? = nil) {
+             channel: Channel? = nil) {
             self.id = id
             self.isFavorite = isFavorite
             self.channel = channel
@@ -31,7 +31,7 @@ extension SchemaV1 {
         var isFavorite: Bool
         
         /// Optional relationship back to the channel (if it exists)
-        var channel: IPTVChannel?
+        var channel: Channel?
         
         // MARK: - JSONSerializable Implementation
         //

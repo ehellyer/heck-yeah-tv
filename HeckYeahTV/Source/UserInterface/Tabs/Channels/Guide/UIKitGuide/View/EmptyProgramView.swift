@@ -30,17 +30,17 @@ class EmptyProgramView: UIView {
         translatesAutoresizingMaskIntoConstraints = false
         
         tag = Self.viewTypeTagId
-        self.addSubview(timeLabel)
+        self.addSubview(titleLabel)
         
         // Must be centered.
-        self.centerXAnchor.constraint(equalTo: timeLabel.centerXAnchor).isActive = true
-        self.centerYAnchor.constraint(equalTo: timeLabel.centerYAnchor).isActive = true
+        self.centerXAnchor.constraint(equalTo: titleLabel.centerXAnchor).isActive = true
+        self.centerYAnchor.constraint(equalTo: titleLabel.centerYAnchor).isActive = true
         
         // Try not to blow label out the sides
-        let leadingConstraint = timeLabel.leadingAnchor.constraint(greaterThanOrEqualTo: self.leadingAnchor, constant: 20)
+        let leadingConstraint = titleLabel.leadingAnchor.constraint(greaterThanOrEqualTo: self.leadingAnchor, constant: 20)
         leadingConstraint.priority = .init(900)
         leadingConstraint.isActive = true
-        let trailingConstraint = timeLabel.trailingAnchor.constraint(greaterThanOrEqualTo: self.trailingAnchor, constant: 20)
+        let trailingConstraint = titleLabel.trailingAnchor.constraint(greaterThanOrEqualTo: self.trailingAnchor, constant: 20)
         trailingConstraint.priority = .init(900)
         trailingConstraint.isActive = true
     }
@@ -53,10 +53,10 @@ class EmptyProgramView: UIView {
     
     //MARK: - Private API - View lazy binding.
     
-    private lazy var timeLabel: UILabel = {
+    private lazy var titleLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = AppStyle.Fonts.programTimeFont
+        label.font = AppStyle.Fonts.programTimeSlotFont
         label.textColor = .white
         label.textAlignment = .center
         label.setContentCompressionResistancePriority(.required, for: .vertical)
@@ -67,7 +67,7 @@ class EmptyProgramView: UIView {
     //MARK: - Internal API
     
     func configure(isPlaying: Bool, isLoading: Bool) {
-        timeLabel.text = isLoading ? "" : "No Guide Information"
+        titleLabel.text = isLoading ? "" : "No Guide Information"
         backgroundColor = (isPlaying) ? .guideSelectedChannelBackground : .guideBackgroundNoFocus
     }
     

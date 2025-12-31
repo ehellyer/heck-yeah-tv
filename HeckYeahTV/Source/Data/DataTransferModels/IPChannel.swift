@@ -12,7 +12,7 @@ import Hellfire
 /// Source: [https://iptv-org.github.io/api/channels.json](https://iptv-org.github.io/api/channels.json)
 struct IPChannel: JSONSerializable {
     
-    /// Unique channel Id of the source data.
+    /// Unique channel Id of the source data. (e.g., "France3.fr")
     let channelId: String
     
     /// Full name of the channel
@@ -54,7 +54,13 @@ struct IPChannel: JSONSerializable {
     /// Official website URL
     let website: String?
     
-    private enum CodingKeys: String, CodingKey {
+}
+
+//MARK: - JSONSerializable customization
+
+extension IPChannel {
+    
+    enum CodingKeys: String, CodingKey {
         case channelId = "id"
         case name
         case altNames = "alt_names"

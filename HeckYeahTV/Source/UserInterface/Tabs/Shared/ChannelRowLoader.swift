@@ -1,5 +1,5 @@
 //
-//  GuideRowLoader.swift
+//  ChannelRowLoader.swift
 //  Heck Yeah TV
 //
 //  Created by Ed Hellyer on 10/14/25.
@@ -10,8 +10,8 @@ import Foundation
 import SwiftData
 
 @MainActor
-final class GuideRowLoader: ObservableObject {
-    @Published var channel: IPTVChannel?
+final class ChannelRowLoader: ObservableObject {
+    @Published var channel: Channel?
     
     private var task: Task<Void, Never>?
     
@@ -25,8 +25,8 @@ final class GuideRowLoader: ObservableObject {
         task = Task { [weak self] in
             guard let self else { return }
             do {
-                let chPredicate = #Predicate<IPTVChannel> { $0.id == channelId }
-                var chDescriptor = FetchDescriptor<IPTVChannel>(predicate: chPredicate)
+                let chPredicate = #Predicate<Channel> { $0.id == channelId }
+                var chDescriptor = FetchDescriptor<Channel>(predicate: chPredicate)
                 chDescriptor.fetchLimit = 1
                 let model = try context.fetch(chDescriptor).first
                 try Task.checkCancellation()

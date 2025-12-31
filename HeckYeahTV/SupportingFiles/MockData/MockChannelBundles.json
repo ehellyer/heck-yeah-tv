@@ -1,0 +1,31 @@
+[
+    {
+        "id": "mock#1.guide",
+        "name": "Eds Mock Guide #1",
+        "channelIds": [
+            "chan.news.001",
+            "chan.sports.001",
+            "chan.local.001",
+            "chan.local.002",
+            "chan.movies.001",
+            "chan.nature.001",
+            "chan.kids.001"]
+    },
+    {
+        "id": "mock#2.guide",
+        "name": "Eds Mock Guide #2",
+        "channelIds": [
+            "chan.music.001",
+            "chan.comedy.001",
+            "chan.premium.001",
+            "chan.cooking.001",
+            "chan.travel.001",
+            "chan.anime.001",
+            "chan.sci-fi.001",
+            "chan.gaming.001",
+            "chan.drama.001",
+            "chan.retro.001",
+            "chan.action.001",
+            "chan.reality.001"]
+    }
+]

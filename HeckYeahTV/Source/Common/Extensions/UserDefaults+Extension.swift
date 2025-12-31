@@ -207,4 +207,15 @@ extension UserDefaults {
             standard.set(newValue, forKey: AppKeys.SharedAppState.selectedCategoryKey)
         }
     }
+    
+    
+    /// The unique identifier of the currently selected channel bundle identifier.
+    static var selectedChannelBundle: ChannelBundleId {
+        get {
+            standard.string(forKey: AppKeys.SharedAppState.selectedChannelBundleKey) ?? AppKeys.Application.defaultChannelBundleId
+        }
+        set {
+            standard.set(newValue, forKey: AppKeys.SharedAppState.selectedChannelBundleKey)
+        }
+    }
 }

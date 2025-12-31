@@ -132,47 +132,48 @@
 				"Source/Data/Adapters/IPStream+Channelable.swift",
 				"Source/Data/Adapters/StreamQuality+Extension.swift",
 				Source/Data/DataControllers/AttachmentController.swift,
-				Source/Data/DataTransferModels/ChannelMap.swift,
-				Source/Data/DataTransferModels/Country.swift,
 				Source/Data/DataTransferModels/HDHomeRunChannel.swift,
+				Source/Data/DataTransferModels/HDHomeRunChannelGuide.swift,
 				Source/Data/DataTransferModels/HDHomeRunDevice.swift,
 				Source/Data/DataTransferModels/HDHomeRunDiscovery.swift,
+				Source/Data/DataTransferModels/HDHomeRunProgram.swift,
 				Source/Data/DataTransferModels/IPBlocklist.swift,
 				Source/Data/DataTransferModels/IPCategory.swift,
 				Source/Data/DataTransferModels/IPChannel.swift,
+				Source/Data/DataTransferModels/IPCountry.swift,
 				Source/Data/DataTransferModels/IPFeed.swift,
 				Source/Data/DataTransferModels/IPGuide.swift,
 				Source/Data/DataTransferModels/IPLogo.swift,
+				Source/Data/DataTransferModels/IPRegion.swift,
 				Source/Data/DataTransferModels/IPStream.swift,
-				Source/Data/DataTransferModels/Language.swift,
-				Source/Data/DataTransferModels/Program.swift,
-				Source/Data/DataTransferModels/Region.swift,
-				Source/Data/DataTransferModels/Subdivision.swift,
-				Source/Data/DataTransferModels/Timezone.swift,
-				Source/Data/Services/HDHomeRun/HDHomeRunDiscoveryController.swift,
+				Source/Data/DataTransferModels/IPSubdivision.swift,
+				Source/Data/Services/HDHomeRun/HomeRunController.swift,
+				Source/Data/Services/HDHomeRun/HomeRunDataSources.swift,
+				Source/Data/Services/HDHomeRun/HomeRunImporter.swift,
 				Source/Data/Services/IPTV/IPTVController.swift,
 				Source/Data/Services/IPTV/IPTVDataSources.swift,
+				Source/Data/Services/IPTV/IPTVImporter.swift,
 				Source/Data/SharedAppState/AppStateProvider.swift,
 				Source/Data/SharedAppState/SharedAppState.swift,
+				Source/Data/SwiftData/AppDataSource/ChannelBundleMap.swift,
 				Source/Data/SwiftData/AppDataSource/ChannelFilterable.swift,
 				Source/Data/SwiftData/AppDataSource/SwiftDataControllable.swift,
 				Source/Data/SwiftData/AppDataSource/SwiftDataController.swift,
 				Source/Data/SwiftData/Migration/UpgradeSchemaMigrationPlan.swift,
 				Source/Data/SwiftData/Schema/SchemaCurrent.swift,
 				Source/Data/SwiftData/Schema/SchemaV1.swift,
+				Source/Data/SwiftData/SwiftDataModels/Channel.swift,
+				Source/Data/SwiftData/SwiftDataModels/ChannelBundle.swift,
+				Source/Data/SwiftData/SwiftDataModels/ChannelProgram.swift,
 				Source/Data/SwiftData/SwiftDataModels/ChannelSourceType.swift,
-				Source/Data/SwiftData/SwiftDataModels/Guide.swift,
-				Source/Data/SwiftData/SwiftDataModels/HDHomeRunServer.swift,
-				Source/Data/SwiftData/SwiftDataModels/IPTVCategory.swift,
-				Source/Data/SwiftData/SwiftDataModels/IPTVChannel.swift,
-				Source/Data/SwiftData/SwiftDataModels/IPTVCountry.swift,
-				Source/Data/SwiftData/SwiftDataModels/IPTVFavorite.swift,
+				Source/Data/SwiftData/SwiftDataModels/Country.swift,
+				Source/Data/SwiftData/SwiftDataModels/Favorite.swift,
+				Source/Data/SwiftData/SwiftDataModels/HomeRunDevice.swift,
+				Source/Data/SwiftData/SwiftDataModels/ProgramCategory.swift,
 				Source/Data/SwiftData/SwiftDataModels/SchemaVersion.swift,
 				Source/Data/SwiftData/SwiftDataModels/StreamQuality.swift,
 				Source/Data/SwiftData/SwiftDataStack.swift,
 				Source/Data/SwiftData/Utilities/DataChangeTracking.swift,
-				Source/Data/SwiftData/Utilities/HDHomeRunImporter.swift,
-				Source/Data/SwiftData/Utilities/IPTVImporter.swift,
 				Source/UserInterface/MacAndPhone/SectionView.swift,
 				Source/UserInterface/Main/BootGateView.swift,
 				Source/UserInterface/Main/BootSplashView.swift,
@@ -195,6 +196,7 @@
 				Source/UserInterface/Tabs/Filter/CountryPickerView.swift,
 				Source/UserInterface/Tabs/Filter/FilterButtonStyle.swift,
 				Source/UserInterface/Tabs/Filter/FilterView.swift,
+				Source/UserInterface/Tabs/Filter/ListButtonRow.swift,
 				Source/UserInterface/Tabs/Filter/ListButtonStyle.swift,
 				Source/UserInterface/Tabs/Recents/RecentsView.swift,
 				Source/UserInterface/Tabs/Settings/FocusedToggleStyle.swift,
@@ -202,19 +204,20 @@
 				Source/UserInterface/Tabs/Settings/SectionTextStyle.swift,
 				Source/UserInterface/Tabs/Settings/SettingsContainerView.swift,
 				Source/UserInterface/Tabs/Settings/SettingsView.swift,
-				Source/UserInterface/Tabs/Shared/GuideRowLoader.swift,
+				Source/UserInterface/Tabs/Shared/ChannelRowLoader.swift,
+				Source/UserInterface/Tabs/Shared/ProgramsRowLoader.swift,
 				Source/UserInterface/TabView/Enum/AppSection.swift,
 				SupportingFiles/AppIconAssets.xcassets,
 				SupportingFiles/AppMediaAssets.xcassets,
 				SupportingFiles/ColorAssets.xcassets,
 				SupportingFiles/MockData/MockCategories.json,
+				SupportingFiles/MockData/MockChannelBundles.json,
+				SupportingFiles/MockData/MockChannels.json,
 				SupportingFiles/MockData/MockCountries.json,
-				SupportingFiles/MockData/MockDataPersistence.swift,
 				SupportingFiles/MockData/MockFavorites.json,
-				SupportingFiles/MockData/MockGuides.json,
-				SupportingFiles/MockData/MockIPTVChannels.json,
 				SupportingFiles/MockData/MockSharedAppState.swift,
 				SupportingFiles/MockData/MockSwiftDataController.swift,
+				SupportingFiles/MockData/MockSwiftDataStack.swift,
 				SupportingFiles/MockData/MockTunerDevices.json,
 				SupportingFiles/MockPreviewView/TVPreviewView.swift,
 			);
@@ -267,47 +270,48 @@
 				"Source/Data/Adapters/IPStream+Channelable.swift",
 				"Source/Data/Adapters/StreamQuality+Extension.swift",
 				Source/Data/DataControllers/AttachmentController.swift,
-				Source/Data/DataTransferModels/ChannelMap.swift,
-				Source/Data/DataTransferModels/Country.swift,
 				Source/Data/DataTransferModels/HDHomeRunChannel.swift,
+				Source/Data/DataTransferModels/HDHomeRunChannelGuide.swift,
 				Source/Data/DataTransferModels/HDHomeRunDevice.swift,
 				Source/Data/DataTransferModels/HDHomeRunDiscovery.swift,
+				Source/Data/DataTransferModels/HDHomeRunProgram.swift,
 				Source/Data/DataTransferModels/IPBlocklist.swift,
 				Source/Data/DataTransferModels/IPCategory.swift,
 				Source/Data/DataTransferModels/IPChannel.swift,
+				Source/Data/DataTransferModels/IPCountry.swift,
 				Source/Data/DataTransferModels/IPFeed.swift,
 				Source/Data/DataTransferModels/IPGuide.swift,
 				Source/Data/DataTransferModels/IPLogo.swift,
+				Source/Data/DataTransferModels/IPRegion.swift,
 				Source/Data/DataTransferModels/IPStream.swift,
-				Source/Data/DataTransferModels/Language.swift,
-				Source/Data/DataTransferModels/Program.swift,
-				Source/Data/DataTransferModels/Region.swift,
-				Source/Data/DataTransferModels/Subdivision.swift,
-				Source/Data/DataTransferModels/Timezone.swift,
-				Source/Data/Services/HDHomeRun/HDHomeRunDiscoveryController.swift,
+				Source/Data/DataTransferModels/IPSubdivision.swift,
+				Source/Data/Services/HDHomeRun/HomeRunController.swift,
+				Source/Data/Services/HDHomeRun/HomeRunDataSources.swift,
+				Source/Data/Services/HDHomeRun/HomeRunImporter.swift,
 				Source/Data/Services/IPTV/IPTVController.swift,
 				Source/Data/Services/IPTV/IPTVDataSources.swift,
+				Source/Data/Services/IPTV/IPTVImporter.swift,
 				Source/Data/SharedAppState/AppStateProvider.swift,
 				Source/Data/SharedAppState/SharedAppState.swift,
+				Source/Data/SwiftData/AppDataSource/ChannelBundleMap.swift,
 				Source/Data/SwiftData/AppDataSource/ChannelFilterable.swift,
 				Source/Data/SwiftData/AppDataSource/SwiftDataControllable.swift,
 				Source/Data/SwiftData/AppDataSource/SwiftDataController.swift,
 				Source/Data/SwiftData/Migration/UpgradeSchemaMigrationPlan.swift,
 				Source/Data/SwiftData/Schema/SchemaCurrent.swift,
 				Source/Data/SwiftData/Schema/SchemaV1.swift,
+				Source/Data/SwiftData/SwiftDataModels/Channel.swift,
+				Source/Data/SwiftData/SwiftDataModels/ChannelBundle.swift,
+				Source/Data/SwiftData/SwiftDataModels/ChannelProgram.swift,
 				Source/Data/SwiftData/SwiftDataModels/ChannelSourceType.swift,
-				Source/Data/SwiftData/SwiftDataModels/Guide.swift,
-				Source/Data/SwiftData/SwiftDataModels/HDHomeRunServer.swift,
-				Source/Data/SwiftData/SwiftDataModels/IPTVCategory.swift,
-				Source/Data/SwiftData/SwiftDataModels/IPTVChannel.swift,
-				Source/Data/SwiftData/SwiftDataModels/IPTVCountry.swift,
-				Source/Data/SwiftData/SwiftDataModels/IPTVFavorite.swift,
+				Source/Data/SwiftData/SwiftDataModels/Country.swift,
+				Source/Data/SwiftData/SwiftDataModels/Favorite.swift,
+				Source/Data/SwiftData/SwiftDataModels/HomeRunDevice.swift,
+				Source/Data/SwiftData/SwiftDataModels/ProgramCategory.swift,
 				Source/Data/SwiftData/SwiftDataModels/SchemaVersion.swift,
 				Source/Data/SwiftData/SwiftDataModels/StreamQuality.swift,
 				Source/Data/SwiftData/SwiftDataStack.swift,
 				Source/Data/SwiftData/Utilities/DataChangeTracking.swift,
-				Source/Data/SwiftData/Utilities/HDHomeRunImporter.swift,
-				Source/Data/SwiftData/Utilities/IPTVImporter.swift,
 				Source/UserInterface/Main/BootGateView.swift,
 				Source/UserInterface/Main/BootSplashView.swift,
 				Source/UserInterface/Main/DustyView.swift,
@@ -338,6 +342,7 @@
 				Source/UserInterface/Tabs/Filter/CountryPickerView.swift,
 				Source/UserInterface/Tabs/Filter/FilterButtonStyle.swift,
 				Source/UserInterface/Tabs/Filter/FilterView.swift,
+				Source/UserInterface/Tabs/Filter/ListButtonRow.swift,
 				Source/UserInterface/Tabs/Filter/ListButtonStyle.swift,
 				Source/UserInterface/Tabs/Recents/RecentsView.swift,
 				Source/UserInterface/Tabs/Settings/FocusedToggleStyle.swift,
@@ -345,20 +350,21 @@
 				Source/UserInterface/Tabs/Settings/SectionTextStyle.swift,
 				Source/UserInterface/Tabs/Settings/SettingsContainerView.swift,
 				Source/UserInterface/Tabs/Settings/SettingsView.swift,
-				Source/UserInterface/Tabs/Shared/GuideRowLoader.swift,
+				Source/UserInterface/Tabs/Shared/ChannelRowLoader.swift,
+				Source/UserInterface/Tabs/Shared/ProgramsRowLoader.swift,
 				Source/UserInterface/TabView/Enum/AppSection.swift,
 				Source/UserInterface/TabView/TabContainerView.swift,
 				SupportingFiles/AppIconAssets.xcassets,
 				SupportingFiles/AppMediaAssets.xcassets,
 				SupportingFiles/ColorAssets.xcassets,
 				SupportingFiles/MockData/MockCategories.json,
+				SupportingFiles/MockData/MockChannelBundles.json,
+				SupportingFiles/MockData/MockChannels.json,
 				SupportingFiles/MockData/MockCountries.json,
-				SupportingFiles/MockData/MockDataPersistence.swift,
 				SupportingFiles/MockData/MockFavorites.json,
-				SupportingFiles/MockData/MockGuides.json,
-				SupportingFiles/MockData/MockIPTVChannels.json,
 				SupportingFiles/MockData/MockSharedAppState.swift,
 				SupportingFiles/MockData/MockSwiftDataController.swift,
+				SupportingFiles/MockData/MockSwiftDataStack.swift,
 				SupportingFiles/MockData/MockTunerDevices.json,
 				SupportingFiles/MockPreviewView/TVPreviewView.swift,
 			);
@@ -739,7 +745,6 @@
 					};
 					EBE03BC32E53D423006B7747 = {
 						CreatedOnToolsVersion = 16.4;
-						TestTargetID = EBE03BB62E53D421006B7747;
 					};
 					EBE03BCD2E53D423006B7747 = {
 						CreatedOnToolsVersion = 16.4;
@@ -1484,7 +1489,6 @@
 		EBE03BDC2E53D423006B7747 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 84CS8BE5EQ;
@@ -1497,7 +1501,6 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/HeckYeahTV.app/HeckYeahTV";
 				TVOS_DEPLOYMENT_TARGET = 18.6;
 			};
 			name = Debug;
@@ -1505,7 +1508,6 @@
 		EBE03BDD2E53D423006B7747 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 84CS8BE5EQ;
@@ -1518,7 +1520,6 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/HeckYeahTV.app/HeckYeahTV";
 				TVOS_DEPLOYMENT_TARGET = 18.6;
 			};
 			name = Release;

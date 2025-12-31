@@ -11,7 +11,7 @@ import SwiftUI
 struct GuideSubTitleView: View {
     
     @Environment(\.redactionReasons) private var redactionReasons
-    let channel: IPTVChannel?
+    let channel: Channel?
     
     var number: String? {
         if channel == nil {
@@ -87,7 +87,7 @@ struct GuideSubTitleView: View {
     @Previewable @State var appState: AppStateProvider = MockSharedAppState()
     
     // Override the injected SwiftDataController
-    let mockData = MockDataPersistence()
+    let mockData = MockSwiftDataStack()
     let swiftDataController = MockSwiftDataController(viewContext: mockData.context)
     InjectedValues[\.swiftDataController] = swiftDataController
 

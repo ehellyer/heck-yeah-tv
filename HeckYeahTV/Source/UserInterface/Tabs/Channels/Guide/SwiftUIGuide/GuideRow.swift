@@ -14,7 +14,7 @@ struct GuideRow: View {
     let internalVtPadding: CGFloat = 15
     let cornerRadius: CGFloat = AppStyle.cornerRadius
     
-    @State var channel: IPTVChannel?
+    @State var channel: Channel?
     @Binding var appState: AppStateProvider
     @State var hideGuideInfo: Bool
     @State private var rowWidth: CGFloat = 800 // Default, will update dynamically
@@ -56,7 +56,7 @@ struct GuideRow: View {
         return width < 600
     }
     
-    private func updateLogoImage(for channel: IPTVChannel?) {
+    private func updateLogoImage(for channel: Channel?) {
         let currentChannelId = channel?.id
         imageLoadTask?.cancel()
         imageLoadTask = Task {
@@ -78,7 +78,7 @@ struct GuideRow: View {
                 if channel.favorite != nil {
                     channel.favorite?.isFavorite.toggle()
                 } else {
-                    channel.favorite = IPTVFavorite(id: channel.id, isFavorite: true)
+                    channel.favorite = Favorite(id: channel.id, isFavorite: true)
                 }
             } label: {
                 Image(systemName: isFavoriteChannel ? "star.fill" : "star")
@@ -195,13 +195,13 @@ struct GuideRow: View {
     @Previewable @State var appState: AppStateProvider = MockSharedAppState()
 
     // Override the injected SwiftDataController
-    let mockData = MockDataPersistence()
+    let mockData = MockSwiftDataStack()
     let swiftDataController = MockSwiftDataController(viewContext: mockData.context)
     InjectedValues[\.swiftDataController] = swiftDataController
 
     
     let channel = swiftDataController.fetchChannel(at: 8)
-    let selectedChannelId = swiftDataController.guideChannelMap.map[0]
+    let selectedChannelId = swiftDataController.channelBundleMap.map[0]
     
     return TVPreviewView() {
         GuideRow(channel: channel,

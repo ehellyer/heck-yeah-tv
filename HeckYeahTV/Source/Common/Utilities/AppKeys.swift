@@ -32,27 +32,28 @@ struct AppKeys {
             return Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as? String ?? ""
         }
         
-        static var osName: String {
 #if os(iOS)
 #if targetEnvironment(macCatalyst)
-            return "macOS(Catalyst)"
+        static let osName: String = "macOS(Catalyst)"
 #else
-            return "iOS"
+        static let osName: String = "iOS"
 #endif
 #elseif os(watchOS)
-            return "watchOS"
+        static let osName: String = "watchOS"
 #elseif os(tvOS)
-            return "tvOS"
+        static let osName: String = "tvOS"
 #elseif os(macOS)
-            return "macOS"
+        static let osName: String = "macOS"
 #elseif os(Linux)
-            return "Linux"
+        static let osName: String = "Linux"
 #elseif os(Windows)
-            return "Windows"
+        static let osName: String = "Windows"
 #else
-            return "Unknown"
+        static let osName: String = "Unknown"
 #endif
-        }
+
+        
+        static let defaultChannelBundleId: String = "default.channel.bundle.id"
     }
     
     struct SharedAppState {
@@ -64,6 +65,7 @@ struct AppKeys {
         static let selectedChannelKey = "SharedAppState.selectedChannelKey"
         static let recentChannelIdsKey = "SharedAppState.recentChannelIdsKey"
         static let scanForTunersKey = "SharedAppState.scanForTunersKey"
+        static let selectedChannelBundleKey = "selectedChannelBundleKey"
 
         // Search parameter keys
         static let selectedCountryKey = "SharedAppState.selectedCountryKey"

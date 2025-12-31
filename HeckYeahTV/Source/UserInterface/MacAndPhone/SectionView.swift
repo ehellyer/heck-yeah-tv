@@ -43,7 +43,7 @@ struct SectionView: View {
     @Previewable @State var appState: any AppStateProvider = MockSharedAppState()
    
     // Override the injected SwiftDataController
-    let mockData = MockDataPersistence()
+    let mockData = MockSwiftDataStack()
     let swiftDataController = MockSwiftDataController(viewContext: mockData.context)
     InjectedValues[\.swiftDataController] = swiftDataController
     
@@ -55,12 +55,12 @@ struct SectionView: View {
             .environment(\.modelContext, mockData.context)
             .onAppear() {
                     // Loads up the recents list
-                    appState.selectedChannel = swiftDataController.guideChannelMap.map[1]
-                    appState.selectedChannel = swiftDataController.guideChannelMap.map[3]
-                    appState.selectedChannel = swiftDataController.guideChannelMap.map[5]
-                    appState.selectedChannel = swiftDataController.guideChannelMap.map[7]
-                    appState.selectedChannel = swiftDataController.guideChannelMap.map[9]
-                    appState.selectedChannel = swiftDataController.guideChannelMap.map[11]
+                    appState.selectedChannel = swiftDataController.channelBundleMap.map[1]
+                    appState.selectedChannel = swiftDataController.channelBundleMap.map[3]
+                    appState.selectedChannel = swiftDataController.channelBundleMap.map[5]
+                    appState.selectedChannel = swiftDataController.channelBundleMap.map[7]
+                    appState.selectedChannel = swiftDataController.channelBundleMap.map[9]
+                    appState.selectedChannel = swiftDataController.channelBundleMap.map[11]
             }
     }
 }

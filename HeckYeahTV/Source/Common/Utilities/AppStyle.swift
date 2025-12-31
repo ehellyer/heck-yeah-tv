@@ -14,6 +14,14 @@ struct AppStyle {
         return 20
     }
     
+    struct ProgramView {
+#if os(tvOS)
+        static var width: CGFloat = 320
+#else
+        static var width: CGFloat = 260
+#endif
+    }
+    
     struct Fonts {
         
         static var gridRowFont: Font {
@@ -45,24 +53,24 @@ struct AppStyle {
 #endif
         }
         
-            
-        static var programTitleFont: PlatformFont {
+
+        static var programTimeSlotFont: PlatformFont {
 #if os(tvOS)
-            .systemFont(ofSize: 23, weight: .medium)
+            .systemFont(ofSize: 23, weight: .bold)
 #elseif os(iOS)
-            .systemFont(ofSize: 17, weight: .medium)
+            .systemFont(ofSize: 17, weight: .bold)
 #else
-            .systemFont(ofSize: 17, weight: .medium)
+            .systemFont(ofSize: 17, weight: .bold)
 #endif
         }
         
-        static var programTimeFont: PlatformFont {
+        static var programTitleFont: PlatformFont {
 #if os(tvOS)
-            .systemFont(ofSize: 24, weight: .semibold)
+            .systemFont(ofSize: 23, weight: .regular)
 #elseif os(iOS)
-            .systemFont(ofSize: 18, weight: .medium)
+            .systemFont(ofSize: 17, weight: .regular)
 #else
-            .systemFont(ofSize: 18, weight: .medium)
+            .systemFont(ofSize: 17, weight: .regular)
 #endif
         }
         

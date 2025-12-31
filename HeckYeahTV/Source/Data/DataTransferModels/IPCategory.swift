@@ -21,7 +21,13 @@ struct IPCategory: JSONSerializable {
     /// Short description of the category
     let description: String
     
-    private enum CodingKeys: String, CodingKey {
+}
+
+//MARK: - JSONSerializable customization
+
+extension IPCategory {
+    
+    enum CodingKeys: String, CodingKey {
         case categoryId = "id"
         case name
         case description

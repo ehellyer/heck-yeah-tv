@@ -47,7 +47,7 @@ struct SettingsContainerView: View {
     @Previewable @State var appState: any AppStateProvider = MockSharedAppState()
     
     // Override the injected SwiftDataController
-    let mockData = MockDataPersistence()
+    let mockData = MockSwiftDataStack()
     let swiftDataController = MockSwiftDataController(viewContext: mockData.context)
     InjectedValues[\.swiftDataController] = swiftDataController
     

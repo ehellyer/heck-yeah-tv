@@ -16,11 +16,12 @@ struct TVPreviewView<T: View>: View {
     }
     
     private let contentView: () -> T
-
     
     var body: some View {
         ZStack {
-            // Simulated TV stream background for previews (Image has versions for device and orientations.)
+            // Adds an image in the background to simulated TV stream for previews.
+            // Thew Image asset catalog has versions to match preview device and orientations.
+            // The purpose is to help visualize how transparency effects look over a TV stream.
             Color.clear
                 .overlay(
                     Image("PreviewTVScreenShot")

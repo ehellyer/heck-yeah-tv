@@ -88,7 +88,7 @@ class FavoriteToggleView: UIView {
                     if channel.favorite != nil {
                         channel.favorite?.isFavorite.toggle()
                     } else {
-                        channel.favorite = IPTVFavorite(id: channel.id, isFavorite: true)
+                        channel.favorite = Favorite(id: channel.id, isFavorite: true)
                     }
                     
                     if channel.modelContext?.hasChanges ?? false == true {
@@ -112,7 +112,7 @@ class FavoriteToggleView: UIView {
     
     //MARK: - Private API
 
-    private var channel: IPTVChannel?
+    private var channel: Channel?
     
     @Injected(\.swiftDataController)
     private var swiftDataController: SwiftDataControllable
@@ -129,7 +129,7 @@ class FavoriteToggleView: UIView {
     
     weak var delegate: GuideViewDelegate?
 
-    func configure(with channel: IPTVChannel?, isPlaying: Bool) {
+    func configure(with channel: Channel?, isPlaying: Bool) {
         self.channel = channel
 
         let isFavorite: Bool = channel?.favorite?.isFavorite ?? false

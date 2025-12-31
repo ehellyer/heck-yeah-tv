@@ -16,7 +16,6 @@ final class SharedAppState: AppStateProvider {
     
     private init() { }
     
-    /// Is the player paused? Spoiler alert: if the video isn't moving, it's paused.
     var isPlayerPaused: Bool {
         get {
             access(keyPath: \.isPlayerPaused)
@@ -29,7 +28,6 @@ final class SharedAppState: AppStateProvider {
         }
     }
     
-    /// Show the navigation UI or go full stealth mode. Your choice.
     var showAppNavigation: Bool {
         get {
             access(keyPath: \.showAppNavigation)
@@ -42,7 +40,6 @@ final class SharedAppState: AppStateProvider {
         }
     }
     
-    /// Which tab are you pretending to use right now?
     var selectedTab: AppSection {
         get {
             access(keyPath: \.selectedTab)
@@ -55,7 +52,6 @@ final class SharedAppState: AppStateProvider {
         }
     }
     
-    /// The channel you're watching. We're totally not keeping track. (We are.)
     var selectedChannel: ChannelId? {
         get {
             access(keyPath: \.selectedChannel)
@@ -71,7 +67,6 @@ final class SharedAppState: AppStateProvider {
         }
     }
     
-    /// Your channel-surfing shame, preserved forever in a LIFO stack. 0 = your most recent bad decision.
     private(set) var recentChannelIds: [ChannelId] {
         get {
             access(keyPath: \.recentChannelIds)
@@ -84,7 +79,6 @@ final class SharedAppState: AppStateProvider {
         }
     }
     
-    /// Scan for tuners. It's like a treasure hunt, but for TV hardware you forgot you owned.
     var scanForTuners: Bool {
         get {
             access(keyPath: \.scanForTuners)
@@ -93,6 +87,18 @@ final class SharedAppState: AppStateProvider {
         set {
             withMutation(keyPath: \.scanForTuners) {
                 UserDefaults.scanForTuners = newValue
+            }
+        }
+    }
+    
+    var selectedChannelBundle: ChannelBundleId {
+        get {
+            access(keyPath: \.selectedChannelBundle)
+            return UserDefaults.selectedChannelBundle
+        }
+        set {
+            withMutation(keyPath: \.selectedChannelBundle) {
+                UserDefaults.selectedChannelBundle = newValue
             }
         }
     }

@@ -31,9 +31,14 @@ struct IPLogo: JSONSerializable {
     let format: String?
     
     /// Direct URL to the logo asset
-    let url: String
+    let url: URL
+}
+
+//MARK: - JSONSerializable customization
+
+extension IPLogo {
     
-    private enum CodingKeys: String, CodingKey {
+    enum CodingKeys: String, CodingKey {
         case channelId = "channel"
         case feedId = "feed"
         case tags
@@ -52,7 +57,7 @@ struct IPLogo: JSONSerializable {
             self.width = try container.decode(CGFloat.self, forKey: .width)
             self.height = try container.decode(CGFloat.self, forKey: .height)
             self.format = try container.decodeIfPresent(String.self, forKey: .format)
-            self.url = try container.decode(String.self, forKey: .url)
+            self.url = try container.decode(URL.self, forKey: .url)
         } catch {
             logDebug(error)
             throw error

@@ -31,7 +31,7 @@ class GuideRowCell: UITableViewCell {
         super.prepareForReuse()
         programsStackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
         channelId = nil
-        programs = []
+        programs = nil
     }
     
     private func commonInit() {
@@ -53,10 +53,12 @@ class GuideRowCell: UITableViewCell {
     
     private var isPlaying: Bool = false
     private(set) var channelId: ChannelId?
-    private var channel: IPTVChannel?
-    private var programs: [Program] = []
-    private var channelLoader = GuideRowLoader()
-    private var loaderBindings = Set<AnyCancellable>()
+    private var channel: Channel?
+    private var programs: [ChannelProgram]?
+    private var channelLoader = ChannelRowLoader()
+    private var programsLoader = ProgramsRowLoader()
+    private var channelLoaderBindings = Set<AnyCancellable>()
+    private var programsLoaderBindings = Set<AnyCancellable>()
     
     //MARK: - Binding ObservableObject to UIKit
     
@@ -68,9 +70,17 @@ class GuideRowCell: UITableViewCell {
                 self.channel = channel
                 self.channelNameView.configure(with: channel, isPlaying: isPlaying)
                 self.favoriteButtonView.configure(with: channel, isPlaying: isPlaying)
+            }
+            .store(in: &channelLoaderBindings)
+        
+        programsLoader.$programs
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] programs in
+                guard let self, channelId == programs?.first?.channelId else { return }
+                self.programs = programs
                 self.updateProgramsDisplay(with: channel?.id, isPlaying: isPlaying)
             }
-            .store(in: &loaderBindings)
+            .store(in: &channelLoaderBindings)
     }
         
     //MARK: - Private API - Lazy view binding
@@ -158,20 +168,21 @@ class GuideRowCell: UITableViewCell {
         programsStackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
         programsMaskView.viewWithTag(EmptyProgramView.viewTypeTagId)?.removeFromSuperview()
         
-        if channelId == nil || programs.count == 0 {
+        guard let programs, programs.count > 0 else {
             // Add 'No guide information' view.
             let emptyProgramView = EmptyProgramView(frame: CGRect.zero)
             emptyProgramView.configure(isPlaying: isPlaying, isLoading: (channelId == nil))
             programsMaskView.addSubview(emptyProgramView)
             emptyProgramView.fillSuperview()
-        } else {
-            // Add program views
-            for program in programs {
-                let programView = ProgramView()
-                programView.delegate = self.delegate
-                programView.configure(with: program, channelId: channelId, isPlaying: isPlaying)
-                programsStackView.addArrangedSubview(programView)
-            }
+            return
+        }
+        
+        // Add program views
+        for program in programs {
+            let programView = ProgramView()
+            programView.delegate = self.delegate
+            programView.configure(with: program, channelId: channelId, isPlaying: isPlaying)
+            programsStackView.addArrangedSubview(programView)
         }
     }
     
@@ -185,13 +196,15 @@ class GuideRowCell: UITableViewCell {
     }
 
     @MainActor
-    func configure(with channelId: ChannelId, isPlaying: Bool, programs: [Program], viewContext: ModelContext) {
+    func configure(with channelId: ChannelId,
+                   isPlaying: Bool,
+                   viewContext: ModelContext) {
         self.channelId = channelId
-        self.programs = programs
         self.isPlaying = isPlaying
         
         if self.channel?.id != channelId {
             channelLoader.load(channelId: channelId, context: viewContext)
+            programsLoader.load(channelId: channelId, context: viewContext)
             channelNameView.configure(with: nil, isPlaying: isPlaying)
             favoriteButtonView.configure(with: nil, isPlaying: isPlaying)
             updateProgramsDisplay(with: nil, isPlaying: isPlaying)

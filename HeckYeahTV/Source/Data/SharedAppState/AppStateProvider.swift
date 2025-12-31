@@ -25,7 +25,7 @@ protocol AppStateProvider {
     
     /// The channel that's currently getting all the attention.
     ///
-    /// This is the Taylor Swift of channels — the one everyone's watching right now.
+    /// This is the Taylor Swift of channels, the one everyone's watching right now.
     /// `nil` means nobody's home and you're staring at a blank screen like it owes you money.
     var selectedChannel: ChannelId? { get set }
     
@@ -47,6 +47,16 @@ protocol AppStateProvider {
     /// Because even apps need to organize their lives into sections.
     /// It's like a filing cabinet, but with more SwiftUI and fewer paper cuts.
     var selectedTab: AppSection { get set }
+    
+    /// The currently selected custom channel bundle from your curated collection.
+    ///
+    /// Each bundle is a lovingly hand-picked selection from the vast ocean of 24/7 streams,
+    /// some educational, some entertaining, most just hypnotic background noise that you'll
+    /// swear you're "actively watching" while scrolling on your phone.
+    ///
+    /// Change this value to switch between different flavors of perpetual content.
+    /// "Just one episode", famous last words.
+    var selectedChannelBundle: ChannelBundleId { get set }
 }
 
 extension AppStateProvider {

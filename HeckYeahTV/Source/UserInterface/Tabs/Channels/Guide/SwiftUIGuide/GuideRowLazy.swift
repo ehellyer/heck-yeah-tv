@@ -15,7 +15,7 @@ struct GuideRowLazy: View {
     @Binding var appState: AppStateProvider
     @State var hideGuideInfo: Bool
     @Environment(\.modelContext) private var viewContext
-    @StateObject private var loader = GuideRowLoader()
+    @StateObject private var loader = ChannelRowLoader()
     
     var body: some View {
         Group {
@@ -43,11 +43,11 @@ struct GuideRowLazy: View {
     @Previewable @State var appState: AppStateProvider = MockSharedAppState()
 
     // Override the injected SwiftDataController
-    let mockData = MockDataPersistence()
+    let mockData = MockSwiftDataStack()
     let swiftDataController = MockSwiftDataController(viewContext: mockData.context)
     InjectedValues[\.swiftDataController] = swiftDataController
     
-    let channelId = swiftDataController.guideChannelMap.map[6]
+    let channelId = swiftDataController.channelBundleMap.map[6]
 
     return TVPreviewView() {
         GuideRowLazy(channelId: channelId,

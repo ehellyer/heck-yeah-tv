@@ -8,6 +8,8 @@
 
 import Foundation
 
+/// A filter criteria used on a ChannelBundle to produce the ChannelBundleMap.
+/// In other words: the bouncer at the velvet rope of your channel collection.
 @MainActor
 protocol ChannelFilterable {
     

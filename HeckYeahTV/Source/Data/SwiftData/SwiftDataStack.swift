@@ -12,7 +12,7 @@ import SQLite3
 
 @MainActor
 final class SwiftDataStack {
-
+    
     /// Private init due to shared singleton instance.
     private init() {
         do {
@@ -54,8 +54,8 @@ final class SwiftDataStack {
             
             let schema = Schema(versionedSchema: HeckYeahSchema.self)
             let modelConfig = ModelConfiguration(schema: schema,
-                                            url: self.storeURL,
-                                            cloudKitDatabase: .none)
+                                                 url: self.storeURL,
+                                                 cloudKitDatabase: .none)
             
             container = try ModelContainer(for: schema,
                                            migrationPlan: UpgradeSchemaMigrationPlan.self,
@@ -65,18 +65,32 @@ final class SwiftDataStack {
             viewContext.autosaveEnabled = true
             
             try Self.updateSchemaVersionTable(context: viewContext)
-            
+            try Self.checkDefaultChannelBundle(context: viewContext)
         } catch {
             logFatal("Failed to initialize GuideStore: \(error)")
         }
     }
-
+    
     // Inserts or updates the schema version number into the model SchemaVersion for debug purposes when looking directly at the store via other dev tools.
     private static func updateSchemaVersionTable(context: ModelContext) throws {
         // Causes an insert or update because the SchemaVersion model has an ID property that is determined in the models initializer.
         context.insert(SchemaVersion())
         if context.hasChanges {
             try context.save()
+        }
+    }
+    
+    // There must be at least one channel bundle, if one does not yet exist, we add the default.
+    private static func checkDefaultChannelBundle(context: ModelContext) throws {
+        let descriptor = FetchDescriptor<ChannelBundle>()
+        let count = try context.fetchCount(descriptor)
+        if count == 0 {
+            context.insert(ChannelBundle(id: UserDefaults.selectedChannelBundle,
+                                         name: "Default",
+                                         channelIds: []))
+            if context.hasChanges {
+                try context.save()
+            }
         }
     }
     
@@ -125,7 +139,7 @@ final class SwiftDataStack {
     
     /// MainActor singleton instance.
     static let shared = SwiftDataStack()
-
+    
     /// Model Container.
     let container: ModelContainer
     

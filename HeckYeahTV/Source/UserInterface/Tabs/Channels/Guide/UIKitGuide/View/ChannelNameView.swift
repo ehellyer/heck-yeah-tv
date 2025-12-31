@@ -179,7 +179,7 @@ class ChannelNameView: UIView {
         qualityImageView.tintColor = color
     }
     
-    private func updateLogoImage(for channel: IPTVChannel?) {
+    private func updateLogoImage(for channel: Channel?) {
 
         logoImageView.image = nil
         logoImageView.tintColor = nil
@@ -214,7 +214,7 @@ class ChannelNameView: UIView {
     
     weak var delegate: GuideViewDelegate?
     
-    func configure(with channel: IPTVChannel?, isPlaying: Bool) {
+    func configure(with channel: Channel?, isPlaying: Bool) {
         self.channelId = channel?.id
         backgroundColor = (isPlaying) ? .guideSelectedChannelBackground : .guideBackgroundNoFocus
         

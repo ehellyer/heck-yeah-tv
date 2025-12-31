@@ -10,7 +10,7 @@ import SwiftUI
 
 struct CategoryPickerView: View {
     
-    let categories: [IPTVCategory]
+    let categories: [ProgramCategory]
     @Binding var selectedCategory: CategoryId?
     
     @Environment(\.dismiss) private var dismiss
@@ -19,14 +19,16 @@ struct CategoryPickerView: View {
     var body: some View {
         ScrollViewReader { proxy in
             List {
-                ListButtonRow(title: "None",
+                ListButtonRow(emoji: nil,
+                              title: "None",
                               isSelected: selectedCategory == nil) {
                     selectedCategory = nil
                     dismiss()
                 }.id("none-option")
                 
                 ForEach(categories, id: \.name) { category in
-                    ListButtonRow(title: category.name,
+                    ListButtonRow(emoji: nil,
+                                  title: category.name,
                                   isSelected: selectedCategory == category.categoryId) {
                         selectedCategory = category.categoryId
                         dismiss()
@@ -74,7 +76,7 @@ struct CategoryPickerView: View {
 #Preview {
     @Previewable @State var appState: AppStateProvider = MockSharedAppState()
     @Previewable @State var categoryId: CategoryId? = "auto"
-    let mockData = MockDataPersistence()
+    let mockData = MockSwiftDataStack()
     
     let swiftDataController = MockSwiftDataController(viewContext: mockData.context,
                                                       selectedCategory: categoryId!)

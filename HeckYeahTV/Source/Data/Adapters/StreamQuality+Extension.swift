@@ -25,7 +25,12 @@ extension StreamQuality {
         }
     }
     
-    static func convertToStreamQuality(_ format: String) -> StreamQuality {
+    static func convertToStreamQuality(_ format: String?) -> StreamQuality {
+        
+        guard let format else {
+            return .unknown
+        }
+        
         // Extract the numeric value (e.g., "1080p" -> 1080).  Yes, we are ignoring video bit rate between interlaced and progressive scans.
         guard let resolution = Int(format.filter { $0.isNumber }) else {
             return .unknown

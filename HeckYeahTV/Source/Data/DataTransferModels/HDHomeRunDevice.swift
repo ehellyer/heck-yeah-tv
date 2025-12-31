@@ -9,14 +9,6 @@
 import Foundation
 import Hellfire
 
-
-/// Returns an array of HDHomeRun Devices found on the local network.  Each device will provide it's own details and channel line up URL.
-struct HDHomeRunKeys {
-    struct Tuner {
-        static let hdHomeRunDiscoveryURL = URL(string: "https://api.hdhomerun.com/discover")!
-    }
-}
-
 /// HDHomeRunDevice - After initial discover call to find HDHomeRun Devices on the network, a device discover call is made and returns details on the specific device.
 /// 
 /// e.g. [http://192.168.78.220/discover.json](http://192.168.78.220/discover.json) -> `HDHomeRunDevice`
@@ -32,6 +24,8 @@ struct HDHomeRunDevice: JSONSerializable, Equatable {
     let lineupURL: URL
     let tunerCount: Int
 }
+
+//MARK: - JSONSerializable customization
 
 extension HDHomeRunDevice {
     

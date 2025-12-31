@@ -1,5 +1,5 @@
 //
-//  IPTVChannel.swift
+//  Channel.swift
 //  HeckYeahTV
 //
 //  Created by Ed Hellyer on 11/30/25.
@@ -12,15 +12,16 @@ import Hellfire
 
 extension SchemaV1 {
     
-    @Model final class IPTVChannel: JSONSerializable {
-        #Index<IPTVChannel>([\.sortHint, \.id], [\.id])
+    @Model final class Channel: JSONSerializable {
+        #Index<Channel>([\.sortHint, \.id], [\.id])
         
         init(id: ChannelId,
+             guideId: String?,
              sortHint: String,
              title: String,
              number: String?,
              country: CountryCode?,
-             categories: [IPTVCategory],
+             categories: [ProgramCategory],
              languages: [LanguageCode],
              url: URL,
              logoURL: URL?,
@@ -28,8 +29,9 @@ extension SchemaV1 {
              hasDRM: Bool,
              source: ChannelSource,
              deviceId: HDHomeRunDeviceId?,
-             favorite: IPTVFavorite?) {
+             favorite: Favorite?) {
             self.id = id
+            self.guideId = guideId
             self.sortHint = sortHint
             self.title = title
             self.number = number
@@ -47,6 +49,10 @@ extension SchemaV1 {
         
         @Attribute(.unique)
         var id: ChannelId
+        
+        /// The unique identifier to link guide information from the channels originating source.
+        var guideId: String?
+        
         var sortHint: String
         var title: String
         var number: String?
@@ -54,7 +60,7 @@ extension SchemaV1 {
         
         // Many-to-many relationship with categories
         @Relationship(deleteRule: .nullify)
-        var categories: [IPTVCategory] = []
+        var categories: [ProgramCategory] = []
         
         var languages: [LanguageCode] = []
         var url: URL
@@ -65,12 +71,8 @@ extension SchemaV1 {
         var deviceId: HDHomeRunDeviceId?
         
         // Relationship to favorite status (nullify on delete to preserve favorite when channel is deleted)
-        @Relationship(deleteRule: .nullify, inverse: \IPTVFavorite.channel)
-        var favorite: IPTVFavorite?
-        
-        // Many-to-many relationship with guides (nullify on delete to preserve guides when channel is deleted)
-        @Relationship(deleteRule: .nullify)
-        var guides: [Guide] = []
+        @Relationship(deleteRule: .nullify, inverse: \Favorite.channel)
+        var favorite: Favorite?
         
         // MARK: JSONSerializable Implementation
         //
@@ -81,6 +83,7 @@ extension SchemaV1 {
         
         enum CodingKeys: String, CodingKey {
             case id
+            case guideId
             case sortHint
             case title
             case number
@@ -99,10 +102,11 @@ extension SchemaV1 {
         func encode(to encoder: Encoder) throws {
             var container = encoder.container(keyedBy: CodingKeys.self)
             try container.encode(id, forKey: .id)
+            try container.encodeIfPresent(guideId, forKey: .guideId)
             try container.encode(sortHint, forKey: .sortHint)
             try container.encode(title, forKey: .title)
             try container.encodeIfPresent(number, forKey: .number)
-            try container.encode(country, forKey: .country)
+            try container.encodeIfPresent(country, forKey: .country)
             try container.encode(categories, forKey: .categories)
             try container.encode(languages, forKey: .languages)
             try container.encode(url, forKey: .url)
@@ -110,17 +114,18 @@ extension SchemaV1 {
             try container.encode(quality, forKey: .quality)
             try container.encode(hasDRM, forKey: .hasDRM)
             try container.encode(source, forKey: .source)
-            try container.encode(deviceId, forKey: .deviceId)
+            try container.encodeIfPresent(deviceId, forKey: .deviceId)
         }
         
         init(from decoder: Decoder) throws {
             let container = try decoder.container(keyedBy: CodingKeys.self)
             self.id = try container.decode(ChannelId.self, forKey: .id)
+            self.guideId = try container.decodeIfPresent(String.self, forKey: .guideId)
             self.sortHint = try container.decode(String.self, forKey: .sortHint)
             self.title = try container.decode(String.self, forKey: .title)
             self.number = try container.decodeIfPresent(String.self, forKey: .number)
             self.country = try container.decodeIfPresent(CountryCode.self, forKey: .country)
-            self.categories = try container.decodeIfPresent([IPTVCategory].self, forKey: .categories) ?? []
+            self.categories = try container.decodeIfPresent([ProgramCategory].self, forKey: .categories) ?? []
             self.languages = try container.decode([LanguageCode].self, forKey: .languages)
             self.url = try container.decode(URL.self, forKey: .url)
             self.logoURL = try container.decodeIfPresent(URL.self, forKey: .logoURL)

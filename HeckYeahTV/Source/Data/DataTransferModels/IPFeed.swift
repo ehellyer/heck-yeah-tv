@@ -39,7 +39,13 @@ struct IPFeed: JSONSerializable {
     /// Video format (e.g., "576i")
     let format: String
     
-    private enum CodingKeys: String, CodingKey {
+}
+
+//MARK: - JSONSerializable customization
+
+extension IPFeed {
+    
+    enum CodingKeys: String, CodingKey {
         case channelId = "channel"
         case feedId = "id"
         case name

@@ -1,5 +1,5 @@
 //
-//  HDHomeRunServer.swift
+//  HomeRunDevice.swift
 //  HeckYeahTV
 //
 //  Created by Ed Hellyer on 11/30/25.
@@ -12,8 +12,8 @@ import Hellfire
 
 extension SchemaV1 {
     
-    @Model final class HDHomeRunServer: JSONSerializable {
-        #Index<HDHomeRunServer>([\.deviceId])
+    @Model final class HomeRunDevice: JSONSerializable {
+        #Index<HomeRunDevice>([\.deviceId])
         
         init(deviceId: HDHomeRunDeviceId,
              friendlyName: String,

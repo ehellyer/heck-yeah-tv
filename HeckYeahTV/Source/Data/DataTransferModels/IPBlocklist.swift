@@ -21,7 +21,13 @@ struct IPBlocklist: JSONSerializable {
     /// Link to removal request or DMCA takedown notice
     let ref: String
     
-    private enum CodingKeys: String, CodingKey {
+}
+
+//MARK: - JSONSerializable customization
+
+extension IPBlocklist {
+    
+    enum CodingKeys: String, CodingKey {
         case channelId = "channel"
         case reason
         case ref

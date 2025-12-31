@@ -1,5 +1,5 @@
 //
-//  MockChannelLoader.swift
+//  MockSwiftDataStack.swift
 //  HeckYeahTV
 //
 //  Created by Ed Hellyer on 11/6/25.
@@ -33,10 +33,11 @@ enum MockDataPersistenceError: LocalizedError {
 
 /// Builds an IN-MEMORY mock SwiftDataStack for previews.
 @MainActor
-final class MockDataPersistence {
+final class MockSwiftDataStack {
     
-    private(set) var context: ModelContext
     
+//MARK: - Internal API - SwiftDataControllable implementation
+
     init() {
         
         let schema = Schema(versionedSchema: HeckYeahSchema.self)
@@ -46,6 +47,8 @@ final class MockDataPersistence {
         context = ModelContext(container)
         loadMockData()
     }
+    
+    private(set) var context: ModelContext
     
     private func loadMockDataFromFile<T: JSONSerializable>(fileName: String, ext: String) throws -> T {
         guard let url = Bundle.main.url(forResource: fileName, withExtension: ext) else {
@@ -66,24 +69,24 @@ final class MockDataPersistence {
         do {
             logDebug("MockDataPersistence Init starting...")
 
-            let mockChannels: [IPTVChannel] = try loadMockDataFromFile(fileName: "MockIPTVChannels", ext: "json")
+            let mockChannels: [Channel] = try loadMockDataFromFile(fileName: "MockChannels", ext: "json")
             mockChannels.forEach(context.insert)
             logDebug("\(mockChannels.count) channels loaded")
             
-            let mockCountries: [IPTVCountry] = try loadMockDataFromFile(fileName: "MockCountries", ext: "json")
+            let mockCountries: [Country] = try loadMockDataFromFile(fileName: "MockCountries", ext: "json")
             mockCountries.forEach(context.insert)
             logDebug("\(mockCountries.count) countries loaded")
             
-            let mockTuners: [HDHomeRunServer] = try loadMockDataFromFile(fileName: "MockTunerDevices", ext: "json")
+            let mockTuners: [HomeRunDevice] = try loadMockDataFromFile(fileName: "MockTunerDevices", ext: "json")
             mockTuners.forEach(context.insert)
             logDebug("\(mockTuners.count) tuners loaded")
             
-            //Dev Note: IPTVChannel & IPTVCategory M:M relationships are setup in the MockIPTVChannels.json file.
-            let mockCategories: [IPTVCategory] = try loadMockDataFromFile(fileName: "MockCategories", ext: "json")
+            //Dev Note: Channel & ProgramCategory M:M relationships are setup in the MockChannels.json file.
+            let mockCategories: [ProgramCategory] = try loadMockDataFromFile(fileName: "MockCategories", ext: "json")
             mockCategories.forEach(context.insert)
             logDebug("\(mockCategories.count) categories loaded")
             
-            let mockFavorites: [IPTVFavorite] = try loadMockDataFromFile(fileName: "MockFavorites", ext: "json")
+            let mockFavorites: [Favorite] = try loadMockDataFromFile(fileName: "MockFavorites", ext: "json")
             mockFavorites.forEach(context.insert)
             logDebug("\(mockFavorites.count) favorites loaded")
             
@@ -91,12 +94,11 @@ final class MockDataPersistence {
             mockFavorites.forEach { fav in
                 mockChannels.first(where: { $0.id == fav.id })?.favorite = fav
             }
+           
+            let mockChannelBundles: [ChannelBundle] = try loadMockDataFromFile(fileName: "MockChannelBundles", ext: "json")
+            mockChannelBundles.forEach(context.insert)
+            logDebug("\(mockChannelBundles.count) channel bundles loaded")
 
-            //Dev note: IPTVChannel & Guide M:M relationships are setup in the MockGuide.json file.
-            let mockGuides: [Guide] = try loadMockDataFromFile(fileName: "MockGuides", ext: "json")
-            mockGuides.forEach(context.insert)
-            logDebug("\(mockGuides.count) guides loaded")
-            
             do {
                 try context.save()
                 logDebug("MockDataPersistence Init completed: Mock data loaded into in-memory store.")

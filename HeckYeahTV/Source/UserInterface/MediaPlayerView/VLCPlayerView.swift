@@ -76,8 +76,8 @@ struct VLCPlayerView: CrossPlatformRepresentable {
         }()
         
         private func resolveChannelURL(id: ChannelId) -> URL? {
-            let predicate = #Predicate<IPTVChannel> { $0.id == id }
-            var descriptor = FetchDescriptor<IPTVChannel>(predicate: predicate)
+            let predicate = #Predicate<Channel> { $0.id == id }
+            var descriptor = FetchDescriptor<Channel>(predicate: predicate)
             descriptor.fetchLimit = 1
             return try? viewContext.fetch(descriptor).first?.url
         }

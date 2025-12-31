@@ -92,7 +92,7 @@ struct Heck_Yeah_TVApp: App {
                 
                 group.addTask {
                     let scanForTuners = await appState.scanForTuners
-                    let hdTunerImporter = HDHomeRunImporter(container: container, scanForTuners: scanForTuners)
+                    let hdTunerImporter = HomeRunImporter(container: container, scanForTuners: scanForTuners)
                     let _ = try? await hdTunerImporter.load()
                 }
                 

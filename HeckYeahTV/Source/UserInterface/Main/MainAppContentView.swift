@@ -195,14 +195,10 @@ extension MainAppContentView {
             // When playing, show the toast briefly, then hide it unless cancelled by a new state change.
             fadeTask = Task { @MainActor in
                 showPlayPauseButton = true
-                do {
-                    // Display the "Play" toast for 2 seconds.
-                    try await Task.sleep(nanoseconds: 2_000_000_000)
-                    try Task.checkCancellation()
-                    showPlayPauseButton = false
-                } catch {
-                    // Task was cancelled; intentionally ignore to let the latest state win.
-                }
+                // Display the "Play" toast for 2 seconds.
+                try? await Task.sleep(nanoseconds: 2_000_000_000)
+                guard !Task.isCancelled else { return }
+                showPlayPauseButton = false
             }
         }
     }
@@ -214,16 +210,16 @@ extension MainAppContentView {
     @Previewable @State var _appState: any AppStateProvider = MockSharedAppState()
 
     // Override the injected SwiftDataController
-    let mockData = MockDataPersistence()
+    let mockData = MockSwiftDataStack()
     let swiftDataController = MockSwiftDataController(viewContext: mockData.context)
     InjectedValues[\.swiftDataController] = swiftDataController
     
-    let selectedChannelId = swiftDataController.guideChannelMap.map[3]
+    let selectedChannelId = swiftDataController.channelBundleMap.map[3]
     
     return MainAppContentView(appState: _appState)
         .modelContext(mockData.context)
         .onAppear {
             _appState.selectedChannel = selectedChannelId
-            _appState.showAppNavigation = true
+            _appState.showAppNavigation = false
         }
 }

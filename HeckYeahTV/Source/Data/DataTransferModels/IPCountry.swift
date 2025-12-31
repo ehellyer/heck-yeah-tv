@@ -1,5 +1,5 @@
 //
-//  Country.swift
+//  IPCountry.swift
 //  Heck Yeah TV
 //
 //  Created by Ed Hellyer on 8/11/25.
@@ -10,7 +10,7 @@ import Foundation
 import Hellfire
 
 /// Source: [https://iptv-org.github.io/api/countries.json](https://iptv-org.github.io/api/countries.json)
-struct Country: JSONSerializable {
+struct IPCountry: JSONSerializable {
     
     /// Name of the country
     let name: String

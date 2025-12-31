@@ -33,7 +33,7 @@ class ProgramView: UIView {
         stackView.addArrangedSubview(timeLabel)
         stackView.addArrangedSubview(titleLabel)
         self.addGestureRecognizer(longTapGesture)
-        self.widthAnchor.constraint(equalToConstant: 260).isActive = true
+        self.widthAnchor.constraint(equalToConstant: AppStyle.ProgramView.width).isActive = true
     }
     
     required init?(coder: NSCoder) {
@@ -67,21 +67,24 @@ class ProgramView: UIView {
         stackContainerView.bottomAnchor.constraint(greaterThanOrEqualTo: stackView.bottomAnchor, constant: 0).isActive = true
         return stackView
     }()
+    private lazy var timeLabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.numberOfLines = 1
+        label.font = AppStyle.Fonts.programTimeSlotFont
+        label.textColor = .guideForegroundNoFocus
+        label.setContentCompressionResistancePriority(.required, for: .horizontal)
+        label.setContentCompressionResistancePriority(.required, for: .vertical)
+        return label
+    }()
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.numberOfLines = 3
         label.font = AppStyle.Fonts.programTitleFont
         label.textColor = .guideForegroundNoFocus
-        return label
-    }()
-    private lazy var timeLabel: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.numberOfLines = 1
-        label.font = AppStyle.Fonts.programTimeFont
-        label.textColor = .guideForegroundNoFocus
         label.setContentCompressionResistancePriority(.required, for: .vertical)
+        label.setContentCompressionResistancePriority(UILayoutPriority(999), for: .horizontal)
         return label
     }()
     private lazy var longTapGesture: UILongPressGestureRecognizer = {
@@ -113,7 +116,20 @@ class ProgramView: UIView {
     //MARK: - Private API
     
     private var channelId: ChannelId?
-    private var program: Program?
+    private var program: ChannelProgram?
+    
+    /// Shared date formatter for time slot strings. Reused to avoid repeated alloc/init.
+    private static let timeFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "h:mm a"
+        return formatter
+    }()
+    
+    private func formattedTimeSlot(for program: ChannelProgram) -> String {
+        let startTimeString = Self.timeFormatter.string(from: program.startTime)
+        let endTimeString = Self.timeFormatter.string(from: program.endTime)
+        return "\(startTimeString) - \(endTimeString)"
+    }
     
     private func updateViewTintColor(_ color: UIColor) {
         titleLabel.textColor = color
@@ -124,12 +140,14 @@ class ProgramView: UIView {
     
     weak var delegate: GuideViewDelegate?
     
-    func configure(with program: Program?, channelId: ChannelId?, isPlaying: Bool) {
+    func configure(with program: ChannelProgram?,
+                   channelId: ChannelId?,
+                   isPlaying: Bool) {
         self.channelId = channelId
         self.program = program
         backgroundColor = (isPlaying) ? .guideSelectedChannelBackground : .guideBackgroundNoFocus
         titleLabel.text = program?.title
-        timeLabel.text = program?.timeSlot
+        timeLabel.text = program.map { formattedTimeSlot(for: $0) } //Map used to unwrap optional.
     }
 }
 

@@ -11,12 +11,15 @@ import SwiftData
 
 struct SettingsView: View {
     @Binding var appState: AppStateProvider
-    @Environment(\.modelContext) private var modelContext
+    @Environment(\.modelContext) private var viewContext
+    
+    @State private var swiftDataController: SwiftDataControllable = InjectedValues[\.swiftDataController]
+    
     @Environment(\.dismiss) private var dismiss
     
     @State private var showingCountryPicker = false
     @State private var isScanningForTuners: Bool = false
-    @State private var isUpdatingIPTVChannels: Bool = false
+    @State private var isUpdatingChannels: Bool = false
     
 #if os(iOS)
     let titleColor: Color = Color.sectionTitle
@@ -26,8 +29,7 @@ struct SettingsView: View {
     let titleColor: Color = .white
 #endif
     
-    @Query private var iptvChannels: [IPTVChannel]
-    @Query(sort: \HDHomeRunServer.deviceId, order: .forward) private var devices: [HDHomeRunServer]
+    @Query(sort: \HomeRunDevice.deviceId, order: .forward) private var devices: [HomeRunDevice]
     
     var body: some View {
         Form {
@@ -37,8 +39,8 @@ struct SettingsView: View {
                     Text("Total IPTV Channels")
                         .modifier(SectionTextStyle())
                     Spacer()
-                    if not(isUpdatingIPTVChannels) {
-                        Text("\(iptvChannels.count)")
+                    if not(isUpdatingChannels) {
+                        Text("\(swiftDataController.totalChannelCount)")
                             .modifier(SectionTextStyle())
                     }
                 }
@@ -46,16 +48,16 @@ struct SettingsView: View {
                 
                 Button {
                     Task {
-                        isUpdatingIPTVChannels = true
+                        isUpdatingChannels = true
                         DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
-                            isUpdatingIPTVChannels = false
+                            isUpdatingChannels = false
                         }
                     }
                 } label: {
                     HStack {
                         Text("Update IPTV channels")
                         Spacer()
-                        if isUpdatingIPTVChannels {
+                        if isUpdatingChannels {
                             ProgressView()
                                 .tint(.primary)
                                 .frame(width: 20, height: 20)
@@ -176,7 +178,7 @@ struct SettingsView: View {
     @Previewable @State var appState: any AppStateProvider = MockSharedAppState()
     
     // Override the injected SwiftDataController
-    let mockData = MockDataPersistence()
+    let mockData = MockSwiftDataStack()
     let swiftDataController = MockSwiftDataController(viewContext: mockData.context)
     InjectedValues[\.swiftDataController] = swiftDataController
     

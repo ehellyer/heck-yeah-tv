@@ -30,7 +30,13 @@ struct IPGuide: JSONSerializable {
     /// Language of the guide (ISO 639-1 code) (e.g., "en")
     let lang: String
     
-    private enum CodingKeys: String, CodingKey {
+}
+
+//MARK: - JSONSerializable customization
+
+extension IPGuide {
+    
+    enum CodingKeys: String, CodingKey {
         case channelId = "channel"
         case feedId = "feed"
         case site

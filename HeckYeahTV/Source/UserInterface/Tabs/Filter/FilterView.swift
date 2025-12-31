@@ -15,8 +15,8 @@ struct FilterView: View {
     @Environment(\.modelContext) private var viewContext
     @State private var swiftDataController: SwiftDataControllable = InjectedValues[\.swiftDataController]
     
-    @Query(sort: \IPTVCountry.name, order: .forward) private var countries: [IPTVCountry]
-    @Query(sort: \IPTVCategory.name, order: .forward) private var categories: [IPTVCategory]
+    @Query(sort: \Country.name, order: .forward) private var countries: [Country]
+    @Query(sort: \ProgramCategory.name, order: .forward) private var categories: [ProgramCategory]
     
     private var selectedCountryName: String {
         let countryCode = swiftDataController.selectedCountry
@@ -165,7 +165,7 @@ struct FilterView: View {
                 
                 // Count of channels matching criteria label.
                 HStack {
-                    Text("\(swiftDataController.guideChannelMap.map.count) channels in guide")
+                    Text("\(swiftDataController.channelBundleMap.map.count) channels in guide")
                         .font(.caption)
 #if os(tvOS)
                         .foregroundStyle(.white)
@@ -188,7 +188,7 @@ struct FilterView: View {
     
     
     // Override the injected SwiftDataController
-    let mockData = MockDataPersistence()
+    let mockData = MockSwiftDataStack()
     let swiftDataController = MockSwiftDataController(viewContext: mockData.context)
     InjectedValues[\.swiftDataController] = swiftDataController
 

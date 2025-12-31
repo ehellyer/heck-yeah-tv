@@ -23,6 +23,8 @@ struct HDHomeRunDiscovery: JSONSerializable, Equatable  {
     let lineupURL: URL
 }
 
+//MARK: - JSONSerializable customization
+
 extension HDHomeRunDiscovery {
     
     enum CodingKeys: String, CodingKey {
