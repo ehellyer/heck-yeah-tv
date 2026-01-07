@@ -181,7 +181,7 @@ actor HomeRunImporter {
                                        originalAirDate: program.originalAirdate,
                                        programImageURL: program.imageURL,
                                        recordingRule: program.recordingRule,
-                                       category: program.filter ?? [])
+                                       filter: program.filter ?? [])
                     )
                 }
             }
@@ -195,14 +195,40 @@ actor HomeRunImporter {
         
     }
     
+    /// Updates the last guide fetch timestamp to the current date/time.
+    /// Call this after successfully fetching and importing guide data.
+    private func updateLastGuideFetchDate() async {
+        await MainActor.run {
+            let updatedDate = Date()
+            SharedAppState.shared.dateLastGuideFetch = updatedDate
+            logDebug("Updated dateLastGuideFetch to: \(updatedDate)")
+        }
+    }
+    
     //MARK: - Public API
     
     func load() async throws -> FetchSummary {
         var summary = FetchSummary()
         
         let homeRunController: HomeRunDiscoveryController = HomeRunDiscoveryController()
+
+        let lastGuideFetchDate: Date? = await SharedAppState.shared.dateLastGuideFetch
+
+        let shouldFetchGuideData: Bool = {
+            guard let lastFetchDate = lastGuideFetchDate else {
+                // Never fetched before, should fetch now
+                return true
+            }
+            
+            // Random interval between 5 and 10 hours
+            let randomHours = Double.random(in: 5...10)
+            let intervalSinceLastFetch = Date().timeIntervalSince(lastFetchDate)
+            let hoursElapsed = intervalSinceLastFetch / 3600 // Convert seconds to hours
+            
+            return hoursElapsed >= randomHours
+        }()
         
-        let homeRunSummary = await homeRunController.fetchAll()
+        let homeRunSummary = await homeRunController.fetchAll(includeGuideData: shouldFetchGuideData)
         
         summary.mergeSummary(homeRunSummary)
         
@@ -213,11 +239,24 @@ actor HomeRunImporter {
         try await self.importTunerDevices(homeRunController.devices)
         try await self.importHDHRChannels(homeRunController.channels)
         
-        let channelGuideMap: [GuideNumber : ChannelId] = await homeRunController.channels.reduce(into: [:]) { accumulator, channel in
-            accumulator[channel.guideNumber] = channel.id
+        if shouldFetchGuideData {
+            let channelGuideMap: [GuideNumber : ChannelId] = await homeRunController.channels.reduce(into: [:]) { accumulator, channel in
+                accumulator[channel.guideNumber] = channel.id
+            }
+            
+            do {
+                try await self.importChannelGuides(homeRunController.channelGuides, channelGuideMap: channelGuideMap)
+                
+                // Only update the timestamp if guide import was successful
+                await self.updateLastGuideFetchDate()
+            } catch {
+                logError("Failed to import channel guides: \(error)")
+                throw error
+            }
+        } else {
+            logDebug("Skipping guide data fetch. Last fetch was recent enough.")
         }
         
-        try await self.importChannelGuides(homeRunController.channelGuides, channelGuideMap: channelGuideMap)
         return summary
     }
 }

@@ -26,7 +26,7 @@ struct FilterView: View {
         return "None"
     }
     
-    private var selectedCountryBinding: Binding<CountryCode> {
+    private var selectedCountryBinding: Binding<CountryCodeId> {
         Binding(
             get: { swiftDataController.selectedCountry },
             set: { swiftDataController.selectedCountry = $0 }

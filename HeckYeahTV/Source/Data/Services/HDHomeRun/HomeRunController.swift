@@ -103,6 +103,21 @@ actor HomeRunDiscoveryController {
         return summary
     }
     
+    /// Fetches program guide data for HDHomeRun channels from the guide service.
+    ///
+    /// This method constructs a request to the HDHomeRun guide service API, combining device authentication
+    /// from all discovered tuners to retrieve program listings. The guide data includes program titles,
+    /// descriptions, air times, and other metadata for the specified time range.
+    ///
+    /// - Parameters:
+    ///   - devices: A list of active HDHomeRun devices discovered on the network. Used to concatenate the
+    ///              DeviceAuth strings from all HDHomeRun devices for authentication with the guide service.
+    ///   - start: Optional. Unix timestamp of the start of the time range requested. Default = current time.
+    ///   - duration: Optional. Number of hours of the time range requested. Default = 4, Max = 24.
+    ///   - channelNumber: Optional. Specific channel number to request guide data for. Default = all channels.
+    ///
+    /// - Returns: A `FetchSummary` containing success/failure information for the guide data fetch operation,
+    ///            including the number of channel guides retrieved and any errors encountered.
     private func channelGuideFetch(devices: [HDHomeRunDevice],
                                     start: Int?,
                                     duration: Int?,
@@ -162,8 +177,9 @@ actor HomeRunDiscoveryController {
     var channelGuides: [HDHomeRunChannelGuide] = []
     var indexedLogos: [GuideNumber: URL] = [:] //Indexed on HDHomeRunChannel.guideNumber.
     
-    func fetchAll() async -> FetchSummary {
+    func fetchAll(includeGuideData: Bool) async -> FetchSummary {
         logDebug("Looking for HDHomeRun Tuners, obtaining channel line up and fetching guide information. 🇺🇸")
+        
         var summary = await deviceDiscovery()
         if discoveredDevices.count > 0 {
             summary.mergeSummary(await deviceDetails())
@@ -174,15 +190,17 @@ actor HomeRunDiscoveryController {
             summary.mergeSummary(_summary)
         }
         
-        if channels.count > 0 {
+        if includeGuideData && channels.count > 0 {
             let _summary = await channelGuideFetch(devices: devices, start: nil, duration: 24, channelNumber: nil)
             summary.mergeSummary(_summary)
-        }
-        
-        if channelGuides.count > 0 {
-            logDebug("Found \(channelGuides.count) channel programs.")
-            for i in channels.indices {
-                channels[i].logoURL = indexedLogos[channels[i].guideNumber]
+            
+            if channelGuides.count > 0 {
+                logDebug("Found \(channelGuides.count) HDHomeRun channels with programs.")
+                for i in channels.indices {
+                    channels[i].logoURL = indexedLogos[channels[i].guideNumber]
+                }
+            } else {
+                logWarning("No HDHomeRun channel program data was returned from the guide API.")
             }
         }
         

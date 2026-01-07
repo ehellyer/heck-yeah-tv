@@ -14,4 +14,6 @@ protocol GuideViewDelegate: AnyObject {
     func selectChannel(_ channelId: ChannelId)
     
     func toggleFavoriteChannel(_ channelId: ChannelId)
+    
+    func showChannelProgram(_ channelProgram: ChannelProgram)
 }

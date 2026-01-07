@@ -40,6 +40,8 @@ final class SharedAppState: AppStateProvider {
         }
     }
     
+    var showChannelProgramsFullScreen: ChannelProgram? = nil
+    
     var selectedTab: AppSection {
         get {
             access(keyPath: \.selectedTab)
@@ -99,6 +101,18 @@ final class SharedAppState: AppStateProvider {
         set {
             withMutation(keyPath: \.selectedChannelBundle) {
                 UserDefaults.selectedChannelBundle = newValue
+            }
+        }
+    }
+    
+    var dateLastGuideFetch: Date? {
+        get {
+            access(keyPath: \.dateLastGuideFetch)
+            return UserDefaults.dateLastGuideFetch
+        }
+        set {
+            withMutation(keyPath: \.dateLastGuideFetch) {
+                UserDefaults.dateLastGuideFetch = newValue
             }
         }
     }

@@ -11,6 +11,7 @@ import SwiftUI
 struct RecentsView: View {
 
     @Binding var appState: AppStateProvider
+    
     @Environment(\.modelContext) private var viewContext
     @Namespace private var focusNamespace
     @FocusState private var focusedChannelId: String?
@@ -21,9 +22,9 @@ struct RecentsView: View {
                 ScrollView(.vertical) {
                     LazyVStack(alignment: .leading) {
                         ForEach(appState.recentChannelIds, id: \.self) { channelId in
-                            GuideRowLazy(channelId: channelId,
-                                         appState: $appState,
-                                         hideGuideInfo: true)
+                            ChannelViewLoader(appState: $appState,
+                                            channelId: channelId,
+                                            isCompact: true)
                             .id(channelId)
                         }
                     }

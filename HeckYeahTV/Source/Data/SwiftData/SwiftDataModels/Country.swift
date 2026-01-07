@@ -16,7 +16,7 @@ extension SchemaV1 {
         #Index<Country>([\.code])
         
         init(name: String,
-             code: CountryCode,
+             code: CountryCodeId,
              languages: [String],
              flag: String) {
             self.name = name
@@ -30,7 +30,7 @@ extension SchemaV1 {
         
         /// [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) code of the country
         @Attribute(.unique)
-        var code: CountryCode
+        var code: CountryCodeId
         
         /// List of official languages of the country ([ISO 639-3](https://en.wikipedia.org/wiki/ISO_639-3) code)
         var languages: [String]
@@ -63,7 +63,7 @@ extension SchemaV1 {
         init(from decoder: Decoder) throws {
             let container = try decoder.container(keyedBy: CodingKeys.self)
             self.name = try container.decode(String.self, forKey: .name)
-            self.code = try container.decode(CountryCode.self, forKey: .code)
+            self.code = try container.decode(CountryCodeId.self, forKey: .code)
             self.languages = try container.decode([String].self, forKey: .languages)
             self.flag = try container.decode(String.self, forKey: .flag)
         }

@@ -66,6 +66,7 @@ struct AppKeys {
         static let recentChannelIdsKey = "SharedAppState.recentChannelIdsKey"
         static let scanForTunersKey = "SharedAppState.scanForTunersKey"
         static let selectedChannelBundleKey = "selectedChannelBundleKey"
+        static let dateLastGuideFetchKey = "dateLastGuideFetchKey"
 
         // Search parameter keys
         static let selectedCountryKey = "SharedAppState.selectedCountryKey"

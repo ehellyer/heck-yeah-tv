@@ -9,6 +9,7 @@
 import Foundation
 
 private struct AttachmentControllerInjectionKey: InjectionKey {
+    @MainActor
     static var currentValue: AttachmentController = AttachmentController()
 }
 

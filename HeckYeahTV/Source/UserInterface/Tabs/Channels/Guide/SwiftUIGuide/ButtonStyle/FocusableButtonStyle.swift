@@ -12,11 +12,15 @@ struct FocusableButtonStyle: ButtonStyle {
     let isPlaying: Bool
     let cornerRadius: CGFloat
     let isFocused: Bool
-    private let focusGrowth: CGFloat = 15 // Fixed pixel growth
+    let isProgramNow: Bool
     
     @State private var buttonSize: CGSize = .zero
     
     func makeBody(configuration: Configuration) -> some View {
+        
+        let foregroundColor: Color = AppStyle.GuideView.foregroundColor(isFocused: isFocused)
+        let backgroundColor: Color = AppStyle.GuideView.backgroundColor(isFocused: isFocused, isPlaying: isPlaying, isProgramNow: isProgramNow)
+
         configuration.label
             .foregroundStyle(foregroundColor)  // Move this BEFORE other modifiers
             .background(
@@ -34,30 +38,7 @@ struct FocusableButtonStyle: ButtonStyle {
                 RoundedRectangle(cornerRadius: cornerRadius)
                     .fill(backgroundColor)
             )
-            .scaleEffect(scaleAmount(for: buttonSize))
+            .scaleEffect(AppStyle.GuideView.scaleAmount(for: buttonSize, isFocused: isFocused))
             .animation(.easeInOut(duration: 0.2), value: isFocused)
-    }
-    
-    private func scaleAmount(for size: CGSize) -> CGFloat {
-        guard isFocused else { return 1.0 }
-        let minDimension = max(size.width, 1.0)
-        let scaleFactor = (minDimension + focusGrowth) / minDimension
-        return scaleFactor
-    }
-    
-    private var foregroundColor: Color {
-        if isFocused {
-            return .guideForegroundFocused
-        } else {
-            return .guideForegroundNoFocus
-        }
-    }
-    
-    private var backgroundColor: Color {
-        if isFocused {
-            return .guideBackgroundFocused
-        } else {
-            return isPlaying ? .guideSelectedChannelBackground : .guideBackgroundNoFocus
-        }
     }
 }

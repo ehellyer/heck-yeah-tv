@@ -36,6 +36,43 @@ protocol SwiftDataControllable: ChannelFilterable {
     /// If this map is empty, either your filters are too aggressive or you need more channels.
     /// Probably both.
     var channelBundleMap: ChannelBundleMap { get }
+
+    /// Fetches a single channel from the database by its ID, or throws a tantrum.
+    ///
+    /// This is your "get me that specific channel, and I mean NOW" function. It dives into
+    /// SwiftData, retrieves the exact channel you asked for, and returns it... or throws an
+    /// error if it turns out that channel ID was made up, deleted, or living in a parallel
+    /// universe where your database schema is slightly different.
+    ///
+    /// Perfect for when you know exactly what you want and you're not in the mood for
+    /// "suggestions" or "alternatives."
+    ///
+    /// - Parameter channelId: The unique identifier of the channel you're hunting for.
+    ///                        Make sure it's real, or prepare to catch some errors.
+    ///
+    /// - Returns: The `Channel` object you requested, complete with all its metadata glory.
+    ///
+    /// - Throws: Whatever SwiftData decides to throw when it can't find your channel.
+    ///           Could be "not found," could be "corrupted data," could be "Mercury is in
+    ///           retrograde." Who knows? That's why we have `try`.
+    func channel(for channelId: ChannelId) throws -> Channel
+    
+    /// Retrieves the program schedule for a channel, because you need to know what's on.
+    ///
+    /// This function fetches all the `ChannelProgram` entries associated with a specific channel,
+    /// sorted chronologically so you can see what's on now, what's coming up next, and what you'll
+    /// be binge-watching at 3 AM when you should be sleeping.
+    ///
+    /// If the channel doesn't have any programs yet (maybe it's new, maybe the guide data hasn't
+    /// loaded, or maybe it's one of those mysterious channels that just plays static), you'll get
+    /// an empty array. Not `nil`, an actual empty array. Because sometimes "nothing on" is still
+    /// a valid answer, and Swift wants you to handle it without all those pesky optional unwraps.
+    ///
+    /// - Parameter channelId: The ID of the channel whose schedule you're stalking.
+    ///
+    /// - Returns: An array of `ChannelProgram` objects, ordered by start time. Could be empty
+    ///            if the channel is fresh out of content or still waiting for its TV Guide moment.
+    func channelPrograms(for channelId: ChannelId) -> [ChannelProgram]
     
     /// Constructs a SwiftData predicate based on your filtering whims.  This is what builds the ChannelBundleMap.
     ///
@@ -53,6 +90,6 @@ protocol SwiftDataControllable: ChannelFilterable {
     ///            May return zero results if your criteria are unreasonably specific.
     static func predicateBuilder(showFavoritesOnly: Bool,
                                  searchTerm: String?,
-                                 countryCode: CountryCode,
+                                 countryCode: CountryCodeId,
                                  categoryId: CategoryId?) -> Predicate<Channel>
 }

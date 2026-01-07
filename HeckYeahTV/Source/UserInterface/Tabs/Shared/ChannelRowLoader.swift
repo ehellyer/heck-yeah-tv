@@ -25,6 +25,10 @@ final class ChannelRowLoader: ObservableObject {
         task = Task { [weak self] in
             guard let self else { return }
             do {
+                // Simulate loading delay in preview mode
+                if PreviewDetector.isRunningInPreview {
+                    try await Task.sleep(nanoseconds: 1_000_000_000)
+                }
                 let chPredicate = #Predicate<Channel> { $0.id == channelId }
                 var chDescriptor = FetchDescriptor<Channel>(predicate: chPredicate)
                 chDescriptor.fetchLimit = 1

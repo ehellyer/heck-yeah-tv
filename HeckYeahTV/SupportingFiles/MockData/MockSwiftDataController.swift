@@ -20,7 +20,7 @@ final class MockSwiftDataController: SwiftDataControllable {
     }
 
     init(viewContext: ModelContext,
-         selectedCountry: CountryCode = "US",
+         selectedCountry: CountryCodeId = "US",
          selectedCategory: CategoryId? = nil,
          showFavoritesOnly: Bool = false,
          searchTerm: String? = nil) {
@@ -43,9 +43,32 @@ final class MockSwiftDataController: SwiftDataControllable {
 
     private(set) var channelBundleMap: ChannelBundleMap = ChannelBundleMap(id: UserDefaults.selectedChannelBundle, map: [])
     
+    func channel(for channelId: ChannelId) throws -> Channel {
+        let predicate = #Predicate<Channel> { $0.id == channelId }
+        var fetchDescriptor = FetchDescriptor<Channel>(predicate: predicate)
+        fetchDescriptor.fetchLimit = 1
+        guard let _program = try viewContext.fetch(fetchDescriptor).first else {
+            throw GuideStoreError.noChannelFoundForId(channelId)
+        }
+        return _program
+    }
+    
+    func channelPrograms(for channelId: ChannelId) -> [ChannelProgram] {
+        do {
+            let predicate = #Predicate<ChannelProgram> { $0.channelId == channelId }
+            let startTimeSort = SortDescriptor<ChannelProgram>(\.startTime, order: .forward)
+            let fetchDescriptor = FetchDescriptor<ChannelProgram>(predicate: predicate, sortBy: [startTimeSort])
+            let _programs = try viewContext.fetch(fetchDescriptor)
+            return _programs
+        } catch {
+            logError("Failed to fetch channel programs for channelId: \(channelId).  Error \(error.localizedDescription)")
+            return []
+        }
+    }
+
     static func predicateBuilder(showFavoritesOnly: Bool,
                                  searchTerm: String?,
-                                 countryCode: CountryCode,
+                                 countryCode: CountryCodeId,
                                  categoryId: CategoryId?) -> Predicate<Channel> {
         
         // Keeping the predicate builder code in the same spot for now.  (Less maintenance)  Change if needed.
@@ -64,7 +87,7 @@ final class MockSwiftDataController: SwiftDataControllable {
         }
     }
     
-    var selectedCountry: CountryCode {
+    var selectedCountry: CountryCodeId {
         didSet {
             guard selectedCountry != oldValue else { return }
             scheduleChannelBundleMapRebuild()
@@ -87,7 +110,7 @@ final class MockSwiftDataController: SwiftDataControllable {
     
     //MARK: - Internal API Functions for Preview
     
-    func fetchChannel(at index: Int) -> Channel {
+    func previewOnly_fetchChannel(at index: Int) -> Channel {
         let channelId = channelBundleMap.map[index]
         let predicate = #Predicate<Channel> { $0.id == channelId }
         var descriptor = FetchDescriptor<Channel>(predicate: predicate)
@@ -96,18 +119,28 @@ final class MockSwiftDataController: SwiftDataControllable {
         return channel
     }
     
-    func categories() -> [ProgramCategory] {
-        let descriptor = FetchDescriptor<ProgramCategory>(sortBy: [SortDescriptor(\ProgramCategory.name, order: .forward)])
-        let _categories = try! viewContext.fetch(descriptor)
+    func previewOnly_categories() -> [ProgramCategory] {
+        let sortDescriptor = SortDescriptor<ProgramCategory>(\ProgramCategory.name, order: .forward)
+        let fetchDescriptor = FetchDescriptor<ProgramCategory>(sortBy: [sortDescriptor])
+        let _categories = try! viewContext.fetch(fetchDescriptor)
         return _categories
     }
 
-    func countries() -> [Country] {
-        let descriptor = FetchDescriptor<Country>(sortBy: [SortDescriptor(\Country.name, order: .forward)])
-        let _countries = try! viewContext.fetch(descriptor)
+    func previewOnly_countries() -> [Country] {
+        let sortDescriptor = SortDescriptor<Country>(\Country.name, order: .forward)
+        let fetchDescriptor = FetchDescriptor<Country>(sortBy: [sortDescriptor])
+        let _countries = try! viewContext.fetch(fetchDescriptor)
         return _countries
     }
 
+    func previewOnly_channelPrograms(channelId: ChannelId) -> [ChannelProgram] {
+        
+        let predicate = #Predicate<ChannelProgram> { $0.channelId == channelId }
+        let startTimeSort = SortDescriptor<ChannelProgram>(\.startTime, order: .forward)
+        let fetchDescriptor = FetchDescriptor<ChannelProgram>(predicate: predicate, sortBy: [startTimeSort])
+        let _channelPrograms = try! viewContext.fetch(fetchDescriptor)
+        return _channelPrograms
+    }
     
     //MARK: - Private API Properties
     
@@ -125,6 +158,7 @@ final class MockSwiftDataController: SwiftDataControllable {
     private func bootStrap() throws {
         guard bootstrapStarted == false else { return }
         bootstrapStarted = true
+
         try rebuildChannelBundleMap()
     }
 

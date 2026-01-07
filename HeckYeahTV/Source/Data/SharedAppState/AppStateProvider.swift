@@ -8,6 +8,10 @@
 
 import Foundation
 
+/// Represents the instance state of Heck Yeah TV app.  These are settings that would never be shared across
+/// CloudKit (tm) so that all your Heck Yeah TV apps would pause at the same time, or have the same selected channel,
+/// or show the same recent channels, etc...
+
 @MainActor
 protocol AppStateProvider {
     
@@ -22,6 +26,9 @@ protocol AppStateProvider {
     /// Set to `true` when you want users to actually find things in your app.
     /// Set to `false` when you want a clean, minimalist look (or when you're pretending to be Netflix).
     var showAppNavigation: Bool { get set }
+    
+    
+    var showChannelProgramsFullScreen: ChannelProgram? { get set }
     
     /// The channel that's currently getting all the attention.
     ///
@@ -57,6 +64,10 @@ protocol AppStateProvider {
     /// Change this value to switch between different flavors of perpetual content.
     /// "Just one episode", famous last words.
     var selectedChannelBundle: ChannelBundleId { get set }
+    
+    
+    /// Last guide fetch time.
+    var dateLastGuideFetch: Date? { get set }
 }
 
 extension AppStateProvider {

@@ -1,177 +1,8 @@
 [
     {
-        "id": "chan.music.001",
-        "sortHint": "0002",
-        "title": "Music Videos HD",
-        "number": "Channel 200",
-        "country": "US",
-        "categories": [
-            {
-                "categoryId": "music",
-                "name": "Music",
-                "categoryDescription": "Programming is music or music related"
-            },
-            {
-                "categoryId": "entertainment",
-                "name": "Entertainment",
-                "categoryDescription": "Channels with a variety of entertainment programs"
-            }
-        ],
-        "languages": ["eng"],
-        "url": "https://example.com/music/videos.m3u8",
-        "logoURL": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/NBC_logo_2022_%28vertical%29.svg/512px-NBC_logo_2022_%28vertical%29.svg.png",
-        "quality": {"fhd":{}},
-        "hasDRM": false,
-        "source": "ipStream"
-    },
-    {
-        "id": "chan.news.001",
-        "sortHint": "0003",
-        "title": "World News Network",
-        "country": "US",
-        "categories": [
-            {
-                "categoryId": "news",
-                "name": "News",
-                "categoryDescription": "Programming is mostly news"
-            }
-        ],
-        "languages": ["eng", "spa"],
-        "url": "https://example.com/news/stream.m3u8",
-        "logoURL": "https://i.imgur.com/7oNe8xj.png",
-        "quality": {"fhd":{}},
-        "hasDRM": false,
-        "source": "ipStream"
-    },
-    {
-        "id": "chan.sports.001",
-        "sortHint": "0004",
-        "title": "Sports Central",
-        "number": "Channel 42",
-        "country": "US",
-        "categories": [
-            {
-                "categoryId": "sports",
-                "name": "Sports",
-                "categoryDescription": "Programming is sports"
-            }
-        ],
-        "languages": ["eng"],
-        "url": "https://example.com/sports/live.m3u8",
-        "logoURL": "https://static.wikia.nocookie.net/logopedia/images/0/06/Network_10_2018.svg/revision/latest/scale-to-width-down/512",
-        "quality": {"uhd4k":{}},
-        "hasDRM": true,
-        "source": "ipStream"
-    },
-    {
-        "id": "chan.movies.001",
-        "sortHint": "0005",
-        "title": "Classic Cinema",
-        "number": "Channel 88",
-        "country": "US",
-        "categories": [
-            {
-                "categoryId": "movies",
-                "name": "Movies",
-                "categoryDescription": "Movies and films"
-            },
-            {
-                "categoryId": "classic",
-                "name": "Classic",
-                "categoryDescription": "Classic and vintage content"
-            }
-        ],
-        "languages": ["eng"],
-        "url": "https://example.com/movies/classic.m3u8",
-        "logoURL": "https://i.postimg.cc/13hHGFKf/1plus1international.png",
-        "quality": {"sd":{}},
-        "hasDRM": false,
-        "source": "ipStream"
-    },
-    {
-        "id": "chan.nature.001",
-        "sortHint": "0006",
-        "title": "Nature & Wildlife 4K",
-        "number": "Channel 103",
-        "country": "UK",
-        "categories": [
-            {
-                "categoryId": "documentary",
-                "name": "Documentary",
-                "categoryDescription": "Documentary programming"
-            },
-            {
-                "categoryId": "relax",
-                "name": "Relax",
-                "categoryDescription": "Relaxing and calming content"
-            }
-        ],
-        "languages": ["eng"],
-        "url": "https://example.com/nature/4k.m3u8",
-        "logoURL": "https://i.imgur.com/FSkYLPK.png",
-        "quality": {"uhd4k":{}},
-        "hasDRM": false,
-        "source": "ipStream"
-    },
-    {
-        "id": "chan.comedy.001",
-        "sortHint": "0007",
-        "title": "Comedy Network",
-        "number": "Channel 67",
-        "country": "US",
-        "categories": [
-            {
-                "categoryId": "comedy",
-                "name": "Comedy",
-                "categoryDescription": "Comedy and humor programming"
-            },
-            {
-                "categoryId": "entertainment",
-                "name": "Entertainment",
-                "categoryDescription": "Channels with a variety of entertainment programs"
-            }
-        ],
-        "languages": ["eng"],
-        "url": "https://example.com/comedy/stream.m3u8",
-        "logoURL": "https://i.imgur.com/3FlmRu9.png",
-        "quality": {"fhd":{}},
-        "hasDRM": false,
-        "source": "ipStream"
-    },
-    {
-        "id": "chan.kids.001",
-        "sortHint": "0008",
-        "title": "Kids TV",
-        "number": "Channel 25",
-        "country": "US",
-        "categories": [
-            {
-                "categoryId": "kids",
-                "name": "Kids",
-                "categoryDescription": "Children's programming"
-            },
-            {
-                "categoryId": "family",
-                "name": "Family",
-                "categoryDescription": "Family-friendly content"
-            },
-            {
-                "categoryId": "animation",
-                "name": "Animation",
-                "categoryDescription": "Animated shows and cartoons"
-            }
-        ],
-        "languages": ["eng"],
-        "url": "https://example.com/kids/cartoons.m3u8",
-        "logoURL": "https://i.imgur.com/XyBKaXI.png",
-        "quality": {"fhd":{}},
-        "hasDRM": false,
-        "source": "ipStream"
-    },
-    {
         "id": "chan.local.001",
-        "sortHint": "0009",
-        "title": "Local NBC",
+        "sortHint": "0000",
+        "title": "Local ABC",
         "number": "Channel 2.1",
         "country": "US",
         "categories": [
@@ -195,1774 +26,1568 @@
         "deviceId": "10A81C77"
     },
     {
-        "id": "chan.local.002",
-        "sortHint": "0010",
-        "title": "Local ABC",
-        "number": "Channel 7.1",
-        "country": "US",
-        "categories": [
-            {
-                "categoryId": "general",
-                "name": "General",
-                "categoryDescription": "Provides a variety of different programming"
-            },
-            {
-                "categoryId": "news",
-                "name": "News",
-                "categoryDescription": "News and current events"
-            }
-        ],
-        "languages": ["eng"],
-        "url": "http://192.168.1.100:5004/auto/v7.1",
-        "logoURL": "https://i.imgur.com/5di4Nis.png",
-        "quality": {"fhd":{}},
-        "hasDRM": false,
-        "source": "homeRunTuner",
-        "deviceId": "10A81C77"
-    },
-    {
-        "id": "chan.documentary.001",
-        "sortHint": "0011",
-        "title": "Documentary Channel",
-        "number": "Channel 150",
-        "country": "UK",
-        "categories": [
-            {
-                "categoryId": "documentary",
-                "name": "Documentary",
-                "categoryDescription": "Documentary programming"
-            },
-            {
-                "categoryId": "education",
-                "name": "Education",
-                "categoryDescription": "Educational content"
-            }
-        ],
-        "languages": ["eng"],
-        "url": "https://example.com/docs/stream.m3u8",
-        "logoURL": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/NBC_logo_2022_%28vertical%29.svg/512px-NBC_logo_2022_%28vertical%29.svg.png",
-        "quality": {"uhd4k":{}},
-        "hasDRM": true,
-        "source": "ipStream"
-    },
-    {
-        "id": "chan.tech.001",
-        "sortHint": "0012",
-        "title": "Tech Today",
-        "number": "Channel 177",
-        "country": "US",
-        "categories": [
-            {
-                "categoryId": "science",
-                "name": "Science",
-                "categoryDescription": "Science and technology programming"
-            },
-            {
-                "categoryId": "news",
-                "name": "News",
-                "categoryDescription": "News and current events"
-            }
-        ],
-        "languages": ["eng"],
-        "url": "https://example.com/tech/live.m3u8",
-        "logoURL": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/WDAY-TV_2021.svg/512px-WDAY-TV_2021.svg.png",
-        "quality": {"fhd":{}},
-        "hasDRM": false,
-        "source": "ipStream"
-    },
-    {
-        "id": "chan.premium.001",
-        "sortHint": "0013",
-        "title": "Premium Movies 8K",
-        "number": "Channel 500",
-        "country": "US",
-        "categories": [
-            {
-                "categoryId": "movies",
-                "name": "Movies",
-                "categoryDescription": "Movies and films"
-            },
-            {
-                "categoryId": "entertainment",
-                "name": "Entertainment",
-                "categoryDescription": "Channels with a variety of entertainment programs"
-            }
-        ],
-        "languages": ["eng", "spa", "fra"],
-        "url": "https://example.com/premium/8k.m3u8",
-        "logoURL": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/80/WDAZ-TV_2021.svg/512px-WDAZ-TV_2021.svg.png",
-        "quality": {"uhd8k":{}},
-        "hasDRM": true,
-        "source": "ipStream"
-    },
-    {
-        "id": "chan.cooking.001",
-        "sortHint": "0014",
-        "title": "Cooking Network",
-        "number": "Channel 89",
-        "country": "FR",
-        "categories": [
-            {
-                "categoryId": "cooking",
-                "name": "Cooking",
-                "categoryDescription": "Cooking and culinary shows"
-            },
-            {
-                "categoryId": "lifestyle",
-                "name": "Lifestyle",
-                "categoryDescription": "Lifestyle and living content"
-            }
-        ],
-        "languages": ["fra", "eng"],
-        "url": "https://example.com/cooking/stream.m3u8",
-        "logoURL": "https://upload.wikimedia.org/wikipedia/commons/8/89/PBS_logo_2019.svg",
-        "quality": {"fhd":{}},
-        "hasDRM": false,
-        "source": "ipStream"
-    },
-    {
-        "id": "chan.travel.001",
-        "sortHint": "0015",
-        "title": "Travel & Adventure",
-        "number": "Channel 112",
-        "country": "UK",
-        "categories": [
-            {
-                "categoryId": "travel",
-                "name": "Travel",
-                "categoryDescription": "Travel and adventure content"
-            },
-            {
-                "categoryId": "documentary",
-                "name": "Documentary",
-                "categoryDescription": "Documentary programming"
-            }
-        ],
-        "languages": ["eng"],
-        "url": "https://example.com/travel/adventure.m3u8",
-        "logoURL": "https://i.imgur.com/gCjaY0F.png",
-        "quality": {"uhd4k":{}},
-        "hasDRM": false,
-        "source": "ipStream"
-    },
-    {
-        "id": "chan.unknown.001",
-        "sortHint": "0016",
-        "title": "Mystery Stream",
-        "number": "Channel 999",
-        "country": null,
-        "categories": [
-            {
-                "categoryId": "general",
-                "name": "General",
-                "categoryDescription": "Provides a variety of different programming"
-            }
-        ],
-        "languages": ["eng"],
-        "url": "https://example.com/mystery/stream.m3u8",
-        "logoURL": "https://i.imgur.com/gCjaY0F.png",
-        "quality": {"unknown":{}},
-        "hasDRM": false,
-        "source": "ipStream"
-    },
-    {
-        "id": "chan.local.003",
-        "sortHint": "0017",
-        "title": "Local CBS",
-        "number": "Channel 4.1",
-        "country": "US",
-        "categories": [
-            {
-                "categoryId": "general",
-                "name": "General",
-                "categoryDescription": "Provides a variety of different programming"
-            },
-            {
-                "categoryId": "news",
-                "name": "News",
-                "categoryDescription": "News and current events"
-            }
-        ],
-        "languages": ["eng"],
-        "url": "http://192.168.1.100:5004/auto/v4.1",
-        "logoURL": "https://i.imgur.com/ZsTuADb.png",
-        "quality": {"fhd":{}},
-        "hasDRM": false,
-        "source": "homeRunTuner",
-        "deviceId": "10A81C77"
-    },
-    {
-        "id": "chan.history.001",
-        "sortHint": "0018",
-        "title": "History Channel",
-        "number": "Channel 125",
-        "country": "US",
-        "categories": [
-            {
-                "categoryId": "documentary",
-                "name": "Documentary",
-                "categoryDescription": "Documentary programming"
-            },
-            {
-                "categoryId": "education",
-                "name": "Education",
-                "categoryDescription": "Educational content"
-            }
-        ],
-        "languages": ["eng"],
-        "url": "https://example.com/history/stream.m3u8",
-        "logoURL": "https://i.imgur.com/GxrCIxz.png",
-        "quality": {"fhd":{}},
-        "hasDRM": false,
-        "source": "ipStream"
-    },
-    {
-        "id": "chan.anime.001",
-        "sortHint": "0019",
-        "title": "Anime Network",
-        "number": "Channel 350",
-        "country": "JP",
-        "categories": [
-            {
-                "categoryId": "animation",
-                "name": "Animation",
-                "categoryDescription": "Animated shows and cartoons"
-            },
-            {
-                "categoryId": "series",
-                "name": "Series",
-                "categoryDescription": "Series and episodic content"
-            }
-        ],
-        "languages": ["jpn", "eng"],
-        "url": "https://example.com/anime/stream.m3u8",
-        "logoURL": "https://i.imgur.com/TKPk7Fn.png",
-        "quality": {"fhd":{}},
-        "hasDRM": false,
-        "source": "ipStream"
-    },
-    {
-        "id": "chan.weather.001",
-        "sortHint": "0020",
-        "title": "Weather 24/7",
-        "number": "Channel 10",
-        "country": "US",
-        "categories": [
-            {
-                "categoryId": "weather",
-                "name": "Weather",
-                "categoryDescription": "Weather forecasts and updates"
-            },
-            {
-                "categoryId": "news",
-                "name": "News",
-                "categoryDescription": "News and current events"
-            }
-        ],
-        "languages": ["eng"],
-        "url": "https://example.com/weather/live.m3u8",
-        "logoURL": "https://i.postimg.cc/HkJ1kzDc/pulse.png",
-        "quality": {"fhd":{}},
-        "hasDRM": false,
-        "source": "ipStream"
-    },
-    {
-        "id": "chan.sci-fi.001",
-        "sortHint": "0021",
-        "title": "Sci-Fi Universe",
-        "number": "Channel 245",
-        "country": "US",
-        "categories": [
-            {
-                "categoryId": "movies",
-                "name": "Movies",
-                "categoryDescription": "Movies and films"
-            },
-            {
-                "categoryId": "series",
-                "name": "Series",
-                "categoryDescription": "Series and episodic content"
-            },
-            {
-                "categoryId": "science",
-                "name": "Science",
-                "categoryDescription": "Science and technology programming"
-            }
-        ],
-        "languages": ["eng"],
-        "url": "https://example.com/scifi/stream.m3u8",
-        "logoURL": "https://i.imgur.com/vTHk2rq.png",
-        "quality": {"uhd4k":{}},
-        "hasDRM": true,
-        "source": "ipStream"
-    },
-    {
-        "id": "chan.local.004",
-        "sortHint": "0022",
-        "title": "Local FOX",
-        "number": "Channel 5.1",
-        "country": "US",
-        "categories": [
-            {
-                "categoryId": "general",
-                "name": "General",
-                "categoryDescription": "Provides a variety of different programming"
-            },
-            {
-                "categoryId": "news",
-                "name": "News",
-                "categoryDescription": "News and current events"
-            },
-            {
-                "categoryId": "sports",
-                "name": "Sports",
-                "categoryDescription": "Live sports and sports coverage"
-            }
-        ],
-        "languages": ["eng"],
-        "url": "http://192.168.1.100:5004/auto/v5.1",
-        "logoURL": "https://i.imgur.com/0xS5lNT.png",
-        "quality": {"fhd":{}},
-        "hasDRM": false,
-        "source": "homeRunTuner",
-        "deviceId": "10A81C77"
-    },
-    {
-        "id": "chan.lifestyle.001",
-        "sortHint": "0023",
-        "title": "Lifestyle & Home",
-        "number": "Channel 95",
-        "country": "US",
-        "categories": [
-            {
-                "categoryId": "lifestyle",
-                "name": "Lifestyle",
-                "categoryDescription": "Lifestyle and living content"
-            },
-            {
-                "categoryId": "family",
-                "name": "Family",
-                "categoryDescription": "Family-friendly content"
-            }
-        ],
-        "languages": ["eng"],
-        "url": "https://example.com/lifestyle/stream.m3u8",
-        "logoURL": "https://i.imgur.com/q3ij8wO.png",
-        "quality": {"fhd":{}},
-        "hasDRM": false,
-        "source": "ipStream"
-    },
-    {
-        "id": "chan.gaming.001",
-        "sortHint": "0024",
-        "title": "Gaming Live",
-        "number": "Channel 333",
-        "country": "US",
-        "categories": [
-            {
-                "categoryId": "interactive",
-                "name": "Interactive",
-                "categoryDescription": "Interactive and gaming content"
-            },
-            {
-                "categoryId": "entertainment",
-                "name": "Entertainment",
-                "categoryDescription": "Channels with a variety of entertainment programs"
-            }
-        ],
-        "languages": ["eng"],
-        "url": "https://example.com/gaming/live.m3u8",
-        "logoURL": "https://i.imgur.com/60qMpEK.png",
-        "quality": {"fhd":{}},
-        "hasDRM": false,
-        "source": "ipStream"
-    },
-    {
-        "id": "chan.horror.001",
-        "sortHint": "0025",
-        "title": "Horror Classics",
-        "number": "Channel 666",
-        "country": "US",
-        "categories": [
-            {
-                "categoryId": "movies",
-                "name": "Movies",
-                "categoryDescription": "Movies and films"
-            },
-            {
-                "categoryId": "classic",
-                "name": "Classic",
-                "categoryDescription": "Classic and vintage content"
-            }
-        ],
-        "languages": ["eng"],
-        "url": "https://example.com/horror/classics.m3u8",
-        "logoURL": "https://i.imgur.com/cdfkh6N.png",
-        "quality": {"sd":{}},
-        "hasDRM": false,
-        "source": "ipStream"
-    },
-    {
-        "id": "chan.business.001",
-        "sortHint": "0026",
-        "title": "Business News Network",
-        "number": "Channel 201",
-        "country": "US",
-        "categories": [
-            {
-                "categoryId": "business",
-                "name": "Business",
-                "categoryDescription": "Business and financial news"
-            },
-            {
-                "categoryId": "news",
-                "name": "News",
-                "categoryDescription": "News and current events"
-            }
-        ],
-        "languages": ["eng"],
-        "url": "https://example.com/business/live.m3u8",
-        "logoURL": "https://i.postimg.cc/prnqYJh1/baywatch.png",
-        "quality": {"fhd":{}},
-        "hasDRM": false,
-        "source": "ipStream"
-    },
-    {
-        "id": "chan.drama.001",
-        "sortHint": "0027",
-        "title": "Drama Series Channel",
-        "number": "Channel 155",
-        "country": "UK",
-        "categories": [
-            {
-                "categoryId": "series",
-                "name": "Series",
-                "categoryDescription": "Series and episodic content"
-            },
-            {
-                "categoryId": "entertainment",
-                "name": "Entertainment",
-                "categoryDescription": "Channels with a variety of entertainment programs"
-            }
-        ],
-        "languages": ["eng"],
-        "url": "https://example.com/drama/stream.m3u8",
-        "logoURL": "https://i.postimg.cc/prnqYJh1/baywatch.png",
-        "quality": {"uhd4k":{}},
-        "hasDRM": true,
-        "source": "ipStream"
-    },
-    {
-        "id": "chan.local.005",
-        "sortHint": "0028",
-        "title": "Local PBS",
-        "number": "Channel 13.1",
-        "country": "US",
-        "categories": [
-            {
-                "categoryId": "public",
-                "name": "Public",
-                "categoryDescription": "Public broadcasting content"
-            },
-            {
-                "categoryId": "education",
-                "name": "Education",
-                "categoryDescription": "Educational content"
-            },
-            {
-                "categoryId": "documentary",
-                "name": "Documentary",
-                "categoryDescription": "Documentary programming"
-            }
-        ],
-        "languages": ["eng"],
-        "url": "http://192.168.1.100:5004/auto/v13.1",
-        "logoURL": "https://i.postimg.cc/prnqYJh1/baywatch.png",
-        "quality": {"fhd":{}},
-        "hasDRM": false,
-        "source": "homeRunTuner",
-        "deviceId": "10A81C77"
-    },
-    {
-        "id": "chan.retro.001",
-        "sortHint": "0029",
-        "title": "Retro TV",
-        "number": "Channel 80",
-        "country": "US",
-        "categories": [
-            {
-                "categoryId": "classic",
-                "name": "Classic",
-                "categoryDescription": "Classic and vintage content"
-            },
-            {
-                "categoryId": "entertainment",
-                "name": "Entertainment",
-                "categoryDescription": "Channels with a variety of entertainment programs"
-            }
-        ],
-        "languages": ["eng"],
-        "url": "https://example.com/retro/stream.m3u8",
-        "logoURL": "https://i.postimg.cc/prnqYJh1/baywatch.png",
-        "quality": {"sd":{}},
-        "hasDRM": false,
-        "source": "ipStream"
-    },
-    {
-        "id": "chan.fitness.001",
-        "sortHint": "0030",
-        "title": "Fitness & Health",
-        "number": "Channel 188",
-        "country": "US",
-        "categories": [
-            {
-                "categoryId": "lifestyle",
-                "name": "Lifestyle",
-                "categoryDescription": "Lifestyle and living content"
-            }
-        ],
-        "languages": ["eng"],
-        "url": "https://example.com/fitness/live.m3u8",
-        "logoURL": "https://i.postimg.cc/prnqYJh1/baywatch.png",
-        "quality": {"fhd":{}},
-        "hasDRM": false,
-        "source": "ipStream"
-    },
-    {
-        "id": "chan.action.001",
-        "sortHint": "0031",
-        "title": "Action Movies 24/7",
-        "number": "Channel 290",
-        "country": "US",
-        "categories": [
-            {
-                "categoryId": "movies",
-                "name": "Movies",
-                "categoryDescription": "Movies and films"
-            },
-            {
-                "categoryId": "entertainment",
-                "name": "Entertainment",
-                "categoryDescription": "Channels with a variety of entertainment programs"
-            }
-        ],
-        "languages": ["eng"],
-        "url": "https://example.com/action/stream.m3u8",
-        "logoURL": "https://i.postimg.cc/prnqYJh1/baywatch.png",
-        "quality": {"uhd4k":{}},
-        "hasDRM": true,
-        "source": "ipStream"
-    },
-    {
-        "id": "chan.educational.001",
-        "sortHint": "0032",
-        "title": "Educational Kids",
-        "number": "Channel 30",
-        "country": "US",
-        "categories": [
-            {
-                "categoryId": "kids",
-                "name": "Kids",
-                "categoryDescription": "Children's programming"
-            },
-            {
-                "categoryId": "education",
-                "name": "Education",
-                "categoryDescription": "Educational content"
-            },
-            {
-                "categoryId": "family",
-                "name": "Family",
-                "categoryDescription": "Family-friendly content"
-            }
-        ],
-        "languages": ["eng"],
-        "url": "https://example.com/educational/kids.m3u8",
-        "logoURL": "https://i.postimg.cc/prnqYJh1/baywatch.png",
-        "quality": {"fhd":{}},
-        "hasDRM": false,
-        "source": "ipStream"
-    },
-    {
-        "id": "chan.romance.001",
-        "sortHint": "0033",
-        "title": "Romance Channel",
-        "number": "Channel 198",
-        "country": "US",
-        "categories": [
-            {
-                "categoryId": "movies",
-                "name": "Movies",
-                "categoryDescription": "Movies and films"
-            },
-            {
-                "categoryId": "series",
-                "name": "Series",
-                "categoryDescription": "Series and episodic content"
-            }
-        ],
-        "languages": ["eng"],
-        "url": "https://example.com/romance/stream.m3u8",
-        "logoURL": "https://i.postimg.cc/prnqYJh1/baywatch.png",
-        "quality": {"fhd":{}},
-        "hasDRM": false,
-        "source": "ipStream"
-    },
-    {
-        "id": "chan.local.006",
-        "sortHint": "0034",
-        "title": "Local CW",
-        "number": "Channel 11.1",
-        "country": "US",
-        "categories": [
-            {
-                "categoryId": "general",
-                "name": "General",
-                "categoryDescription": "Provides a variety of different programming"
-            },
-            {
-                "categoryId": "entertainment",
-                "name": "Entertainment",
-                "categoryDescription": "Channels with a variety of entertainment programs"
-            }
-        ],
-        "languages": ["eng"],
-        "url": "http://192.168.1.100:5004/auto/v11.1",
-        "logoURL": "https://i.postimg.cc/prnqYJh1/baywatch.png",
-        "quality": {"fhd":{}},
-        "hasDRM": false,
-        "source": "homeRunTuner",
-        "deviceId": "10A81C77"
-    },
-    {
-        "id": "chan.international.001",
-        "sortHint": "0035",
-        "title": "International News",
-        "number": "Channel 202",
-        "country": "UK",
-        "categories": [
-            {
-                "categoryId": "news",
-                "name": "News",
-                "categoryDescription": "News and current events"
-            }
-        ],
-        "languages": ["eng", "fra", "deu", "spa"],
-        "url": "https://example.com/international/news.m3u8",
-        "logoURL": "https://i.postimg.cc/prnqYJh1/baywatch.png",
-        "quality": {"fhd":{}},
-        "hasDRM": false,
-        "source": "ipStream"
-    },
-    {
-        "id": "chan.auto.001",
-        "sortHint": "0036",
-        "title": "Auto & Motorsports",
-        "number": "Channel 275",
-        "country": "DE",
-        "categories": [
-            {
-                "categoryId": "auto",
-                "name": "Auto",
-                "categoryDescription": "Automotive and racing content"
-            },
-            {
-                "categoryId": "sports",
-                "name": "Sports",
-                "categoryDescription": "Live sports and sports coverage"
-            }
-        ],
-        "languages": ["deu", "eng"],
-        "url": "https://example.com/auto/racing.m3u8",
-        "logoURL": "https://i.postimg.cc/prnqYJh1/baywatch.png",
-        "quality": {"uhd4k":{}},
-        "hasDRM": false,
-        "source": "ipStream"
-    },
-    {
-        "id": "chan.reality.001",
-        "sortHint": "0037",
-        "title": "Reality TV Plus",
-        "number": "Channel 165",
-        "country": "US",
-        "categories": [
-            {
-                "categoryId": "entertainment",
-                "name": "Entertainment",
-                "categoryDescription": "Channels with a variety of entertainment programs"
-            },
-            {
-                "categoryId": "series",
-                "name": "Series",
-                "categoryDescription": "Series and episodic content"
-            }
-        ],
-        "languages": ["eng"],
-        "url": "https://example.com/reality/stream.m3u8",
-        "logoURL": "https://i.postimg.cc/prnqYJh1/baywatch.png",
-        "quality": {"fhd":{}},
-        "hasDRM": false,
-        "source": "ipStream"
-    },
-    {
-        "id": "chan.space.001",
-        "sortHint": "0038",
-        "title": "Space & Astronomy 4K",
-        "number": "Channel 301",
-        "country": "US",
-        "categories": [
-            {
-                "categoryId": "science",
-                "name": "Science",
-                "categoryDescription": "Science and technology programming"
-            },
-            {
-                "categoryId": "documentary",
-                "name": "Documentary",
-                "categoryDescription": "Documentary programming"
-            },
-            {
-                "categoryId": "education",
-                "name": "Education",
-                "categoryDescription": "Educational content"
-            }
-        ],
-        "languages": ["eng"],
-        "url": "https://example.com/space/4k.m3u8",
-        "logoURL": "https://i.postimg.cc/prnqYJh1/baywatch.png",
-        "quality": {"uhd4k":{}},
-        "hasDRM": false,
-        "source": "ipStream"
-    },
-    {
-        "id": "chan.indie.001",
-        "sortHint": "0039",
-        "title": "Indie Films",
-        "number": "Channel 420",
-        "country": "US",
-        "categories": [
-            {
-                "categoryId": "movies",
-                "name": "Movies",
-                "categoryDescription": "Movies and films"
-            },
-            {
-                "categoryId": "culture",
-                "name": "Culture",
-                "categoryDescription": "Cultural and artistic content"
-            }
-        ],
-        "languages": ["eng"],
-        "url": "https://example.com/indie/films.m3u8",
-        "logoURL": "https://i.postimg.cc/prnqYJh1/baywatch.png",
-        "quality": {"fhd":{}},
-        "hasDRM": false,
-        "source": "ipStream"
-    },
-    {
-        "id": "chan.jazz.001",
-        "sortHint": "0040",
-        "title": "Jazz & Blues",
-        "number": "Channel 225",
-        "country": "US",
-        "categories": [
-            {
-                "categoryId": "music",
-                "name": "Music",
-                "categoryDescription": "Programming is music or music related"
-            }
-        ],
-        "languages": ["eng"],
-        "url": "https://example.com/jazz/live.m3u8",
-        "logoURL": "https://i.imgur.com/Gry2KEN.jpg",
-        "quality": {"fhd":{}},
-        "hasDRM": false,
-        "source": "ipStream"
-    },
-    {
-        "id": "chan.classic.rock.001",
-        "sortHint": "0041",
-        "title": "Classic Rock Radio",
-        "number": "Channel 226",
-        "country": "US",
-        "categories": [
-            {
-                "categoryId": "music",
-                "name": "Music",
-                "categoryDescription": "Programming is music or music related"
-            },
-            {
-                "categoryId": "entertainment",
-                "name": "Entertainment",
-                "categoryDescription": "Channels with a variety of entertainment programs"
-            }
-        ],
-        "languages": ["eng"],
-        "url": "https://example.com/classicrock/stream.m3u8",
-        "logoURL": "https://i.imgur.com/aR5q6mA.png",
-        "quality": {"fhd":{}},
-        "hasDRM": false,
-        "source": "ipStream"
-    },
-    {
-        "id": "chan.pop.001",
-        "sortHint": "0042",
-        "title": "Pop Hits Now",
-        "number": "Channel 227",
-        "country": "US",
-        "categories": [
-            {
-                "categoryId": "music",
-                "name": "Music",
-                "categoryDescription": "Programming is music or music related"
-            },
-            {
-                "categoryId": "entertainment",
-                "name": "Entertainment",
-                "categoryDescription": "Channels with a variety of entertainment programs"
-            }
-        ],
-        "languages": ["eng"],
-        "url": "https://example.com/pop/hits.m3u8",
-        "logoURL": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/NBC_logo_2022_%28vertical%29.svg/512px-NBC_logo_2022_%28vertical%29.svg.png",
-        "quality": {"uhd4k":{}},
-        "hasDRM": false,
-        "source": "ipStream"
-    },
-    {
-        "id": "chan.world.news.002",
-        "sortHint": "0043",
-        "title": "Global News 24/7",
-        "number": "Channel 203",
-        "country": "UK",
-        "categories": [
-            {
-                "categoryId": "news",
-                "name": "News",
-                "categoryDescription": "News and current events"
-            }
-        ],
-        "languages": ["eng"],
-        "url": "https://example.com/global/news.m3u8",
-        "logoURL": "https://i.imgur.com/7oNe8xj.png",
-        "quality": {"fhd":{}},
-        "hasDRM": false,
-        "source": "ipStream"
-    },
-    {
-        "id": "chan.extreme.sports.001",
-        "sortHint": "0044",
-        "title": "Extreme Sports Network",
-        "number": "Channel 276",
-        "country": "US",
-        "categories": [
-            {
-                "categoryId": "sports",
-                "name": "Sports",
-                "categoryDescription": "Live sports and sports coverage"
-            },
-            {
-                "categoryId": "entertainment",
-                "name": "Entertainment",
-                "categoryDescription": "Channels with a variety of entertainment programs"
-            }
-        ],
-        "languages": ["eng"],
-        "url": "https://example.com/extreme/sports.m3u8",
-        "logoURL": "https://static.wikia.nocookie.net/logopedia/images/0/06/Network_10_2018.svg/revision/latest/scale-to-width-down/512",
-        "quality": {"uhd4k":{}},
-        "hasDRM": true,
-        "source": "ipStream"
-    },
-    {
-        "id": "chan.western.001",
-        "sortHint": "0045",
-        "title": "Western Classics",
-        "number": "Channel 89",
-        "country": "US",
-        "categories": [
-            {
-                "categoryId": "movies",
-                "name": "Movies",
-                "categoryDescription": "Movies and films"
-            },
-            {
-                "categoryId": "classic",
-                "name": "Classic",
-                "categoryDescription": "Classic and vintage content"
-            }
-        ],
-        "languages": ["eng"],
-        "url": "https://example.com/western/classics.m3u8",
-        "logoURL": "https://i.postimg.cc/13hHGFKf/1plus1international.png",
-        "quality": {"sd":{}},
-        "hasDRM": false,
-        "source": "ipStream"
-    },
-    {
-        "id": "chan.ocean.001",
-        "sortHint": "0046",
-        "title": "Ocean Life HD",
-        "number": "Channel 104",
-        "country": "UK",
-        "categories": [
-            {
-                "categoryId": "documentary",
-                "name": "Documentary",
-                "categoryDescription": "Programming that depicts a person or real-world event"
-            },
-            {
-                "categoryId": "relax",
-                "name": "Relax",
-                "categoryDescription": "Programming is calm sounding and beautiful views"
-            }
-        ],
-        "languages": ["eng"],
-        "url": "https://example.com/ocean/hd.m3u8",
-        "logoURL": "https://i.imgur.com/FSkYLPK.png",
-        "quality": {"fhd":{}},
-        "hasDRM": false,
-        "source": "ipStream"
-    },
-    {
-        "id": "chan.standup.001",
-        "sortHint": "0047",
-        "title": "Stand-Up Comedy Live",
-        "number": "Channel 68",
-        "country": "US",
-        "categories": [
-            {
-                "categoryId": "comedy",
-                "name": "Comedy",
-                "categoryDescription": "Comedy and humor programming"
-            },
-            {
-                "categoryId": "entertainment",
-                "name": "Entertainment",
-                "categoryDescription": "Channels with a variety of entertainment programs"
-            }
-        ],
-        "languages": ["eng"],
-        "url": "https://example.com/standup/live.m3u8",
-        "logoURL": "https://i.imgur.com/3FlmRu9.png",
-        "quality": {"fhd":{}},
-        "hasDRM": false,
-        "source": "ipStream"
-    },
-    {
-        "id": "chan.preschool.001",
-        "sortHint": "0048",
-        "title": "Preschool Learning",
-        "number": "Channel 26",
-        "country": "US",
-        "categories": [
-            {
-                "categoryId": "kids",
-                "name": "Kids",
-                "categoryDescription": "Children's programming"
-            },
-            {
-                "categoryId": "education",
-                "name": "Education",
-                "categoryDescription": "Educational content"
-            },
-            {
-                "categoryId": "family",
-                "name": "Family",
-                "categoryDescription": "Family-friendly content"
-            }
-        ],
-        "languages": ["eng"],
-        "url": "https://example.com/preschool/learning.m3u8",
-        "logoURL": "https://i.imgur.com/XyBKaXI.png",
-        "quality": {"fhd":{}},
-        "hasDRM": false,
-        "source": "ipStream"
-    },
-    {
-        "id": "chan.local.007",
-        "sortHint": "0049",
-        "title": "Local Independent",
-        "number": "Channel 38.1",
-        "country": "US",
-        "categories": [
-            {
-                "categoryId": "general",
-                "name": "General",
-                "categoryDescription": "Provides a variety of different programming"
-            }
-        ],
-        "languages": ["eng"],
-        "url": "http://192.168.1.100:5004/auto/v38.1",
-        "logoURL": "https://i.imgur.com/h09sbN0.png",
-        "quality": {"fhd":{}},
-        "hasDRM": false,
-        "source": "homeRunTuner",
-        "deviceId": "10A81C77"
-    },
-    {
-        "id": "chan.local.008",
-        "sortHint": "0050",
-        "title": "Local MyNetwork",
-        "number": "Channel 9.1",
-        "country": "US",
-        "categories": [
-            {
-                "categoryId": "general",
-                "name": "General",
-                "categoryDescription": "Provides a variety of different programming"
-            },
-            {
-                "categoryId": "entertainment",
-                "name": "Entertainment",
-                "categoryDescription": "Channels with a variety of entertainment programs"
-            }
-        ],
-        "languages": ["eng"],
-        "url": "http://192.168.1.100:5004/auto/v9.1",
-        "logoURL": "https://i.imgur.com/5di4Nis.png",
-        "quality": {"fhd":{}},
-        "hasDRM": false,
-        "source": "homeRunTuner",
-        "deviceId": "10A81C77"
-    },
-    {
-        "id": "chan.archaeology.001",
-        "sortHint": "0051",
-        "title": "Ancient Mysteries",
-        "number": "Channel 151",
-        "country": "UK",
-        "categories": [
-            {
-                "categoryId": "documentary",
-                "name": "Documentary",
-                "categoryDescription": "Programming that depicts a person or real-world event"
-            },
-            {
-                "categoryId": "education",
-                "name": "Education",
-                "categoryDescription": "Programming is intended to be educational"
-            }
-        ],
-        "languages": ["eng"],
-        "url": "https://example.com/archaeology/stream.m3u8",
-        "logoURL": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/NBC_logo_2022_%28vertical%29.svg/512px-NBC_logo_2022_%28vertical%29.svg.png",
-        "quality": {"uhd4k":{}},
-        "hasDRM": false,
-        "source": "ipStream"
-    },
-    {
-        "id": "chan.gadgets.001",
-        "sortHint": "0052",
-        "title": "Gadget Reviews",
-        "number": "Channel 178",
-        "country": "US",
-        "categories": [
-            {
-                "categoryId": "science",
-                "name": "Science",
-                "categoryDescription": "Channels that only show series"
-            },
-            {
-                "categoryId": "education",
-                "name": "Education",
-                "categoryDescription": "Programming is intended to be educational"
-            }
-        ],
-        "languages": ["eng"],
-        "url": "https://example.com/gadgets/reviews.m3u8",
-        "logoURL": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/WDAY-TV_2021.svg/512px-WDAY-TV_2021.svg.png",
-        "quality": {"fhd":{}},
-        "hasDRM": false,
-        "source": "ipStream"
-    },
-    {
-        "id": "chan.blockbusters.001",
-        "sortHint": "0053",
-        "title": "Blockbuster Cinema",
-        "number": "Channel 501",
-        "country": "US",
-        "categories": [
-            {
-                "categoryId": "movies",
-                "name": "Movies",
-                "categoryDescription": "Movies and films"
-            },
-            {
-                "categoryId": "entertainment",
-                "name": "Entertainment",
-                "categoryDescription": "Channels with a variety of entertainment programs"
-            }
-        ],
-        "languages": ["eng", "spa"],
-        "url": "https://example.com/blockbusters/stream.m3u8",
-        "logoURL": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/80/WDAZ-TV_2021.svg/512px-WDAZ-TV_2021.svg.png",
-        "quality": {"uhd4k":{}},
-        "hasDRM": true,
-        "source": "ipStream"
-    },
-    {
-        "id": "chan.baking.001",
-        "sortHint": "0054",
-        "title": "Baking Championship",
-        "number": "Channel 90",
-        "country": "UK",
-        "categories": [
-            {
-                "categoryId": "cooking",
-                "name": "Cooking",
-                "categoryDescription": "Cooking and culinary shows"
-            },
-            {
-                "categoryId": "competition",
-                "name": "Competition",
-                "categoryDescription": "Competition and contest shows"
-            }
-        ],
-        "languages": ["eng"],
-        "url": "https://example.com/baking/championship.m3u8",
-        "logoURL": "https://upload.wikimedia.org/wikipedia/commons/8/89/PBS_logo_2019.svg",
-        "quality": {"fhd":{}},
-        "hasDRM": false,
-        "source": "ipStream"
-    },
-    {
-        "id": "chan.destinations.001",
-        "sortHint": "0055",
-        "title": "Dream Destinations",
-        "number": "Channel 113",
-        "country": "US",
-        "categories": [
-            {
-                "categoryId": "travel",
-                "name": "Travel",
-                "categoryDescription": "Travel and adventure content"
-            },
-            {
-                "categoryId": "lifestyle",
-                "name": "Lifestyle",
-                "categoryDescription": "Lifestyle and living content"
-            }
-        ],
-        "languages": ["eng"],
-        "url": "https://example.com/destinations/dream.m3u8",
-        "logoURL": "https://i.imgur.com/gCjaY0F.png",
-        "quality": {"uhd4k":{}},
-        "hasDRM": false,
-        "source": "ipStream"
-    },
-    {
-        "id": "chan.paranormal.001",
-        "sortHint": "0056",
-        "title": "Paranormal Investigations",
-        "number": "Channel 444",
-        "country": "US",
-        "categories": [
-            {
-                "categoryId": "entertainment",
-                "name": "Entertainment",
-                "categoryDescription": "Channels with a variety of entertainment programs"
-            }
-        ],
-        "languages": ["eng"],
-        "url": "https://example.com/paranormal/investigations.m3u8",
-        "logoURL": "https://i.imgur.com/gCjaY0F.png",
-        "quality": {"fhd":{}},
-        "hasDRM": false,
-        "source": "ipStream"
-    },
-    {
-        "id": "chan.local.009",
-        "sortHint": "0057",
-        "title": "Local Telemundo",
-        "number": "Channel 47.1",
-        "country": "US",
-        "categories": [
-            {
-                "categoryId": "general",
-                "name": "General",
-                "categoryDescription": "Provides a variety of different programming"
-            },
-            {
-                "categoryId": "entertainment",
-                "name": "Entertainment",
-                "categoryDescription": "Channels with a variety of entertainment programs"
-            }
-        ],
-        "languages": ["spa", "eng"],
-        "url": "http://192.168.1.100:5004/auto/v47.1",
-        "logoURL": "https://i.imgur.com/ZsTuADb.png",
-        "quality": {"fhd":{}},
-        "hasDRM": false,
-        "source": "homeRunTuner",
-        "deviceId": "10A81C77"
-    },
-    {
-        "id": "chan.civilization.001",
-        "sortHint": "0058",
-        "title": "Lost Civilizations",
-        "number": "Channel 126",
-        "country": "UK",
-        "categories": [
-            {
-                "categoryId": "documentary",
-                "name": "Documentary",
-                "categoryDescription": "Programming that depicts a person or real-world event"
-            }
-        ],
-        "languages": ["eng"],
-        "url": "https://example.com/civilization/lost.m3u8",
-        "logoURL": "https://i.imgur.com/GxrCIxz.png",
-        "quality": {"uhd4k":{}},
-        "hasDRM": true,
-        "source": "ipStream"
-    },
-    {
-        "id": "chan.manga.001",
-        "sortHint": "0059",
-        "title": "Manga Adaptations",
-        "number": "Channel 351",
-        "country": "JP",
-        "categories": [
-            {
-                "categoryId": "animation",
-                "name": "Animation",
-                "categoryDescription": "Animated shows and cartoons"
-            },
-            {
-                "categoryId": "series",
-                "name": "Series",
-                "categoryDescription": "Series and episodic content"
-            }
-        ],
-        "languages": ["jpn", "eng"],
-        "url": "https://example.com/manga/adaptations.m3u8",
-        "logoURL": "https://i.imgur.com/TKPk7Fn.png",
-        "quality": {"fhd":{}},
-        "hasDRM": false,
-        "source": "ipStream"
-    },
-    {
-        "id": "chan.storm.001",
-        "sortHint": "0060",
-        "title": "Storm Watch",
-        "number": "Channel 11",
-        "country": "US",
-        "categories": [
-            {
-                "categoryId": "weather",
-                "name": "Weather",
-                "categoryDescription": "Weather forecasts and updates"
-            },
-            {
-                "categoryId": "news",
-                "name": "News",
-                "categoryDescription": "News and current events"
-            },
-            {
-                "categoryId": "documentary",
-                "name": "Documentary",
-                "categoryDescription": "Documentary programming"
-            }
-        ],
-        "languages": ["eng"],
-        "url": "https://example.com/storm/watch.m3u8",
-        "logoURL": "https://i.postimg.cc/HkJ1kzDc/pulse.png",
-        "quality": {"fhd":{}},
-        "hasDRM": false,
-        "source": "ipStream"
-    },
-    {
-        "id": "chan.fantasy.001",
-        "sortHint": "0061",
-        "title": "Fantasy Realm",
-        "number": "Channel 246",
-        "country": "US",
-        "categories": [
-            {
-                "categoryId": "movies",
-                "name": "Movies",
-                "categoryDescription": "Movies and films"
-            },
-            {
-                "categoryId": "series",
-                "name": "Series",
-                "categoryDescription": "Series and episodic content"
-            }
-        ],
-        "languages": ["eng"],
-        "url": "https://example.com/fantasy/realm.m3u8",
-        "logoURL": "https://i.imgur.com/vTHk2rq.png",
-        "quality": {"uhd4k":{}},
-        "hasDRM": true,
-        "source": "ipStream"
-    },
-    {
-        "id": "chan.local.010",
-        "sortHint": "0062",
-        "title": "Local ION",
-        "number": "Channel 31.1",
-        "country": "US",
-        "categories": [
-            {
-                "categoryId": "general",
-                "name": "General",
-                "categoryDescription": "Provides a variety of different programming"
-            },
-            {
-                "categoryId": "entertainment",
-                "name": "Entertainment",
-                "categoryDescription": "Channels with a variety of entertainment programs"
-            }
-        ],
-        "languages": ["eng"],
-        "url": "http://192.168.1.100:5004/auto/v31.1",
-        "logoURL": "https://i.imgur.com/0xS5lNT.png",
-        "quality": {"fhd":{}},
-        "hasDRM": false,
-        "source": "homeRunTuner",
-        "deviceId": "10A81C77"
-    },
-    {
-        "id": "chan.diy.001",
-        "sortHint": "0063",
-        "title": "DIY & Crafts",
-        "number": "Channel 96",
-        "country": "US",
-        "categories": [
-            {
-                "categoryId": "lifestyle",
-                "name": "Lifestyle",
-                "categoryDescription": "Lifestyle and living content"
-            },
-            {
-                "categoryId": "education",
-                "name": "Education",
-                "categoryDescription": "Educational content"
-            }
-        ],
-        "languages": ["eng"],
-        "url": "https://example.com/diy/crafts.m3u8",
-        "logoURL": "https://i.imgur.com/q3ij8wO.png",
-        "quality": {"fhd":{}},
-        "hasDRM": false,
-        "source": "ipStream"
-    },
-    {
-        "id": "chan.esports.001",
-        "sortHint": "0064",
-        "title": "eSports Championship",
-        "number": "Channel 334",
-        "country": "US",
-        "categories": [
-            {
-                "categoryId": "interactive",
-                "name": "Interactive",
-                "categoryDescription": "Programming that allows viewers to actively engage with the content"
-            },
-            {
-                "categoryId": "sports",
-                "name": "Sports",
-                "categoryDescription": "Programming is sports"
-            },
-            {
-                "categoryId": "entertainment",
-                "name": "Entertainment",
-                "categoryDescription": "Channels with a variety of entertainment programs"
-            }
-        ],
-        "languages": ["eng"],
-        "url": "https://example.com/esports/championship.m3u8",
-        "logoURL": "https://i.imgur.com/60qMpEK.png",
-        "quality": {"uhd4k":{}},
-        "hasDRM": false,
-        "source": "ipStream"
-    },
-    {
-        "id": "chan.thriller.001",
-        "sortHint": "0065",
-        "title": "Thriller Theatre",
-        "number": "Channel 667",
-        "country": "US",
-        "categories": [
-            {
-                "categoryId": "movies",
-                "name": "Movies",
-                "categoryDescription": "Channels that only show movies"
-            },
-            {
-                "categoryId": "entertainment",
-                "name": "Entertainment",
-                "categoryDescription": "Channels with a variety of entertainment programs"
-            }
-        ],
-        "languages": ["eng"],
-        "url": "https://example.com/thriller/theatre.m3u8",
-        "logoURL": "https://i.imgur.com/cdfkh6N.png",
-        "quality": {"fhd":{}},
-        "hasDRM": false,
-        "source": "ipStream"
-    },
-    {
-        "id": "chan.finance.001",
-        "sortHint": "0066",
-        "title": "Finance & Markets",
-        "number": "Channel 204",
-        "country": "US",
-        "categories": [
-            {
-                "categoryId": "business",
-                "name": "Business",
-                "categoryDescription": "Programming related to business"
-            },
-            {
-                "categoryId": "news",
-                "name": "News",
-                "categoryDescription": "Programming is mostly news"
-            }
-        ],
-        "languages": ["eng"],
-        "url": "https://example.com/finance/markets.m3u8",
-        "logoURL": "https://i.postimg.cc/prnqYJh1/baywatch.png",
-        "quality": {"fhd":{}},
-        "hasDRM": false,
-        "source": "ipStream"
-    },
-    {
-        "id": "chan.crime.001",
-        "sortHint": "0067",
-        "title": "Crime Investigations",
-        "number": "Channel 156",
-        "country": "US",
-        "categories": [
-            {
-                "categoryId": "series",
-                "name": "Series",
-                "categoryDescription": "Science and Technology"
-            },
-            {
-                "categoryId": "entertainment",
-                "name": "Entertainment",
-                "categoryDescription": "Channels with a variety of entertainment programs"
-            }
-        ],
-        "languages": ["eng"],
-        "url": "https://example.com/crime/investigations.m3u8",
-        "logoURL": "https://i.postimg.cc/prnqYJh1/baywatch.png",
-        "quality": {"fhd":{}},
-        "hasDRM": false,
-        "source": "ipStream"
-    },
-    {
-        "id": "chan.local.011",
-        "sortHint": "0068",
-        "title": "Local Univision",
-        "number": "Channel 41.1",
-        "country": "US",
-        "categories": [
-            {
-                "categoryId": "general",
-                "name": "General",
-                "categoryDescription": "Provides a variety of different programming"
-            },
-            {
-                "categoryId": "entertainment",
-                "name": "Entertainment",
-                "categoryDescription": "Channels with a variety of entertainment programs"
-            }
-        ],
-        "languages": ["spa", "eng"],
-        "url": "http://192.168.1.100:5004/auto/v41.1",
-        "logoURL": "https://i.postimg.cc/prnqYJh1/baywatch.png",
-        "quality": {"fhd":{}},
-        "hasDRM": false,
-        "source": "homeRunTuner",
-        "deviceId": "10A81C77"
-    },
-    {
-        "id": "chan.vintage.001",
-        "sortHint": "0069",
-        "title": "Vintage Classics",
-        "number": "Channel 81",
-        "country": "US",
-        "categories": [
-            {
-                "categoryId": "classic",
-                "name": "Classic",
-                "categoryDescription": "Classic and vintage content"
-            },
-            {
-                "categoryId": "movies",
-                "name": "Movies",
-                "categoryDescription": "Movies and films"
-            }
-        ],
-        "languages": ["eng"],
-        "url": "https://example.com/vintage/classics.m3u8",
-        "logoURL": "https://i.postimg.cc/prnqYJh1/baywatch.png",
-        "quality": {"sd":{}},
-        "hasDRM": false,
-        "source": "ipStream"
-    },
-    {
-        "id": "chan.yoga.001",
-        "sortHint": "0070",
-        "title": "Yoga & Meditation",
-        "number": "Channel 189",
-        "country": "US",
-        "categories": [
-            {
-                "categoryId": "lifestyle",
-                "name": "Lifestyle",
-                "categoryDescription": "Programs related to health, fitness, leisure, fashion, decor, etc."
-            }
-        ],
-        "languages": ["eng"],
-        "url": "https://example.com/yoga/meditation.m3u8",
-        "logoURL": "https://i.postimg.cc/prnqYJh1/baywatch.png",
-        "quality": {"fhd":{}},
-        "hasDRM": false,
-        "source": "ipStream"
-    },
-    {
-        "id": "chan.adventure.001",
-        "sortHint": "0071",
-        "title": "Adventure Cinema",
-        "number": "Channel 291",
-        "country": "US",
-        "categories": [
-            {
-                "categoryId": "movies",
-                "name": "Movies",
-                "categoryDescription": "Channels that only show movies"
-            },
-            {
-                "categoryId": "entertainment",
-                "name": "Entertainment",
-                "categoryDescription": "Channels with a variety of entertainment programs"
-            }
-        ],
-        "languages": ["eng"],
-        "url": "https://example.com/adventure/cinema.m3u8",
-        "logoURL": "https://i.postimg.cc/prnqYJh1/baywatch.png",
-        "quality": {"uhd4k":{}},
-        "hasDRM": false,
-        "source": "ipStream"
-    },
-    {
-        "id": "chan.stem.001",
-        "sortHint": "0072",
-        "title": "STEM Learning Kids",
-        "number": "Channel 31",
-        "country": "US",
-        "categories": [
-            {
-                "categoryId": "kids",
-                "name": "Kids",
-                "categoryDescription": "Children's programming"
-            },
-            {
-                "categoryId": "education",
-                "name": "Education",
-                "categoryDescription": "Educational content"
-            },
-            {
-                "categoryId": "science",
-                "name": "Science",
-                "categoryDescription": "Science and technology programming"
-            }
-        ],
-        "languages": ["eng"],
-        "url": "https://example.com/stem/kids.m3u8",
-        "logoURL": "https://i.postimg.cc/prnqYJh1/baywatch.png",
-        "quality": {"fhd":{}},
-        "hasDRM": false,
-        "source": "ipStream"
-    },
-    {
-        "id": "chan.hallmark.001",
-        "sortHint": "0073",
-        "title": "Heartfelt Movies",
-        "number": "Channel 199",
-        "country": "US",
-        "categories": [
-            {
-                "categoryId": "movies",
-                "name": "Movies",
-                "categoryDescription": "Movies and films"
-            },
-            {
-                "categoryId": "family",
-                "name": "Family",
-                "categoryDescription": "Family-friendly content"
-            }
-        ],
-        "languages": ["eng"],
-        "url": "https://example.com/heartfelt/movies.m3u8",
-        "logoURL": "https://i.postimg.cc/prnqYJh1/baywatch.png",
-        "quality": {"fhd":{}},
-        "hasDRM": false,
-        "source": "ipStream"
-    },
-    {
-        "id": "chan.local.012",
-        "sortHint": "0074",
-        "title": "Local MeTV",
-        "number": "Channel 8.1",
-        "country": "US",
-        "categories": [
-            {
-                "categoryId": "classic",
-                "name": "Classic",
-                "categoryDescription": "Classic and vintage content"
-            },
-            {
-                "categoryId": "entertainment",
-                "name": "Entertainment",
-                "categoryDescription": "Channels with a variety of entertainment programs"
-            }
-        ],
-        "languages": ["eng"],
-        "url": "http://192.168.1.100:5004/auto/v8.1",
-        "logoURL": "https://i.postimg.cc/prnqYJh1/baywatch.png",
-        "quality": {"fhd":{}},
-        "hasDRM": false,
-        "source": "homeRunTuner",
-        "deviceId": "10A81C77"
-    },
-    {
-        "id": "chan.world.001",
-        "sortHint": "0075",
-        "title": "World News Tonight",
-        "number": "Channel 205",
-        "country": "US",
-        "categories": [
-            {
-                "categoryId": "news",
-                "name": "News",
-                "categoryDescription": "Programming is mostly news"
-            }
-        ],
-        "languages": ["eng", "spa", "fra"],
-        "url": "https://example.com/world/tonight.m3u8",
-        "logoURL": "https://i.postimg.cc/prnqYJh1/baywatch.png",
-        "quality": {"fhd":{}},
-        "hasDRM": false,
-        "source": "ipStream"
-    },
-    {
-        "id": "chan.motorcycle.001",
-        "sortHint": "0076",
-        "title": "Motorcycle Racing",
-        "number": "Channel 277",
-        "country": "IT",
-        "categories": [
-            {
-                "categoryId": "auto",
-                "name": "Auto",
-                "categoryDescription": "Programming related to cars, motorcycles, and other automobiles"
-            },
-            {
-                "categoryId": "sports",
-                "name": "Sports",
-                "categoryDescription": "Programming is sports"
-            }
-        ],
-        "languages": ["ita", "eng"],
-        "url": "https://example.com/motorcycle/racing.m3u8",
-        "logoURL": "https://i.postimg.cc/prnqYJh1/baywatch.png",
-        "quality": {"uhd4k":{}},
-        "hasDRM": true,
-        "source": "ipStream"
-    },
-    {
-        "id": "chan.competition.001",
-        "sortHint": "0077",
-        "title": "Competition Shows",
-        "number": "Channel 166",
-        "country": "US",
-        "categories": [
-            {
-                "categoryId": "entertainment",
-                "name": "Entertainment",
-                "categoryDescription": "Channels with a variety of entertainment programs"
-            }
-        ],
-        "languages": ["eng"],
-        "url": "https://example.com/competition/shows.m3u8",
-        "logoURL": "https://i.postimg.cc/prnqYJh1/baywatch.png",
-        "quality": {"fhd":{}},
-        "hasDRM": false,
-        "source": "ipStream"
-    },
-    {
-        "id": "chan.cosmos.001",
-        "sortHint": "0078",
-        "title": "Cosmos Exploration",
-        "number": "Channel 302",
-        "country": "US",
-        "categories": [
-            {
-                "categoryId": "science",
-                "name": "Science",
-                "categoryDescription": "Science and technology programming"
-            },
-            {
-                "categoryId": "documentary",
-                "name": "Documentary",
-                "categoryDescription": "Documentary programming"
-            }
-        ],
-        "languages": ["eng"],
-        "url": "https://example.com/cosmos/exploration.m3u8",
-        "logoURL": "https://i.postimg.cc/prnqYJh1/baywatch.png",
-        "quality": {"uhd4k":{}},
-        "hasDRM": false,
-        "source": "ipStream"
-    },
-    {
-        "id": "chan.arthouse.001",
-        "sortHint": "0079",
-        "title": "Art House Cinema",
-        "number": "Channel 421",
-        "country": "FR",
-        "categories": [
-            {
-                "categoryId": "movies",
-                "name": "Movies",
-                "categoryDescription": "Channels that only show movies"
-            },
-            {
-                "categoryId": "culture",
-                "name": "Culture",
-                "categoryDescription": "Programming is mostly about art and culture"
-            }
-        ],
-        "languages": ["fra", "eng"],
-        "url": "https://example.com/arthouse/cinema.m3u8",
-        "logoURL": "https://i.postimg.cc/prnqYJh1/baywatch.png",
-        "quality": {"fhd":{}},
-        "hasDRM": false,
-        "source": "ipStream"
-    },
-    {
-        "id": "chan.soul.001",
-        "sortHint": "0080",
-        "title": "Soul & R&B",
-        "number": "Channel 228",
-        "country": "US",
-        "categories": [
-            {
-                "categoryId": "music",
-                "name": "Music",
-                "categoryDescription": "Programming is music or music related"
-            }
-        ],
-        "languages": ["eng"],
-        "url": "https://example.com/soul/rnb.m3u8",
-        "logoURL": "https://i.imgur.com/Gry2KEN.jpg",
-        "quality": {"fhd":{}},
-        "hasDRM": false,
-        "source": "ipStream"
-    }
+    "categories" : [
+
+    ],
+    "country" : "ANY",
+    "deviceId" : "10A81C77",
+    "guideId" : "6.1",
+    "hasDRM" : false,
+    "id" : "5bbd46c52ffdc477bbbd7eac14dc17ee9d0ea28163127c71e35f05822a0b9250",
+    "languages" : [
+
+    ],
+    "logoURL" : "https:\/\/img.hdhomerun.com\/channels\/US36075.png",
+    "number" : "6.1",
+    "quality" : {
+      "fhd" : {
+
+      }
+    },
+    "sortHint" : "6.1::WTVR-HD",
+    "source" : "homeRunTuner",
+    "title" : "WTVR-HD",
+    "url" : "http:\/\/192.168.78.220:5004\/auto\/v6.1"
+  },
+  {
+    "categories" : [
+
+    ],
+    "country" : "ANY",
+    "deviceId" : "10A81C77",
+    "guideId" : "6.2",
+    "hasDRM" : false,
+    "id" : "e19323684c285f0921bfb2cdde9efa96bfcf408b13d25a143f5d06b16e52a417",
+    "languages" : [
+
+    ],
+    "logoURL" : "https:\/\/img.hdhomerun.com\/channels\/US46787.png",
+    "number" : "6.2",
+    "quality" : {
+      "sd" : {
+
+      }
+    },
+    "sortHint" : "6.2::CBS6ANT",
+    "source" : "homeRunTuner",
+    "title" : "CBS6ANT",
+    "url" : "http:\/\/192.168.78.220:5004\/auto\/v6.2"
+  },
+  {
+    "categories" : [
+
+    ],
+    "country" : "ANY",
+    "deviceId" : "10A81C77",
+    "guideId" : "6.3",
+    "hasDRM" : false,
+    "id" : "e7e91fbc4d1ad9b94692c679664bff9e12bf231eed5897cd8077a9dc29be3f10",
+    "languages" : [
+
+    ],
+    "number" : "6.3",
+    "quality" : {
+      "sd" : {
+
+      }
+    },
+    "sortHint" : "6.3::CBS6XTR",
+    "source" : "homeRunTuner",
+    "title" : "CBS6XTR",
+    "url" : "http:\/\/192.168.78.220:5004\/auto\/v6.3"
+  },
+  {
+    "categories" : [
+
+    ],
+    "country" : "ANY",
+    "deviceId" : "10A81C77",
+    "guideId" : "6.4",
+    "hasDRM" : false,
+    "id" : "1fbd1af5fd32f8294baf69881b97f640103273e87092b4082c292987be75fcf3",
+    "languages" : [
+
+    ],
+    "logoURL" : "https:\/\/img.hdhomerun.com\/channels\/US117550.png",
+    "number" : "6.4",
+    "quality" : {
+      "sd" : {
+
+      }
+    },
+    "sortHint" : "6.4::CourtTV",
+    "source" : "homeRunTuner",
+    "title" : "CourtTV",
+    "url" : "http:\/\/192.168.78.220:5004\/auto\/v6.4"
+  },
+  {
+    "categories" : [
+
+    ],
+    "country" : "ANY",
+    "deviceId" : "10A81C77",
+    "guideId" : "6.5",
+    "hasDRM" : false,
+    "id" : "2144e100eb5a44c30b978099f46986a8a2af02bd4145489ab23257a4eb76bcd4",
+    "languages" : [
+
+    ],
+    "logoURL" : "https:\/\/img.hdhomerun.com\/channels\/US119696.png",
+    "number" : "6.5",
+    "quality" : {
+      "sd" : {
+
+      }
+    },
+    "sortHint" : "6.5::ION",
+    "source" : "homeRunTuner",
+    "title" : "ION",
+    "url" : "http:\/\/192.168.78.220:5004\/auto\/v6.5"
+  },
+  {
+    "categories" : [
+
+    ],
+    "country" : "ANY",
+    "deviceId" : "10A81C77",
+    "guideId" : "6.6",
+    "hasDRM" : false,
+    "id" : "b8bed043b880eb4edad38174c25bfa06db20d0bc38ad11d5ef91ec1bac2b9d38",
+    "languages" : [
+
+    ],
+    "logoURL" : "https:\/\/img.hdhomerun.com\/channels\/US121420.png",
+    "number" : "6.6",
+    "quality" : {
+      "sd" : {
+
+      }
+    },
+    "sortHint" : "6.6::BUSTED",
+    "source" : "homeRunTuner",
+    "title" : "BUSTED",
+    "url" : "http:\/\/192.168.78.220:5004\/auto\/v6.6"
+  },
+  {
+    "categories" : [
+
+    ],
+    "country" : "ANY",
+    "deviceId" : "10A81C77",
+    "guideId" : "6.7",
+    "hasDRM" : false,
+    "id" : "cd2b2256458511c2f0ec1cc0ab3ce56029bb8697cfd5ff288a4d8ec2cf632c1a",
+    "languages" : [
+
+    ],
+    "logoURL" : "https:\/\/img.hdhomerun.com\/channels\/US130172.png",
+    "number" : "6.7",
+    "quality" : {
+      "sd" : {
+
+      }
+    },
+    "sortHint" : "6.7::HSN",
+    "source" : "homeRunTuner",
+    "title" : "HSN",
+    "url" : "http:\/\/192.168.78.220:5004\/auto\/v6.7"
+  },
+  {
+    "categories" : [
+
+    ],
+    "country" : "ANY",
+    "deviceId" : "10A81C77",
+    "guideId" : "8.1",
+    "hasDRM" : false,
+    "id" : "6d01fee6b9c711b98dca6b59682eeda75e67e4f428abed6aa28b890d993fe82c",
+    "languages" : [
+
+    ],
+    "logoURL" : "https:\/\/img.hdhomerun.com\/channels\/US20458.png",
+    "number" : "8.1",
+    "quality" : {
+      "fhd" : {
+
+      }
+    },
+    "sortHint" : "8.1::WRIC-TV",
+    "source" : "homeRunTuner",
+    "title" : "WRIC-TV",
+    "url" : "http:\/\/192.168.78.220:5004\/auto\/v8.1"
+  },
+  {
+    "categories" : [
+
+    ],
+    "country" : "ANY",
+    "deviceId" : "10A81C77",
+    "guideId" : "8.2",
+    "hasDRM" : false,
+    "id" : "cb5159e6b33837fb149be9d99ef8e15ca9b12c1f53345cec84c7898016079eca",
+    "languages" : [
+
+    ],
+    "logoURL" : "https:\/\/img.hdhomerun.com\/channels\/US71490.png",
+    "number" : "8.2",
+    "quality" : {
+      "sd" : {
+
+      }
+    },
+    "sortHint" : "8.2::Rewind",
+    "source" : "homeRunTuner",
+    "title" : "Rewind",
+    "url" : "http:\/\/192.168.78.220:5004\/auto\/v8.2"
+  },
+  {
+    "categories" : [
+
+    ],
+    "country" : "ANY",
+    "deviceId" : "10A81C77",
+    "guideId" : "8.3",
+    "hasDRM" : false,
+    "id" : "8569bf71b4c4e81787a417b4cdd908cda49890d4655d22458c87cc3da4b33ca4",
+    "languages" : [
+
+    ],
+    "logoURL" : "https:\/\/img.hdhomerun.com\/channels\/US98442.png",
+    "number" : "8.3",
+    "quality" : {
+      "sd" : {
+
+      }
+    },
+    "sortHint" : "8.3::Cozi",
+    "source" : "homeRunTuner",
+    "title" : "Cozi",
+    "url" : "http:\/\/192.168.78.220:5004\/auto\/v8.3"
+  },
+  {
+    "categories" : [
+
+    ],
+    "country" : "ANY",
+    "deviceId" : "10A81C77",
+    "guideId" : "8.4",
+    "hasDRM" : false,
+    "id" : "7a9b1eebc340e54fd8e0383b3952863ba491fcb655c7bbdefa6ab2afd2e57dfd",
+    "languages" : [
+
+    ],
+    "logoURL" : "https:\/\/img.hdhomerun.com\/channels\/US106028.png",
+    "number" : "8.4",
+    "quality" : {
+      "sd" : {
+
+      }
+    },
+    "sortHint" : "8.4::Laff",
+    "source" : "homeRunTuner",
+    "title" : "Laff",
+    "url" : "http:\/\/192.168.78.220:5004\/auto\/v8.4"
+  },
+  {
+    "categories" : [
+
+    ],
+    "country" : "ANY",
+    "deviceId" : "10A81C77",
+    "guideId" : "12.1",
+    "hasDRM" : false,
+    "id" : "c5cb6caa9c90306b33cfc9ba087204bacec1225225a57756ed3ca79a49ab3cea",
+    "languages" : [
+
+    ],
+    "logoURL" : "https:\/\/img.hdhomerun.com\/channels\/US30305.png",
+    "number" : "12.1",
+    "quality" : {
+      "fhd" : {
+
+      }
+    },
+    "sortHint" : "12.1::WWBT-DT",
+    "source" : "homeRunTuner",
+    "title" : "WWBT-DT",
+    "url" : "http:\/\/192.168.78.220:5004\/auto\/v12.1"
+  },
+  {
+    "categories" : [
+
+    ],
+    "country" : "ANY",
+    "deviceId" : "10A81C77",
+    "guideId" : "12.2",
+    "hasDRM" : false,
+    "id" : "f0b03d660e676a2635622d6ca0258b64c9647943a07af683f09d89d43e566004",
+    "languages" : [
+
+    ],
+    "logoURL" : "https:\/\/img.hdhomerun.com\/channels\/US30674.png",
+    "number" : "12.2",
+    "quality" : {
+      "sd" : {
+
+      }
+    },
+    "sortHint" : "12.2::12 MeTV",
+    "source" : "homeRunTuner",
+    "title" : "12 MeTV",
+    "url" : "http:\/\/192.168.78.220:5004\/auto\/v12.2"
+  },
+  {
+    "categories" : [
+
+    ],
+    "country" : "ANY",
+    "deviceId" : "10A81C77",
+    "guideId" : "12.3",
+    "hasDRM" : false,
+    "id" : "96fe8fe016aaad774dd5105526c52583abaa4a7ee8f1e059abfd5b45703ce28f",
+    "languages" : [
+
+    ],
+    "logoURL" : "https:\/\/img.hdhomerun.com\/channels\/US30675.png",
+    "number" : "12.3",
+    "quality" : {
+      "sd" : {
+
+      }
+    },
+    "sortHint" : "12.3::H&I",
+    "source" : "homeRunTuner",
+    "title" : "H&I",
+    "url" : "http:\/\/192.168.78.220:5004\/auto\/v12.3"
+  },
+  {
+    "categories" : [
+
+    ],
+    "country" : "ANY",
+    "deviceId" : "10A81C77",
+    "guideId" : "12.4",
+    "hasDRM" : false,
+    "id" : "32842f90136a527d900666f554d76ad047d0375e0034010ec392d6126ccd9e50",
+    "languages" : [
+
+    ],
+    "logoURL" : "https:\/\/img.hdhomerun.com\/channels\/US113527.png",
+    "number" : "12.4",
+    "quality" : {
+      "sd" : {
+
+      }
+    },
+    "sortHint" : "12.4::Mystery",
+    "source" : "homeRunTuner",
+    "title" : "Mystery",
+    "url" : "http:\/\/192.168.78.220:5004\/auto\/v12.4"
+  },
+  {
+    "categories" : [
+
+    ],
+    "country" : "ANY",
+    "deviceId" : "10A81C77",
+    "guideId" : "12.5",
+    "hasDRM" : false,
+    "id" : "c5464371c025dca9c4790a02bc150e67cc395dad1d02fd9c4a09355a61f179af",
+    "languages" : [
+
+    ],
+    "logoURL" : "https:\/\/img.hdhomerun.com\/channels\/US114161.png",
+    "number" : "12.5",
+    "quality" : {
+      "sd" : {
+
+      }
+    },
+    "sortHint" : "12.5::Crime",
+    "source" : "homeRunTuner",
+    "title" : "Crime",
+    "url" : "http:\/\/192.168.78.220:5004\/auto\/v12.5"
+  },
+  {
+    "categories" : [
+
+    ],
+    "country" : "ANY",
+    "deviceId" : "10A81C77",
+    "guideId" : "12.6",
+    "hasDRM" : false,
+    "id" : "bc51c14907856fc98da7dbb2780056762015bf9b3f1f6e31f702522c03c730e1",
+    "languages" : [
+
+    ],
+    "number" : "12.6",
+    "quality" : {
+      "fhd" : {
+
+      }
+    },
+    "sortHint" : "12.6::NBC",
+    "source" : "homeRunTuner",
+    "title" : "NBC",
+    "url" : "http:\/\/192.168.78.220:5004\/auto\/v12.6"
+  },
+  {
+    "categories" : [
+
+    ],
+    "country" : "ANY",
+    "deviceId" : "10A81C77",
+    "guideId" : "23.1",
+    "hasDRM" : false,
+    "id" : "5b2572dbbe3b6094781145616deb037564894011c907d0c71d4fdab6315403a0",
+    "languages" : [
+
+    ],
+    "logoURL" : "https:\/\/img.hdhomerun.com\/channels\/US43782.png",
+    "number" : "23.1",
+    "quality" : {
+      "fhd" : {
+
+      }
+    },
+    "sortHint" : "23.1::VPM",
+    "source" : "homeRunTuner",
+    "title" : "VPM",
+    "url" : "http:\/\/192.168.78.220:5004\/auto\/v23.1"
+  },
+  {
+    "categories" : [
+
+    ],
+    "country" : "ANY",
+    "deviceId" : "10A81C77",
+    "guideId" : "23.2",
+    "hasDRM" : false,
+    "id" : "1eaaf4212cba7f7ff51a56e25cba818353fcf5e5e4e7009284c058f14d136866",
+    "languages" : [
+
+    ],
+    "logoURL" : "https:\/\/img.hdhomerun.com\/channels\/US58837.png",
+    "number" : "23.2",
+    "quality" : {
+      "sd" : {
+
+      }
+    },
+    "sortHint" : "23.2::Create",
+    "source" : "homeRunTuner",
+    "title" : "Create",
+    "url" : "http:\/\/192.168.78.220:5004\/auto\/v23.2"
+  },
+  {
+    "categories" : [
+
+    ],
+    "country" : "ANY",
+    "deviceId" : "10A81C77",
+    "guideId" : "23.3",
+    "hasDRM" : false,
+    "id" : "a034df1db09853ed1682d912898d64ce085841cbf6187f916ddde59b70b3d126",
+    "languages" : [
+
+    ],
+    "logoURL" : "https:\/\/img.hdhomerun.com\/channels\/US58918.png",
+    "number" : "23.3",
+    "quality" : {
+      "sd" : {
+
+      }
+    },
+    "sortHint" : "23.3::World",
+    "source" : "homeRunTuner",
+    "title" : "World",
+    "url" : "http:\/\/192.168.78.220:5004\/auto\/v23.3"
+  },
+  {
+    "categories" : [
+
+    ],
+    "country" : "ANY",
+    "deviceId" : "10A81C77",
+    "guideId" : "23.4",
+    "hasDRM" : false,
+    "id" : "ece917ed46fd64bff18304eff64b27f0bd7a509e6cd7a3abbae30ea74474ffd8",
+    "languages" : [
+
+    ],
+    "logoURL" : "https:\/\/img.hdhomerun.com\/channels\/US108690.png",
+    "number" : "23.4",
+    "quality" : {
+      "sd" : {
+
+      }
+    },
+    "sortHint" : "23.4::Kids",
+    "source" : "homeRunTuner",
+    "title" : "Kids",
+    "url" : "http:\/\/192.168.78.220:5004\/auto\/v23.4"
+  },
+  {
+    "categories" : [
+
+    ],
+    "country" : "ANY",
+    "deviceId" : "10A81C77",
+    "guideId" : "23.5",
+    "hasDRM" : false,
+    "id" : "6d2a1ca1d2afe68aed1fa507b73651bef03ec0d92f30d597c044e080dd20ba26",
+    "languages" : [
+
+    ],
+    "logoURL" : "https:\/\/img.hdhomerun.com\/channels\/US44732.png",
+    "number" : "23.5",
+    "quality" : {
+      "fhd" : {
+
+      }
+    },
+    "sortHint" : "23.5::VPMPlus",
+    "source" : "homeRunTuner",
+    "title" : "VPMPlus",
+    "url" : "http:\/\/192.168.78.220:5004\/auto\/v23.5"
+  },
+  {
+    "categories" : [
+
+    ],
+    "country" : "ANY",
+    "deviceId" : "10A81C77",
+    "guideId" : "28.1",
+    "hasDRM" : false,
+    "id" : "fcb47672e851c2c1474e32772b27a041069f6737f9113d9fe932ff536bfcb7af",
+    "languages" : [
+
+    ],
+    "logoURL" : "https:\/\/img.hdhomerun.com\/channels\/US76943.png",
+    "number" : "28.1",
+    "quality" : {
+      "sd" : {
+
+      }
+    },
+    "sortHint" : "28.1::WWBK-LD",
+    "source" : "homeRunTuner",
+    "title" : "WWBK-LD",
+    "url" : "http:\/\/192.168.78.220:5004\/auto\/v28.1"
+  },
+  {
+    "categories" : [
+
+    ],
+    "country" : "ANY",
+    "deviceId" : "10A81C77",
+    "guideId" : "28.2",
+    "hasDRM" : false,
+    "id" : "64cf54faae987defafcda40ea679139983d92697a442c22587f0bd434e8f4904",
+    "languages" : [
+
+    ],
+    "number" : "28.2",
+    "quality" : {
+      "sd" : {
+
+      }
+    },
+    "sortHint" : "28.2::WWBK-LD",
+    "source" : "homeRunTuner",
+    "title" : "WWBK-LD",
+    "url" : "http:\/\/192.168.78.220:5004\/auto\/v28.2"
+  },
+  {
+    "categories" : [
+
+    ],
+    "country" : "ANY",
+    "deviceId" : "10A81C77",
+    "guideId" : "28.3",
+    "hasDRM" : false,
+    "id" : "fa9c4083921fcb7b33a17bafe8edec26e1aa55cc6a66e0e6806335424eabc21f",
+    "languages" : [
+
+    ],
+    "number" : "28.3",
+    "quality" : {
+      "sd" : {
+
+      }
+    },
+    "sortHint" : "28.3::WWBK-LD",
+    "source" : "homeRunTuner",
+    "title" : "WWBK-LD",
+    "url" : "http:\/\/192.168.78.220:5004\/auto\/v28.3"
+  },
+  {
+    "categories" : [
+
+    ],
+    "country" : "ANY",
+    "deviceId" : "10A81C77",
+    "guideId" : "28.4",
+    "hasDRM" : false,
+    "id" : "31223f4e3401fe3b9e36705ece8959448dc597c261888517cf714183713a1814",
+    "languages" : [
+
+    ],
+    "number" : "28.4",
+    "quality" : {
+      "sd" : {
+
+      }
+    },
+    "sortHint" : "28.4::WWBK-LD",
+    "source" : "homeRunTuner",
+    "title" : "WWBK-LD",
+    "url" : "http:\/\/192.168.78.220:5004\/auto\/v28.4"
+  },
+  {
+    "categories" : [
+
+    ],
+    "country" : "ANY",
+    "deviceId" : "10A81C77",
+    "guideId" : "28.5",
+    "hasDRM" : false,
+    "id" : "cd0f8c4a6643603f8c65e29c2cad356e9cdbe09b5466e10c76ae1f374f3b411c",
+    "languages" : [
+
+    ],
+    "number" : "28.5",
+    "quality" : {
+      "sd" : {
+
+      }
+    },
+    "sortHint" : "28.5::WWBK-LD",
+    "source" : "homeRunTuner",
+    "title" : "WWBK-LD",
+    "url" : "http:\/\/192.168.78.220:5004\/auto\/v28.5"
+  },
+  {
+    "categories" : [
+
+    ],
+    "country" : "ANY",
+    "deviceId" : "10A81C77",
+    "guideId" : "28.6",
+    "hasDRM" : false,
+    "id" : "badbb5e8321b44c0fa6e99d98a85d5062c3b13f1d48a0cd83c3e4ccc87fe39af",
+    "languages" : [
+
+    ],
+    "number" : "28.6",
+    "quality" : {
+      "sd" : {
+
+      }
+    },
+    "sortHint" : "28.6::WWBK-LD",
+    "source" : "homeRunTuner",
+    "title" : "WWBK-LD",
+    "url" : "http:\/\/192.168.78.220:5004\/auto\/v28.6"
+  },
+  {
+    "categories" : [
+
+    ],
+    "country" : "ANY",
+    "deviceId" : "10A81C77",
+    "guideId" : "28.7",
+    "hasDRM" : false,
+    "id" : "a3e5b7c2e91e1726f0949b26c5849220158d7577d55357ad8a704ae515577707",
+    "languages" : [
+
+    ],
+    "number" : "28.7",
+    "quality" : {
+      "sd" : {
+
+      }
+    },
+    "sortHint" : "28.7::WWBK-LD",
+    "source" : "homeRunTuner",
+    "title" : "WWBK-LD",
+    "url" : "http:\/\/192.168.78.220:5004\/auto\/v28.7"
+  },
+  {
+    "categories" : [
+
+    ],
+    "country" : "ANY",
+    "deviceId" : "10A81C77",
+    "guideId" : "30.1",
+    "hasDRM" : false,
+    "id" : "6db5ae632944fe7adb6d44494659438e22114ee93629ebbd9f5e66ba41d7ca80",
+    "languages" : [
+
+    ],
+    "logoURL" : "https:\/\/img.hdhomerun.com\/channels\/US82691.png",
+    "number" : "30.1",
+    "quality" : {
+      "sd" : {
+
+      }
+    },
+    "sortHint" : "30.1::WFWG-LD",
+    "source" : "homeRunTuner",
+    "title" : "WFWG-LD",
+    "url" : "http:\/\/192.168.78.220:5004\/auto\/v30.1"
+  },
+  {
+    "categories" : [
+
+    ],
+    "country" : "ANY",
+    "deviceId" : "10A81C77",
+    "guideId" : "30.2",
+    "hasDRM" : false,
+    "id" : "469328f35fb6b7c6ed7b332abb8558fbfa0acd6cfc36ecc6f0660e29371aa9fe",
+    "languages" : [
+
+    ],
+    "logoURL" : "https:\/\/img.hdhomerun.com\/channels\/US114573.png",
+    "number" : "30.2",
+    "quality" : {
+      "sd" : {
+
+      }
+    },
+    "sortHint" : "30.2::WFWG-LD",
+    "source" : "homeRunTuner",
+    "title" : "WFWG-LD",
+    "url" : "http:\/\/192.168.78.220:5004\/auto\/v30.2"
+  },
+  {
+    "categories" : [
+
+    ],
+    "country" : "ANY",
+    "deviceId" : "10A81C77",
+    "guideId" : "30.3",
+    "hasDRM" : false,
+    "id" : "906012879714c1ecf7382989afe376cd8b115a5c90126e23eb3eb123abe312da",
+    "languages" : [
+
+    ],
+    "logoURL" : "https:\/\/img.hdhomerun.com\/channels\/US82563.png",
+    "number" : "30.3",
+    "quality" : {
+      "sd" : {
+
+      }
+    },
+    "sortHint" : "30.3::WFWG-LD",
+    "source" : "homeRunTuner",
+    "title" : "WFWG-LD",
+    "url" : "http:\/\/192.168.78.220:5004\/auto\/v30.3"
+  },
+  {
+    "categories" : [
+
+    ],
+    "country" : "ANY",
+    "deviceId" : "10A81C77",
+    "guideId" : "30.4",
+    "hasDRM" : false,
+    "id" : "93565bd113203eb9762ac51dc2453f6dc0afa6e700ff2608fa8cca9859ee0e6b",
+    "languages" : [
+
+    ],
+    "logoURL" : "https:\/\/img.hdhomerun.com\/channels\/US83472.png",
+    "number" : "30.4",
+    "quality" : {
+      "sd" : {
+
+      }
+    },
+    "sortHint" : "30.4::WFWG-LD",
+    "source" : "homeRunTuner",
+    "title" : "WFWG-LD",
+    "url" : "http:\/\/192.168.78.220:5004\/auto\/v30.4"
+  },
+  {
+    "categories" : [
+
+    ],
+    "country" : "ANY",
+    "deviceId" : "10A81C77",
+    "guideId" : "30.5",
+    "hasDRM" : false,
+    "id" : "ebea38bc6a884373865961d7d593e88353eaf627add4efa93f6ec81d7bc33ffc",
+    "languages" : [
+
+    ],
+    "logoURL" : "https:\/\/img.hdhomerun.com\/channels\/US113143.png",
+    "number" : "30.5",
+    "quality" : {
+      "sd" : {
+
+      }
+    },
+    "sortHint" : "30.5::WFWG-LD",
+    "source" : "homeRunTuner",
+    "title" : "WFWG-LD",
+    "url" : "http:\/\/192.168.78.220:5004\/auto\/v30.5"
+  },
+  {
+    "categories" : [
+
+    ],
+    "country" : "ANY",
+    "deviceId" : "10A81C77",
+    "guideId" : "30.6",
+    "hasDRM" : false,
+    "id" : "d86f00e1c360212ccc386d6262ffd6d7c55b71f4a2c28bf49ed7e1496770c983",
+    "languages" : [
+
+    ],
+    "number" : "30.6",
+    "quality" : {
+      "sd" : {
+
+      }
+    },
+    "sortHint" : "30.6::WFWG-LD",
+    "source" : "homeRunTuner",
+    "title" : "WFWG-LD",
+    "url" : "http:\/\/192.168.78.220:5004\/auto\/v30.6"
+  },
+  {
+    "categories" : [
+
+    ],
+    "country" : "ANY",
+    "deviceId" : "10A81C77",
+    "guideId" : "30.7",
+    "hasDRM" : false,
+    "id" : "5050a615009e9d8020b9b64fb86e7cfde05e092a9e14c26dc4f45e8b2d04b64c",
+    "languages" : [
+
+    ],
+    "number" : "30.7",
+    "quality" : {
+      "sd" : {
+
+      }
+    },
+    "sortHint" : "30.7::WFWG-LD",
+    "source" : "homeRunTuner",
+    "title" : "WFWG-LD",
+    "url" : "http:\/\/192.168.78.220:5004\/auto\/v30.7"
+  },
+  {
+    "categories" : [
+
+    ],
+    "country" : "ANY",
+    "deviceId" : "10A81C77",
+    "guideId" : "35.1",
+    "hasDRM" : false,
+    "id" : "d153b7e6d72acee1c3de2543c5f28b8a930261eb0f31f263f173d1c01f2cb543",
+    "languages" : [
+
+    ],
+    "logoURL" : "https:\/\/img.hdhomerun.com\/channels\/US34674.png",
+    "number" : "35.1",
+    "quality" : {
+      "fhd" : {
+
+      }
+    },
+    "sortHint" : "35.1::FOX",
+    "source" : "homeRunTuner",
+    "title" : "FOX",
+    "url" : "http:\/\/192.168.78.220:5004\/auto\/v35.1"
+  },
+  {
+    "categories" : [
+
+    ],
+    "country" : "ANY",
+    "deviceId" : "10A81C77",
+    "guideId" : "35.2",
+    "hasDRM" : false,
+    "id" : "5d529db36496cc304e444a448a14aa7e3c2e9b752f38b2ba7c41d66220fe6390",
+    "languages" : [
+
+    ],
+    "logoURL" : "https:\/\/img.hdhomerun.com\/channels\/US52724.png",
+    "number" : "35.2",
+    "quality" : {
+      "sd" : {
+
+      }
+    },
+    "sortHint" : "35.2::ROAR",
+    "source" : "homeRunTuner",
+    "title" : "ROAR",
+    "url" : "http:\/\/192.168.78.220:5004\/auto\/v35.2"
+  },
+  {
+    "categories" : [
+
+    ],
+    "country" : "ANY",
+    "deviceId" : "10A81C77",
+    "guideId" : "35.3",
+    "hasDRM" : false,
+    "id" : "7c8588961e22d40a5780bf258ff7ff54a79139c5a3457a085fa3ae6b9bcc6cdd",
+    "languages" : [
+
+    ],
+    "logoURL" : "https:\/\/img.hdhomerun.com\/channels\/US69969.png",
+    "number" : "35.3",
+    "quality" : {
+      "sd" : {
+
+      }
+    },
+    "sortHint" : "35.3::Comet",
+    "source" : "homeRunTuner",
+    "title" : "Comet",
+    "url" : "http:\/\/192.168.78.220:5004\/auto\/v35.3"
+  },
+  {
+    "categories" : [
+
+    ],
+    "country" : "ANY",
+    "deviceId" : "10A81C77",
+    "guideId" : "35.4",
+    "hasDRM" : false,
+    "id" : "7183d2fbc84b0b1952672ed3882c62564abfb1c4126bfa2081c7c8d5caf52632",
+    "languages" : [
+
+    ],
+    "logoURL" : "https:\/\/img.hdhomerun.com\/channels\/US102233.png",
+    "number" : "35.4",
+    "quality" : {
+      "sd" : {
+
+      }
+    },
+    "sortHint" : "35.4::Charge!",
+    "source" : "homeRunTuner",
+    "title" : "Charge!",
+    "url" : "http:\/\/192.168.78.220:5004\/auto\/v35.4"
+  },
+  {
+    "categories" : [
+
+    ],
+    "country" : "ANY",
+    "deviceId" : "10A81C77",
+    "guideId" : "35.5",
+    "hasDRM" : false,
+    "id" : "8c8ac794509d90fff49fc06b99ed8d0a6b7883a7ac2554fc1b94066bb5c2a4ed",
+    "languages" : [
+
+    ],
+    "logoURL" : "https:\/\/img.hdhomerun.com\/channels\/US112986.png",
+    "number" : "35.5",
+    "quality" : {
+      "sd" : {
+
+      }
+    },
+    "sortHint" : "35.5::TheNest",
+    "source" : "homeRunTuner",
+    "title" : "TheNest",
+    "url" : "http:\/\/192.168.78.220:5004\/auto\/v35.5"
+  },
+  {
+    "categories" : [
+
+    ],
+    "country" : "ANY",
+    "deviceId" : "10A81C77",
+    "guideId" : "45.1",
+    "hasDRM" : false,
+    "id" : "fe32ce9ddd069a4effb0ff61f227d16cde9d82cda820aca2a0802f5824fc9d49",
+    "languages" : [
+
+    ],
+    "logoURL" : "https:\/\/img.hdhomerun.com\/channels\/US78805.png",
+    "number" : "45.1",
+    "quality" : {
+      "fhd" : {
+
+      }
+    },
+    "sortHint" : "45.1::WZTD-LD",
+    "source" : "homeRunTuner",
+    "title" : "WZTD-LD",
+    "url" : "http:\/\/192.168.78.220:5004\/auto\/v45.1"
+  },
+  {
+    "categories" : [
+
+    ],
+    "country" : "ANY",
+    "deviceId" : "10A81C77",
+    "guideId" : "45.2",
+    "hasDRM" : false,
+    "id" : "6db36e195995ea9bec5570288851a2662b82a81c67cf326fda9e2043783d294d",
+    "languages" : [
+
+    ],
+    "number" : "45.2",
+    "quality" : {
+      "sd" : {
+
+      }
+    },
+    "sortHint" : "45.2::CRIMES",
+    "source" : "homeRunTuner",
+    "title" : "CRIMES",
+    "url" : "http:\/\/192.168.78.220:5004\/auto\/v45.2"
+  },
+  {
+    "categories" : [
+
+    ],
+    "country" : "ANY",
+    "deviceId" : "10A81C77",
+    "guideId" : "45.3",
+    "hasDRM" : false,
+    "id" : "0681b3860c56127191263d56062e30884f7e388558072f5e8faa370fb61f7b05",
+    "languages" : [
+
+    ],
+    "number" : "45.3",
+    "quality" : {
+      "sd" : {
+
+      }
+    },
+    "sortHint" : "45.3::OXYGEN",
+    "source" : "homeRunTuner",
+    "title" : "OXYGEN",
+    "url" : "http:\/\/192.168.78.220:5004\/auto\/v45.3"
+  },
+  {
+    "categories" : [
+
+    ],
+    "country" : "ANY",
+    "deviceId" : "10A81C77",
+    "guideId" : "48.1",
+    "hasDRM" : false,
+    "id" : "0feb18aecccc710bbc19ba0bec4d0f02d98a77daff9b4b35d1961d130e9da4c0",
+    "languages" : [
+
+    ],
+    "logoURL" : "https:\/\/img.hdhomerun.com\/channels\/US96557.png",
+    "number" : "48.1",
+    "quality" : {
+      "sd" : {
+
+      }
+    },
+    "sortHint" : "48.1::Daystar",
+    "source" : "homeRunTuner",
+    "title" : "Daystar",
+    "url" : "http:\/\/192.168.78.220:5004\/auto\/v48.1"
+  },
+  {
+    "categories" : [
+
+    ],
+    "country" : "ANY",
+    "deviceId" : "10A81C77",
+    "guideId" : "48.2",
+    "hasDRM" : false,
+    "id" : "1120fc8f42b582f604547277927df81a6dbaddb5c2d82cf182375390436ab76b",
+    "languages" : [
+
+    ],
+    "number" : "48.2",
+    "quality" : {
+      "sd" : {
+
+      }
+    },
+    "sortHint" : "48.2::Outlaw",
+    "source" : "homeRunTuner",
+    "title" : "Outlaw",
+    "url" : "http:\/\/192.168.78.220:5004\/auto\/v48.2"
+  },
+  {
+    "categories" : [
+
+    ],
+    "country" : "ANY",
+    "deviceId" : "10A81C77",
+    "guideId" : "53.1",
+    "hasDRM" : false,
+    "id" : "5cd24c82ee96d460dd9ff5e9e85289542892f85c98dd153308546d3f91d7fe26",
+    "languages" : [
+
+    ],
+    "logoURL" : "https:\/\/img.hdhomerun.com\/channels\/US121673.png",
+    "number" : "53.1",
+    "quality" : {
+      "sd" : {
+
+      }
+    },
+    "sortHint" : "53.1::WUDW-LD",
+    "source" : "homeRunTuner",
+    "title" : "WUDW-LD",
+    "url" : "http:\/\/192.168.78.220:5004\/auto\/v53.1"
+  },
+  {
+    "categories" : [
+
+    ],
+    "country" : "ANY",
+    "deviceId" : "10A81C77",
+    "guideId" : "53.2",
+    "hasDRM" : false,
+    "id" : "be2bd5fa5a6eddccaf05c973cc965cb72ba925583f2beef267e4b700169654cb",
+    "languages" : [
+
+    ],
+    "logoURL" : "https:\/\/img.hdhomerun.com\/channels\/US115494.png",
+    "number" : "53.2",
+    "quality" : {
+      "sd" : {
+
+      }
+    },
+    "sortHint" : "53.2::WUDW-LD",
+    "source" : "homeRunTuner",
+    "title" : "WUDW-LD",
+    "url" : "http:\/\/192.168.78.220:5004\/auto\/v53.2"
+  },
+  {
+    "categories" : [
+
+    ],
+    "country" : "ANY",
+    "deviceId" : "10A81C77",
+    "guideId" : "53.3",
+    "hasDRM" : false,
+    "id" : "23eb3f21e93257073322d1de37b7686fbf86a73b69335586ffd199eaa83cc9bc",
+    "languages" : [
+
+    ],
+    "logoURL" : "https:\/\/img.hdhomerun.com\/channels\/US80751.png",
+    "number" : "53.3",
+    "quality" : {
+      "sd" : {
+
+      }
+    },
+    "sortHint" : "53.3::WUDW-LD",
+    "source" : "homeRunTuner",
+    "title" : "WUDW-LD",
+    "url" : "http:\/\/192.168.78.220:5004\/auto\/v53.3"
+  },
+  {
+    "categories" : [
+
+    ],
+    "country" : "ANY",
+    "deviceId" : "10A81C77",
+    "guideId" : "53.4",
+    "hasDRM" : false,
+    "id" : "cd6439b8c135a97fa01b3dc29575a4e89c1f842929eb635f028dc3cc637f8f09",
+    "languages" : [
+
+    ],
+    "logoURL" : "https:\/\/img.hdhomerun.com\/channels\/US56032.png",
+    "number" : "53.4",
+    "quality" : {
+      "sd" : {
+
+      }
+    },
+    "sortHint" : "53.4::WUDW-LD",
+    "source" : "homeRunTuner",
+    "title" : "WUDW-LD",
+    "url" : "http:\/\/192.168.78.220:5004\/auto\/v53.4"
+  },
+  {
+    "categories" : [
+
+    ],
+    "country" : "ANY",
+    "deviceId" : "10A81C77",
+    "guideId" : "53.5",
+    "hasDRM" : false,
+    "id" : "b6180d4425f21abc951d4d030cd7cc531f1f56b4f18e1a706146ae8210ee6564",
+    "languages" : [
+
+    ],
+    "logoURL" : "https:\/\/img.hdhomerun.com\/channels\/US113143.png",
+    "number" : "53.5",
+    "quality" : {
+      "sd" : {
+
+      }
+    },
+    "sortHint" : "53.5::WUDW-LD",
+    "source" : "homeRunTuner",
+    "title" : "WUDW-LD",
+    "url" : "http:\/\/192.168.78.220:5004\/auto\/v53.5"
+  },
+  {
+    "categories" : [
+
+    ],
+    "country" : "ANY",
+    "deviceId" : "10A81C77",
+    "guideId" : "53.6",
+    "hasDRM" : false,
+    "id" : "86450722d45a99e56c64c72bca7dda86e874680e9f23e181242ae39cb77ffa9b",
+    "languages" : [
+
+    ],
+    "number" : "53.6",
+    "quality" : {
+      "sd" : {
+
+      }
+    },
+    "sortHint" : "53.6::WUDW-LD",
+    "source" : "homeRunTuner",
+    "title" : "WUDW-LD",
+    "url" : "http:\/\/192.168.78.220:5004\/auto\/v53.6"
+  },
+  {
+    "categories" : [
+
+    ],
+    "country" : "ANY",
+    "deviceId" : "10A81C77",
+    "guideId" : "53.7",
+    "hasDRM" : false,
+    "id" : "1a6ecdbfa3281686d12bed01cc2645816c6259bbf6371484e7d71ecce0913588",
+    "languages" : [
+
+    ],
+    "number" : "53.7",
+    "quality" : {
+      "sd" : {
+
+      }
+    },
+    "sortHint" : "53.7::WUDW-LD",
+    "source" : "homeRunTuner",
+    "title" : "WUDW-LD",
+    "url" : "http:\/\/192.168.78.220:5004\/auto\/v53.7"
+  },
+  {
+    "categories" : [
+
+    ],
+    "country" : "ANY",
+    "deviceId" : "10A81C77",
+    "guideId" : "65.1",
+    "hasDRM" : false,
+    "id" : "f67c129f706e1b8feba1fc614b57054b00024ec7889645b4616041d051135373",
+    "languages" : [
+
+    ],
+    "logoURL" : "https:\/\/img.hdhomerun.com\/channels\/US35569.png",
+    "number" : "65.1",
+    "quality" : {
+      "fhd" : {
+
+      }
+    },
+    "sortHint" : "65.1::WUPV-DT",
+    "source" : "homeRunTuner",
+    "title" : "WUPV-DT",
+    "url" : "http:\/\/192.168.78.220:5004\/auto\/v65.1"
+  },
+  {
+    "categories" : [
+
+    ],
+    "country" : "ANY",
+    "deviceId" : "10A81C77",
+    "guideId" : "65.2",
+    "hasDRM" : false,
+    "id" : "4cda32dfb986150902c1017db8da2acdfbfbf5f114d6cd4f5cc899102799d6de",
+    "languages" : [
+
+    ],
+    "logoURL" : "https:\/\/img.hdhomerun.com\/channels\/US55716.png",
+    "number" : "65.2",
+    "quality" : {
+      "sd" : {
+
+      }
+    },
+    "sortHint" : "65.2::Bounce",
+    "source" : "homeRunTuner",
+    "title" : "Bounce",
+    "url" : "http:\/\/192.168.78.220:5004\/auto\/v65.2"
+  },
+  {
+    "categories" : [
+
+    ],
+    "country" : "ANY",
+    "deviceId" : "10A81C77",
+    "guideId" : "65.3",
+    "hasDRM" : false,
+    "id" : "220c78b84db6e2c21a88c4b099423640f9ee964b0ab41436db0b90f71f5a97fa",
+    "languages" : [
+
+    ],
+    "logoURL" : "https:\/\/img.hdhomerun.com\/channels\/US90853.png",
+    "number" : "65.3",
+    "quality" : {
+      "sd" : {
+
+      }
+    },
+    "sortHint" : "65.3::Grit",
+    "source" : "homeRunTuner",
+    "title" : "Grit",
+    "url" : "http:\/\/192.168.78.220:5004\/auto\/v65.3"
+  },
+  {
+    "categories" : [
+
+    ],
+    "country" : "ANY",
+    "deviceId" : "10A81C77",
+    "guideId" : "65.4",
+    "hasDRM" : false,
+    "id" : "5109dde123dbb7ca30eb58c5cd8dcef1459069ea917c066876951639a871686e",
+    "languages" : [
+
+    ],
+    "logoURL" : "https:\/\/img.hdhomerun.com\/channels\/US109827.png",
+    "number" : "65.4",
+    "quality" : {
+      "sd" : {
+
+      }
+    },
+    "sortHint" : "65.4::The365",
+    "source" : "homeRunTuner",
+    "title" : "The365",
+    "url" : "http:\/\/192.168.78.220:5004\/auto\/v65.4"
+  },
+  {
+    "categories" : [
+
+    ],
+    "country" : "ANY",
+    "deviceId" : "10A81C77",
+    "guideId" : "65.5",
+    "hasDRM" : false,
+    "id" : "607435815240e80b5fdb10396dee0fd1adaf7a6455dc0adc7e41690cf4a41ed5",
+    "languages" : [
+
+    ],
+    "logoURL" : "https:\/\/img.hdhomerun.com\/channels\/US119354.png",
+    "number" : "65.5",
+    "quality" : {
+      "sd" : {
+
+      }
+    },
+    "sortHint" : "65.5::StartTV",
+    "source" : "homeRunTuner",
+    "title" : "StartTV",
+    "url" : "http:\/\/192.168.78.220:5004\/auto\/v65.5"
+  },
+  {
+    "categories" : [
+
+    ],
+    "country" : "ANY",
+    "deviceId" : "10A81C77",
+    "guideId" : "65.6",
+    "hasDRM" : false,
+    "id" : "c0ef5339889c68f7e16a5b8d12e5840aab43ca49df3894390a5e48f1e06c0ec7",
+    "languages" : [
+
+    ],
+    "number" : "65.6",
+    "quality" : {
+      "fhd" : {
+
+      }
+    },
+    "sortHint" : "65.6::CW",
+    "source" : "homeRunTuner",
+    "title" : "CW",
+    "url" : "http:\/\/192.168.78.220:5004\/auto\/v65.6"
+  },
+  {
+    "categories" : [
+
+    ],
+    "country" : "ANY",
+    "deviceId" : "10A81C77",
+    "guideId" : "106.1",
+    "hasDRM" : true,
+    "id" : "132c20dba090a039c4deaeb9cdd6a0b144e97801b48240b397bc257f7798986f",
+    "languages" : [
+
+    ],
+    "logoURL" : "https:\/\/img.hdhomerun.com\/channels\/US36075.png",
+    "number" : "106.1",
+    "quality" : {
+      "sd" : {
+
+      }
+    },
+    "sortHint" : "106.1::WTVR",
+    "source" : "homeRunTuner",
+    "title" : "WTVR",
+    "url" : "http:\/\/192.168.78.220:5004\/auto\/v106.1"
+  },
+  {
+    "categories" : [
+
+    ],
+    "country" : "ANY",
+    "deviceId" : "10A81C77",
+    "guideId" : "108.1",
+    "hasDRM" : false,
+    "id" : "645154aaf07d3c0aa402d338fac2568fa327285cc2ebbdb3d33a898f94c96409",
+    "languages" : [
+
+    ],
+    "logoURL" : "https:\/\/img.hdhomerun.com\/channels\/US20458.png",
+    "number" : "108.1",
+    "quality" : {
+      "sd" : {
+
+      }
+    },
+    "sortHint" : "108.1::WRIC-TV",
+    "source" : "homeRunTuner",
+    "title" : "WRIC-TV",
+    "url" : "http:\/\/192.168.78.220:5004\/auto\/v108.1"
+  },
+  {
+    "categories" : [
+
+    ],
+    "country" : "ANY",
+    "deviceId" : "10A81C77",
+    "guideId" : "112.1",
+    "hasDRM" : true,
+    "id" : "4bae843c43dd5ea09c4cb85224f6c696ba855bdcec1db3ce1f53d8d21496f156",
+    "languages" : [
+
+    ],
+    "logoURL" : "https:\/\/img.hdhomerun.com\/channels\/US30305.png",
+    "number" : "112.1",
+    "quality" : {
+      "sd" : {
+
+      }
+    },
+    "sortHint" : "112.1::WWBT-HD",
+    "source" : "homeRunTuner",
+    "title" : "WWBT-HD",
+    "url" : "http:\/\/192.168.78.220:5004\/auto\/v112.1"
+  },
+  {
+    "categories" : [
+
+    ],
+    "country" : "ANY",
+    "deviceId" : "10A81C77",
+    "guideId" : "135.1",
+    "hasDRM" : false,
+    "id" : "eaa42de9b8d5bfd7c7fcdeb683184d3f506124e727f96b8b4ca27e06f0f56431",
+    "languages" : [
+
+    ],
+    "logoURL" : "https:\/\/img.hdhomerun.com\/channels\/US34674.png",
+    "number" : "135.1",
+    "quality" : {
+      "sd" : {
+
+      }
+    },
+    "sortHint" : "135.1::WRLH",
+    "source" : "homeRunTuner",
+    "title" : "WRLH",
+    "url" : "http:\/\/192.168.78.220:5004\/auto\/v135.1"
+  },
+  {
+    "categories" : [
+
+    ],
+    "country" : "ANY",
+    "deviceId" : "10A81C77",
+    "guideId" : "157.1",
+    "hasDRM" : false,
+    "id" : "33fea0947f19769e53e4a78687abd707d7be1d5617e60c0adff8c4900be71adf",
+    "languages" : [
+
+    ],
+    "logoURL" : "https:\/\/img.hdhomerun.com\/channels\/US44732.png",
+    "number" : "157.1",
+    "quality" : {
+      "fhd" : {
+
+      }
+    },
+    "sortHint" : "157.1::WCVW-HD",
+    "source" : "homeRunTuner",
+    "title" : "WCVW-HD",
+    "url" : "http:\/\/192.168.78.220:5004\/auto\/v157.1"
+  },
+  {
+    "categories" : [
+
+    ],
+    "country" : "ANY",
+    "deviceId" : "10A81C77",
+    "guideId" : "165.1",
+    "hasDRM" : true,
+    "id" : "e8737db748ce684c4e6457921f8195a241242bdbf30ca8cec3230b2153f24510",
+    "languages" : [
+
+    ],
+    "logoURL" : "https:\/\/img.hdhomerun.com\/channels\/US35569.png",
+    "number" : "165.1",
+    "quality" : {
+      "sd" : {
+
+      }
+    },
+    "sortHint" : "165.1::WUPV-HD",
+    "source" : "homeRunTuner",
+    "title" : "WUPV-HD",
+    "url" : "http:\/\/192.168.78.220:5004\/auto\/v165.1"
+  },
+  {
+      "id": "chan.local.002",
+      "sortHint": "99999999999999",
+      "title": "Playboy TV",
+      "number": "Channel 7.1",
+      "country": "US",
+      "categories": [
+          {
+              "categoryId": "relax",
+              "name": "Relax",
+              "categoryDescription": "Programming is calm sounding and beautiful views"
+          }
+      ],
+      "languages": ["eng"],
+      "url": "http://192.168.1.100:5004/auto/v7.1",
+      "logoURL": "https://i.imgur.com/5di4Nis.png",
+      "quality": {"fhd":{}},
+      "hasDRM": false,
+      "source": "homeRunTuner",
+      "deviceId": "10A81C77"
+  }
 ]

@@ -20,14 +20,14 @@ extension SchemaV1 {
              sortHint: String,
              title: String,
              number: String?,
-             country: CountryCode?,
+             country: CountryCodeId?,
              categories: [ProgramCategory],
-             languages: [LanguageCode],
+             languages: [LanguageCodeId],
              url: URL,
              logoURL: URL?,
              quality: StreamQuality,
              hasDRM: Bool,
-             source: ChannelSource,
+             source: ChannelSourceId,
              deviceId: HDHomeRunDeviceId?,
              favorite: Favorite?) {
             self.id = id
@@ -56,18 +56,18 @@ extension SchemaV1 {
         var sortHint: String
         var title: String
         var number: String?
-        var country: CountryCode?
+        var country: CountryCodeId?
         
         // Many-to-many relationship with categories
         @Relationship(deleteRule: .nullify)
         var categories: [ProgramCategory] = []
         
-        var languages: [LanguageCode] = []
+        var languages: [LanguageCodeId] = []
         var url: URL
         var logoURL: URL?
         var quality: StreamQuality
         var hasDRM: Bool
-        var source: ChannelSource
+        var source: ChannelSourceId
         var deviceId: HDHomeRunDeviceId?
         
         // Relationship to favorite status (nullify on delete to preserve favorite when channel is deleted)
@@ -124,14 +124,14 @@ extension SchemaV1 {
             self.sortHint = try container.decode(String.self, forKey: .sortHint)
             self.title = try container.decode(String.self, forKey: .title)
             self.number = try container.decodeIfPresent(String.self, forKey: .number)
-            self.country = try container.decodeIfPresent(CountryCode.self, forKey: .country)
+            self.country = try container.decodeIfPresent(CountryCodeId.self, forKey: .country)
             self.categories = try container.decodeIfPresent([ProgramCategory].self, forKey: .categories) ?? []
-            self.languages = try container.decode([LanguageCode].self, forKey: .languages)
+            self.languages = try container.decode([LanguageCodeId].self, forKey: .languages)
             self.url = try container.decode(URL.self, forKey: .url)
             self.logoURL = try container.decodeIfPresent(URL.self, forKey: .logoURL)
             self.quality = try container.decode(StreamQuality.self, forKey: .quality)
             self.hasDRM = try container.decode(Bool.self, forKey: .hasDRM)
-            self.source = try container.decode(ChannelSource.self, forKey: .source)
+            self.source = try container.decode(ChannelSourceId.self, forKey: .source)
             self.deviceId = try container.decodeIfPresent(HDHomeRunDeviceId.self, forKey: .deviceId)
         }
     }

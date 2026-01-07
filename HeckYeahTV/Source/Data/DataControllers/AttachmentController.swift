@@ -25,7 +25,8 @@ import Hellfire
 /// ## Fetching Images Like a Boss
 /// - ``fetchImage(_:cachePolicyType:)``
 /// - ``fetchPlatformImage(_:cachePolicyType:)``
-class AttachmentController {
+@MainActor
+final class AttachmentController {
     
     deinit {
         logDebug("Deallocated")

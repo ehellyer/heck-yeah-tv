@@ -25,13 +25,18 @@ final class ProgramsRowLoader: ObservableObject {
         task = Task { [weak self] in
             guard let self else { return }
             do {
+                // Simulate loading delay in preview mode
+                if PreviewDetector.isRunningInPreview {
+                    try await Task.sleep(nanoseconds: 2_500_000_000)
+                }
+                
                 let predicate = #Predicate<ChannelProgram> { $0.channelId == channelId }
-                let sortDescriptor = SortDescriptor<ChannelProgram>(\.startTime, order: .forward)
-                let fetchDescriptor = FetchDescriptor<ChannelProgram>(predicate: predicate, sortBy: [sortDescriptor])
-                let model = try context.fetch(fetchDescriptor)
+                let startTimeSort = SortDescriptor<ChannelProgram>(\.startTime, order: .forward)
+                let fetchDescriptor = FetchDescriptor<ChannelProgram>(predicate: predicate, sortBy: [startTimeSort])
+                let _programs = try context.fetch(fetchDescriptor)
                 try Task.checkCancellation()
                 await MainActor.run {
-                    self.programs = model
+                    self.programs = _programs
                 }
             } catch {
                 await MainActor.run {

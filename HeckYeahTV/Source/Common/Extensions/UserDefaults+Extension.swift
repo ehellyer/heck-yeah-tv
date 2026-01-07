@@ -165,11 +165,11 @@ extension UserDefaults {
     /// by region. The value is persisted in `UserDefaults.standard`.
     ///
     /// - Returns: The two-letter country code (e.g., "US", "GB", "CA"), or `nil` if no country is selected.
-    static var selectedCountry: CountryCode {
+    static var selectedCountry: CountryCodeId {
         get {
-            guard let _countryCode: CountryCode = standard.string(forKey: AppKeys.SharedAppState.selectedCountryKey) else {
+            guard let _countryCode: CountryCodeId = standard.string(forKey: AppKeys.SharedAppState.selectedCountryKey) else {
 
-                var defaultCode: CountryCode
+                var defaultCode: CountryCodeId
                 
                 if Locale.current.region?.isISORegion == true && (Locale.current.region?.subRegions.count ?? 0) == 0
                     , let identifier = Locale.current.region?.identifier {
@@ -213,6 +213,17 @@ extension UserDefaults {
     static var selectedChannelBundle: ChannelBundleId {
         get {
             standard.string(forKey: AppKeys.SharedAppState.selectedChannelBundleKey) ?? AppKeys.Application.defaultChannelBundleId
+        }
+        set {
+            standard.set(newValue, forKey: AppKeys.SharedAppState.selectedChannelBundleKey)
+        }
+    }
+    
+    
+    /// The time the last successful guide fetch occurred
+    static var dateLastGuideFetch: Date? {
+        get {
+            standard.object(forKey: AppKeys.SharedAppState.dateLastGuideFetchKey) as? Date
         }
         set {
             standard.set(newValue, forKey: AppKeys.SharedAppState.selectedChannelBundleKey)

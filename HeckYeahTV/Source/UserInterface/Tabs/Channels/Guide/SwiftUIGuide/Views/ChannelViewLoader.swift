@@ -1,5 +1,5 @@
 //
-//  GuideRowLazy.swift
+//  ChannelViewLoader.swift
 //  HeckYeahTV
 //
 //  Created by Ed Hellyer on 10/14/25.
@@ -9,27 +9,21 @@
 import SwiftUI
 import SwiftData
 
-struct GuideRowLazy: View {
+struct ChannelViewLoader: View {
     
-    let channelId: ChannelId
     @Binding var appState: AppStateProvider
-    @State var hideGuideInfo: Bool
+    let channelId: ChannelId
+    @State var isCompact: Bool
+    
     @Environment(\.modelContext) private var viewContext
     @StateObject private var loader = ChannelRowLoader()
     
     var body: some View {
-        Group {
-            if let channel = loader.channel {
-                GuideRow(channel: channel,
-                         appState: $appState,
-                         hideGuideInfo: hideGuideInfo)
-            } else {
-                GuideRow(channel: nil,
-                         appState: $appState,
-                         hideGuideInfo: hideGuideInfo)
-                .redacted(reason: .placeholder)
-            }
-        }
+        let channel = loader.channel
+        ChannelView(appState: $appState,
+                    isCompact: isCompact,
+                    channel: channel)
+        .modifier(RedactedIfNeeded(type: channel))
         .onAppear {
             loader.load(channelId: channelId, context: viewContext)
         }
@@ -39,21 +33,22 @@ struct GuideRowLazy: View {
     }
 }
 
-#Preview("GuideRowLazy") {
+#Preview("ChannelViewLoader") {
     @Previewable @State var appState: AppStateProvider = MockSharedAppState()
-
+    
+    let isCompact: Bool = true
+    
     // Override the injected SwiftDataController
     let mockData = MockSwiftDataStack()
     let swiftDataController = MockSwiftDataController(viewContext: mockData.context)
     InjectedValues[\.swiftDataController] = swiftDataController
     
-    let channelId = swiftDataController.channelBundleMap.map[6]
-
+    let channelId = swiftDataController.channelBundleMap.map[41]
+    
     return TVPreviewView() {
-        GuideRowLazy(channelId: channelId,
-                     appState: $appState,
-                     hideGuideInfo: true)
-            .modelContext(mockData.context)
-            //.redacted(reason: .placeholder)
+        ChannelViewLoader(appState: $appState,
+                        channelId: channelId,
+                        isCompact: isCompact)
+        .modelContext(mockData.context)
     }
 }

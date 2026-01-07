@@ -14,12 +14,90 @@ struct AppStyle {
         return 20
     }
     
+#if os(tvOS)
+    static let rowHeight : CGFloat = 100
+#else
+    static let rowHeight : CGFloat = 80
+#endif
+    
+    struct FavoritesView {
+#if os(tvOS)
+        static let width: CGFloat = 90
+        static let scaleEffect: CGFloat = 1.2
+        static let height : CGFloat = AppStyle.rowHeight
+        static let internalHorizontalPadding: CGFloat = 15
+        static let internalVerticalPadding: CGFloat = 15
+#else
+        static let width: CGFloat = 70
+        static let scaleEffect: CGFloat = 1.5
+        static let height : CGFloat = AppStyle.rowHeight
+        static let internalHorizontalPadding: CGFloat = 15
+        static let internalVerticalPadding: CGFloat = 15
+#endif
+    }
+    
+    
+    struct ChannelView {
+#if os(tvOS)
+        static let minWidth: CGFloat = 420
+        static let height : CGFloat = AppStyle.rowHeight
+        static let logoSize = CGSize(width: 70, height: 70)
+        static let internalHorizontalPadding: CGFloat = 15
+        static let internalVerticalPadding: CGFloat = 15
+        static let favButtonTrailing: CGFloat = 15
+#else
+        static let minWidth: CGFloat = 300
+        static let height : CGFloat = AppStyle.rowHeight
+        static let logoSize = CGSize(width: 60, height: 60)
+        static let internalHorizontalPadding: CGFloat = 15
+        static let internalVerticalPadding: CGFloat = 15
+        static let favButtonTrailing: CGFloat = 15
+#endif
+    }
+    
     struct ProgramView {
 #if os(tvOS)
+        static let internalHorizontalPadding: CGFloat = 15
+        static let internalVerticalPadding: CGFloat = 15
         static var width: CGFloat = 320
+        static let height : CGFloat = AppStyle.rowHeight
+        static let programSpacing: CGFloat = 15
 #else
         static var width: CGFloat = 260
+        static let height : CGFloat = AppStyle.rowHeight
+        static let programSpacing: CGFloat = 15
+        static let internalHorizontalPadding: CGFloat = 15
+        static let internalVerticalPadding: CGFloat = 15
 #endif
+    }
+    
+    struct GuideView {
+        private static let focusGrowth: CGFloat = 15 // Fixed pixel growth
+        
+        static func scaleAmount(for size: CGSize, isFocused: Bool) -> CGFloat {
+            guard isFocused else { return 1.0 }
+            let minDimension = max(size.width, 1.0)
+            let scaleFactor = (minDimension + focusGrowth) / minDimension
+            return scaleFactor
+        }
+        
+        static func foregroundColor(isFocused: Bool) -> Color {
+            if isFocused {
+                return .guideForegroundFocused
+            } else {
+                return .guideForegroundNoFocus
+            }
+        }
+        
+        static func backgroundColor(isFocused: Bool, isPlaying: Bool, isProgramNow: Bool) -> Color {
+            if isProgramNow {
+                return .programNowPlayingBackground
+            } else if isFocused {
+                return .guideBackgroundFocused
+            } else {
+                return isPlaying ? .guideSelectedChannelBackground : .guideBackgroundNoFocus
+            }
+        }
     }
     
     struct Fonts {
@@ -53,7 +131,6 @@ struct AppStyle {
 #endif
         }
         
-
         static var programTimeSlotFont: PlatformFont {
 #if os(tvOS)
             .systemFont(ofSize: 23, weight: .bold)
@@ -85,3 +162,4 @@ struct AppStyle {
         }
     }
 }
+

@@ -11,7 +11,7 @@ import SwiftUI
 struct CountryPickerView: View {
     
     let countries: [Country]
-    @Binding var selectedCountry: CountryCode
+    @Binding var selectedCountry: CountryCodeId
     
     @Environment(\.dismiss) private var dismiss
     @Environment(\.colorScheme) private var colorScheme
@@ -75,9 +75,9 @@ struct CountryPickerView: View {
     let swiftDataController = MockSwiftDataController(viewContext: mockData.context)
     InjectedValues[\.swiftDataController] = swiftDataController
     
-    let countries = swiftDataController.countries()
+    let countries = swiftDataController.previewOnly_countries()
     
-    var selectedCountryBinding: Binding<CountryCode> {
+    var selectedCountryBinding: Binding<CountryCodeId> {
         Binding(
             get: { swiftDataController.selectedCountry },
             set: { swiftDataController.selectedCountry = $0 }

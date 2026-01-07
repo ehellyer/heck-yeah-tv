@@ -208,7 +208,7 @@ final class BootSoundPlayer: NSObject, @unchecked Sendable {
         @State private var ready = false
         var body: some View {
             BootGateView(isBootComplete: $ready) {
-                Text("Main App")
+                Text("Main App Start")
                     .font(.largeTitle)
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .background(Color.black.opacity(0.9))

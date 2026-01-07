@@ -29,7 +29,6 @@ struct IPGuide: JSONSerializable {
     
     /// Language of the guide (ISO 639-1 code) (e.g., "en")
     let lang: String
-    
 }
 
 //MARK: - JSONSerializable customization

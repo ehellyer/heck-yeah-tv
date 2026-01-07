@@ -13,7 +13,7 @@ import Hellfire
 extension SchemaV1 {
     
     @Model final class ChannelProgram: JSONSerializable {
-        #Index<ChannelProgram>([\.id], [\.id, \.startTime])
+        #Index<ChannelProgram>([\.id], [\.channelId, \.startTime])
         
         init(id: ChannelProgramId,
              channelId: ChannelId,
@@ -27,7 +27,7 @@ extension SchemaV1 {
              originalAirDate: Date?,
              programImageURL: URL?,
              recordingRule: Int?,
-             category: [CategoryId]
+             filter: [String]
              ) {
             self.id = id
             self.channelId = channelId
@@ -41,13 +41,13 @@ extension SchemaV1 {
             self.originalAirDate = originalAirDate
             self.programImageURL = programImageURL
             self.recordingRule = recordingRule
-            self.category = category
+            self.filter = filter
             
         }
         
         
         #Unique<ChannelProgram>([\.id])
-        var id: ChannelProgramId
+        var id: ChannelProgramId        // Stable hash on channelId and startTime.  This is done in theHomeRunImporter where the init is first called.  It is the only place where all the mapping can be done on dependent fetches.
         var channelId: ChannelId
         var startTime: Date
         var endTime: Date
@@ -59,7 +59,7 @@ extension SchemaV1 {
         var originalAirDate: Date?
         var programImageURL: URL?
         var recordingRule: Int?
-        var category: [CategoryId]
+        var filter: [String]
         
         
         // MARK: JSONSerializable Implementation
@@ -83,7 +83,7 @@ extension SchemaV1 {
             //case seriesId
             case programImageURL
             case recordingRule
-            case category
+            case filter
         }
         
         func encode(to encoder: Encoder) throws {
@@ -102,7 +102,7 @@ extension SchemaV1 {
             //try container.encodeIfPresent(seriesId, forKey: .seriesId)
             try container.encodeIfPresent(programImageURL, forKey: .programImageURL)
             try container.encodeIfPresent(recordingRule, forKey: .recordingRule)
-            try container.encode(category, forKey: .category)
+            try container.encode(filter, forKey: .filter)
         }
         
         init(from decoder: Decoder) throws {
@@ -120,7 +120,7 @@ extension SchemaV1 {
             //self.seriesId = try container.decode(String.self, forKey: .seriesId)
             self.programImageURL = try container.decodeIfPresent(URL.self, forKey: .programImageURL)
             self.recordingRule = try container.decodeIfPresent(Int.self, forKey: .recordingRule)
-            self.category = try container.decode([CategoryId].self, forKey: .category)
+            self.filter = try container.decode([String].self, forKey: .filter)
         }
     }
 }

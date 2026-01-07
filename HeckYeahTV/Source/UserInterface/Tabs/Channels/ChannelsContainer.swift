@@ -27,6 +27,8 @@ struct ChannelsContainer: View {
             .focusSection()
             .focused($isFocused)
 
+//            GuideView(appState: $appState)
+            
             GuideViewRepresentable(appState: $appState,
                                    isFocused: $isFocused)
                 .focused($isFocused) // Bind to SwiftUI focus

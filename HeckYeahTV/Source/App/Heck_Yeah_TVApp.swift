@@ -103,9 +103,52 @@ struct Heck_Yeah_TVApp: App {
             }
             
             await MainActor.run {
+//                writeMockFiles()
+                
                 // Update state variable that boot up processes are completed.
                 isBootComplete = true
             }
         }
     }
+}
+
+extension Heck_Yeah_TVApp {
+    
+#if DEBUG
+    //TODO: EJH - Comment out for release.
+    //Rough code for developer only - Not production code.
+    func writeMockFiles() {
+        let cpDescriptor: FetchDescriptor<ChannelProgram> = FetchDescriptor<ChannelProgram>(
+            sortBy: [
+                SortDescriptor(\ChannelProgram.channelId),
+                SortDescriptor(\ChannelProgram.startTime)
+            ]
+        )
+        
+        let cDescriptor: FetchDescriptor<Channel> = FetchDescriptor<Channel>(
+            predicate: #Predicate {
+                $0.country == "ANY" && $0.source == "homeRunTuner"
+            },
+            sortBy: [
+                SortDescriptor(\Channel.sortHint)
+            ]
+        )
+        
+        let viewContext = dataPersistence.viewContext
+        
+        let fetchedChannels: [Channel]? = try? viewContext.fetch(cDescriptor)
+        let fetchedPrograms: [ChannelProgram]? = try? viewContext.fetch(cpDescriptor)
+        
+        let jsonChanelsString = try? fetchedChannels?.toJSONString()
+        let jsonChanelProgramsString = try? fetchedPrograms?.toJSONString()
+        
+        let rootURL = SwiftDataStack.shared.appFileStoreRootURL
+        
+        let channelsURL = rootURL.appendingPathComponent("MockChannels", isDirectory: false).appendingPathExtension("json")
+        let channelProgramsURL = rootURL.appendingPathComponent("MockChannelPrograms", isDirectory: false).appendingPathExtension("json")
+        
+        try? jsonChanelsString?.write(to: channelsURL, atomically: true, encoding: .utf8)
+        try? jsonChanelProgramsString?.write(to: channelProgramsURL, atomically: true, encoding: .utf8)
+    }
+#endif
 }

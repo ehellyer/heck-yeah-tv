@@ -11,7 +11,6 @@
 		E2A5EE63B6F0360CFDEA112A /* Pods_tvOS_HeckYeahTV.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4850C4BF6A440A7BD11EC2DD /* Pods_tvOS_HeckYeahTV.framework */; };
 		EB33342E2EC8273700CFAC43 /* Pods_macOS_HeckYeahTV.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB33342D2EC8273700CFAC43 /* Pods_macOS_HeckYeahTV.framework */; };
 		EB35E3122F00781200D31894 /* MobileVLCKit.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB35E3112F00781200D31894 /* MobileVLCKit.xcframework */; };
-		EB35E3132F00781200D31894 /* MobileVLCKit.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = EB35E3112F00781200D31894 /* MobileVLCKit.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		EBB5B3292ED8B9D6004251CB /* Hellfire in Frameworks */ = {isa = PBXBuildFile; productRef = EBB5B3282ED8B9D6004251CB /* Hellfire */; };
 		EBB5B51F2EDD46C4004251CB /* Hellfire in Frameworks */ = {isa = PBXBuildFile; productRef = EBB5B51E2EDD46C4004251CB /* Hellfire */; };
 		EBB5B5212EDD46DC004251CB /* Hellfire in Frameworks */ = {isa = PBXBuildFile; productRef = EBB5B5202EDD46DC004251CB /* Hellfire */; };
@@ -64,20 +63,6 @@
 		};
 /* End PBXContainerItemProxy section */
 
-/* Begin PBXCopyFilesBuildPhase section */
-		EB35E3142F00781200D31894 /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				EB35E3132F00781200D31894 /* MobileVLCKit.xcframework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXCopyFilesBuildPhase section */
-
 /* Begin PBXFileReference section */
 		054AB03F510D838EFFB350DD /* Pods-iOS_HeckYeahTV.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-iOS_HeckYeahTV.release.xcconfig"; path = "Target Support Files/Pods-iOS_HeckYeahTV/Pods-iOS_HeckYeahTV.release.xcconfig"; sourceTree = "<group>"; };
 		4850C4BF6A440A7BD11EC2DD /* Pods_tvOS_HeckYeahTV.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_tvOS_HeckYeahTV.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -116,6 +101,7 @@
 				Source/Common/DependencyInjection/DependancyInjectionCore/InjectionKey.swift,
 				Source/Common/DependencyInjection/InjectedAttachmentController/AttachmentControllerInjectionKey.swift,
 				Source/Common/DependencyInjection/InjectedSwiftDataController/SwiftDataControllerInjectionKey.swift,
+				"Source/Common/Extensions/Color+Extension.swift",
 				"Source/Common/Extensions/NSView+AsImage.swift",
 				"Source/Common/Extensions/PlatformImage+AsImage.swift",
 				"Source/Common/Extensions/String+Extension.swift",
@@ -126,6 +112,7 @@
 				Source/Common/PlatformRepresentable/PlatformRepresentableAlias.swift,
 				Source/Common/Utilities/AppKeys.swift,
 				Source/Common/Utilities/AppStyle.swift,
+				Source/Common/Utilities/PreviewDetector.swift,
 				Source/Data/Adapters/Channelable.swift,
 				Source/Data/Adapters/FetchSummary.swift,
 				"Source/Data/Adapters/HDHomeRunChannel+Channelable.swift",
@@ -157,6 +144,7 @@
 				Source/Data/SharedAppState/SharedAppState.swift,
 				Source/Data/SwiftData/AppDataSource/ChannelBundleMap.swift,
 				Source/Data/SwiftData/AppDataSource/ChannelFilterable.swift,
+				Source/Data/SwiftData/AppDataSource/GuideStoreError.swift,
 				Source/Data/SwiftData/AppDataSource/SwiftDataControllable.swift,
 				Source/Data/SwiftData/AppDataSource/SwiftDataController.swift,
 				Source/Data/SwiftData/Migration/UpgradeSchemaMigrationPlan.swift,
@@ -175,20 +163,33 @@
 				Source/Data/SwiftData/SwiftDataStack.swift,
 				Source/Data/SwiftData/Utilities/DataChangeTracking.swift,
 				Source/UserInterface/MacAndPhone/SectionView.swift,
-				Source/UserInterface/Main/BootGateView.swift,
-				Source/UserInterface/Main/BootSplashView.swift,
-				Source/UserInterface/Main/DustyView.swift,
 				Source/UserInterface/Main/MainAppContentView.swift,
 				Source/UserInterface/Main/NavigationActivationView.swift,
 				Source/UserInterface/Main/PlayPauseBadge.swift,
 				Source/UserInterface/Main/RootView.swift,
+				Source/UserInterface/Main/SplashScreen/BootGateView.swift,
+				Source/UserInterface/Main/SplashScreen/BootSplashView.swift,
+				Source/UserInterface/Main/SplashScreen/DustyView.swift,
 				Source/UserInterface/MediaPlayerView/VLCPlayerView.swift,
-				Source/UserInterface/Tabs/Channels/Guide/SwiftUIGuide/ButtonBorderStyleModifier.swift,
-				Source/UserInterface/Tabs/Channels/Guide/SwiftUIGuide/FocusableButtonStyle.swift,
-				Source/UserInterface/Tabs/Channels/Guide/SwiftUIGuide/GuideRow.swift,
-				Source/UserInterface/Tabs/Channels/Guide/SwiftUIGuide/GuideRowLazy.swift,
-				Source/UserInterface/Tabs/Channels/Guide/SwiftUIGuide/GuideSubTitleView.swift,
-				Source/UserInterface/Tabs/Channels/Guide/SwiftUIGuide/GuideView.swift,
+				Source/UserInterface/Tabs/Channels/Guide/SwiftUIGuide/ButtonStyle/FocusableButtonStyle.swift,
+				Source/UserInterface/Tabs/Channels/Guide/SwiftUIGuide/Enum/ChannelProgramDateFormatter.swift,
+				Source/UserInterface/Tabs/Channels/Guide/SwiftUIGuide/Enum/FocusedButton.swift,
+				Source/UserInterface/Tabs/Channels/Guide/SwiftUIGuide/ViewModifier/ButtonBorderStyleModifier.swift,
+				Source/UserInterface/Tabs/Channels/Guide/SwiftUIGuide/ViewModifier/RedactedIfNeeded.swift,
+				Source/UserInterface/Tabs/Channels/Guide/SwiftUIGuide/Views/ChannelProgramDetailView/ChannelProgramDetailView.swift,
+				Source/UserInterface/Tabs/Channels/Guide/SwiftUIGuide/Views/ChannelProgramDetailView/ChannelProgramsFullScreenView.swift,
+				Source/UserInterface/Tabs/Channels/Guide/SwiftUIGuide/Views/ChannelProgramDetailView/IndicatorView.swift,
+				Source/UserInterface/Tabs/Channels/Guide/SwiftUIGuide/Views/ChannelProgramDetailView/LoadImageAsync.swift,
+				Source/UserInterface/Tabs/Channels/Guide/SwiftUIGuide/Views/ChannelProgramListView.swift,
+				Source/UserInterface/Tabs/Channels/Guide/SwiftUIGuide/Views/ChannelProgramView.swift,
+				Source/UserInterface/Tabs/Channels/Guide/SwiftUIGuide/Views/ChannelView.swift,
+				Source/UserInterface/Tabs/Channels/Guide/SwiftUIGuide/Views/ChannelViewLoader.swift,
+				Source/UserInterface/Tabs/Channels/Guide/SwiftUIGuide/Views/ChannelViewSubTitle.swift,
+				Source/UserInterface/Tabs/Channels/Guide/SwiftUIGuide/Views/FavoriteView.swift,
+				Source/UserInterface/Tabs/Channels/Guide/SwiftUIGuide/Views/GuideView.swift,
+				Source/UserInterface/Tabs/Channels/Guide/SwiftUIGuide/Views/NoChannelProgramView.swift,
+				Source/UserInterface/Tabs/Channels/Guide/SwiftUIGuide/Views/NoChannelsCriteria.swift,
+				Source/UserInterface/Tabs/Channels/Guide/SwiftUIGuide/Views/NoChannelsFavorites.swift,
 				Source/UserInterface/Tabs/Channels/Guide/UIKitGuide/View/StreamQualityRepresentableView.swift,
 				Source/UserInterface/Tabs/Channels/Guide/UIKitGuide/View/StreamQualityView.swift,
 				Source/UserInterface/Tabs/Channels/ShowFavorites.swift,
@@ -212,6 +213,7 @@
 				SupportingFiles/ColorAssets.xcassets,
 				SupportingFiles/MockData/MockCategories.json,
 				SupportingFiles/MockData/MockChannelBundles.json,
+				SupportingFiles/MockData/MockChannelPrograms.json,
 				SupportingFiles/MockData/MockChannels.json,
 				SupportingFiles/MockData/MockCountries.json,
 				SupportingFiles/MockData/MockFavorites.json,
@@ -244,6 +246,48 @@
 			);
 			target = EBE03BB62E53D421006B7747 /* iOS_HeckYeahTV */;
 		};
+		EB7C4ADE2F06F17500AF0C68 /* Exceptions for "HeckYeahTV" folder in "iOS_HeckYeahTVTests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Source/UserInterface/TabView/Enum/AppSection.swift,
+			);
+			target = EBE03BC32E53D423006B7747 /* iOS_HeckYeahTVTests */;
+		};
+		EB7C4B222F06F1B300AF0C68 /* Exceptions for "HeckYeahTV" folder in "iOS_HeckYeahTVUITests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Source/UserInterface/TabView/Enum/AppSection.swift,
+			);
+			target = EBE03BCD2E53D423006B7747 /* iOS_HeckYeahTVUITests */;
+		};
+		EB7C4B232F06F1B300AF0C68 /* Exceptions for "HeckYeahTV" folder in "tvOS_HeckYeahTVTests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Source/UserInterface/TabView/Enum/AppSection.swift,
+			);
+			target = EBE03C222E53D8DF006B7747 /* tvOS_HeckYeahTVTests */;
+		};
+		EB7C4B242F06F1B300AF0C68 /* Exceptions for "HeckYeahTV" folder in "tvOS_HeckYeahTVUITests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Source/UserInterface/TabView/Enum/AppSection.swift,
+			);
+			target = EBE03C2C2E53D8DF006B7747 /* tvOS_HeckYeahTVUITests */;
+		};
+		EB7C4B252F06F1B300AF0C68 /* Exceptions for "HeckYeahTV" folder in "macOS_HeckYeahTVTests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Source/UserInterface/TabView/Enum/AppSection.swift,
+			);
+			target = EB2C2DC32E5E203C005CE685 /* macOS_HeckYeahTVTests */;
+		};
+		EB7C4B262F06F1B300AF0C68 /* Exceptions for "HeckYeahTV" folder in "macOS_HeckYeahTVUITests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Source/UserInterface/TabView/Enum/AppSection.swift,
+			);
+			target = EB2C2DCD2E5E203C005CE685 /* macOS_HeckYeahTVUITests */;
+		};
 		EBE03C6D2E53E493006B7747 /* Exceptions for "HeckYeahTV" folder in "tvOS_HeckYeahTV" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
@@ -253,6 +297,7 @@
 				Source/Common/DependencyInjection/DependancyInjectionCore/InjectionKey.swift,
 				Source/Common/DependencyInjection/InjectedAttachmentController/AttachmentControllerInjectionKey.swift,
 				Source/Common/DependencyInjection/InjectedSwiftDataController/SwiftDataControllerInjectionKey.swift,
+				"Source/Common/Extensions/Color+Extension.swift",
 				"Source/Common/Extensions/FocusTargetView+FocusAnimation.swift",
 				"Source/Common/Extensions/PlatformImage+AsImage.swift",
 				"Source/Common/Extensions/String+Extension.swift",
@@ -264,6 +309,7 @@
 				Source/Common/PlatformRepresentable/PlatformRepresentableAlias.swift,
 				Source/Common/Utilities/AppKeys.swift,
 				Source/Common/Utilities/AppStyle.swift,
+				Source/Common/Utilities/PreviewDetector.swift,
 				Source/Data/Adapters/Channelable.swift,
 				Source/Data/Adapters/FetchSummary.swift,
 				"Source/Data/Adapters/HDHomeRunChannel+Channelable.swift",
@@ -295,6 +341,7 @@
 				Source/Data/SharedAppState/SharedAppState.swift,
 				Source/Data/SwiftData/AppDataSource/ChannelBundleMap.swift,
 				Source/Data/SwiftData/AppDataSource/ChannelFilterable.swift,
+				Source/Data/SwiftData/AppDataSource/GuideStoreError.swift,
 				Source/Data/SwiftData/AppDataSource/SwiftDataControllable.swift,
 				Source/Data/SwiftData/AppDataSource/SwiftDataController.swift,
 				Source/Data/SwiftData/Migration/UpgradeSchemaMigrationPlan.swift,
@@ -312,20 +359,34 @@
 				Source/Data/SwiftData/SwiftDataModels/StreamQuality.swift,
 				Source/Data/SwiftData/SwiftDataStack.swift,
 				Source/Data/SwiftData/Utilities/DataChangeTracking.swift,
-				Source/UserInterface/Main/BootGateView.swift,
-				Source/UserInterface/Main/BootSplashView.swift,
-				Source/UserInterface/Main/DustyView.swift,
 				Source/UserInterface/Main/MainAppContentView.swift,
 				Source/UserInterface/Main/NavigationActivationView.swift,
 				Source/UserInterface/Main/PlayPauseBadge.swift,
 				Source/UserInterface/Main/RootView.swift,
+				Source/UserInterface/Main/SplashScreen/BootGateView.swift,
+				Source/UserInterface/Main/SplashScreen/BootSplashView.swift,
+				Source/UserInterface/Main/SplashScreen/DustyView.swift,
 				Source/UserInterface/MediaPlayerView/VLCPlayerView.swift,
 				Source/UserInterface/Tabs/Channels/ChannelsContainer.swift,
-				Source/UserInterface/Tabs/Channels/Guide/SwiftUIGuide/ButtonBorderStyleModifier.swift,
-				Source/UserInterface/Tabs/Channels/Guide/SwiftUIGuide/FocusableButtonStyle.swift,
-				Source/UserInterface/Tabs/Channels/Guide/SwiftUIGuide/GuideRow.swift,
-				Source/UserInterface/Tabs/Channels/Guide/SwiftUIGuide/GuideRowLazy.swift,
-				Source/UserInterface/Tabs/Channels/Guide/SwiftUIGuide/GuideSubTitleView.swift,
+				Source/UserInterface/Tabs/Channels/Guide/SwiftUIGuide/ButtonStyle/FocusableButtonStyle.swift,
+				Source/UserInterface/Tabs/Channels/Guide/SwiftUIGuide/Enum/ChannelProgramDateFormatter.swift,
+				Source/UserInterface/Tabs/Channels/Guide/SwiftUIGuide/Enum/FocusedButton.swift,
+				Source/UserInterface/Tabs/Channels/Guide/SwiftUIGuide/ViewModifier/ButtonBorderStyleModifier.swift,
+				Source/UserInterface/Tabs/Channels/Guide/SwiftUIGuide/ViewModifier/RedactedIfNeeded.swift,
+				Source/UserInterface/Tabs/Channels/Guide/SwiftUIGuide/Views/ChannelProgramDetailView/ChannelProgramDetailView.swift,
+				Source/UserInterface/Tabs/Channels/Guide/SwiftUIGuide/Views/ChannelProgramDetailView/ChannelProgramsFullScreenView.swift,
+				Source/UserInterface/Tabs/Channels/Guide/SwiftUIGuide/Views/ChannelProgramDetailView/IndicatorView.swift,
+				Source/UserInterface/Tabs/Channels/Guide/SwiftUIGuide/Views/ChannelProgramDetailView/LoadImageAsync.swift,
+				Source/UserInterface/Tabs/Channels/Guide/SwiftUIGuide/Views/ChannelProgramListView.swift,
+				Source/UserInterface/Tabs/Channels/Guide/SwiftUIGuide/Views/ChannelProgramView.swift,
+				Source/UserInterface/Tabs/Channels/Guide/SwiftUIGuide/Views/ChannelView.swift,
+				Source/UserInterface/Tabs/Channels/Guide/SwiftUIGuide/Views/ChannelViewLoader.swift,
+				Source/UserInterface/Tabs/Channels/Guide/SwiftUIGuide/Views/ChannelViewSubTitle.swift,
+				Source/UserInterface/Tabs/Channels/Guide/SwiftUIGuide/Views/FavoriteView.swift,
+				Source/UserInterface/Tabs/Channels/Guide/SwiftUIGuide/Views/GuideView.swift,
+				Source/UserInterface/Tabs/Channels/Guide/SwiftUIGuide/Views/NoChannelProgramView.swift,
+				Source/UserInterface/Tabs/Channels/Guide/SwiftUIGuide/Views/NoChannelsCriteria.swift,
+				Source/UserInterface/Tabs/Channels/Guide/SwiftUIGuide/Views/NoChannelsFavorites.swift,
 				Source/UserInterface/Tabs/Channels/Guide/UIKitGuide/View/ChannelNameView.swift,
 				Source/UserInterface/Tabs/Channels/Guide/UIKitGuide/View/EmptyProgramView.swift,
 				Source/UserInterface/Tabs/Channels/Guide/UIKitGuide/View/FavoriteToggleView.swift,
@@ -359,6 +420,7 @@
 				SupportingFiles/ColorAssets.xcassets,
 				SupportingFiles/MockData/MockCategories.json,
 				SupportingFiles/MockData/MockChannelBundles.json,
+				SupportingFiles/MockData/MockChannelPrograms.json,
 				SupportingFiles/MockData/MockChannels.json,
 				SupportingFiles/MockData/MockCountries.json,
 				SupportingFiles/MockData/MockFavorites.json,
@@ -377,8 +439,14 @@
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
 				EB2C313A2E5E4E06005CE685 /* Exceptions for "HeckYeahTV" folder in "iOS_HeckYeahTV" target */,
+				EB7C4ADE2F06F17500AF0C68 /* Exceptions for "HeckYeahTV" folder in "iOS_HeckYeahTVTests" target */,
+				EB7C4B222F06F1B300AF0C68 /* Exceptions for "HeckYeahTV" folder in "iOS_HeckYeahTVUITests" target */,
 				EBE03C6D2E53E493006B7747 /* Exceptions for "HeckYeahTV" folder in "tvOS_HeckYeahTV" target */,
+				EB7C4B232F06F1B300AF0C68 /* Exceptions for "HeckYeahTV" folder in "tvOS_HeckYeahTVTests" target */,
+				EB7C4B242F06F1B300AF0C68 /* Exceptions for "HeckYeahTV" folder in "tvOS_HeckYeahTVUITests" target */,
 				EB2C2E192E5E2238005CE685 /* Exceptions for "HeckYeahTV" folder in "macOS_HeckYeahTV" target */,
+				EB7C4B252F06F1B300AF0C68 /* Exceptions for "HeckYeahTV" folder in "macOS_HeckYeahTVTests" target */,
+				EB7C4B262F06F1B300AF0C68 /* Exceptions for "HeckYeahTV" folder in "macOS_HeckYeahTVUITests" target */,
 			);
 			path = HeckYeahTV;
 			sourceTree = "<group>";
@@ -624,7 +692,6 @@
 				EBE03BC02E53D423006B7747 /* Sources */,
 				EBE03BC12E53D423006B7747 /* Frameworks */,
 				EBE03BC22E53D423006B7747 /* Resources */,
-				EB35E3142F00781200D31894 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);

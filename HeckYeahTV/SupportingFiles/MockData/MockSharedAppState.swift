@@ -11,9 +11,30 @@ import Observation
 
 @MainActor @Observable
 final class MockSharedAppState: AppStateProvider {
+
+    init(isPlayerPaused: Bool = false,
+         showAppNavigation: Bool = false,
+         showChannelProgramsFullScreen: ChannelProgram? = nil,
+         selectedTab: AppSection = .guide,
+         selectedChannel: ChannelId? = nil,
+         recentChannelIds: [ChannelId] = [],
+         scanForTuners: Bool = true,
+         selectedChannelBundle: ChannelBundleId = AppKeys.Application.defaultChannelBundleId,
+         dateLastGuideFetch: Date? = nil) {
+        
+        self.isPlayerPaused = isPlayerPaused
+        self.showAppNavigation = showAppNavigation
+        self.selectedTab = selectedTab
+        self.selectedChannel = selectedChannel
+        self.recentChannelIds = recentChannelIds
+        self.scanForTuners = scanForTuners
+        self.selectedChannelBundle = selectedChannelBundle
+        self.dateLastGuideFetch = dateLastGuideFetch
+    }
     
     var isPlayerPaused: Bool
     var showAppNavigation: Bool
+    var showChannelProgramsFullScreen: ChannelProgram?
     var selectedTab: AppSection
     var selectedChannel: ChannelId? {
         didSet {
@@ -25,22 +46,6 @@ final class MockSharedAppState: AppStateProvider {
     var recentChannelIds: [ChannelId]
     var scanForTuners: Bool
     var selectedChannelBundle: ChannelBundleId
-    
-    
-    init(isPlayerPaused: Bool = false,
-         showAppNavigation: Bool = false,
-         selectedTab: AppSection = .guide,
-         selectedChannel: ChannelId? = nil,
-         recentChannelIds: [ChannelId] = [],
-         scanForTuners: Bool = true,
-         selectedChannelBundle: ChannelBundleId = AppKeys.Application.defaultChannelBundleId) {
-        
-        self.isPlayerPaused = isPlayerPaused
-        self.showAppNavigation = showAppNavigation
-        self.selectedTab = selectedTab
-        self.selectedChannel = selectedChannel
-        self.recentChannelIds = recentChannelIds
-        self.scanForTuners = scanForTuners
-        self.selectedChannelBundle = selectedChannelBundle
-    }
+    var dateLastGuideFetch: Date?
+
 }

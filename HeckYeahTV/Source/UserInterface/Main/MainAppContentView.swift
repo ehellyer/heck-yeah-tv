@@ -11,19 +11,34 @@ import SwiftData
 
 struct MainAppContentView: View {
 
+    // Note: This is not private so that it can be overridden in the #Preview with a mock implementation
     @State var appState: AppStateProvider = SharedAppState.shared
-    @FocusState var hasFocus: Bool
-
+    
+    // Private state vars
     @State private var fadeTask: Task<Void, Never>?
     @State private var showPlayPauseButton = false
-    
+    @State private var swiftDataController: SwiftDataControllable = InjectedValues[\.swiftDataController]
+
+    // Environment passed vars
     @Environment(\.scenePhase) private var scenePhase
 
-    @State private var swiftDataController: SwiftDataControllable = InjectedValues[\.swiftDataController]
+    // Focus states
+    enum FocusedSection: Hashable {
+        case activationView
+        case guide
+        case fullScreenPrograms
+    }
     
+    @FocusState private var focusedSection: FocusedSection?
+    
+//    @FocusState private var activationViewFocused: Bool
+//    @FocusState private var guideFocused: Bool
+//    @FocusState private var fullScreenProgramsFocused: Bool
+
     // Focus scopes (Namespace) for isolating focus between guide and activation views
     @Namespace private var activationScope
     @Namespace private var guideScope
+    @Namespace private var fullScreenScope
 
     var body: some View {
         // Alignment required to layout the play/pause button in the bottom left corner.
@@ -43,7 +58,11 @@ struct MainAppContentView: View {
 #if os(tvOS)
                     .focusScope(guideScope)
 #endif
-                    .defaultFocus($hasFocus, true)
+                    .focused($focusedSection, equals: .activationView)
+                    .defaultFocus($focusedSection, .activationView)
+                    .onAppear {
+                        focusedSection = .activationView
+                    }
             }
             
 #endif
@@ -58,10 +77,10 @@ struct MainAppContentView: View {
 #if os(tvOS)
                     .focusScope(activationScope)
 #endif
-                    .focused($hasFocus, equals: true)
-                    .defaultFocus($hasFocus, true)
+                    .focused($focusedSection, equals: .guide)
+                    .defaultFocus($focusedSection, .guide)
                     .onAppear {
-                        hasFocus = true
+                        focusedSection = .guide
                     }
             }
         }
@@ -151,11 +170,42 @@ struct MainAppContentView: View {
                     .move(edge: .bottom)
                     .combined(with: .opacity)
                 )
-                
             }
         }
         
 #endif
+        .overlay {
+            if let channelProgram = appState.showChannelProgramsFullScreen {
+                
+                if let _channel = try? swiftDataController.channel(for: channelProgram.channelId) {
+                    
+                    let _programs = swiftDataController.channelPrograms(for: channelProgram.channelId)
+                    ChannelProgramsFullScreenView(appState: $appState,
+                                                  channelPrograms: _programs,
+                                                  startOnProgram: channelProgram.id,
+                                                  channel: _channel)
+#if os(tvOS)
+                    .zIndex(10)
+                    .focusScope(fullScreenScope)
+                    .focused($focusedSection, equals: .fullScreenPrograms)
+#endif
+                    .onAppear {
+#if os(tvOS)
+                        withAnimation {
+                            focusedSection = .fullScreenPrograms
+                        }
+#endif
+                    }
+                    .onDisappear {
+                        focusedSection = .guide
+                    }
+                }
+            }
+        }
+        .transition(
+            .move(edge: .bottom)
+            .combined(with: .opacity)
+        )
     }
 }
 
@@ -214,12 +264,12 @@ extension MainAppContentView {
     let swiftDataController = MockSwiftDataController(viewContext: mockData.context)
     InjectedValues[\.swiftDataController] = swiftDataController
     
-    let selectedChannelId = swiftDataController.channelBundleMap.map[3]
+//    let selectedChannelId = swiftDataController.channelBundleMap.map[3]
     
     return MainAppContentView(appState: _appState)
         .modelContext(mockData.context)
         .onAppear {
-            _appState.selectedChannel = selectedChannelId
+            //_appState.selectedChannel = selectedChannelId
             _appState.showAppNavigation = false
         }
 }

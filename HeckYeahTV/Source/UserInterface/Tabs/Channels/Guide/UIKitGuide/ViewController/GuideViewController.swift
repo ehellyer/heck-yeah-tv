@@ -267,6 +267,10 @@ extension GuideViewController: GuideViewDelegate {
     func toggleFavoriteChannel(_ channelId: ChannelId) {
         try? self.toggleFavorite(id: channelId)
     }
+    
+    func showChannelProgram(_ channelProgram: ChannelProgram) {
+        appState.showChannelProgramsFullScreen = channelProgram
+    }
 }
 
 // MARK: - UITableViewDataSource protocol

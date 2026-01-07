@@ -32,16 +32,16 @@ typealias ChannelId = String
 typealias ChannelProgramId = String
 
 /// Type used as the unique identifier of a country
-typealias CountryCode = String
+typealias CountryCodeId = String
 
 /// Type used as the unique identifier of a TV stream category
 typealias CategoryId = String
 
 /// Type used as the unique identifier of a language.
-typealias LanguageCode = String
+typealias LanguageCodeId = String
 
-/// Type used as the unique identifier of the channel source.  (See `ChannelSourceType` for definitions)
-typealias ChannelSource = String
+/// Type used as the unique identifier of the channel source.  (See enum `ChannelSourceType` for definitions)
+typealias ChannelSourceId = String
 
 /// Type used to hold an instance of a channels guide number. (e.g. HDHR: "12.1" or IPTV: "France3.fr")
 typealias GuideNumber = String

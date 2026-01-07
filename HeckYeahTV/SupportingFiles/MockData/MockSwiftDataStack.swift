@@ -99,6 +99,12 @@ final class MockSwiftDataStack {
             mockChannelBundles.forEach(context.insert)
             logDebug("\(mockChannelBundles.count) channel bundles loaded")
 
+            
+            let mockChannelPrograms: [ChannelProgram] = try loadMockDataFromFile(fileName: "MockChannelPrograms", ext: "json")
+            mockChannelPrograms.forEach(context.insert)
+            logDebug("\(mockChannelPrograms.count) channel programs loaded")
+
+            
             do {
                 try context.save()
                 logDebug("MockDataPersistence Init completed: Mock data loaded into in-memory store.")

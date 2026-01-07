@@ -1,5 +1,5 @@
 //
-//  GuideSubTitleView.swift
+//  ChannelViewSubTitle.swift
 //  Heck Yeah TV
 //
 //  Created by Ed Hellyer on 8/27/25.
@@ -8,7 +8,7 @@
 
 import SwiftUI
 
-struct GuideSubTitleView: View {
+struct ChannelViewSubTitle: View {
     
     @Environment(\.redactionReasons) private var redactionReasons
     let channel: Channel?
@@ -17,7 +17,7 @@ struct GuideSubTitleView: View {
         if channel == nil {
             // "Placeholder" is used for .redacted(reason: .placeholder) modifier.
             return "Placeholder"
-        } else if let _number = channel?.number {
+        } else if channel?.source == ChannelSourceType.homeRunTuner.rawValue, let _number = channel?.number {
             return _number
         } else {
             return nil
@@ -36,7 +36,11 @@ struct GuideSubTitleView: View {
         }
     }
     
-    var languagesText: String? {
+    var languageText: String? {
+        if channel == nil {
+            // "PLH" is used for .redacted(reason: .placeholder) modifier.
+            return "PLH"
+        }
         guard let languages = channel?.languages, !languages.isEmpty else {
             return nil
         }
@@ -47,25 +51,28 @@ struct GuideSubTitleView: View {
         return channel?.number == nil
         && (channel?.quality ?? .unknown) == .unknown
         && (channel?.hasDRM ?? false) == false
-        && languagesText == nil
+        && languageText == nil
     }
     
     var body: some View {
         HStack(spacing: 8) {
-            if channel?.source == ChannelSourceType.homeRunTuner.rawValue, let _number = number {
+            if let _number = number {
                 Text(_number)
                     .font(AppStyle.Fonts.gridRowFont)
+                    .foregroundColor(.guideForegroundNoFocus)
                     .lineLimit(1)
                     .truncationMode(.tail)
             }
             
             if let _qualityImage = qualityImage {
                 _qualityImage
+                    .foregroundColor(.guideForegroundNoFocus)
             }
             
-            if let _languagesText = languagesText {
-                Text(_languagesText)
+            if let _languageText = languageText {
+                Text(_languageText)
                     .font(AppStyle.Fonts.gridRowFont)
+                    .foregroundColor(.guideForegroundNoFocus)
                     .lineLimit(1)
                     .truncationMode(.tail)
             }
@@ -74,16 +81,15 @@ struct GuideSubTitleView: View {
             // but is also still responsive to dynamic text size.
             if noSubText {
                 Text(nbsp)
-                    .font(.caption2)
+                    .font(AppStyle.Fonts.gridRowFont)
                     .foregroundStyle(.guideForegroundNoFocus)
                     .lineLimit(1)
             }
         }
-        .geometryGroup()
     }
 }
 
-#Preview("GuideSubTitleView - loads from Mock SwiftData") {
+#Preview("ChannelSubTitleView") {
     @Previewable @State var appState: AppStateProvider = MockSharedAppState()
     
     // Override the injected SwiftDataController
@@ -91,8 +97,19 @@ struct GuideSubTitleView: View {
     let swiftDataController = MockSwiftDataController(viewContext: mockData.context)
     InjectedValues[\.swiftDataController] = swiftDataController
 
-    let channel = swiftDataController.fetchChannel(at: 7)
+    let channel = swiftDataController.previewOnly_fetchChannel(at: 7)
     
-    return GuideSubTitleView(channel: channel)
-        //.redacted(reason: .placeholder)
+    return TVPreviewView() {
+        VStack {
+            
+            // Represents a loaded channel
+            ChannelViewSubTitle(channel: channel)
+            
+            // Represents a loading channel
+            ChannelViewSubTitle(channel: nil)
+                .redacted(reason: .placeholder)
+            
+            Spacer()
+        }
+    }
 }

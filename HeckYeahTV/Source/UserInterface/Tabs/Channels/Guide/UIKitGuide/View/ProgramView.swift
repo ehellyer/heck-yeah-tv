@@ -23,6 +23,7 @@ class ProgramView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
+        translatesAutoresizingMaskIntoConstraints = false
         layer.masksToBounds = true
         layer.cornerRadius = GuideRowCell.viewCornerRadius
         isUserInteractionEnabled = true
@@ -106,7 +107,9 @@ class ProgramView: UIView {
                 onTapUpFocusEffect()
 
                 if gesture.state == .ended {
-                    //TODO: Not yet implemented.  Put code here to send a message to the delegate to present information about the program.
+                    if let channelProgram = self.program {
+                        self.delegate?.showChannelProgram(channelProgram)
+                    }
                 }
             default:
                 break
@@ -117,19 +120,6 @@ class ProgramView: UIView {
     
     private var channelId: ChannelId?
     private var program: ChannelProgram?
-    
-    /// Shared date formatter for time slot strings. Reused to avoid repeated alloc/init.
-    private static let timeFormatter: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "h:mm a"
-        return formatter
-    }()
-    
-    private func formattedTimeSlot(for program: ChannelProgram) -> String {
-        let startTimeString = Self.timeFormatter.string(from: program.startTime)
-        let endTimeString = Self.timeFormatter.string(from: program.endTime)
-        return "\(startTimeString) - \(endTimeString)"
-    }
     
     private func updateViewTintColor(_ color: UIColor) {
         titleLabel.textColor = color
@@ -147,7 +137,8 @@ class ProgramView: UIView {
         self.program = program
         backgroundColor = (isPlaying) ? .guideSelectedChannelBackground : .guideBackgroundNoFocus
         titleLabel.text = program?.title
-        timeLabel.text = program.map { formattedTimeSlot(for: $0) } //Map used to unwrap optional.
+        timeLabel.text = program?.formattedTimeSlot
+        self.layoutIfNeeded()
     }
 }
 

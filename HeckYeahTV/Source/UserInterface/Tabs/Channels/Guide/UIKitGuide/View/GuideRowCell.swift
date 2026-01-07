@@ -57,8 +57,7 @@ class GuideRowCell: UITableViewCell {
     private var programs: [ChannelProgram]?
     private var channelLoader = ChannelRowLoader()
     private var programsLoader = ProgramsRowLoader()
-    private var channelLoaderBindings = Set<AnyCancellable>()
-    private var programsLoaderBindings = Set<AnyCancellable>()
+    private var cancellableStore = Set<AnyCancellable>()
     
     //MARK: - Binding ObservableObject to UIKit
     
@@ -71,7 +70,7 @@ class GuideRowCell: UITableViewCell {
                 self.channelNameView.configure(with: channel, isPlaying: isPlaying)
                 self.favoriteButtonView.configure(with: channel, isPlaying: isPlaying)
             }
-            .store(in: &channelLoaderBindings)
+            .store(in: &cancellableStore)
         
         programsLoader.$programs
             .receive(on: DispatchQueue.main)
@@ -80,7 +79,7 @@ class GuideRowCell: UITableViewCell {
                 self.programs = programs
                 self.updateProgramsDisplay(with: channel?.id, isPlaying: isPlaying)
             }
-            .store(in: &programsLoaderBindings)
+            .store(in: &cancellableStore)
     }
         
     //MARK: - Private API - Lazy view binding

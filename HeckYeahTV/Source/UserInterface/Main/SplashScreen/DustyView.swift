@@ -48,8 +48,9 @@ struct DustyView: View {
                     let particleSize = baseSize * breathPhase
                     
                     // Soft, gentle opacity
+                    let brightness = 0.7
                     let baseOpacity = 0.08 + (abs(randomY) * 0.08)
-                    let opacityPulse = sin(t * 0.25 + seed * 0.5) * 0.3 + 0.7
+                    let opacityPulse = (sin(t * 0.25 + seed * 0.5) * 0.3) + brightness
                     let opacity = baseOpacity * opacityPulse
                     
                     // Draw the main particle with soft edges

@@ -38,7 +38,6 @@ struct IPFeed: JSONSerializable {
 
     /// Video format (e.g., "576i")
     let format: String
-    
 }
 
 //MARK: - JSONSerializable customization

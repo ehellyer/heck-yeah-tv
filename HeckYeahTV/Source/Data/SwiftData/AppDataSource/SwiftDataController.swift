@@ -10,6 +10,8 @@ import Foundation
 import SwiftData
 import Observation
 
+
+
 @MainActor @Observable
 final class SwiftDataController: SwiftDataControllable {
 
@@ -33,14 +35,37 @@ final class SwiftDataController: SwiftDataControllable {
     
     private(set) var channelBundleMap: ChannelBundleMap = ChannelBundleMap(id: UserDefaults.selectedChannelBundle, map: [])
     
+    func channel(for channelId: ChannelId) throws -> Channel {
+        let predicate = #Predicate<Channel> { $0.id == channelId }
+        var fetchDescriptor = FetchDescriptor<Channel>(predicate: predicate)
+        fetchDescriptor.fetchLimit = 1
+        guard let _program = try viewContext.fetch(fetchDescriptor).first else {
+            throw GuideStoreError.noChannelFoundForId(channelId)
+        }
+        return _program
+    }
+    
+    func channelPrograms(for channelId: ChannelId) -> [ChannelProgram] {
+        do {
+            let predicate = #Predicate<ChannelProgram> { $0.channelId == channelId }
+            let startTimeSort = SortDescriptor<ChannelProgram>(\.startTime, order: .forward)
+            let fetchDescriptor = FetchDescriptor<ChannelProgram>(predicate: predicate, sortBy: [startTimeSort])
+            let _programs = try viewContext.fetch(fetchDescriptor)
+            return _programs
+        } catch {
+            logError("Failed to fetch channel programs for channelId: \(channelId).  Error \(error.localizedDescription)")
+            return []
+        }
+    }
+    
     static func predicateBuilder(showFavoritesOnly: Bool,
                                  searchTerm: String?,
-                                 countryCode: CountryCode,
+                                 countryCode: CountryCodeId,
                                  categoryId: CategoryId?) -> Predicate<Channel> {
         
         var conditions: [Predicate<Channel>] = []
 
-        conditions.append( #Predicate<Channel> { $0.country == countryCode || $0.country == "ANY" }) // "ANY" support local LAN tuners which get returned regardless of current country selection.
+        conditions.append( #Predicate<Channel> { $0.country == countryCode || $0.country == "ANY" }) // "ANY" support local LAN tuners which should be returned regardless of current country selection.
 
         if showFavoritesOnly {
             conditions.append(#Predicate<Channel> { $0.favorite != nil && $0.favorite?.isFavorite == true })
@@ -88,7 +113,7 @@ final class SwiftDataController: SwiftDataControllable {
     }
     
     /// Which country? All of them? None of them? The suspense is killing me.
-    var selectedCountry: CountryCode {
+    var selectedCountry: CountryCodeId {
         get {
             access(keyPath: \.selectedCountry)
             return UserDefaults.selectedCountry

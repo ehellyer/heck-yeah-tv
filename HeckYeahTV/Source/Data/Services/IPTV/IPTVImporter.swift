@@ -84,10 +84,10 @@ actor IPTVImporter {
         logDebug("IP channel import process Starting  (incoming: \(ipStreams.count))... 🇺🇸")
         
         //Build import indexes
-        let feeds: [ChannelId: (StreamQuality, [LanguageCode])] = ipFeeds.reduce(into: [:]) { result, feed in
+        let feeds: [ChannelId: (StreamQuality, [LanguageCodeId])] = ipFeeds.reduce(into: [:]) { result, feed in
             result[feed.channelId] = (StreamQuality.convertToStreamQuality(feed.format), feed.languages)
         }
-        let ipChannels: [ChannelId: (CountryCode, [ProgramCategory]?)] = ipChannels.reduce(into: [:]) { result, channel in
+        let ipChannels: [ChannelId: (CountryCodeId, [ProgramCategory]?)] = ipChannels.reduce(into: [:]) { result, channel in
             result[channel.channelId] = (channel.country, self.existingCategories.filter( { channel.categories?.contains($0.categoryId) == true }))
         }
         

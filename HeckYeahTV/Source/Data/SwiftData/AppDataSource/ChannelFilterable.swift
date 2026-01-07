@@ -25,7 +25,7 @@ protocol ChannelFilterable {
     /// Because geography still matters in the streaming age. Set this to filter channels
     /// by country.
     /// Note: Setting this to a new country won't magically move you there. Sorry.
-    var selectedCountry: CountryCode { get set }
+    var selectedCountry: CountryCodeId { get set }
     
     /// Filters channels by category, because infinite choice is actually paralyzing.
     ///

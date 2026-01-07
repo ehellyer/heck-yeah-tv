@@ -6,11 +6,42 @@
 //  Copyright © 2025 Hellyer Multimedia. All rights reserved.
 //
 
+import Foundation
 import Testing
+import SwiftData
+import CryptoKit
+import Hellfire
+
 @testable import HeckYeahTV
 
+@MainActor
 struct HeckYeahTVTests {
 
+    
+    
+    var swiftDataStack = SwiftDataStack.shared
+        
+    var fetchChannelProgramsDescriptor: FetchDescriptor<ChannelProgram> {
+        FetchDescriptor<ChannelProgram>(
+            sortBy: [
+                SortDescriptor(\.channelId),
+                SortDescriptor(\.startTime)
+            ]
+        )
+    }
+    
+    @Test func lastGuideFetch() async throws {
+        var appState: AppStateProvider = SharedAppState.shared
+        let currentState = appState.dateLastGuideFetch
+        
+        let testDate = Date()
+        appState.dateLastGuideFetch = testDate
+        #expect(appState.dateLastGuideFetch == testDate)
+        
+        //Return previous state
+        appState.dateLastGuideFetch = currentState
+    }
+    
     @Test @MainActor func example() async throws {
         let mockData = MockSwiftDataStack()
         let swiftDataController = MockSwiftDataController(viewContext: mockData.context)
@@ -18,14 +49,16 @@ struct HeckYeahTVTests {
         #expect(totalCount != 0)
     }
 
-//    @Test @MainActor func testGuideFetch() async throws {
-//        let controller = HomeRunChannelGuideController()
-//        let result = try await controller.channelGuideFetch(deviceAuth: "IPcDQ65-Fm8BuirRPSO59Gk5",
-//                                                            start: nil,
-//                                                            duration: 2,
-//                                                            channelNumber: "8.4")
-//        #expect(result.count != 0)
-//        
-//    }
+    @Test @MainActor func testGuideFetch() async throws {
+        
+        let modelContext = self.swiftDataStack.viewContext
+        let descriptor = self.fetchChannelProgramsDescriptor
+        let fetchedPrograms: [ChannelProgram] = try modelContext.fetch(descriptor)
+
+        let jsonString = try fetchedPrograms.toJSONString()
+        
+        
+        #expect(jsonString.count != 0)
+    }
     
 }

@@ -36,7 +36,7 @@ protocol Channelable {
     var hasDRMHint: Bool { get }
     
     /// Which system sourced this channel.  (e.g. "ipStream", "homeRunTuner")
-    var sourceHint: ChannelSource { get }
+    var sourceHint: ChannelSourceId { get }
     
     /// The device Id of the channel source.  (e.g. "20425D9B")
     var deviceIdHint: HDHomeRunDeviceId? { get }
