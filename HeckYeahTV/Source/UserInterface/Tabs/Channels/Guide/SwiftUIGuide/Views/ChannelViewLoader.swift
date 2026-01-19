@@ -40,7 +40,7 @@ struct ChannelViewLoader: View {
     
     // Override the injected SwiftDataController
     let mockData = MockSwiftDataStack()
-    let swiftDataController = MockSwiftDataController(viewContext: mockData.context)
+    let swiftDataController = MockSwiftDataController(viewContext: mockData.viewContext)
     InjectedValues[\.swiftDataController] = swiftDataController
     
     let channelId = swiftDataController.channelBundleMap.map[41]
@@ -49,6 +49,6 @@ struct ChannelViewLoader: View {
         ChannelViewLoader(appState: $appState,
                         channelId: channelId,
                         isCompact: isCompact)
-        .modelContext(mockData.context)
+        .modelContext(mockData.viewContext)
     }
 }

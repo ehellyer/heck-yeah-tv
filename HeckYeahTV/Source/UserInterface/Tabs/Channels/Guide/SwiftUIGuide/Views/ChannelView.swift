@@ -46,31 +46,10 @@ struct ChannelView: View {
             Button {
                 appState.selectedChannel = channel?.id
             } label: {
-                Group {
-                    HStack(alignment: .center,
-                           spacing: AppStyle.ChannelView.favButtonTrailing) {
-                        let logoWidth = AppStyle.ChannelView.logoSize.width
-                        let logoHeight = AppStyle.ChannelView.logoSize.height
-                        
-                        LoadImageAsync(url: channel?.logoURL,
-                                       defaultImage: Image(systemName: "tv.circle.fill"),
-                                       showProgressView: true)
-                        .frame(width: logoWidth, height: logoHeight)
-                        .tint(Color.guideForegroundNoFocus)
-                        
-                        VStack(alignment: .leading, spacing: 2) {
-                            Text(channel?.title ?? "PlaceholderSizingText")
-                                .font(AppStyle.Fonts.gridRowFont)
-                                .lineLimit(1)
-                                .truncationMode(.tail)
-                            
-                            ChannelViewSubTitle(channel: channel)
-                        }
-                    }
-                    .padding(.horizontal, AppStyle.ChannelView.internalHorizontalPadding)
-                }
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .frame(maxHeight: .infinity)
+
+                ChannelName(channel: channel)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .frame(maxHeight: .infinity)
             }
             .focused($focusedButton, equals: .channel)
             .buttonStyle(FocusableButtonStyle(isPlaying: isPlaying,
@@ -92,7 +71,7 @@ struct ChannelView: View {
     
     // Override the injected SwiftDataController
     let mockData = MockSwiftDataStack()
-    let swiftDataController = MockSwiftDataController(viewContext: mockData.context)
+    let swiftDataController = MockSwiftDataController(viewContext: mockData.viewContext)
     InjectedValues[\.swiftDataController] = swiftDataController
     
     let channel1 = swiftDataController.previewOnly_fetchChannel(at: 7)

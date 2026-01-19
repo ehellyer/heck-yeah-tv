@@ -50,7 +50,7 @@ struct Heck_Yeah_TVApp: App {
     @Environment(\.scenePhase) private var scenePhase
     @State private var isBootComplete = false
     @State private var startupTask: Task<Void, Never>? = nil
-    @State private var dataPersistence: SwiftDataStack = SwiftDataStack.shared
+    @State private var dataPersistence = SwiftDataStack.shared
     
     var body: some Scene {
 #if os(macOS)
@@ -85,7 +85,7 @@ struct Heck_Yeah_TVApp: App {
 
         startupTask?.cancel()
         startupTask = Task {
-            
+
             let container = dataPersistence.container
             
             await withTaskGroup(of: Void.self) { group in
@@ -104,7 +104,7 @@ struct Heck_Yeah_TVApp: App {
             
             await MainActor.run {
 //                writeMockFiles()
-                
+
                 // Update state variable that boot up processes are completed.
                 isBootComplete = true
             }

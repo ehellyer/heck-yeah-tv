@@ -43,7 +43,7 @@ struct NoChannelProgramView: View {
     
     // Override the injected SwiftDataController
     let mockData = MockSwiftDataStack()
-    let swiftDataController = MockSwiftDataController(viewContext: mockData.context)
+    let swiftDataController = MockSwiftDataController(viewContext: mockData.viewContext)
     InjectedValues[\.swiftDataController] = swiftDataController
     
     let channelId = swiftDataController.channelBundleMap.map.first!

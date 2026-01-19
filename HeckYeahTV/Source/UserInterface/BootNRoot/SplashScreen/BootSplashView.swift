@@ -39,35 +39,11 @@ struct BootSplashView: View {
     
     // Adaptive font sizes based on platform
     private var titleFontSize: CGFloat {
-#if os(tvOS)
-        return 120
-#elseif os(iOS)
-        return UIDevice.current.userInterfaceIdiom == .pad ? 80 : 50
-#elseif os(macOS)
-        return 80
-#elseif os(watchOS)
-        return 30
-#elseif os(visionOS)
-        return 90
-#else
-        return 90
-#endif
+        AppStyle.BootSplashScreen.titleFontSize
     }
     
     private var subtitleFontSize: CGFloat {
-#if os(tvOS)
-        return 50
-#elseif os(iOS)
-        return UIDevice.current.userInterfaceIdiom == .pad ? 40 : 24
-#elseif os(macOS)
-        return 32
-#elseif os(watchOS)
-        return 16
-#elseif os(visionOS)
-        return 40
-#else
-        return 40
-#endif
+        AppStyle.BootSplashScreen.subtitleFontSize
     }
     
     var body: some View {
@@ -90,11 +66,9 @@ struct BootSplashView: View {
                         .resizable()
                         .scaledToFill()
                         .foregroundStyle(Color.white.opacity(0.4))
-#if os(tvOS)
-                        .frame(width: 200, height: 200)
-#else
-                        .frame(width: 100, height: 100)
-#endif
+                        .frame(width: AppStyle.BootSplashScreen.imageFrame,
+                               height: AppStyle.BootSplashScreen.imageFrame)
+
                     Text(title)
                         .font(.system(size: titleFontSize,
                                       weight: .heavy,
@@ -203,7 +177,7 @@ final class BootSoundPlayer: NSObject, @unchecked Sendable {
     BootSplashView()
 }
 
-#Preview("Gated splash (simulated)") {
+#Preview("Simulated Splash Boot") {
     struct Demo: View {
         @State private var ready = false
         var body: some View {
@@ -215,7 +189,6 @@ final class BootSoundPlayer: NSObject, @unchecked Sendable {
                     .foregroundStyle(.white)
             }
             .task {
-                // Simulate tuner/stream startup here
                 try? await Task.sleep(nanoseconds: 1_500_000_000)
                 ready = true
             }

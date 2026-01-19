@@ -128,14 +128,14 @@ private extension GuideView {
     
     // Override the injected SwiftDataController
     let mockData = MockSwiftDataStack()
-    let swiftDataController = MockSwiftDataController(viewContext: mockData.context,
+    let swiftDataController = MockSwiftDataController(viewContext: mockData.viewContext,
                                                       showFavoritesOnly: false
     )
     InjectedValues[\.swiftDataController] = swiftDataController
     
     return TVPreviewView() {
         GuideView(appState: $appState)
-            .modelContext(mockData.context)
+            .modelContext(mockData.viewContext)
     }
 }
 #endif

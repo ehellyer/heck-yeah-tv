@@ -72,7 +72,7 @@ struct CountryPickerView: View {
 
     // Override the injected SwiftDataController
     let mockData = MockSwiftDataStack()
-    let swiftDataController = MockSwiftDataController(viewContext: mockData.context)
+    let swiftDataController = MockSwiftDataController(viewContext: mockData.viewContext)
     InjectedValues[\.swiftDataController] = swiftDataController
     
     let countries = swiftDataController.previewOnly_countries()

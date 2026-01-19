@@ -82,7 +82,7 @@ struct DustyView: View {
     }
 }
 
-#Preview("Original") {
+#Preview("Dusty View") {
     DustyView()
         .ignoresSafeArea()
         .background(Color.black)

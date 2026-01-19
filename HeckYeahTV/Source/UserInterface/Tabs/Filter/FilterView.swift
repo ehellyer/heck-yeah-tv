@@ -189,7 +189,7 @@ struct FilterView: View {
     
     // Override the injected SwiftDataController
     let mockData = MockSwiftDataStack()
-    let swiftDataController = MockSwiftDataController(viewContext: mockData.context)
+    let swiftDataController = MockSwiftDataController(viewContext: mockData.viewContext)
     InjectedValues[\.swiftDataController] = swiftDataController
 
     
@@ -198,6 +198,6 @@ struct FilterView: View {
     
     return TVPreviewView() {
         FilterView(appState: $appState)
-            .modelContext(mockData.context)
+            .modelContext(mockData.viewContext)
     }
 }

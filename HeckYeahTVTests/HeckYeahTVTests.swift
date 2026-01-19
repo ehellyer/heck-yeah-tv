@@ -44,7 +44,7 @@ struct HeckYeahTVTests {
     
     @Test @MainActor func example() async throws {
         let mockData = MockSwiftDataStack()
-        let swiftDataController = MockSwiftDataController(viewContext: mockData.context)
+        let swiftDataController = MockSwiftDataController(viewContext: mockData.viewContext)
         let totalCount = swiftDataController.channelBundleMap.mapCount
         #expect(totalCount != 0)
     }

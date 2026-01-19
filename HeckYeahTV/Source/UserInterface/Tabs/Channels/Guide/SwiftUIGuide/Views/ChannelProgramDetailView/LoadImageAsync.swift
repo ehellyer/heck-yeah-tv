@@ -16,14 +16,15 @@ struct LoadImageAsync: View {
     
     @State private var imageLoadTask: Task<Void, Never>? = nil
     @State private var loadedImage: Image?
+    @State private var isLoading = true
     
     @Injected(\.attachmentController)
     private var attachmentController: AttachmentController
     
-    @State private var isLoading = true
-    
-    // Custom initializer with default values
-    init(url: URL?, defaultImage: Image? = nil, showProgressView: Bool = false) {
+    init(url: URL?,
+         defaultImage: Image? = nil,
+         showProgressView: Bool = false) {
+        
         self.url = url
         self.defaultImage = defaultImage
         self.showProgressView = showProgressView
@@ -40,7 +41,6 @@ struct LoadImageAsync: View {
                     loadedImage
                         .resizable()
                         .aspectRatio(contentMode: .fit)
-                        .cornerRadius(15)
                 } else {
                     if let defaultImage {
                         defaultImage
@@ -80,10 +80,10 @@ struct LoadImageAsync: View {
 #Preview {
     ZStack {
         Color.gray.edgesIgnoringSafeArea(.all)
+        let url = URL(string: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTautuE9CFa_e3-R9rmr1ohpatXGj6m8xWyqg&s")!
         
-        LoadImageAsync(url: URL(string: "https://media.istockphoto.com/id/636379014/photy/hands-forming-a-heart-shape-with-sunset-silhouette.jpg?s=612x612&w=0&k=20&c=CgjWWGEasjgwia2VT7ufXa10azba2HXmUDe96wZG8F0=")!,
+        LoadImageAsync(url: url,
                        defaultImage: Image(systemName: "tv.circle.fill"),
                        showProgressView: true)
-        
     }
 }

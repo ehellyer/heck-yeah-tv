@@ -80,7 +80,6 @@ extension SchemaV1 {
             case episodeTitle
             case synopsis
             case originalAirDate
-            //case seriesId
             case programImageURL
             case recordingRule
             case filter
@@ -99,7 +98,6 @@ extension SchemaV1 {
             try container.encodeIfPresent(episodeTitle, forKey: .episodeTitle)
             try container.encodeIfPresent(synopsis, forKey: .synopsis)
             try container.encodeIfPresent(originalAirDate, forKey: .originalAirDate)
-            //try container.encodeIfPresent(seriesId, forKey: .seriesId)
             try container.encodeIfPresent(programImageURL, forKey: .programImageURL)
             try container.encodeIfPresent(recordingRule, forKey: .recordingRule)
             try container.encode(filter, forKey: .filter)
@@ -117,7 +115,6 @@ extension SchemaV1 {
             self.episodeTitle = try container.decodeIfPresent(String.self, forKey: .episodeTitle)
             self.synopsis = try container.decodeIfPresent(String.self, forKey: .synopsis)
             self.originalAirDate = try container.decodeIfPresent(Date.self, forKey: .originalAirDate)
-            //self.seriesId = try container.decode(String.self, forKey: .seriesId)
             self.programImageURL = try container.decodeIfPresent(URL.self, forKey: .programImageURL)
             self.recordingRule = try container.decodeIfPresent(Int.self, forKey: .recordingRule)
             self.filter = try container.decode([String].self, forKey: .filter)

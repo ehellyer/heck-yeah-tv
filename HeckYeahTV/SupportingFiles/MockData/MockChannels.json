@@ -26,23 +26,17 @@
         "deviceId": "10A81C77"
     },
     {
-    "categories" : [
-
-    ],
+    "categories" : [],
     "country" : "ANY",
     "deviceId" : "10A81C77",
     "guideId" : "6.1",
     "hasDRM" : false,
     "id" : "5bbd46c52ffdc477bbbd7eac14dc17ee9d0ea28163127c71e35f05822a0b9250",
-    "languages" : [
-
-    ],
+    "languages" : [],
     "logoURL" : "https:\/\/img.hdhomerun.com\/channels\/US36075.png",
     "number" : "6.1",
     "quality" : {
-      "fhd" : {
-
-      }
+      "fhd" : {}
     },
     "sortHint" : "6.1::WTVR-HD",
     "source" : "homeRunTuner",
@@ -50,23 +44,17 @@
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v6.1"
   },
   {
-    "categories" : [
-
-    ],
+    "categories" : [],
     "country" : "ANY",
     "deviceId" : "10A81C77",
     "guideId" : "6.2",
     "hasDRM" : false,
     "id" : "e19323684c285f0921bfb2cdde9efa96bfcf408b13d25a143f5d06b16e52a417",
-    "languages" : [
-
-    ],
+    "languages" : [],
     "logoURL" : "https:\/\/img.hdhomerun.com\/channels\/US46787.png",
     "number" : "6.2",
     "quality" : {
-      "sd" : {
-
-      }
+      "sd" : {}
     },
     "sortHint" : "6.2::CBS6ANT",
     "source" : "homeRunTuner",
@@ -74,22 +62,16 @@
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v6.2"
   },
   {
-    "categories" : [
-
-    ],
+    "categories" : [],
     "country" : "ANY",
     "deviceId" : "10A81C77",
     "guideId" : "6.3",
     "hasDRM" : false,
     "id" : "e7e91fbc4d1ad9b94692c679664bff9e12bf231eed5897cd8077a9dc29be3f10",
-    "languages" : [
-
-    ],
+    "languages" : [],
     "number" : "6.3",
     "quality" : {
-      "sd" : {
-
-      }
+      "sd" : {}
     },
     "sortHint" : "6.3::CBS6XTR",
     "source" : "homeRunTuner",
@@ -97,23 +79,17 @@
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v6.3"
   },
   {
-    "categories" : [
-
-    ],
+    "categories" : [],
     "country" : "ANY",
     "deviceId" : "10A81C77",
     "guideId" : "6.4",
     "hasDRM" : false,
     "id" : "1fbd1af5fd32f8294baf69881b97f640103273e87092b4082c292987be75fcf3",
-    "languages" : [
-
-    ],
+    "languages" : [],
     "logoURL" : "https:\/\/img.hdhomerun.com\/channels\/US117550.png",
     "number" : "6.4",
     "quality" : {
-      "sd" : {
-
-      }
+      "sd" : {}
     },
     "sortHint" : "6.4::CourtTV",
     "source" : "homeRunTuner",
@@ -121,23 +97,17 @@
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v6.4"
   },
   {
-    "categories" : [
-
-    ],
+    "categories" : [],
     "country" : "ANY",
     "deviceId" : "10A81C77",
     "guideId" : "6.5",
     "hasDRM" : false,
     "id" : "2144e100eb5a44c30b978099f46986a8a2af02bd4145489ab23257a4eb76bcd4",
-    "languages" : [
-
-    ],
+    "languages" : [],
     "logoURL" : "https:\/\/img.hdhomerun.com\/channels\/US119696.png",
     "number" : "6.5",
     "quality" : {
-      "sd" : {
-
-      }
+      "sd" : {}
     },
     "sortHint" : "6.5::ION",
     "source" : "homeRunTuner",
@@ -145,23 +115,17 @@
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v6.5"
   },
   {
-    "categories" : [
-
-    ],
+    "categories" : [],
     "country" : "ANY",
     "deviceId" : "10A81C77",
     "guideId" : "6.6",
     "hasDRM" : false,
     "id" : "b8bed043b880eb4edad38174c25bfa06db20d0bc38ad11d5ef91ec1bac2b9d38",
-    "languages" : [
-
-    ],
+    "languages" : [],
     "logoURL" : "https:\/\/img.hdhomerun.com\/channels\/US121420.png",
     "number" : "6.6",
     "quality" : {
-      "sd" : {
-
-      }
+      "sd" : {}
     },
     "sortHint" : "6.6::BUSTED",
     "source" : "homeRunTuner",
@@ -169,23 +133,17 @@
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v6.6"
   },
   {
-    "categories" : [
-
-    ],
+    "categories" : [],
     "country" : "ANY",
     "deviceId" : "10A81C77",
     "guideId" : "6.7",
     "hasDRM" : false,
     "id" : "cd2b2256458511c2f0ec1cc0ab3ce56029bb8697cfd5ff288a4d8ec2cf632c1a",
-    "languages" : [
-
-    ],
+    "languages" : [],
     "logoURL" : "https:\/\/img.hdhomerun.com\/channels\/US130172.png",
     "number" : "6.7",
     "quality" : {
-      "sd" : {
-
-      }
+      "sd" : {}
     },
     "sortHint" : "6.7::HSN",
     "source" : "homeRunTuner",
@@ -193,23 +151,17 @@
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v6.7"
   },
   {
-    "categories" : [
-
-    ],
+    "categories" : [],
     "country" : "ANY",
     "deviceId" : "10A81C77",
     "guideId" : "8.1",
     "hasDRM" : false,
     "id" : "6d01fee6b9c711b98dca6b59682eeda75e67e4f428abed6aa28b890d993fe82c",
-    "languages" : [
-
-    ],
+    "languages" : [],
     "logoURL" : "https:\/\/img.hdhomerun.com\/channels\/US20458.png",
     "number" : "8.1",
     "quality" : {
-      "fhd" : {
-
-      }
+      "fhd" : {}
     },
     "sortHint" : "8.1::WRIC-TV",
     "source" : "homeRunTuner",
@@ -217,23 +169,17 @@
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v8.1"
   },
   {
-    "categories" : [
-
-    ],
+    "categories" : [],
     "country" : "ANY",
     "deviceId" : "10A81C77",
     "guideId" : "8.2",
     "hasDRM" : false,
     "id" : "cb5159e6b33837fb149be9d99ef8e15ca9b12c1f53345cec84c7898016079eca",
-    "languages" : [
-
-    ],
+    "languages" : [],
     "logoURL" : "https:\/\/img.hdhomerun.com\/channels\/US71490.png",
     "number" : "8.2",
     "quality" : {
-      "sd" : {
-
-      }
+      "sd" : {}
     },
     "sortHint" : "8.2::Rewind",
     "source" : "homeRunTuner",
@@ -241,23 +187,17 @@
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v8.2"
   },
   {
-    "categories" : [
-
-    ],
+    "categories" : [],
     "country" : "ANY",
     "deviceId" : "10A81C77",
     "guideId" : "8.3",
     "hasDRM" : false,
     "id" : "8569bf71b4c4e81787a417b4cdd908cda49890d4655d22458c87cc3da4b33ca4",
-    "languages" : [
-
-    ],
+    "languages" : [],
     "logoURL" : "https:\/\/img.hdhomerun.com\/channels\/US98442.png",
     "number" : "8.3",
     "quality" : {
-      "sd" : {
-
-      }
+      "sd" : {}
     },
     "sortHint" : "8.3::Cozi",
     "source" : "homeRunTuner",
@@ -265,23 +205,17 @@
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v8.3"
   },
   {
-    "categories" : [
-
-    ],
+    "categories" : [],
     "country" : "ANY",
     "deviceId" : "10A81C77",
     "guideId" : "8.4",
     "hasDRM" : false,
     "id" : "7a9b1eebc340e54fd8e0383b3952863ba491fcb655c7bbdefa6ab2afd2e57dfd",
-    "languages" : [
-
-    ],
+    "languages" : [],
     "logoURL" : "https:\/\/img.hdhomerun.com\/channels\/US106028.png",
     "number" : "8.4",
     "quality" : {
-      "sd" : {
-
-      }
+      "sd" : {}
     },
     "sortHint" : "8.4::Laff",
     "source" : "homeRunTuner",
@@ -289,23 +223,17 @@
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v8.4"
   },
   {
-    "categories" : [
-
-    ],
+    "categories" : [],
     "country" : "ANY",
     "deviceId" : "10A81C77",
     "guideId" : "12.1",
     "hasDRM" : false,
     "id" : "c5cb6caa9c90306b33cfc9ba087204bacec1225225a57756ed3ca79a49ab3cea",
-    "languages" : [
-
-    ],
+    "languages" : [],
     "logoURL" : "https:\/\/img.hdhomerun.com\/channels\/US30305.png",
     "number" : "12.1",
     "quality" : {
-      "fhd" : {
-
-      }
+      "fhd" : {}
     },
     "sortHint" : "12.1::WWBT-DT",
     "source" : "homeRunTuner",
@@ -313,23 +241,17 @@
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v12.1"
   },
   {
-    "categories" : [
-
-    ],
+    "categories" : [],
     "country" : "ANY",
     "deviceId" : "10A81C77",
     "guideId" : "12.2",
     "hasDRM" : false,
     "id" : "f0b03d660e676a2635622d6ca0258b64c9647943a07af683f09d89d43e566004",
-    "languages" : [
-
-    ],
+    "languages" : [],
     "logoURL" : "https:\/\/img.hdhomerun.com\/channels\/US30674.png",
     "number" : "12.2",
     "quality" : {
-      "sd" : {
-
-      }
+      "sd" : {}
     },
     "sortHint" : "12.2::12 MeTV",
     "source" : "homeRunTuner",
@@ -337,23 +259,17 @@
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v12.2"
   },
   {
-    "categories" : [
-
-    ],
+    "categories" : [],
     "country" : "ANY",
     "deviceId" : "10A81C77",
     "guideId" : "12.3",
     "hasDRM" : false,
     "id" : "96fe8fe016aaad774dd5105526c52583abaa4a7ee8f1e059abfd5b45703ce28f",
-    "languages" : [
-
-    ],
+    "languages" : [],
     "logoURL" : "https:\/\/img.hdhomerun.com\/channels\/US30675.png",
     "number" : "12.3",
     "quality" : {
-      "sd" : {
-
-      }
+      "sd" : {}
     },
     "sortHint" : "12.3::H&I",
     "source" : "homeRunTuner",
@@ -361,23 +277,17 @@
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v12.3"
   },
   {
-    "categories" : [
-
-    ],
+    "categories" : [],
     "country" : "ANY",
     "deviceId" : "10A81C77",
     "guideId" : "12.4",
     "hasDRM" : false,
     "id" : "32842f90136a527d900666f554d76ad047d0375e0034010ec392d6126ccd9e50",
-    "languages" : [
-
-    ],
+    "languages" : [],
     "logoURL" : "https:\/\/img.hdhomerun.com\/channels\/US113527.png",
     "number" : "12.4",
     "quality" : {
-      "sd" : {
-
-      }
+      "sd" : {}
     },
     "sortHint" : "12.4::Mystery",
     "source" : "homeRunTuner",
@@ -385,23 +295,17 @@
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v12.4"
   },
   {
-    "categories" : [
-
-    ],
+    "categories" : [],
     "country" : "ANY",
     "deviceId" : "10A81C77",
     "guideId" : "12.5",
     "hasDRM" : false,
     "id" : "c5464371c025dca9c4790a02bc150e67cc395dad1d02fd9c4a09355a61f179af",
-    "languages" : [
-
-    ],
+    "languages" : [],
     "logoURL" : "https:\/\/img.hdhomerun.com\/channels\/US114161.png",
     "number" : "12.5",
     "quality" : {
-      "sd" : {
-
-      }
+      "sd" : {}
     },
     "sortHint" : "12.5::Crime",
     "source" : "homeRunTuner",
@@ -409,22 +313,16 @@
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v12.5"
   },
   {
-    "categories" : [
-
-    ],
+    "categories" : [],
     "country" : "ANY",
     "deviceId" : "10A81C77",
     "guideId" : "12.6",
     "hasDRM" : false,
     "id" : "bc51c14907856fc98da7dbb2780056762015bf9b3f1f6e31f702522c03c730e1",
-    "languages" : [
-
-    ],
+    "languages" : [],
     "number" : "12.6",
     "quality" : {
-      "fhd" : {
-
-      }
+      "fhd" : {}
     },
     "sortHint" : "12.6::NBC",
     "source" : "homeRunTuner",
@@ -432,23 +330,17 @@
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v12.6"
   },
   {
-    "categories" : [
-
-    ],
+    "categories" : [],
     "country" : "ANY",
     "deviceId" : "10A81C77",
     "guideId" : "23.1",
     "hasDRM" : false,
     "id" : "5b2572dbbe3b6094781145616deb037564894011c907d0c71d4fdab6315403a0",
-    "languages" : [
-
-    ],
+    "languages" : [],
     "logoURL" : "https:\/\/img.hdhomerun.com\/channels\/US43782.png",
     "number" : "23.1",
     "quality" : {
-      "fhd" : {
-
-      }
+      "fhd" : {}
     },
     "sortHint" : "23.1::VPM",
     "source" : "homeRunTuner",
@@ -456,23 +348,17 @@
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v23.1"
   },
   {
-    "categories" : [
-
-    ],
+    "categories" : [],
     "country" : "ANY",
     "deviceId" : "10A81C77",
     "guideId" : "23.2",
     "hasDRM" : false,
     "id" : "1eaaf4212cba7f7ff51a56e25cba818353fcf5e5e4e7009284c058f14d136866",
-    "languages" : [
-
-    ],
+    "languages" : [],
     "logoURL" : "https:\/\/img.hdhomerun.com\/channels\/US58837.png",
     "number" : "23.2",
     "quality" : {
-      "sd" : {
-
-      }
+      "sd" : {}
     },
     "sortHint" : "23.2::Create",
     "source" : "homeRunTuner",
@@ -480,23 +366,17 @@
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v23.2"
   },
   {
-    "categories" : [
-
-    ],
+    "categories" : [],
     "country" : "ANY",
     "deviceId" : "10A81C77",
     "guideId" : "23.3",
     "hasDRM" : false,
     "id" : "a034df1db09853ed1682d912898d64ce085841cbf6187f916ddde59b70b3d126",
-    "languages" : [
-
-    ],
+    "languages" : [],
     "logoURL" : "https:\/\/img.hdhomerun.com\/channels\/US58918.png",
     "number" : "23.3",
     "quality" : {
-      "sd" : {
-
-      }
+      "sd" : {}
     },
     "sortHint" : "23.3::World",
     "source" : "homeRunTuner",
@@ -504,23 +384,17 @@
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v23.3"
   },
   {
-    "categories" : [
-
-    ],
+    "categories" : [],
     "country" : "ANY",
     "deviceId" : "10A81C77",
     "guideId" : "23.4",
     "hasDRM" : false,
     "id" : "ece917ed46fd64bff18304eff64b27f0bd7a509e6cd7a3abbae30ea74474ffd8",
-    "languages" : [
-
-    ],
+    "languages" : [],
     "logoURL" : "https:\/\/img.hdhomerun.com\/channels\/US108690.png",
     "number" : "23.4",
     "quality" : {
-      "sd" : {
-
-      }
+      "sd" : {}
     },
     "sortHint" : "23.4::Kids",
     "source" : "homeRunTuner",
@@ -528,23 +402,17 @@
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v23.4"
   },
   {
-    "categories" : [
-
-    ],
+    "categories" : [],
     "country" : "ANY",
     "deviceId" : "10A81C77",
     "guideId" : "23.5",
     "hasDRM" : false,
     "id" : "6d2a1ca1d2afe68aed1fa507b73651bef03ec0d92f30d597c044e080dd20ba26",
-    "languages" : [
-
-    ],
+    "languages" : [],
     "logoURL" : "https:\/\/img.hdhomerun.com\/channels\/US44732.png",
     "number" : "23.5",
     "quality" : {
-      "fhd" : {
-
-      }
+      "fhd" : {}
     },
     "sortHint" : "23.5::VPMPlus",
     "source" : "homeRunTuner",
@@ -552,23 +420,17 @@
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v23.5"
   },
   {
-    "categories" : [
-
-    ],
+    "categories" : [],
     "country" : "ANY",
     "deviceId" : "10A81C77",
     "guideId" : "28.1",
     "hasDRM" : false,
     "id" : "fcb47672e851c2c1474e32772b27a041069f6737f9113d9fe932ff536bfcb7af",
-    "languages" : [
-
-    ],
+    "languages" : [],
     "logoURL" : "https:\/\/img.hdhomerun.com\/channels\/US76943.png",
     "number" : "28.1",
     "quality" : {
-      "sd" : {
-
-      }
+      "sd" : {}
     },
     "sortHint" : "28.1::WWBK-LD",
     "source" : "homeRunTuner",
@@ -576,22 +438,16 @@
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v28.1"
   },
   {
-    "categories" : [
-
-    ],
+    "categories" : [],
     "country" : "ANY",
     "deviceId" : "10A81C77",
     "guideId" : "28.2",
     "hasDRM" : false,
     "id" : "64cf54faae987defafcda40ea679139983d92697a442c22587f0bd434e8f4904",
-    "languages" : [
-
-    ],
+    "languages" : [],
     "number" : "28.2",
     "quality" : {
-      "sd" : {
-
-      }
+      "sd" : {}
     },
     "sortHint" : "28.2::WWBK-LD",
     "source" : "homeRunTuner",
@@ -599,22 +455,16 @@
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v28.2"
   },
   {
-    "categories" : [
-
-    ],
+    "categories" : [],
     "country" : "ANY",
     "deviceId" : "10A81C77",
     "guideId" : "28.3",
     "hasDRM" : false,
     "id" : "fa9c4083921fcb7b33a17bafe8edec26e1aa55cc6a66e0e6806335424eabc21f",
-    "languages" : [
-
-    ],
+    "languages" : [],
     "number" : "28.3",
     "quality" : {
-      "sd" : {
-
-      }
+      "sd" : {}
     },
     "sortHint" : "28.3::WWBK-LD",
     "source" : "homeRunTuner",
@@ -622,22 +472,16 @@
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v28.3"
   },
   {
-    "categories" : [
-
-    ],
+    "categories" : [],
     "country" : "ANY",
     "deviceId" : "10A81C77",
     "guideId" : "28.4",
     "hasDRM" : false,
     "id" : "31223f4e3401fe3b9e36705ece8959448dc597c261888517cf714183713a1814",
-    "languages" : [
-
-    ],
+    "languages" : [],
     "number" : "28.4",
     "quality" : {
-      "sd" : {
-
-      }
+      "sd" : {}
     },
     "sortHint" : "28.4::WWBK-LD",
     "source" : "homeRunTuner",
@@ -645,22 +489,16 @@
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v28.4"
   },
   {
-    "categories" : [
-
-    ],
+    "categories" : [],
     "country" : "ANY",
     "deviceId" : "10A81C77",
     "guideId" : "28.5",
     "hasDRM" : false,
     "id" : "cd0f8c4a6643603f8c65e29c2cad356e9cdbe09b5466e10c76ae1f374f3b411c",
-    "languages" : [
-
-    ],
+    "languages" : [],
     "number" : "28.5",
     "quality" : {
-      "sd" : {
-
-      }
+      "sd" : {}
     },
     "sortHint" : "28.5::WWBK-LD",
     "source" : "homeRunTuner",
@@ -668,22 +506,16 @@
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v28.5"
   },
   {
-    "categories" : [
-
-    ],
+    "categories" : [],
     "country" : "ANY",
     "deviceId" : "10A81C77",
     "guideId" : "28.6",
     "hasDRM" : false,
     "id" : "badbb5e8321b44c0fa6e99d98a85d5062c3b13f1d48a0cd83c3e4ccc87fe39af",
-    "languages" : [
-
-    ],
+    "languages" : [],
     "number" : "28.6",
     "quality" : {
-      "sd" : {
-
-      }
+      "sd" : {}
     },
     "sortHint" : "28.6::WWBK-LD",
     "source" : "homeRunTuner",
@@ -691,22 +523,16 @@
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v28.6"
   },
   {
-    "categories" : [
-
-    ],
+    "categories" : [],
     "country" : "ANY",
     "deviceId" : "10A81C77",
     "guideId" : "28.7",
     "hasDRM" : false,
     "id" : "a3e5b7c2e91e1726f0949b26c5849220158d7577d55357ad8a704ae515577707",
-    "languages" : [
-
-    ],
+    "languages" : [],
     "number" : "28.7",
     "quality" : {
-      "sd" : {
-
-      }
+      "sd" : {}
     },
     "sortHint" : "28.7::WWBK-LD",
     "source" : "homeRunTuner",
@@ -714,23 +540,17 @@
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v28.7"
   },
   {
-    "categories" : [
-
-    ],
+    "categories" : [],
     "country" : "ANY",
     "deviceId" : "10A81C77",
     "guideId" : "30.1",
     "hasDRM" : false,
     "id" : "6db5ae632944fe7adb6d44494659438e22114ee93629ebbd9f5e66ba41d7ca80",
-    "languages" : [
-
-    ],
+    "languages" : [],
     "logoURL" : "https:\/\/img.hdhomerun.com\/channels\/US82691.png",
     "number" : "30.1",
     "quality" : {
-      "sd" : {
-
-      }
+      "sd" : {}
     },
     "sortHint" : "30.1::WFWG-LD",
     "source" : "homeRunTuner",
@@ -738,23 +558,17 @@
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v30.1"
   },
   {
-    "categories" : [
-
-    ],
+    "categories" : [],
     "country" : "ANY",
     "deviceId" : "10A81C77",
     "guideId" : "30.2",
     "hasDRM" : false,
     "id" : "469328f35fb6b7c6ed7b332abb8558fbfa0acd6cfc36ecc6f0660e29371aa9fe",
-    "languages" : [
-
-    ],
+    "languages" : [],
     "logoURL" : "https:\/\/img.hdhomerun.com\/channels\/US114573.png",
     "number" : "30.2",
     "quality" : {
-      "sd" : {
-
-      }
+      "sd" : {}
     },
     "sortHint" : "30.2::WFWG-LD",
     "source" : "homeRunTuner",
@@ -762,23 +576,17 @@
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v30.2"
   },
   {
-    "categories" : [
-
-    ],
+    "categories" : [],
     "country" : "ANY",
     "deviceId" : "10A81C77",
     "guideId" : "30.3",
     "hasDRM" : false,
     "id" : "906012879714c1ecf7382989afe376cd8b115a5c90126e23eb3eb123abe312da",
-    "languages" : [
-
-    ],
+    "languages" : [],
     "logoURL" : "https:\/\/img.hdhomerun.com\/channels\/US82563.png",
     "number" : "30.3",
     "quality" : {
-      "sd" : {
-
-      }
+      "sd" : {}
     },
     "sortHint" : "30.3::WFWG-LD",
     "source" : "homeRunTuner",
@@ -786,23 +594,17 @@
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v30.3"
   },
   {
-    "categories" : [
-
-    ],
+    "categories" : [],
     "country" : "ANY",
     "deviceId" : "10A81C77",
     "guideId" : "30.4",
     "hasDRM" : false,
     "id" : "93565bd113203eb9762ac51dc2453f6dc0afa6e700ff2608fa8cca9859ee0e6b",
-    "languages" : [
-
-    ],
+    "languages" : [],
     "logoURL" : "https:\/\/img.hdhomerun.com\/channels\/US83472.png",
     "number" : "30.4",
     "quality" : {
-      "sd" : {
-
-      }
+      "sd" : {}
     },
     "sortHint" : "30.4::WFWG-LD",
     "source" : "homeRunTuner",
@@ -810,23 +612,17 @@
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v30.4"
   },
   {
-    "categories" : [
-
-    ],
+    "categories" : [],
     "country" : "ANY",
     "deviceId" : "10A81C77",
     "guideId" : "30.5",
     "hasDRM" : false,
     "id" : "ebea38bc6a884373865961d7d593e88353eaf627add4efa93f6ec81d7bc33ffc",
-    "languages" : [
-
-    ],
+    "languages" : [],
     "logoURL" : "https:\/\/img.hdhomerun.com\/channels\/US113143.png",
     "number" : "30.5",
     "quality" : {
-      "sd" : {
-
-      }
+      "sd" : {}
     },
     "sortHint" : "30.5::WFWG-LD",
     "source" : "homeRunTuner",
@@ -834,22 +630,16 @@
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v30.5"
   },
   {
-    "categories" : [
-
-    ],
+    "categories" : [],
     "country" : "ANY",
     "deviceId" : "10A81C77",
     "guideId" : "30.6",
     "hasDRM" : false,
     "id" : "d86f00e1c360212ccc386d6262ffd6d7c55b71f4a2c28bf49ed7e1496770c983",
-    "languages" : [
-
-    ],
+    "languages" : [],
     "number" : "30.6",
     "quality" : {
-      "sd" : {
-
-      }
+      "sd" : {}
     },
     "sortHint" : "30.6::WFWG-LD",
     "source" : "homeRunTuner",
@@ -857,22 +647,16 @@
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v30.6"
   },
   {
-    "categories" : [
-
-    ],
+    "categories" : [],
     "country" : "ANY",
     "deviceId" : "10A81C77",
     "guideId" : "30.7",
     "hasDRM" : false,
     "id" : "5050a615009e9d8020b9b64fb86e7cfde05e092a9e14c26dc4f45e8b2d04b64c",
-    "languages" : [
-
-    ],
+    "languages" : [],
     "number" : "30.7",
     "quality" : {
-      "sd" : {
-
-      }
+      "sd" : {}
     },
     "sortHint" : "30.7::WFWG-LD",
     "source" : "homeRunTuner",
@@ -880,23 +664,17 @@
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v30.7"
   },
   {
-    "categories" : [
-
-    ],
+    "categories" : [],
     "country" : "ANY",
     "deviceId" : "10A81C77",
     "guideId" : "35.1",
     "hasDRM" : false,
     "id" : "d153b7e6d72acee1c3de2543c5f28b8a930261eb0f31f263f173d1c01f2cb543",
-    "languages" : [
-
-    ],
+    "languages" : [],
     "logoURL" : "https:\/\/img.hdhomerun.com\/channels\/US34674.png",
     "number" : "35.1",
     "quality" : {
-      "fhd" : {
-
-      }
+      "fhd" : {}
     },
     "sortHint" : "35.1::FOX",
     "source" : "homeRunTuner",
@@ -904,23 +682,17 @@
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v35.1"
   },
   {
-    "categories" : [
-
-    ],
+    "categories" : [],
     "country" : "ANY",
     "deviceId" : "10A81C77",
     "guideId" : "35.2",
     "hasDRM" : false,
     "id" : "5d529db36496cc304e444a448a14aa7e3c2e9b752f38b2ba7c41d66220fe6390",
-    "languages" : [
-
-    ],
+    "languages" : [],
     "logoURL" : "https:\/\/img.hdhomerun.com\/channels\/US52724.png",
     "number" : "35.2",
     "quality" : {
-      "sd" : {
-
-      }
+      "sd" : {}
     },
     "sortHint" : "35.2::ROAR",
     "source" : "homeRunTuner",
@@ -928,23 +700,17 @@
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v35.2"
   },
   {
-    "categories" : [
-
-    ],
+    "categories" : [],
     "country" : "ANY",
     "deviceId" : "10A81C77",
     "guideId" : "35.3",
     "hasDRM" : false,
     "id" : "7c8588961e22d40a5780bf258ff7ff54a79139c5a3457a085fa3ae6b9bcc6cdd",
-    "languages" : [
-
-    ],
+    "languages" : [],
     "logoURL" : "https:\/\/img.hdhomerun.com\/channels\/US69969.png",
     "number" : "35.3",
     "quality" : {
-      "sd" : {
-
-      }
+      "sd" : {}
     },
     "sortHint" : "35.3::Comet",
     "source" : "homeRunTuner",
@@ -952,23 +718,17 @@
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v35.3"
   },
   {
-    "categories" : [
-
-    ],
+    "categories" : [],
     "country" : "ANY",
     "deviceId" : "10A81C77",
     "guideId" : "35.4",
     "hasDRM" : false,
     "id" : "7183d2fbc84b0b1952672ed3882c62564abfb1c4126bfa2081c7c8d5caf52632",
-    "languages" : [
-
-    ],
+    "languages" : [],
     "logoURL" : "https:\/\/img.hdhomerun.com\/channels\/US102233.png",
     "number" : "35.4",
     "quality" : {
-      "sd" : {
-
-      }
+      "sd" : {}
     },
     "sortHint" : "35.4::Charge!",
     "source" : "homeRunTuner",
@@ -976,23 +736,17 @@
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v35.4"
   },
   {
-    "categories" : [
-
-    ],
+    "categories" : [],
     "country" : "ANY",
     "deviceId" : "10A81C77",
     "guideId" : "35.5",
     "hasDRM" : false,
     "id" : "8c8ac794509d90fff49fc06b99ed8d0a6b7883a7ac2554fc1b94066bb5c2a4ed",
-    "languages" : [
-
-    ],
+    "languages" : [],
     "logoURL" : "https:\/\/img.hdhomerun.com\/channels\/US112986.png",
     "number" : "35.5",
     "quality" : {
-      "sd" : {
-
-      }
+      "sd" : {}
     },
     "sortHint" : "35.5::TheNest",
     "source" : "homeRunTuner",
@@ -1000,23 +754,17 @@
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v35.5"
   },
   {
-    "categories" : [
-
-    ],
+    "categories" : [],
     "country" : "ANY",
     "deviceId" : "10A81C77",
     "guideId" : "45.1",
     "hasDRM" : false,
     "id" : "fe32ce9ddd069a4effb0ff61f227d16cde9d82cda820aca2a0802f5824fc9d49",
-    "languages" : [
-
-    ],
+    "languages" : [],
     "logoURL" : "https:\/\/img.hdhomerun.com\/channels\/US78805.png",
     "number" : "45.1",
     "quality" : {
-      "fhd" : {
-
-      }
+      "fhd" : {}
     },
     "sortHint" : "45.1::WZTD-LD",
     "source" : "homeRunTuner",
@@ -1024,22 +772,16 @@
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v45.1"
   },
   {
-    "categories" : [
-
-    ],
+    "categories" : [],
     "country" : "ANY",
     "deviceId" : "10A81C77",
     "guideId" : "45.2",
     "hasDRM" : false,
     "id" : "6db36e195995ea9bec5570288851a2662b82a81c67cf326fda9e2043783d294d",
-    "languages" : [
-
-    ],
+    "languages" : [],
     "number" : "45.2",
     "quality" : {
-      "sd" : {
-
-      }
+      "sd" : {}
     },
     "sortHint" : "45.2::CRIMES",
     "source" : "homeRunTuner",
@@ -1047,22 +789,16 @@
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v45.2"
   },
   {
-    "categories" : [
-
-    ],
+    "categories" : [],
     "country" : "ANY",
     "deviceId" : "10A81C77",
     "guideId" : "45.3",
     "hasDRM" : false,
     "id" : "0681b3860c56127191263d56062e30884f7e388558072f5e8faa370fb61f7b05",
-    "languages" : [
-
-    ],
+    "languages" : [],
     "number" : "45.3",
     "quality" : {
-      "sd" : {
-
-      }
+      "sd" : {}
     },
     "sortHint" : "45.3::OXYGEN",
     "source" : "homeRunTuner",
@@ -1070,23 +806,17 @@
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v45.3"
   },
   {
-    "categories" : [
-
-    ],
+    "categories" : [],
     "country" : "ANY",
     "deviceId" : "10A81C77",
     "guideId" : "48.1",
     "hasDRM" : false,
     "id" : "0feb18aecccc710bbc19ba0bec4d0f02d98a77daff9b4b35d1961d130e9da4c0",
-    "languages" : [
-
-    ],
+    "languages" : [],
     "logoURL" : "https:\/\/img.hdhomerun.com\/channels\/US96557.png",
     "number" : "48.1",
     "quality" : {
-      "sd" : {
-
-      }
+      "sd" : {}
     },
     "sortHint" : "48.1::Daystar",
     "source" : "homeRunTuner",
@@ -1094,22 +824,16 @@
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v48.1"
   },
   {
-    "categories" : [
-
-    ],
+    "categories" : [],
     "country" : "ANY",
     "deviceId" : "10A81C77",
     "guideId" : "48.2",
     "hasDRM" : false,
     "id" : "1120fc8f42b582f604547277927df81a6dbaddb5c2d82cf182375390436ab76b",
-    "languages" : [
-
-    ],
+    "languages" : [],
     "number" : "48.2",
     "quality" : {
-      "sd" : {
-
-      }
+      "sd" : {}
     },
     "sortHint" : "48.2::Outlaw",
     "source" : "homeRunTuner",
@@ -1117,23 +841,17 @@
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v48.2"
   },
   {
-    "categories" : [
-
-    ],
+    "categories" : [],
     "country" : "ANY",
     "deviceId" : "10A81C77",
     "guideId" : "53.1",
     "hasDRM" : false,
     "id" : "5cd24c82ee96d460dd9ff5e9e85289542892f85c98dd153308546d3f91d7fe26",
-    "languages" : [
-
-    ],
+    "languages" : [],
     "logoURL" : "https:\/\/img.hdhomerun.com\/channels\/US121673.png",
     "number" : "53.1",
     "quality" : {
-      "sd" : {
-
-      }
+      "sd" : {}
     },
     "sortHint" : "53.1::WUDW-LD",
     "source" : "homeRunTuner",
@@ -1141,23 +859,17 @@
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v53.1"
   },
   {
-    "categories" : [
-
-    ],
+    "categories" : [],
     "country" : "ANY",
     "deviceId" : "10A81C77",
     "guideId" : "53.2",
     "hasDRM" : false,
     "id" : "be2bd5fa5a6eddccaf05c973cc965cb72ba925583f2beef267e4b700169654cb",
-    "languages" : [
-
-    ],
+    "languages" : [],
     "logoURL" : "https:\/\/img.hdhomerun.com\/channels\/US115494.png",
     "number" : "53.2",
     "quality" : {
-      "sd" : {
-
-      }
+      "sd" : {}
     },
     "sortHint" : "53.2::WUDW-LD",
     "source" : "homeRunTuner",
@@ -1165,23 +877,17 @@
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v53.2"
   },
   {
-    "categories" : [
-
-    ],
+    "categories" : [],
     "country" : "ANY",
     "deviceId" : "10A81C77",
     "guideId" : "53.3",
     "hasDRM" : false,
     "id" : "23eb3f21e93257073322d1de37b7686fbf86a73b69335586ffd199eaa83cc9bc",
-    "languages" : [
-
-    ],
+    "languages" : [],
     "logoURL" : "https:\/\/img.hdhomerun.com\/channels\/US80751.png",
     "number" : "53.3",
     "quality" : {
-      "sd" : {
-
-      }
+      "sd" : {}
     },
     "sortHint" : "53.3::WUDW-LD",
     "source" : "homeRunTuner",
@@ -1189,23 +895,17 @@
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v53.3"
   },
   {
-    "categories" : [
-
-    ],
+    "categories" : [],
     "country" : "ANY",
     "deviceId" : "10A81C77",
     "guideId" : "53.4",
     "hasDRM" : false,
     "id" : "cd6439b8c135a97fa01b3dc29575a4e89c1f842929eb635f028dc3cc637f8f09",
-    "languages" : [
-
-    ],
+    "languages" : [],
     "logoURL" : "https:\/\/img.hdhomerun.com\/channels\/US56032.png",
     "number" : "53.4",
     "quality" : {
-      "sd" : {
-
-      }
+      "sd" : {}
     },
     "sortHint" : "53.4::WUDW-LD",
     "source" : "homeRunTuner",
@@ -1213,23 +913,17 @@
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v53.4"
   },
   {
-    "categories" : [
-
-    ],
+    "categories" : [],
     "country" : "ANY",
     "deviceId" : "10A81C77",
     "guideId" : "53.5",
     "hasDRM" : false,
     "id" : "b6180d4425f21abc951d4d030cd7cc531f1f56b4f18e1a706146ae8210ee6564",
-    "languages" : [
-
-    ],
+    "languages" : [],
     "logoURL" : "https:\/\/img.hdhomerun.com\/channels\/US113143.png",
     "number" : "53.5",
     "quality" : {
-      "sd" : {
-
-      }
+      "sd" : {}
     },
     "sortHint" : "53.5::WUDW-LD",
     "source" : "homeRunTuner",
@@ -1237,22 +931,16 @@
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v53.5"
   },
   {
-    "categories" : [
-
-    ],
+    "categories" : [],
     "country" : "ANY",
     "deviceId" : "10A81C77",
     "guideId" : "53.6",
     "hasDRM" : false,
     "id" : "86450722d45a99e56c64c72bca7dda86e874680e9f23e181242ae39cb77ffa9b",
-    "languages" : [
-
-    ],
+    "languages" : [],
     "number" : "53.6",
     "quality" : {
-      "sd" : {
-
-      }
+      "sd" : {}
     },
     "sortHint" : "53.6::WUDW-LD",
     "source" : "homeRunTuner",
@@ -1260,22 +948,16 @@
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v53.6"
   },
   {
-    "categories" : [
-
-    ],
+    "categories" : [],
     "country" : "ANY",
     "deviceId" : "10A81C77",
     "guideId" : "53.7",
     "hasDRM" : false,
     "id" : "1a6ecdbfa3281686d12bed01cc2645816c6259bbf6371484e7d71ecce0913588",
-    "languages" : [
-
-    ],
+    "languages" : [],
     "number" : "53.7",
     "quality" : {
-      "sd" : {
-
-      }
+      "sd" : {}
     },
     "sortHint" : "53.7::WUDW-LD",
     "source" : "homeRunTuner",
@@ -1283,23 +965,17 @@
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v53.7"
   },
   {
-    "categories" : [
-
-    ],
+    "categories" : [],
     "country" : "ANY",
     "deviceId" : "10A81C77",
     "guideId" : "65.1",
     "hasDRM" : false,
     "id" : "f67c129f706e1b8feba1fc614b57054b00024ec7889645b4616041d051135373",
-    "languages" : [
-
-    ],
+    "languages" : [],
     "logoURL" : "https:\/\/img.hdhomerun.com\/channels\/US35569.png",
     "number" : "65.1",
     "quality" : {
-      "fhd" : {
-
-      }
+      "fhd" : {}
     },
     "sortHint" : "65.1::WUPV-DT",
     "source" : "homeRunTuner",
@@ -1307,23 +983,17 @@
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v65.1"
   },
   {
-    "categories" : [
-
-    ],
+    "categories" : [],
     "country" : "ANY",
     "deviceId" : "10A81C77",
     "guideId" : "65.2",
     "hasDRM" : false,
     "id" : "4cda32dfb986150902c1017db8da2acdfbfbf5f114d6cd4f5cc899102799d6de",
-    "languages" : [
-
-    ],
+    "languages" : [],
     "logoURL" : "https:\/\/img.hdhomerun.com\/channels\/US55716.png",
     "number" : "65.2",
     "quality" : {
-      "sd" : {
-
-      }
+      "sd" : {}
     },
     "sortHint" : "65.2::Bounce",
     "source" : "homeRunTuner",
@@ -1331,23 +1001,17 @@
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v65.2"
   },
   {
-    "categories" : [
-
-    ],
+    "categories" : [],
     "country" : "ANY",
     "deviceId" : "10A81C77",
     "guideId" : "65.3",
     "hasDRM" : false,
     "id" : "220c78b84db6e2c21a88c4b099423640f9ee964b0ab41436db0b90f71f5a97fa",
-    "languages" : [
-
-    ],
+    "languages" : [],
     "logoURL" : "https:\/\/img.hdhomerun.com\/channels\/US90853.png",
     "number" : "65.3",
     "quality" : {
-      "sd" : {
-
-      }
+      "sd" : {}
     },
     "sortHint" : "65.3::Grit",
     "source" : "homeRunTuner",
@@ -1355,23 +1019,17 @@
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v65.3"
   },
   {
-    "categories" : [
-
-    ],
+    "categories" : [],
     "country" : "ANY",
     "deviceId" : "10A81C77",
     "guideId" : "65.4",
     "hasDRM" : false,
     "id" : "5109dde123dbb7ca30eb58c5cd8dcef1459069ea917c066876951639a871686e",
-    "languages" : [
-
-    ],
+    "languages" : [],
     "logoURL" : "https:\/\/img.hdhomerun.com\/channels\/US109827.png",
     "number" : "65.4",
     "quality" : {
-      "sd" : {
-
-      }
+      "sd" : {}
     },
     "sortHint" : "65.4::The365",
     "source" : "homeRunTuner",
@@ -1379,23 +1037,17 @@
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v65.4"
   },
   {
-    "categories" : [
-
-    ],
+    "categories" : [],
     "country" : "ANY",
     "deviceId" : "10A81C77",
     "guideId" : "65.5",
     "hasDRM" : false,
     "id" : "607435815240e80b5fdb10396dee0fd1adaf7a6455dc0adc7e41690cf4a41ed5",
-    "languages" : [
-
-    ],
+    "languages" : [],
     "logoURL" : "https:\/\/img.hdhomerun.com\/channels\/US119354.png",
     "number" : "65.5",
     "quality" : {
-      "sd" : {
-
-      }
+      "sd" : {}
     },
     "sortHint" : "65.5::StartTV",
     "source" : "homeRunTuner",
@@ -1403,22 +1055,16 @@
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v65.5"
   },
   {
-    "categories" : [
-
-    ],
+    "categories" : [],
     "country" : "ANY",
     "deviceId" : "10A81C77",
     "guideId" : "65.6",
     "hasDRM" : false,
     "id" : "c0ef5339889c68f7e16a5b8d12e5840aab43ca49df3894390a5e48f1e06c0ec7",
-    "languages" : [
-
-    ],
+    "languages" : [],
     "number" : "65.6",
     "quality" : {
-      "fhd" : {
-
-      }
+      "fhd" : {}
     },
     "sortHint" : "65.6::CW",
     "source" : "homeRunTuner",
@@ -1426,23 +1072,17 @@
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v65.6"
   },
   {
-    "categories" : [
-
-    ],
+    "categories" : [],
     "country" : "ANY",
     "deviceId" : "10A81C77",
     "guideId" : "106.1",
     "hasDRM" : true,
     "id" : "132c20dba090a039c4deaeb9cdd6a0b144e97801b48240b397bc257f7798986f",
-    "languages" : [
-
-    ],
+    "languages" : [],
     "logoURL" : "https:\/\/img.hdhomerun.com\/channels\/US36075.png",
     "number" : "106.1",
     "quality" : {
-      "sd" : {
-
-      }
+      "sd" : {}
     },
     "sortHint" : "106.1::WTVR",
     "source" : "homeRunTuner",
@@ -1450,23 +1090,17 @@
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v106.1"
   },
   {
-    "categories" : [
-
-    ],
+    "categories" : [],
     "country" : "ANY",
     "deviceId" : "10A81C77",
     "guideId" : "108.1",
     "hasDRM" : false,
     "id" : "645154aaf07d3c0aa402d338fac2568fa327285cc2ebbdb3d33a898f94c96409",
-    "languages" : [
-
-    ],
+    "languages" : [],
     "logoURL" : "https:\/\/img.hdhomerun.com\/channels\/US20458.png",
     "number" : "108.1",
     "quality" : {
-      "sd" : {
-
-      }
+      "sd" : {}
     },
     "sortHint" : "108.1::WRIC-TV",
     "source" : "homeRunTuner",
@@ -1474,23 +1108,17 @@
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v108.1"
   },
   {
-    "categories" : [
-
-    ],
+    "categories" : [],
     "country" : "ANY",
     "deviceId" : "10A81C77",
     "guideId" : "112.1",
     "hasDRM" : true,
     "id" : "4bae843c43dd5ea09c4cb85224f6c696ba855bdcec1db3ce1f53d8d21496f156",
-    "languages" : [
-
-    ],
+    "languages" : [],
     "logoURL" : "https:\/\/img.hdhomerun.com\/channels\/US30305.png",
     "number" : "112.1",
     "quality" : {
-      "sd" : {
-
-      }
+      "sd" : {}
     },
     "sortHint" : "112.1::WWBT-HD",
     "source" : "homeRunTuner",
@@ -1498,23 +1126,17 @@
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v112.1"
   },
   {
-    "categories" : [
-
-    ],
+    "categories" : [],
     "country" : "ANY",
     "deviceId" : "10A81C77",
     "guideId" : "135.1",
     "hasDRM" : false,
     "id" : "eaa42de9b8d5bfd7c7fcdeb683184d3f506124e727f96b8b4ca27e06f0f56431",
-    "languages" : [
-
-    ],
+    "languages" : [],
     "logoURL" : "https:\/\/img.hdhomerun.com\/channels\/US34674.png",
     "number" : "135.1",
     "quality" : {
-      "sd" : {
-
-      }
+      "sd" : {}
     },
     "sortHint" : "135.1::WRLH",
     "source" : "homeRunTuner",
@@ -1522,23 +1144,17 @@
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v135.1"
   },
   {
-    "categories" : [
-
-    ],
+    "categories" : [],
     "country" : "ANY",
     "deviceId" : "10A81C77",
     "guideId" : "157.1",
     "hasDRM" : false,
     "id" : "33fea0947f19769e53e4a78687abd707d7be1d5617e60c0adff8c4900be71adf",
-    "languages" : [
-
-    ],
+    "languages" : [],
     "logoURL" : "https:\/\/img.hdhomerun.com\/channels\/US44732.png",
     "number" : "157.1",
     "quality" : {
-      "fhd" : {
-
-      }
+      "fhd" : {}
     },
     "sortHint" : "157.1::WCVW-HD",
     "source" : "homeRunTuner",
@@ -1546,23 +1162,17 @@
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v157.1"
   },
   {
-    "categories" : [
-
-    ],
+    "categories" : [],
     "country" : "ANY",
     "deviceId" : "10A81C77",
     "guideId" : "165.1",
     "hasDRM" : true,
     "id" : "e8737db748ce684c4e6457921f8195a241242bdbf30ca8cec3230b2153f24510",
-    "languages" : [
-
-    ],
+    "languages" : [],
     "logoURL" : "https:\/\/img.hdhomerun.com\/channels\/US35569.png",
     "number" : "165.1",
     "quality" : {
-      "sd" : {
-
-      }
+      "sd" : {}
     },
     "sortHint" : "165.1::WUPV-HD",
     "source" : "homeRunTuner",

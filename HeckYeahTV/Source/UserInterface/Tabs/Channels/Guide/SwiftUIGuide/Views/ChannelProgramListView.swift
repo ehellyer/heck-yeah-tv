@@ -98,7 +98,7 @@ struct ChannelProgramListView: View {
     
     // Override the injected SwiftDataController
     let mockData = MockSwiftDataStack()
-    let swiftDataController = MockSwiftDataController(viewContext: mockData.context)
+    let swiftDataController = MockSwiftDataController(viewContext: mockData.viewContext)
     InjectedValues[\.swiftDataController] = swiftDataController
     
     let channelId = swiftDataController.channelBundleMap.map[1]
@@ -108,7 +108,7 @@ struct ChannelProgramListView: View {
     return TVPreviewView() {
         ChannelProgramListView(appState: $appState,
                                channelId: channelId)
-        .modelContext(mockData.context)
+        .modelContext(mockData.viewContext)
     }
     
 }

@@ -20,6 +20,28 @@ struct AppStyle {
     static let rowHeight : CGFloat = 80
 #endif
     
+    
+    struct BootSplashScreen {
+#if os(tvOS)
+        static let titleFontSize: CGFloat =  120
+        static let subtitleFontSize: CGFloat =  50
+        static let imageFrame: CGFloat = 200
+#elseif os(iOS)
+        static let titleFontSize: CGFloat =  UIDevice.current.userInterfaceIdiom == .pad ? 80 : 50
+        static let subtitleFontSize: CGFloat =  UIDevice.current.userInterfaceIdiom == .pad ? 40 : 24
+        static let imageFrame: CGFloat = 100
+#elseif os(macOS)
+        static let titleFontSize: CGFloat =  80
+        static let subtitleFontSize: CGFloat =  32
+        static let imageFrame: CGFloat = 100
+#else
+        static let titleFontSize: CGFloat =  90
+        static let subtitleFontSize: CGFloat =  40
+        static let imageFrame: CGFloat = 100
+#endif
+        
+    }
+    
     struct FavoritesView {
 #if os(tvOS)
         static let width: CGFloat = 90
@@ -108,7 +130,6 @@ struct AppStyle {
 #else
             .body
 #endif
-            
         }
         
         static var titleFont: PlatformFont {

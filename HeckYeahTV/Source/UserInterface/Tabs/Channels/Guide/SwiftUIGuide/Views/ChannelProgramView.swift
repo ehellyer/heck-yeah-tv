@@ -30,7 +30,7 @@ struct ChannelProgramView: View {
     var body: some View {
         Button {
             withAnimation {
-                appState.showChannelProgramsFullScreen = channelProgram                
+                appState.showChannelProgramsFullScreen = channelProgram
             }
         } label: {
             VStack(alignment: .leading, spacing: 5) {
@@ -61,7 +61,7 @@ struct ChannelProgramView: View {
     
     // Override the injected SwiftDataController
     let mockData = MockSwiftDataStack()
-    let swiftDataController = MockSwiftDataController(viewContext: mockData.context)
+    let swiftDataController = MockSwiftDataController(viewContext: mockData.viewContext)
     InjectedValues[\.swiftDataController] = swiftDataController
     
     
@@ -76,7 +76,7 @@ struct ChannelProgramView: View {
             if let channelProgram = channelPrograms.first {
                 ChannelProgramView(appState: $appState,
                                    channelProgram: channelProgram)
-                .modelContext(mockData.context)
+                .modelContext(mockData.viewContext)
             }
         }
     }

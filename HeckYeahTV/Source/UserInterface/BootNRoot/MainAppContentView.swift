@@ -180,7 +180,7 @@ struct MainAppContentView: View {
                 if let _channel = try? swiftDataController.channel(for: channelProgram.channelId) {
                     
                     let _programs = swiftDataController.channelPrograms(for: channelProgram.channelId)
-                    ChannelProgramsFullScreenView(appState: $appState,
+                    ProgramsFullScreenView(appState: $appState,
                                                   channelPrograms: _programs,
                                                   startOnProgram: channelProgram.id,
                                                   channel: _channel)
@@ -261,13 +261,13 @@ extension MainAppContentView {
 
     // Override the injected SwiftDataController
     let mockData = MockSwiftDataStack()
-    let swiftDataController = MockSwiftDataController(viewContext: mockData.context)
+    let swiftDataController = MockSwiftDataController(viewContext: mockData.viewContext)
     InjectedValues[\.swiftDataController] = swiftDataController
     
 //    let selectedChannelId = swiftDataController.channelBundleMap.map[3]
     
     return MainAppContentView(appState: _appState)
-        .modelContext(mockData.context)
+        .modelContext(mockData.viewContext)
         .onAppear {
             //_appState.selectedChannel = selectedChannelId
             _appState.showAppNavigation = false

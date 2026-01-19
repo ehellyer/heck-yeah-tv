@@ -179,11 +179,11 @@ struct SettingsView: View {
     
     // Override the injected SwiftDataController
     let mockData = MockSwiftDataStack()
-    let swiftDataController = MockSwiftDataController(viewContext: mockData.context)
+    let swiftDataController = MockSwiftDataController(viewContext: mockData.viewContext)
     InjectedValues[\.swiftDataController] = swiftDataController
     
     return TVPreviewView() {
         SettingsView(appState: $appState)
-            .modelContext(mockData.context)
+            .modelContext(mockData.viewContext)
     }
 }

@@ -70,12 +70,12 @@ struct RecentsView: View {
 
     // Override the injected SwiftDataController
     let mockData = MockSwiftDataStack()
-    let swiftDataController = MockSwiftDataController(viewContext: mockData.context)
+    let swiftDataController = MockSwiftDataController(viewContext: mockData.viewContext)
     InjectedValues[\.swiftDataController] = swiftDataController
     
     return TVPreviewView() {
         RecentsView(appState: $appState)
-            .environment(\.modelContext, mockData.context)
+            .environment(\.modelContext, mockData.viewContext)
             .onAppear() {
                 // Load some recent channels
                 appState.selectedChannel = swiftDataController.channelBundleMap.map[0]

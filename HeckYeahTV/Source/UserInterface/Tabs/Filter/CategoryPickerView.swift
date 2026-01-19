@@ -78,7 +78,7 @@ struct CategoryPickerView: View {
     @Previewable @State var categoryId: CategoryId? = "auto"
     let mockData = MockSwiftDataStack()
     
-    let swiftDataController = MockSwiftDataController(viewContext: mockData.context,
+    let swiftDataController = MockSwiftDataController(viewContext: mockData.viewContext,
                                                       selectedCategory: categoryId!)
     InjectedValues[\.swiftDataController] = swiftDataController
     

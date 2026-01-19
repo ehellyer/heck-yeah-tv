@@ -44,7 +44,7 @@ struct SectionView: View {
    
     // Override the injected SwiftDataController
     let mockData = MockSwiftDataStack()
-    let swiftDataController = MockSwiftDataController(viewContext: mockData.context)
+    let swiftDataController = MockSwiftDataController(viewContext: mockData.viewContext)
     InjectedValues[\.swiftDataController] = swiftDataController
     
     //Select recent list tab
@@ -52,7 +52,7 @@ struct SectionView: View {
     
     return TVPreviewView() {
         SectionView(appState: $appState)
-            .environment(\.modelContext, mockData.context)
+            .environment(\.modelContext, mockData.viewContext)
             .onAppear() {
                     // Loads up the recents list
                     appState.selectedChannel = swiftDataController.channelBundleMap.map[1]
