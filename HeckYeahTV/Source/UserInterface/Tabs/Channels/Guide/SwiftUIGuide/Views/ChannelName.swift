@@ -25,7 +25,7 @@ struct ChannelName: View {
             
             VStack(alignment: .leading, spacing: 2) {
                 Text(channel?.title ?? "PlaceholderSizingText")
-                    .font(.title3.bold())
+                    .font(AppStyle.Fonts.gridRowFont.bold())
                     .foregroundStyle(Color.guideForegroundNoFocus)
                     .lineLimit(1)
                     .truncationMode(.tail)

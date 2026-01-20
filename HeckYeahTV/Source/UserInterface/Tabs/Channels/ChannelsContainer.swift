@@ -13,7 +13,7 @@ struct ChannelsContainer: View {
     
     @Binding var appState: AppStateProvider
 
-    // Private (ish)
+    // Private
     @FocusState private var isFocused: Bool
     @State private var scrollToSelectedAndFocus: Bool = false
     @Environment(\.modelContext) private var viewContext
@@ -24,10 +24,6 @@ struct ChannelsContainer: View {
             ShowFavorites(rightSwipeRedirectAction: {
                 scrollToSelectedAndFocus = true
             })
-            .focusSection()
-            .focused($isFocused)
-
-//            GuideView(appState: $appState)
             
             GuideViewRepresentable(appState: $appState,
                                    isFocused: $isFocused)
@@ -42,7 +38,7 @@ struct ChannelsContainer: View {
 
 #Preview {
     @Previewable @State var appState: AppStateProvider = MockSharedAppState()
-    @Previewable @State  var isFocused: Bool = false
+    @Previewable @State var isFocused: Bool = false
     @Previewable @State var categoryId: CategoryId? = nil
     
     // Override the injected SwiftDataController

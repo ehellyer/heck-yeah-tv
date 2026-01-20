@@ -8,6 +8,7 @@
 
 import SwiftUI
 
+/// Adds a ViewModifier for redacted content (placeholder), when the data type is nil.
 struct RedactedIfNeeded<T>: ViewModifier {
     let type: T?
     

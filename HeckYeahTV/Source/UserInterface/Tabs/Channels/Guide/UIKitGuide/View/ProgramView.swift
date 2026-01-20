@@ -96,6 +96,12 @@ class ProgramView: UIView {
         return gesture
     }()
     
+    private var isProgramNow: Bool {
+        guard let _program = self.program else { return false }
+        let now = Date()
+        return _program.startTime <= now && _program.endTime >= now
+    }
+    
     //MARK: - Private API - Actions and action view modifiers
     
     @objc private func viewTapped(_ gesture: UILongPressGestureRecognizer) {
@@ -135,7 +141,10 @@ class ProgramView: UIView {
                    isPlaying: Bool) {
         self.channelId = channelId
         self.program = program
-        backgroundColor = (isPlaying) ? .guideSelectedChannelBackground : .guideBackgroundNoFocus
+        
+        let bgColor = AppStyle.GuideView.backgroundColor(isFocused: false, isPlaying: isPlaying, isProgramNow: isProgramNow)
+        
+        backgroundColor = UIColor(bgColor)
         titleLabel.text = program?.title
         timeLabel.text = program?.formattedTimeSlot
         self.layoutIfNeeded()

@@ -53,9 +53,7 @@ struct MainAppContentView: View {
                     .focusScope(guideScope)
                     .focused($focusedSection, equals: .guide)
                     .defaultFocus($focusedSection, .guide)
-                    .focusable(appState.showChannelPrograms == nil)             // Disable focus to prevent focus jumping to this view.
-                    .allowsHitTesting(appState.showChannelPrograms == nil)      // Disable focus to prevent focus jumping to this view.
-                    .accessibilityHidden(appState.showChannelPrograms != nil)   // Disable focus to prevent focus jumping to this view.
+                    .disabled(appState.showChannelPrograms != nil) // Prevents focus jumping from ChannelProgramsCarousel to Guide in the background.
                     .onAppear {
                         focusedSection = .guide
                     }
@@ -90,11 +88,11 @@ struct MainAppContentView: View {
 #endif
             }
             
-            
             if showPlayPauseButton {
                 PlayPauseBadge()
             }
-            
+          
+            // An overlay view to capture user interaction on iOS, macOS and focus on tvOS.
             if not(appState.showAppMenu) {
                 MenuActivationView(appState: $appState)
 #if os(tvOS)
