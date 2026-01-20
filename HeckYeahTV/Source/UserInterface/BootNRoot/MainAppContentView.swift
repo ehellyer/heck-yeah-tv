@@ -10,40 +10,34 @@ import SwiftUI
 import SwiftData
 
 struct MainAppContentView: View {
-
+    
     // Note: This is not private so that it can be overridden in the #Preview with a mock implementation
     @State var appState: AppStateProvider = SharedAppState.shared
     
-    // Private state vars
     @State private var fadeTask: Task<Void, Never>?
     @State private var showPlayPauseButton = false
     @State private var swiftDataController: SwiftDataControllable = InjectedValues[\.swiftDataController]
-
-    // Environment passed vars
     @Environment(\.scenePhase) private var scenePhase
-
+    
     // Focus states
     enum FocusedSection: Hashable {
         case activationView
         case guide
-        case fullScreenPrograms
+        case channelPrograms
     }
     
     @FocusState private var focusedSection: FocusedSection?
     
-//    @FocusState private var activationViewFocused: Bool
-//    @FocusState private var guideFocused: Bool
-//    @FocusState private var fullScreenProgramsFocused: Bool
-
-    // Focus scopes (Namespace) for isolating focus between guide and activation views
+    // Focus scopes (Namespace) for isolating focus between activation views, guide and channel programs
     @Namespace private var activationScope
     @Namespace private var guideScope
-    @Namespace private var fullScreenScope
-
+    @Namespace private var channelProgramsScope
+    
     var body: some View {
         // Alignment required to layout the play/pause button in the bottom left corner.
         ZStack(alignment: .bottomLeading)  {
             
+            // Stream Player
             VLCPlayerView(appState: $appState)
                 .ignoresSafeArea()
                 .accessibilityHidden(true)
@@ -51,36 +45,65 @@ struct MainAppContentView: View {
                 .focusable(false)
             
 #if os(tvOS)
-            if appState.showAppNavigation {
-                TabContainerView(appState: $appState)
+            // App Menu for tvOS
+            if appState.showAppMenu {
+                MenuTabView(appState: $appState)
                     .transition(.opacity)
                     .background(Color.guideTransparency)
-#if os(tvOS)
                     .focusScope(guideScope)
-#endif
-                    .focused($focusedSection, equals: .activationView)
-                    .defaultFocus($focusedSection, .activationView)
+                    .focused($focusedSection, equals: .guide)
+                    .defaultFocus($focusedSection, .guide)
+                    .focusable(appState.showChannelPrograms == nil)             // Disable focus to prevent focus jumping to this view.
+                    .allowsHitTesting(appState.showChannelPrograms == nil)      // Disable focus to prevent focus jumping to this view.
+                    .accessibilityHidden(appState.showChannelPrograms != nil)   // Disable focus to prevent focus jumping to this view.
                     .onAppear {
-                        focusedSection = .activationView
+                        focusedSection = .guide
                     }
             }
-            
+#else
+            // App Menu for iOS/macOS
+            if appState.showAppMenu {
+                MainMenu(appState: $appState)
+            }
 #endif
+            
+            // Channel Programs Carousel
+            if let channelProgram = appState.showChannelPrograms,
+               let _channel = try? swiftDataController.channel(for: channelProgram.channelId) {
+                
+                let _programs = swiftDataController.channelPrograms(for: channelProgram.channelId)
+                ChannelProgramsCarousel(appState: $appState,
+                                        channelPrograms: _programs,
+                                        startOnProgram: channelProgram.id,
+                                        channel: _channel)
+                .zIndex(10)
+#if os(tvOS)
+                .focusScope(channelProgramsScope)
+                .focused($focusedSection, equals: .channelPrograms)
+                .defaultFocus($focusedSection, .channelPrograms)
+                .onAppear {
+                    focusedSection = .channelPrograms
+                }
+                .onDisappear {
+                    focusedSection = .guide
+                }
+#endif
+            }
+            
             
             if showPlayPauseButton {
                 PlayPauseBadge()
             }
             
-            if not(appState.showAppNavigation) {
-                // Scope the activation view separately
-                NavigationActivationView(appState: $appState)
+            if not(appState.showAppMenu) {
+                MenuActivationView(appState: $appState)
 #if os(tvOS)
                     .focusScope(activationScope)
 #endif
-                    .focused($focusedSection, equals: .guide)
-                    .defaultFocus($focusedSection, .guide)
+                    .focused($focusedSection, equals: .activationView)
+                    .defaultFocus($focusedSection, .activationView)
                     .onAppear {
-                        focusedSection = .guide
+                        focusedSection = .activationView
                     }
             }
         }
@@ -97,117 +120,17 @@ struct MainAppContentView: View {
         
         .onChange(of: scenePhase,  { _, newValue in
             // If app becomes not-active with the app navigation visible, dismiss the app navigation.
-            if newValue != .active && appState.showAppNavigation {
-                appState.showAppNavigation = false
+            if newValue != .active && appState.showAppMenu {
+                appState.showAppMenu = false
             }
         })
         
         .onAppear {
             showPlayPauseButton = appState.isPlayerPaused
         }
-        
-#if !os(tvOS)
-        
-        .overlay {
-            if appState.showAppNavigation {
-                VStack(spacing: 0) {
-                    HStack {
-                        Menu {
-                            Picker("", selection: $appState.selectedTab) {
-                                ForEach(AppSection.allCases) { tabSection in
-                                    Text(tabSection.title).tag(tabSection)
-                                }
-                            }
-                            .pickerStyle(.inline)
-                            .labelsHidden()
-                            
-                            if appState.selectedTab == .guide {
-                                Toggle(isOn:Binding(
-                                    get: { swiftDataController.showFavoritesOnly },
-                                    set: { swiftDataController.showFavoritesOnly = $0 }
-                                )) {
-                                    Label("Favorites only", systemImage: "star.fill")
-                                        .tint(Color.yellow)
-                                        .labelStyle(.titleAndIcon)
-                                }
-                            }
-                        } label: {
-                            Label("Menu", systemImage: "slider.horizontal.3")
-                        }
-                        .labelStyle(.titleAndIcon)
-                        .buttonStyle(.automatic)
-                        .tint(.white)
-                        
-                        Spacer()
-                        
-                        Button("Done") {
-                            withAnimation {
-                                appState.showAppNavigation = false
-                            }
-                        }
-                        .buttonStyle(.automatic)
-                        .tint(.white)
-                    }
-                    .overlay {
-                        Text(appState.selectedTab.title)
-                            .font(.headline)
-                            .foregroundStyle(.primary)
-                    }
-                    .padding(EdgeInsets(top: 20, leading: 20, bottom: 20, trailing: 20))
-                    .foregroundStyle(.white)
-                    .background(.ultraThinMaterial)
-                    .zIndex(1)
-                    
-                    
-                    SectionView(appState: $appState)
-#if os(macOS)
-                        .padding()
-#endif
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
-                        .background(Color.guideTransparency)
-                }
-                .transition(
-                    .move(edge: .bottom)
-                    .combined(with: .opacity)
-                )
-            }
-        }
-        
-#endif
-        .overlay {
-            if let channelProgram = appState.showChannelProgramsFullScreen {
-                
-                if let _channel = try? swiftDataController.channel(for: channelProgram.channelId) {
-                    
-                    let _programs = swiftDataController.channelPrograms(for: channelProgram.channelId)
-                    ProgramsFullScreenView(appState: $appState,
-                                                  channelPrograms: _programs,
-                                                  startOnProgram: channelProgram.id,
-                                                  channel: _channel)
-#if os(tvOS)
-                    .zIndex(10)
-                    .focusScope(fullScreenScope)
-                    .focused($focusedSection, equals: .fullScreenPrograms)
-#endif
-                    .onAppear {
-#if os(tvOS)
-                        withAnimation {
-                            focusedSection = .fullScreenPrograms
-                        }
-#endif
-                    }
-                    .onDisappear {
-                        focusedSection = .guide
-                    }
-                }
-            }
-        }
-        .transition(
-            .move(edge: .bottom)
-            .combined(with: .opacity)
-        )
     }
 }
+
 
 extension MainAppContentView {
     
@@ -270,6 +193,6 @@ extension MainAppContentView {
         .modelContext(mockData.viewContext)
         .onAppear {
             //_appState.selectedChannel = selectedChannelId
-            _appState.showAppNavigation = false
+            _appState.showAppMenu = false
         }
 }

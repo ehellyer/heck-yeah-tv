@@ -1,5 +1,5 @@
 //
-//  TabContainerView.swift
+//  MenuTabView.swift
 //  Heck Yeah TV
 //
 //  Created by Ed Hellyer on 8/30/25.
@@ -9,7 +9,7 @@
 import SwiftUI
 import SwiftData
 
-struct TabContainerView: View {
+struct MenuTabView: View {
     
     @Binding var appState: AppStateProvider
     
@@ -62,9 +62,14 @@ struct TabContainerView: View {
         // Support for dismissing the tabview by tapping menu on Siri remote for tvOS.
         .onExitCommand {
             withAnimation {
-                appState.showAppNavigation = false
+                appState.showAppMenu = false
             }
         }
+        
+        .transition(
+            .move(edge: .bottom)
+            .combined(with: .opacity)
+        )
     }
 }
 
@@ -78,7 +83,7 @@ struct TabContainerView: View {
     InjectedValues[\.swiftDataController] = swiftDataController
     
     return TVPreviewView() {
-        TabContainerView(appState: $_appState)
+        MenuTabView(appState: $_appState)
             .modelContext(mockData.viewContext)
     }
 }

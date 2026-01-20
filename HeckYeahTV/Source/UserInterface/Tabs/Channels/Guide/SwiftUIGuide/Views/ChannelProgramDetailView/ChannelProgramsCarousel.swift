@@ -1,5 +1,5 @@
 //
-//  ProgramsFullScreenView.swift
+//  ChannelProgramsCarousel.swift
 //  HeckYeahTV
 //
 //  Created by Ed Hellyer on 1/6/26.
@@ -8,7 +8,7 @@
 
 import SwiftUI
 
-struct ProgramsFullScreenView: View {
+struct ChannelProgramsCarousel: View {
     
     @Binding var appState: AppStateProvider
     let channelPrograms: [ChannelProgram]
@@ -28,7 +28,7 @@ struct ProgramsFullScreenView: View {
 #if !os(tvOS)
                 Button {
                     withAnimation {
-                        appState.showChannelProgramsFullScreen = nil
+                        appState.showChannelPrograms = nil
                     }
                 } label: {
                     Image(systemName: "xmark.circle.fill")
@@ -106,7 +106,7 @@ struct ProgramsFullScreenView: View {
         // Support for dismissing the tabview by tapping menu on Siri remote for tvOS.
         .onExitCommand {
             withAnimation {
-                appState.showChannelProgramsFullScreen = nil
+                appState.showChannelPrograms = nil
             }
         }
 #endif
@@ -130,7 +130,7 @@ struct ProgramsFullScreenView: View {
     return TVPreviewView() {
         
         VStack {
-            ProgramsFullScreenView(appState: $appState,
+            ChannelProgramsCarousel(appState: $appState,
                                    channelPrograms: channelPrograms,
                                    startOnProgram: channelPrograms[8].id,
                                    channel: channel)

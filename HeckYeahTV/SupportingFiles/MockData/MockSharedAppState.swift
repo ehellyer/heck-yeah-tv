@@ -13,8 +13,8 @@ import Observation
 final class MockSharedAppState: AppStateProvider {
 
     init(isPlayerPaused: Bool = false,
-         showAppNavigation: Bool = false,
-         showChannelProgramsFullScreen: ChannelProgram? = nil,
+         showAppMenu: Bool = false,
+         showChannelPrograms: ChannelProgram? = nil,
          selectedTab: AppSection = .guide,
          selectedChannel: ChannelId? = nil,
          recentChannelIds: [ChannelId] = [],
@@ -23,7 +23,8 @@ final class MockSharedAppState: AppStateProvider {
          dateLastGuideFetch: Date? = nil) {
         
         self.isPlayerPaused = isPlayerPaused
-        self.showAppNavigation = showAppNavigation
+        self.showAppMenu = showAppMenu
+        self.showChannelPrograms = showChannelPrograms
         self.selectedTab = selectedTab
         self.selectedChannel = selectedChannel
         self.recentChannelIds = recentChannelIds
@@ -33,8 +34,8 @@ final class MockSharedAppState: AppStateProvider {
     }
     
     var isPlayerPaused: Bool
-    var showAppNavigation: Bool
-    var showChannelProgramsFullScreen: ChannelProgram?
+    var showAppMenu: Bool
+    var showChannelPrograms: ChannelProgram?
     var selectedTab: AppSection
     var selectedChannel: ChannelId? {
         didSet {

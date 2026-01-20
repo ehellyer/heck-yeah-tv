@@ -28,19 +28,19 @@ final class SharedAppState: AppStateProvider {
         }
     }
     
-    var showAppNavigation: Bool {
+    var showAppMenu: Bool {
         get {
-            access(keyPath: \.showAppNavigation)
-            return UserDefaults.showAppNavigation
+            access(keyPath: \.showAppMenu)
+            return UserDefaults.showAppMenu
         }
         set {
-            withMutation(keyPath: \.showAppNavigation) {
-                UserDefaults.showAppNavigation = newValue
+            withMutation(keyPath: \.showAppMenu) {
+                UserDefaults.showAppMenu = newValue
             }
         }
     }
     
-    var showChannelProgramsFullScreen: ChannelProgram? = nil
+    var showChannelPrograms: ChannelProgram? = nil
     
     var selectedTab: AppSection {
         get {

@@ -21,14 +21,14 @@ protocol AppStateProvider {
     /// When `false`, the show goes on. It's basically the "hold my beer" of video playback states.
     var isPlayerPaused: Bool { get set }
     
-    /// Controls whether the app navigation is visible or hiding in shame.
+    /// Controls whether the app menu is visible or hiding in shame.
     ///
     /// Set to `true` when you want users to actually find things in your app.
     /// Set to `false` when you want a clean, minimalist look (or when you're pretending to be Netflix).
-    var showAppNavigation: Bool { get set }
+    var showAppMenu: Bool { get set }
     
     
-    var showChannelProgramsFullScreen: ChannelProgram? { get set }
+    var showChannelPrograms: ChannelProgram? { get set }
     
     /// The channel that's currently getting all the attention.
     ///

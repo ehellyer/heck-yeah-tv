@@ -269,7 +269,7 @@ extension GuideViewController: GuideViewDelegate {
     }
     
     func showChannelProgram(_ channelProgram: ChannelProgram) {
-        appState.showChannelProgramsFullScreen = channelProgram
+        appState.showChannelPrograms = channelProgram
     }
 }
 

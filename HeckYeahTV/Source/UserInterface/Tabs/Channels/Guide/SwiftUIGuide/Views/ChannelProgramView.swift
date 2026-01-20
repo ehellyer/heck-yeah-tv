@@ -31,7 +31,7 @@ struct ChannelProgramView: View {
     var body: some View {
         Button {
             withAnimation {
-                appState.showChannelProgramsFullScreen = channelProgram
+                appState.showChannelPrograms = channelProgram
             }
         } label: {
             VStack(alignment: .leading, spacing: 5) {

@@ -1,5 +1,5 @@
 //
-//  NavigationActivationView.swift
+//  MenuActivationView.swift
 //  Heck Yeah TV
 //
 //  Created by Ed Hellyer on 8/26/25.
@@ -8,7 +8,7 @@
 
 import SwiftUI
 
-struct NavigationActivationView: View {
+struct MenuActivationView: View {
 
     @Binding var appState: AppStateProvider
     
@@ -20,7 +20,7 @@ struct NavigationActivationView: View {
             .contentShape(Rectangle())
             .onTapGesture {
                 withAnimation {
-                    appState.showAppNavigation = true
+                    appState.showAppMenu = true
                 }
             }
     }
