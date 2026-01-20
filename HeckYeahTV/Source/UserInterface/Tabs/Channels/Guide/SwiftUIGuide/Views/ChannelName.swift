@@ -16,12 +16,11 @@ struct ChannelName: View {
         
         HStack(alignment: .center, spacing: 20) {
             
-            let logoWidth = AppStyle.ChannelView.logoSize.width
-            let logoHeight = AppStyle.ChannelView.logoSize.height
+            let logoFrame = AppStyle.ChannelView.logoFrame
             LoadImageAsync(url: channel?.logoURL,
                            defaultImage: Image(systemName: "tv.circle.fill"),
                            showProgressView: true)
-            .frame(width: logoWidth, height: logoHeight)
+            .frame(width: logoFrame, height: logoFrame)
             .tint(Color.guideForegroundNoFocus)
             
             VStack(alignment: .leading, spacing: 2) {

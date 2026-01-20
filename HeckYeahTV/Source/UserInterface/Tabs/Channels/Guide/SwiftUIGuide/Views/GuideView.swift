@@ -49,8 +49,7 @@ struct GuideView: View {
                                 HStack(alignment: .top,
                                        spacing: AppStyle.ProgramView.programSpacing) {
                                     ChannelViewLoader(appState: $appState,
-                                                      channelId: channelId,
-                                                      isCompact: compact)
+                                                      channelId: channelId)
                                     .id(channelId)
                                     .frame(minWidth: combinedFCWidth)
                                     .frame(width: (compact) ? nil : combinedFCWidth)

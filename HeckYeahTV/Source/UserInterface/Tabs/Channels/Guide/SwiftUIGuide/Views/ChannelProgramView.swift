@@ -18,7 +18,8 @@ struct ChannelProgramView: View {
     @FocusState private var focusedButton: FocusedButton?
     
     private var isPlaying: Bool {
-        return appState.selectedChannel != nil && appState.selectedChannel == channelProgram.channelId
+        let selectedChannelId = appState.selectedChannel
+        return selectedChannelId != nil && selectedChannelId == channelProgram.channelId
     }
     
     private let cornerRadius: CGFloat = AppStyle.cornerRadius
@@ -68,8 +69,6 @@ struct ChannelProgramView: View {
     let channelId = "7a9b1eebc340e54fd8e0383b3952863ba491fcb655c7bbdefa6ab2afd2e57dfd"
     let channelPrograms = swiftDataController.previewOnly_channelPrograms(channelId: channelId)
     
-    //appState.selectedChannel = channelId
-    
     return TVPreviewView() {
         
         VStack {
@@ -77,6 +76,9 @@ struct ChannelProgramView: View {
                 ChannelProgramView(appState: $appState,
                                    channelProgram: channelProgram)
                 .modelContext(mockData.viewContext)
+                .onAppear {
+                    //appState.selectedChannel = channelId
+                }
             }
         }
     }

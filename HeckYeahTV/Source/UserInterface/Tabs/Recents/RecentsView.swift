@@ -23,8 +23,7 @@ struct RecentsView: View {
                     LazyVStack(alignment: .leading) {
                         ForEach(appState.recentChannelIds, id: \.self) { channelId in
                             ChannelViewLoader(appState: $appState,
-                                            channelId: channelId,
-                                            isCompact: true)
+                                              channelId: channelId)
                             .id(channelId)
                         }
                     }

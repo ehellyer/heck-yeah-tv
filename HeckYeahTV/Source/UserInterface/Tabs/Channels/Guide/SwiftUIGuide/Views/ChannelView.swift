@@ -12,18 +12,8 @@ import SwiftData
 struct ChannelView: View {
 
     @Binding var appState: AppStateProvider
-    @State var isCompact: Bool
     @State var channel: Channel?
-    
-    @StateObject private var loader = ChannelRowLoader()
-    @State private var logoImage: Image = Image(systemName: "tv.circle.fill")
-    
-    @Injected(\.attachmentController)
-    private var attachmentController: AttachmentController
 
-    @State private var swiftDataController: SwiftDataControllable = InjectedValues[\.swiftDataController]
-    
-    // Focus tracking for each button
     @FocusState private var focusedButton: FocusedButton?
 
     private var isFavoriteChannel: Bool {
@@ -31,10 +21,8 @@ struct ChannelView: View {
     }
     
     private var isPlaying: Bool {
-        guard let selectedChannelId = appState.selectedChannel else {
-            return false
-        }
-        return selectedChannelId == channel?.id
+        let selectedChannelId = appState.selectedChannel
+        return selectedChannelId != nil && selectedChannelId == channel?.id
     }
 
     var body: some View {
@@ -46,7 +34,6 @@ struct ChannelView: View {
             Button {
                 appState.selectedChannel = channel?.id
             } label: {
-
                 ChannelName(channel: channel)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .frame(maxHeight: .infinity)
@@ -64,11 +51,9 @@ struct ChannelView: View {
 
 
 
-#Preview("ChannelView - loads from Mock SwiftData") {
+#Preview("ChannelView - Favorite toggle and channel selection") {
     @Previewable @State var appState: AppStateProvider = MockSharedAppState()
 
-    let isCompact: Bool = true
-    
     // Override the injected SwiftDataController
     let mockData = MockSwiftDataStack()
     let swiftDataController = MockSwiftDataController(viewContext: mockData.viewContext)
@@ -82,15 +67,12 @@ struct ChannelView: View {
         VStack {
 
             ChannelView(appState: $appState,
-                        isCompact: isCompact,
                         channel: channel1)
             
             ChannelView(appState: $appState,
-                        isCompact: isCompact,
                         channel: channel2)
             
             ChannelView(appState: $appState,
-                        isCompact: isCompact,
                         channel: channel3)
             
         }

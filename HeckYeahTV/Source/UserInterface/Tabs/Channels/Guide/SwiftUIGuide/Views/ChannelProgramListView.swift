@@ -103,14 +103,12 @@ struct ChannelProgramListView: View {
     
     let channelId = swiftDataController.channelBundleMap.map[1]
     
-    //appState.selectedChannel = channelId
-    
     return TVPreviewView() {
         ChannelProgramListView(appState: $appState,
                                channelId: channelId)
         .modelContext(mockData.viewContext)
+        .onAppear {
+            //appState.selectedChannel = channelId
+        }
     }
-    
 }
-
-

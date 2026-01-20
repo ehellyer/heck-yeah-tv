@@ -13,7 +13,6 @@ struct ChannelViewLoader: View {
     
     @Binding var appState: AppStateProvider
     let channelId: ChannelId
-    @State var isCompact: Bool
     
     @Environment(\.modelContext) private var viewContext
     @StateObject private var loader = ChannelRowLoader()
@@ -21,7 +20,6 @@ struct ChannelViewLoader: View {
     var body: some View {
         let channel = loader.channel
         ChannelView(appState: $appState,
-                    isCompact: isCompact,
                     channel: channel)
         .modifier(RedactedIfNeeded(type: channel))
         .onAppear {
@@ -36,8 +34,6 @@ struct ChannelViewLoader: View {
 #Preview("ChannelViewLoader") {
     @Previewable @State var appState: AppStateProvider = MockSharedAppState()
     
-    let isCompact: Bool = true
-    
     // Override the injected SwiftDataController
     let mockData = MockSwiftDataStack()
     let swiftDataController = MockSwiftDataController(viewContext: mockData.viewContext)
@@ -47,8 +43,7 @@ struct ChannelViewLoader: View {
     
     return TVPreviewView() {
         ChannelViewLoader(appState: $appState,
-                        channelId: channelId,
-                        isCompact: isCompact)
+                          channelId: channelId)
         .modelContext(mockData.viewContext)
     }
 }

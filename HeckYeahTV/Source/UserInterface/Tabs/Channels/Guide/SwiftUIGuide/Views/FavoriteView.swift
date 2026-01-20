@@ -27,12 +27,10 @@ struct FavoriteView: View {
     }
     
     private var isPlaying: Bool {
-        guard let selectedChannelId = appState.selectedChannel else {
-            return false
-        }
-        return selectedChannelId == channel?.id
+        let selectedChannelId = appState.selectedChannel
+        return selectedChannelId != nil && selectedChannelId == channel?.id
     }
-
+    
     var body: some View {
         Button {
             guard let channel else { return }

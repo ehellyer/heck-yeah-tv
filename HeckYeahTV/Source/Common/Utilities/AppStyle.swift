@@ -62,15 +62,15 @@ struct AppStyle {
     struct ChannelView {
 #if os(tvOS)
         static let minWidth: CGFloat = 420
-        static let height : CGFloat = AppStyle.rowHeight
-        static let logoSize = CGSize(width: 70, height: 70)
+        static let height: CGFloat = AppStyle.rowHeight
+        static let logoFrame: CGFloat = 70
         static let internalHorizontalPadding: CGFloat = 15
         static let internalVerticalPadding: CGFloat = 15
         static let favButtonTrailing: CGFloat = 15
 #else
         static let minWidth: CGFloat = 300
         static let height : CGFloat = AppStyle.rowHeight
-        static let logoSize = CGSize(width: 60, height: 60)
+        static let logoFrame: CGFloat = 60
         static let internalHorizontalPadding: CGFloat = 15
         static let internalVerticalPadding: CGFloat = 15
         static let favButtonTrailing: CGFloat = 15
