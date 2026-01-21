@@ -47,20 +47,4 @@ extension IPLogo {
         case format
         case url
     }
-//    
-//    init(from decoder: Decoder) throws {
-//        do {
-//            let container = try decoder.container(keyedBy: CodingKeys.self)
-//            self.channelId = try container.decode(String.self, forKey: .channelId)
-//            self.feedId = try container.decodeIfPresent(String.self, forKey: .feedId)
-//            self.tags = try container.decode([String].self, forKey: .tags)
-//            self.width = try container.decode(CGFloat.self, forKey: .width)
-//            self.height = try container.decode(CGFloat.self, forKey: .height)
-//            self.format = try container.decodeIfPresent(String.self, forKey: .format)
-//            self.url = try container.decode(URL.self, forKey: .url)
-//        } catch {
-//            logDebug(error)
-//            throw error
-//        }
-//    }
 }

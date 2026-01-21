@@ -58,7 +58,7 @@ struct HeckYeahTVTests {
         let jsonString = try fetchedPrograms.toJSONString()
         
         
-        #expect(jsonString.count != 0)
+        #expect(jsonString.isEmpty == false)
     }
     
 }

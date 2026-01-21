@@ -10,13 +10,19 @@ import Foundation
 import SwiftUI
 import Hellfire
 
-enum HomeRunChannelGuideError: LocalizedError {
+enum HomeRunDiscoveryError: LocalizedError {
     case invalidURL
+    case noData
+    case noDeviceAuth
     
     var errorDescription: String? {
         switch self {
             case .invalidURL:
                 return "The URL could not be formed due to malformed data."
+            case .noData:
+                return "There was no data returned from a request, which was unexpected."
+            case .noDeviceAuth:
+                return "No device auth tokens available."
         }
     }
 }
@@ -123,14 +129,21 @@ actor HomeRunDiscoveryController {
                                     duration: Int?,
                                     channelNumber: String?) async -> FetchSummary {
         
-        var summary = FetchSummary()
-        var homeRunDiscoveryURL = URLComponents(string: HomeRunDataSources.TVListings.guideURL.absoluteString)
 
+        let guideURL = HomeRunDataSources.TVListings.guideURL
+        var summary = FetchSummary()
+
+        guard devices.isEmpty else {
+            summary.failures[guideURL] = HomeRunDiscoveryError.noDeviceAuth
+            return summary
+        }
+        
         let deviceAuth = devices.reduce("") { accumulator, device in
             accumulator + device.deviceAuth
         }
 
         //Build query string, (using map to unwrap optional types)
+        var homeRunDiscoveryURL: URLComponents? = URLComponents(string: guideURL.absoluteString)
         homeRunDiscoveryURL?.queryItems = [URLQueryItem(name: "DeviceAuth", value: deviceAuth)]
         start.map {
             homeRunDiscoveryURL?.queryItems?.append(URLQueryItem(name: "Start", value: "\($0)"))
@@ -143,7 +156,7 @@ actor HomeRunDiscoveryController {
         }
         
         guard let url = homeRunDiscoveryURL?.url else {
-            summary.failures[HomeRunDataSources.TVListings.guideURL] = HomeRunChannelGuideError.invalidURL
+            summary.failures[guideURL] = HomeRunDiscoveryError.invalidURL
             return summary
         }
         
@@ -181,7 +194,7 @@ actor HomeRunDiscoveryController {
         logDebug("Looking for HDHomeRun Tuners, obtaining channel line up and fetching guide information. 🇺🇸")
         
         var summary = await deviceDiscovery()
-        if discoveredDevices.count > 0 {
+        if discoveredDevices.isEmpty == false {
             summary.mergeSummary(await deviceDetails())
         }
         
@@ -190,11 +203,11 @@ actor HomeRunDiscoveryController {
             summary.mergeSummary(_summary)
         }
         
-        if includeGuideData && channels.count > 0 {
+        if includeGuideData && channels.isEmpty == false {
             let _summary = await channelGuideFetch(devices: devices, start: nil, duration: 24, channelNumber: nil)
             summary.mergeSummary(_summary)
             
-            if channelGuides.count > 0 {
+            if channelGuides.isEmpty == false {
                 logDebug("Found \(channelGuides.count) HDHomeRun channels with programs.")
                 for i in channels.indices {
                     channels[i].logoURL = indexedLogos[channels[i].guideNumber]

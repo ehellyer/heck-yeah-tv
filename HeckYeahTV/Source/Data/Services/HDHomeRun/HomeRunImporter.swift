@@ -232,7 +232,7 @@ actor HomeRunImporter {
         
         summary.mergeSummary(homeRunSummary)
         
-        if summary.failures.count > 0 {
+        if summary.failures.isEmpty == false {
             logError("\(summary.failures.count) failure(s) in HDHomeRun tuner fetch: \(summary.failures)")
         }
         

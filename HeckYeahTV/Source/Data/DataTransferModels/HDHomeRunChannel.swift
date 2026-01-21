@@ -41,7 +41,7 @@ struct HDHomeRunChannel: JSONSerializable, Equatable {
     /// URL for the source stream of the channel.
     let url: URL
     
-    /// URL for the channel logo.  Set after object has been decoded.  The logo comes from a separate route.
+    /// URL for the channel logo.  Set after object has been decoded.  The logo URL comes from a separate route.
     var logoURL: URL?
 }
 

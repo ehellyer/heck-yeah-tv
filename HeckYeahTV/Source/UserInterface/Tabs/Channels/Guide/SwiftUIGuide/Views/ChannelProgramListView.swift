@@ -26,7 +26,7 @@ struct ChannelProgramListView: View {
         let programs: [ChannelProgram] = loader.programs ?? []
         
         ZStack {
-            if programs.count == 0 {
+            if programs.isEmpty {
                 NoChannelProgramView(appState: $appState,
                                      channelId: channelId)
             } else {

@@ -219,7 +219,7 @@ actor IPTVImporter {
         
         summary.mergeSummary(iptvSummary)
         
-        if summary.failures.count > 0 {
+        if summary.failures.isEmpty == false {
             logError("\(summary.failures.count) failure(s) in bootstrap data fetch: \(summary.failures)")
         }
         
