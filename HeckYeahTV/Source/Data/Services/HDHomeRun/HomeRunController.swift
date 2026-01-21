@@ -51,8 +51,8 @@ actor HomeRunDiscoveryController {
                                      timeoutInterval: 10.0,
                                      headers: self.defaultHeaders)
         do {
-            let response = try await self.sessionInterface.execute(request)
-            self.discoveredDevices = try [HDHomeRunDiscovery].initialize(jsonData: response.body)
+            let response: JSONSerializableResponse<[HDHomeRunDiscovery]> = try await self.sessionInterface.execute(request)
+            self.discoveredDevices = response.jsonObject
             summary.successes[discoveryURL] = discoveredDevices.count
         } catch {
             summary.failures[discoveryURL] = error
@@ -133,7 +133,7 @@ actor HomeRunDiscoveryController {
         let guideURL = HomeRunDataSources.TVListings.guideURL
         var summary = FetchSummary()
 
-        guard devices.isEmpty else {
+        guard devices.isEmpty == false else {
             summary.failures[guideURL] = HomeRunDiscoveryError.noDeviceAuth
             return summary
         }
@@ -162,12 +162,12 @@ actor HomeRunDiscoveryController {
         
         let request = NetworkRequest(url: url,
                                      method: .get,
-                                     timeoutInterval: 10.0,
+                                     timeoutInterval: 15.0,
                                      headers: self.defaultHeaders)
         
         do {
-            let response = try await self.sessionInterface.execute(request)
-            channelGuides = try [HDHomeRunChannelGuide].initialize(jsonData: response.body)
+            let response: JSONSerializableResponse<[HDHomeRunChannelGuide]> = try await self.sessionInterface.execute(request)
+            channelGuides = response.jsonObject
             
             let _indexedLogos: [String: URL] = channelGuides.reduce(into: [:]) { result, guide in
                 result[guide.guideNumber] = guide.logoURL

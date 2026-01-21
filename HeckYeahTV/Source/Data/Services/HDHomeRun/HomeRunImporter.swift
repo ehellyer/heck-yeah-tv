@@ -157,8 +157,13 @@ actor HomeRunImporter {
         
         logDebug("HomeRun Channel guide import process starting... 🇺🇸")
         
-        // delete
-        try context.delete(model: ChannelProgram.self)
+        // delete - programs that ended more than 16 hours
+        logDebug("Deleting program data for programs that ended more than 16 hours ago.")
+        let sixteenHoursAgo = Date().addingTimeInterval(-16 * 60 * 60)
+        let oldProgramsPredicate = #Predicate<ChannelProgram> { program in
+            program.endTime < sixteenHoursAgo
+        }
+        try context.delete(model: ChannelProgram.self, where: oldProgramsPredicate)
         if context.hasChanges {
             try context.save()
         }
@@ -192,7 +197,6 @@ actor HomeRunImporter {
         }
         
         logDebug("HomeRun Channel guide import process completed. Total guides imported for \(channelGuides.count) channels. 🏁")
-        
     }
     
     /// Updates the last guide fetch timestamp to the current date/time.

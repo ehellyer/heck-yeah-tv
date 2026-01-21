@@ -44,13 +44,12 @@ struct ChannelProgramsCarousel: View {
             
             GeometryReader { proxy in
                 ScrollView(.horizontal, showsIndicators: false) {
-                    HStack(spacing: 0) {
+                    LazyHStack(spacing: 0) {
                         ForEach(0..<channelPrograms.count, id: \.self) { index in
                             let padding = max(20, ((proxy.safeAreaInsets.leading + proxy.safeAreaInsets.trailing) / 2))
                             let channelProgram = channelPrograms[index]
-
+                            
                             ProgramDetailView(channelProgram: channelProgram)
-                                
                                 .padding(.leading, padding)
                                 .padding(.trailing, padding)
                                 .containerRelativeFrame(.horizontal)
@@ -73,10 +72,15 @@ struct ChannelProgramsCarousel: View {
                             onPageChange: { index in
                 scrollPositionId = index
             })
+            .fixedSize(horizontal: false, vertical: true)
             .tint(.white)
             .foregroundStyle(Color.white)
             .padding(.top, 10)
+#if os(macOS)
+            .padding(.bottom, 10)
+#endif
         }
+        .frame(maxHeight: .infinity)
         .background(.black.opacity(0.9))
         .focusable()
         .onAppear() {
