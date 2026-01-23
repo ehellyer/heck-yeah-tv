@@ -24,15 +24,15 @@ protocol FocusTargetView {
 extension FocusTargetView where Self: UIView {
     
     /// The number of pixels to grow on each side when focused
-    private var focusGrowthInPixels: CGFloat { return 1.5 }
+    private var focusGrowthInPixels: CGFloat { return 4.0 }
     
     /// The number of pixels to shrink on each side when pressed
     private var pressedShrinkInPixels: CGFloat { return 1.0 }
     
     /// Calculate scale factor based on adding fixed pixels to the view's dimensions
     private func scaleForPixelGrowth(_ pixels: CGFloat) -> CGFloat {
-        // Use the smaller dimension to ensure consistent scaling in both directions
-        let referenceSize = min(bounds.width, bounds.height)
+        
+        let referenceSize = max(bounds.width, bounds.height)
         guard referenceSize > 0 else { return 1.0 }
         
         // Calculate how much bigger the view should be: (size + 2*pixels) / size
@@ -52,7 +52,12 @@ extension FocusTargetView where Self: UIView {
     
     private var selectedLayerName: String { return "selectedEffectLayer" }
     
-    private func addParallaxMotionEffects(tiltValue: CGFloat = 0.15, panValue: CGFloat = 5.0) {
+    private func addParallaxMotionEffects(panValue: CGFloat = 5.0) {
+        // Calculate tilt based on view size - larger views need less tilt
+        // Using 60 as the reference: a 600px view gets 0.1 tilt, a 300px view gets 0.2 tilt
+        let longestSide = max(bounds.width, bounds.height)
+        let tiltValue = longestSide > 0 ? min(60.0 / longestSide, 0.25) : 0.15
+        
         let yRotation = UIInterpolatingMotionEffect(keyPath: "layer.transform.rotation.y", type: .tiltAlongHorizontalAxis)
         yRotation.minimumRelativeValue = tiltValue
         yRotation.maximumRelativeValue = -tiltValue
