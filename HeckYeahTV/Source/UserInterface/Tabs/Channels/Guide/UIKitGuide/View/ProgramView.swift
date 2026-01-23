@@ -23,6 +23,7 @@ class ProgramView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
+        backgroundColor = .clear
         translatesAutoresizingMaskIntoConstraints = false
         layer.masksToBounds = true
         layer.cornerRadius = GuideRowCell.viewCornerRadius
@@ -33,7 +34,6 @@ class ProgramView: UIView {
         stackContainerView.backgroundColor = .clear
         stackView.addArrangedSubview(timeLabel)
         stackView.addArrangedSubview(titleLabel)
-        self.addGestureRecognizer(longTapGesture)
         self.widthAnchor.constraint(equalToConstant: AppStyle.ProgramView.width).isActive = true
     }
     
@@ -84,93 +84,42 @@ class ProgramView: UIView {
         label.numberOfLines = 3
         label.font = AppStyle.Fonts.programTitleFont
         label.textColor = .guideForegroundNoFocus
+        label.setContentCompressionResistancePriority(.required, for: .horizontal)
         label.setContentCompressionResistancePriority(.required, for: .vertical)
-        label.setContentCompressionResistancePriority(UILayoutPriority(999), for: .horizontal)
         return label
     }()
-    private lazy var longTapGesture: UILongPressGestureRecognizer = {
-        let gesture = UILongPressGestureRecognizer(target: self, action: #selector(viewTapped))
-        gesture.cancelsTouchesInView = false
-        gesture.minimumPressDuration = 0
-        gesture.allowableMovement = 12
-        return gesture
-    }()
     
-    private var isProgramNow: Bool {
-        guard let _program = self.program else { return false }
-        let now = Date()
-        return _program.startTime <= now && _program.endTime >= now
-    }
+    //MARK: - Internal API
     
-    //MARK: - Private API - Actions and action view modifiers
-    
-    @objc private func viewTapped(_ gesture: UILongPressGestureRecognizer) {
-        switch gesture.state {
-            case .began:
-                onTapDownFocusEffect()
-
-            case .ended, .changed, .cancelled, .failed:
-                onTapUpFocusEffect()
-
-                if gesture.state == .ended {
-                    if let channelProgram = self.program {
-                        self.delegate?.showChannelProgram(channelProgram)
-                    }
-                }
-            default:
-                break
-        }
-    }
-    
-    //MARK: - Private API
-    
-    private var channelId: ChannelId?
-    private var program: ChannelProgram?
-    
-    private func updateViewTintColor(_ color: UIColor) {
+    func updateViewTintColor(_ color: UIColor) {
         titleLabel.textColor = color
         timeLabel.textColor = color
     }
     
-    //MARK: - Internal API
-    
-    weak var delegate: GuideViewDelegate?
-    
     func configure(with program: ChannelProgram?,
-                   channelId: ChannelId?,
                    isPlaying: Bool) {
-        self.channelId = channelId
-        self.program = program
-        
-        let bgColor = AppStyle.GuideView.backgroundColor(isFocused: false, isPlaying: isPlaying, isProgramNow: isProgramNow)
-        
-        backgroundColor = UIColor(bgColor)
         titleLabel.text = program?.title
         timeLabel.text = program?.formattedTimeSlot
         self.layoutIfNeeded()
     }
 }
 
-extension ProgramView: FocusTargetView {
+#Preview("UIKit Preview") {
+
+    // Override the injected SwiftDataController
+    let mockData = MockSwiftDataStack()
+    let swiftDataController = MockSwiftDataController(viewContext: mockData.viewContext)
+    InjectedValues[\.swiftDataController] = swiftDataController
     
-    override var preferredFocusEnvironments: [UIFocusEnvironment] {
-        return [self]
-    }
+    let channel = swiftDataController.previewOnly_fetchChannel(at: 11)
+    let channelPrograms: [ChannelProgram] = swiftDataController.previewOnly_channelPrograms(channelId: channel.id)
     
-    override var canBecomeFocused: Bool {
-        return true
-    }
+    let view = ProgramView()
+    view.configure(with: channelPrograms.first!, isPlaying: false)
     
-    override func didUpdateFocus(in context: UIFocusUpdateContext, with coordinator: UIFocusAnimationCoordinator) {
-        super.didUpdateFocus(in: context, with: coordinator)
-        if (context.nextFocusedView === self) {
-            self.becomeFocusedUsingAnimationCoordinator(in: context, with: coordinator) { [weak self] foregroundColor, backgroundColor in
-                self?.updateViewTintColor(foregroundColor)
-            }
-        } else if (context.previouslyFocusedView === self) {
-            self.resignFocusUsingAnimationCoordinator(in: context, with: coordinator) { [weak self] foregroundColor, backgroundColor in
-                self?.updateViewTintColor(foregroundColor)
-            }
-        }
-    }
+    let heightConstraint = view.heightAnchor.constraint(equalToConstant: AppStyle.rowHeight)
+    heightConstraint.priority = UILayoutPriority(1000)
+    heightConstraint.isActive = true
+        
+    return view
 }

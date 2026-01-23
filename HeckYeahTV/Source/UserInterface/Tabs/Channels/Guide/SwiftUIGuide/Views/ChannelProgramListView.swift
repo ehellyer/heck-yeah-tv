@@ -32,7 +32,7 @@ struct ChannelProgramListView: View {
             } else {
                 ScrollView(.horizontal) {
                     LazyHStack(alignment: .center,
-                               spacing: AppStyle.ProgramView.programSpacing) {
+                               spacing: AppStyle.GuideView.programSpacing) {
                         ForEach(programs, id: \.id) { program in
                             ChannelProgramView(appState: $appState,
                                                channelProgram: program)

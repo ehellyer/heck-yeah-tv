@@ -74,6 +74,24 @@ protocol SwiftDataControllable: ChannelFilterable {
     ///            if the channel is fresh out of content or still waiting for its TV Guide moment.
     func channelPrograms(for channelId: ChannelId) -> [ChannelProgram]
     
+    /// Purges old channel programs from the database like they're expired leftovers in the fridge.
+    ///
+    /// This function hunts down and deletes all `ChannelProgram` entries whose end times are
+    /// firmly in the past. You know, the shows you missed, the news that's no longer new, and
+    /// that infomercial you definitely weren't going to watch anyway.
+    ///
+    /// Why delete them? Because your database isn't a digital hoarder's paradise, and nobody
+    /// needs to know what was on at 3 AM last Tuesday. Plus, keeping ancient program data around
+    /// is like saving every TV Guide from the '90s—nostalgic maybe, but ultimately just clutter.
+    ///
+    /// This is your database's Marie Kondo moment: "Does this program spark joy? No? It ended
+    /// four hours ago? Then it's time to let it go."
+    ///
+    /// - Throws: Whatever SwiftData decides to complain about when bulk-deleting things.
+    ///           Usually nothing, but sometimes the database gets sentimental about that
+    ///           rerun of a rerun and throws a fit. Handle accordingly.
+    func deletePastChannelPrograms() throws
+    
     /// Constructs a SwiftData predicate based on your filtering whims.  This is what builds the ChannelBundleMap.
     ///
     /// This is where the magic happens: transforming user desires (favorites! Spain! sports!)

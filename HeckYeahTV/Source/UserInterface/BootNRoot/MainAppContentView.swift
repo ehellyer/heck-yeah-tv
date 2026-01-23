@@ -119,7 +119,8 @@ struct MainAppContentView: View {
         .onChange(of: scenePhase,  { _, newValue in
             // If app becomes not-active with the app navigation visible, dismiss the app navigation.
             if newValue != .active && appState.showAppMenu {
-                appState.showAppMenu = false
+                appState.showAppMenu = false        // If presented, hides app menu.
+                appState.showChannelPrograms = nil  // If presented, hides program carousel.
             }
         })
         

@@ -1,5 +1,5 @@
 //
-//  HomeRunDiscoveryController.swift
+//  HomeRunController.swift
 //  Heck Yeah TV
 //
 //  Created by Ed Hellyer on 8/23/25.
@@ -10,7 +10,7 @@ import Foundation
 import SwiftUI
 import Hellfire
 
-enum HomeRunDiscoveryError: LocalizedError {
+enum HomeRunControllerError: LocalizedError {
     case invalidURL
     case noData
     case noDeviceAuth
@@ -28,7 +28,7 @@ enum HomeRunDiscoveryError: LocalizedError {
 }
 
 
-actor HomeRunDiscoveryController {
+actor HomeRunController {
     
     deinit {
         logDebug("Deallocated")
@@ -134,7 +134,7 @@ actor HomeRunDiscoveryController {
         var summary = FetchSummary()
 
         guard devices.isEmpty == false else {
-            summary.failures[guideURL] = HomeRunDiscoveryError.noDeviceAuth
+            summary.failures[guideURL] = HomeRunControllerError.noDeviceAuth
             return summary
         }
         
@@ -156,7 +156,7 @@ actor HomeRunDiscoveryController {
         }
         
         guard let url = homeRunDiscoveryURL?.url else {
-            summary.failures[guideURL] = HomeRunDiscoveryError.invalidURL
+            summary.failures[guideURL] = HomeRunControllerError.invalidURL
             return summary
         }
         

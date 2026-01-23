@@ -27,6 +27,8 @@ class GuideViewController: UIViewController {
         
         // Make the view controller's view focusable so UIKit can take over focus
         self.view.isUserInteractionEnabled = true
+       
+        try? swiftDataController.deletePastChannelPrograms()
     }
     
     override func viewDidAppear(_ animated: Bool) {

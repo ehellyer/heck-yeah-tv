@@ -23,11 +23,36 @@ protocol FocusTargetView {
 
 extension FocusTargetView where Self: UIView {
     
-    private var scaleUp: CGFloat { return 1.05 }
-    private var scaleDown: CGFloat { return 0.95 }
+    /// The number of pixels to grow on each side when focused
+    private var focusGrowthInPixels: CGFloat { return 1.5 }
+    
+    /// The number of pixels to shrink on each side when pressed
+    private var pressedShrinkInPixels: CGFloat { return 1.0 }
+    
+    /// Calculate scale factor based on adding fixed pixels to the view's dimensions
+    private func scaleForPixelGrowth(_ pixels: CGFloat) -> CGFloat {
+        // Use the smaller dimension to ensure consistent scaling in both directions
+        let referenceSize = min(bounds.width, bounds.height)
+        guard referenceSize > 0 else { return 1.0 }
+        
+        // Calculate how much bigger the view should be: (size + 2*pixels) / size
+        // We multiply by 2 because pixels grow on both sides
+        return (referenceSize + (pixels * 2)) / referenceSize
+    }
+    
+    /// Scale factor for focused state (grows by focusGrowthInPixels)
+    private var scaleUp: CGFloat { 
+        return scaleForPixelGrowth(focusGrowthInPixels)
+    }
+    
+    /// Scale factor for pressed state (shrinks by pressedShrinkInPixels)
+    private var scaleDown: CGFloat { 
+        return scaleForPixelGrowth(-pressedShrinkInPixels)
+    }
+    
     private var selectedLayerName: String { return "selectedEffectLayer" }
     
-    private func addParallaxMotionEffects(tiltValue: CGFloat = 0.25, panValue: CGFloat = 5.0) {
+    private func addParallaxMotionEffects(tiltValue: CGFloat = 0.15, panValue: CGFloat = 5.0) {
         let yRotation = UIInterpolatingMotionEffect(keyPath: "layer.transform.rotation.y", type: .tiltAlongHorizontalAxis)
         yRotation.minimumRelativeValue = tiltValue
         yRotation.maximumRelativeValue = -tiltValue
@@ -89,7 +114,7 @@ extension FocusTargetView where Self: UIView {
     
     func onTapDownFocusEffect() {
         UIView.animate(withDuration: 0.1) {
-            let scale: CGFloat = 1
+            let scale: CGFloat = self.scaleDown
             let matrix = CATransform3DScale(CATransform3DIdentity, scale, scale, 1)
             self.layer.transform = matrix
         }

@@ -39,8 +39,7 @@ struct ChannelProgramsCarousel: View {
                 .padding()
 #endif
             }
-            .padding(.bottom, 10)
-            
+            .padding(.bottom, AppStyle.ProgramCarousel.channelNameBottomPadding)
             
             GeometryReader { proxy in
                 ScrollView(.horizontal, showsIndicators: false) {
@@ -93,11 +92,11 @@ struct ChannelProgramsCarousel: View {
         .onMoveCommand { direction in
             withAnimation {
                 switch direction {
-                    case .left:
+                    case .right:
                         if scrollPositionId ?? 0 < channelPrograms.count - 1 {
                             scrollPositionId = (scrollPositionId ?? 0) + 1
                         }
-                    case .right:
+                    case .left:
                         if scrollPositionId ?? 0 > 0 {
                             scrollPositionId = (scrollPositionId ?? 0) - 1
                         }

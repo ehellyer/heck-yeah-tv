@@ -15,7 +15,7 @@ struct AppStyle {
     }
     
 #if os(tvOS)
-    static let rowHeight : CGFloat = 100
+    static let rowHeight : CGFloat = 150
 #else
     static let rowHeight : CGFloat = 80
 #endif
@@ -87,13 +87,28 @@ struct AppStyle {
 #else
         static var width: CGFloat = 260
         static let height : CGFloat = AppStyle.rowHeight
-        static let programSpacing: CGFloat = 15
         static let internalHorizontalPadding: CGFloat = 15
         static let internalVerticalPadding: CGFloat = 15
 #endif
     }
+
+    struct ProgramCarousel {
+#if os(tvOS)
+        static let channelNameBottomPadding: CGFloat = 40
+#else
+        static let channelNameBottomPadding: CGFloat = 20
+#endif
+    }
+
+    
     
     struct GuideView {
+#if os(tvOS)
+        static let programSpacing: CGFloat = 35
+#else
+        static let programSpacing: CGFloat = 15
+#endif
+        
         private static let focusGrowth: CGFloat = 15 // Fixed pixel growth
         
         static func scaleAmount(for size: CGSize, isFocused: Bool) -> CGFloat {

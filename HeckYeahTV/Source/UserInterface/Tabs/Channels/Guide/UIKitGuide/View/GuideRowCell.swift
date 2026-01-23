@@ -29,32 +29,38 @@ class GuideRowCell: UITableViewCell {
     
     override func prepareForReuse() {
         super.prepareForReuse()
-        programsStackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
+        
         channelId = nil
         programs = nil
+        programsCollectionView.reloadData()
     }
     
     private func commonInit() {
+        let widthConstraint = self.widthAnchor.constraint(equalToConstant: 9999)
+        widthConstraint.priority = UILayoutPriority(999)
+        widthConstraint.isActive = true
+
         backgroundColor = .clear
         selectionStyle = .none
         clipsToBounds = false
         layer.masksToBounds = false
         addRowStackView()
-        channelNameView.widthAnchor.constraint(equalTo: self.widthAnchor, multiplier: 0.3).isActive = true
+        channelNameView.widthAnchor.constraint(equalTo: self.widthAnchor, multiplier: 0.26).isActive = true
         bindViewModel()
     }
     
     //MARK: - static internal API
     
     static var identifier: String = "GuideRowCellIdentifier"
-    static var viewCornerRadius: CGFloat = 25.0
+    static var viewCornerRadius: CGFloat = AppStyle.cornerRadius
     
-    //MARK: - Private API - View Models
+    //MARK: - Private API
     
     private var isPlaying: Bool = false
     private(set) var channelId: ChannelId?
     private var channel: Channel?
     private var programs: [ChannelProgram]?
+    private var currentTime: Date = Date()
     private var channelLoader = ChannelRowLoader()
     private var programsLoader = ProgramsRowLoader()
     private var cancellableStore = Set<AnyCancellable>()
@@ -77,7 +83,8 @@ class GuideRowCell: UITableViewCell {
             .sink { [weak self] programs in
                 guard let self, channelId == channel?.id else { return }
                 self.programs = programs
-                self.updateProgramsDisplay(with: channel?.id, isPlaying: isPlaying)
+                self.currentTime = Date() // Update the time once when programs are loaded
+                self.updateProgramsDisplay(with: channelId, isPlaying: isPlaying)
             }
             .store(in: &cancellableStore)
     }
@@ -85,31 +92,20 @@ class GuideRowCell: UITableViewCell {
     //MARK: - Private API - Lazy view binding
     
     private func addRowStackView() {
-        contentView.addSubview(rowStackView)
-        rowStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor).isActive = true
-        contentView.trailingAnchor.constraint(equalTo: rowStackView.trailingAnchor).isActive = true
-        rowStackView.topAnchor.constraint(equalTo: contentView.topAnchor).isActive = true
-        contentView.bottomAnchor.constraint(equalTo: rowStackView.bottomAnchor).isActive = true
-        //
-        programsStackView.topAnchor.constraint(equalTo: self.topAnchor).isActive = true
-        programsStackView.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
+        contentView.configureChildView(rowStackView)
+        programsCollectionView.topAnchor.constraint(equalTo: self.topAnchor).isActive = true
+        programsCollectionView.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
     }
     
-    private(set) lazy var channelNameView: ChannelNameView = {
-        let view =  ChannelNameView()
-        return view
-    }()
+    private(set) lazy var channelNameView: ChannelNameView = ChannelNameView()
     
-    private lazy var favoriteButtonView: FavoriteToggleView = {
-        let view = FavoriteToggleView()
-        return view
-    }()
+    private lazy var favoriteButtonView: FavoriteToggleView = FavoriteToggleView()
 
     private lazy var rowStackView: UIStackView = {
         let stackView = UIStackView()
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .horizontal
-        stackView.spacing = 35
+        stackView.spacing = AppStyle.GuideView.programSpacing
         stackView.distribution = .fill
         stackView.alignment = .fill
         stackView.addArrangedSubview(favoriteButtonView)
@@ -119,70 +115,69 @@ class GuideRowCell: UITableViewCell {
     }()
     
     private lazy var programsMaskView: HorizontalClipContainer = {
-        let view = HorizontalClipContainer()
-        view.leftClip = 10
-        view.rightClip = 35
+        let view = HorizontalClipContainer(leftClip: 0, rightClip: AppStyle.GuideView.programSpacing)
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(programsScrollView)
-        view.leadingAnchor.constraint(equalTo: programsScrollView.leadingAnchor, constant: -10).isActive = true
-        programsScrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-        view.topAnchor.constraint(equalTo: programsScrollView.topAnchor).isActive = true
-        programsScrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
-        programsScrollView.contentInset = .init(top: 0, left: view.leftClip, bottom: 0, right: view.rightClip)
+        view.configureChildView(programsCollectionView)
         return view
     }()
-    
-    private lazy var programsScrollView: UIScrollView = {
-        let scrollView = UIScrollView()
-        scrollView.translatesAutoresizingMaskIntoConstraints = false
-        scrollView.showsHorizontalScrollIndicator = true
-        scrollView.showsVerticalScrollIndicator = false
-        scrollView.addSubview(programsStackView)
-        scrollView.leadingAnchor.constraint(equalTo: programsStackView.leadingAnchor).isActive = true
-        programsStackView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor).isActive = true
-        scrollView.topAnchor.constraint(equalTo: programsStackView.topAnchor).isActive = true
-        programsStackView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor).isActive = true
-        scrollView.clipsToBounds = false
-        scrollView.layer.masksToBounds = false
-        return scrollView
-    }()
-    
-    private lazy var programsStackView: UIStackView = {
-        let stackView = UIStackView()
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        stackView.axis = .horizontal
-        stackView.spacing = 25
-        stackView.distribution = .fill
-        stackView.alignment = .fill
-        stackView.clipsToBounds = false
-        stackView.layer.masksToBounds = false
-        stackView.backgroundColor = .clear
-        return stackView
+  
+    private lazy var programsCollectionView: UICollectionView = {
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .horizontal
+        layout.minimumInteritemSpacing = 0
+        layout.minimumLineSpacing = AppStyle.GuideView.programSpacing
+        layout.estimatedItemSize = .zero // Important: Disable self-sizing to use delegate sizes
+        
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        collectionView.dataSource = self
+        collectionView.delegate = self
+        collectionView.showsHorizontalScrollIndicator = true
+        collectionView.showsVerticalScrollIndicator = false
+        collectionView.backgroundColor = .clear
+        collectionView.clipsToBounds = false
+        collectionView.register(ProgramCollectionViewCell.self,
+                                forCellWithReuseIdentifier: ProgramCollectionViewCell.cellIdentifier)
+
+        collectionView.contentInset = .init(top: 0,
+                                            left: 10,
+                                            bottom: 0,
+                                            right: AppStyle.GuideView.programSpacing)
+
+        return collectionView
     }()
     
     //MARK: - Private API
     
     private func updateProgramsDisplay(with channelId: ChannelId?, isPlaying: Bool) {
         // Clear existing program views
-        programsStackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
         programsMaskView.viewWithTag(EmptyProgramView.viewTypeTagId)?.removeFromSuperview()
         
         guard let programs, programs.isEmpty == false else {
             // Add 'No guide information' view.
             let emptyProgramView = EmptyProgramView(frame: CGRect.zero)
             emptyProgramView.configure(isPlaying: isPlaying, isLoading: (channelId == nil))
-            programsMaskView.addSubview(emptyProgramView)
-            emptyProgramView.fillSuperview()
+            programsMaskView.configureChildView(emptyProgramView, withInset: UIEdgeInsets(top: 0,
+                                                                                          left: 10,
+                                                                                          bottom: 0,
+                                                                                          right: AppStyle.GuideView.programSpacing))
             return
         }
+  
+        programsCollectionView.reloadData()
+        scrollToCurrentProgram()
+    }
+    
+    private func scrollToCurrentProgram() {
+        guard let programs else { return }
         
-        // Add program views
-        for program in programs {
-            let programView = ProgramView()
-            programView.delegate = self.delegate
-            programView.configure(with: program, channelId: channelId, isPlaying: isPlaying)
-            programsStackView.addArrangedSubview(programView)
+        // Find the index of the currently playing program
+        let currentProgramIndex = programs.firstIndex { program in
+            program.startTime <= currentTime && program.endTime >= currentTime
         }
+        guard let index = currentProgramIndex else { return }
+        let indexPath = IndexPath(item: index, section: 0)
+        programsCollectionView.scrollToItem(at: indexPath, at: .left, animated: false)
     }
     
     //MARK: - Internal API
@@ -198,12 +193,14 @@ class GuideRowCell: UITableViewCell {
     func configure(with channelId: ChannelId,
                    isPlaying: Bool,
                    viewContext: ModelContext) {
+        
         self.channelId = channelId
         self.isPlaying = isPlaying
         
         if self.channel?.id != channelId {
             channelLoader.load(channelId: channelId, context: viewContext)
             programsLoader.load(channelId: channelId, context: viewContext)
+            
             channelNameView.configure(with: nil, isPlaying: isPlaying)
             favoriteButtonView.configure(with: nil, isPlaying: isPlaying)
             updateProgramsDisplay(with: nil, isPlaying: isPlaying)
@@ -224,6 +221,135 @@ extension GuideRowCell {
     }
     
     override var preferredFocusEnvironments: [any UIFocusEnvironment] {
-        return [self.channelNameView, self.favoriteButtonView]
+        return [self.channelNameView, self.favoriteButtonView, self.programsCollectionView]
     }
+}
+
+//MARK: - UICollectionViewDataSource protocol
+
+extension GuideRowCell: UICollectionViewDataSource {
+    
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+        return 1
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return self.programs?.count ?? 0
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ProgramCollectionViewCell.cellIdentifier,
+                                                      for: indexPath) as! ProgramCollectionViewCell
+
+        let program = self.programs?[indexPath.item]
+        cell.programView.configure(with: program, isPlaying: isPlaying)
+        
+        var isProgramNow: Bool = false
+        if let _program = program {
+            isProgramNow = _program.startTime <= currentTime && _program.endTime >= currentTime
+        }
+        
+        let backgroundColor = AppStyle.GuideView.backgroundColor(isFocused: false,
+                                                                 isPlaying: isPlaying,
+                                                                 isProgramNow: isProgramNow)
+
+        cell.backgroundColor = UIColor(backgroundColor)
+        
+        return cell
+    }
+}
+
+//MARK: - UICollectionViewDelegate protocol
+
+extension GuideRowCell: UICollectionViewDelegate {
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let channelProgram = self.programs?[indexPath.item]
+        guard let channelProgram else { return }
+        self.delegate?.showChannelProgram(channelProgram)
+    }
+    
+    func scrollViewWillEndDragging(_ scrollView: UIScrollView,
+                                   withVelocity velocity: CGPoint, 
+                                   targetContentOffset: UnsafeMutablePointer<CGPoint>) {
+        
+        guard let collectionView = scrollView as? UICollectionView,
+              let layout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout else {
+            return
+        }
+        
+        // Calculate the cell width including spacing
+        let cellWidth = AppStyle.ProgramView.width
+        let spacing = layout.minimumLineSpacing
+        let cellWidthWithSpacing = cellWidth + spacing
+        
+        // Account for content inset
+        let contentOffsetX = targetContentOffset.pointee.x + collectionView.contentInset.left
+        
+        // Calculate which cell to snap to
+        let targetIndex: CGFloat
+        if velocity.x > 0 {
+            // Scrolling right - snap to next cell
+            targetIndex = ceil(contentOffsetX / cellWidthWithSpacing)
+        } else if velocity.x < 0 {
+            // Scrolling left - snap to previous cell
+            targetIndex = floor(contentOffsetX / cellWidthWithSpacing)
+        } else {
+            // No velocity - snap to nearest cell
+            targetIndex = round(contentOffsetX / cellWidthWithSpacing)
+        }
+        
+        // Calculate the new offset
+        let newOffset = (targetIndex * cellWidthWithSpacing) - collectionView.contentInset.left
+        targetContentOffset.pointee.x = newOffset
+    }
+}
+
+//MARK: - UICollectionViewDelegateFlowLayout protocol
+
+extension GuideRowCell: UICollectionViewDelegateFlowLayout {
+    
+    func collectionView(_ collectionView: UICollectionView,
+                       layout collectionViewLayout: UICollectionViewLayout,
+                       sizeForItemAt indexPath: IndexPath) -> CGSize {
+
+        let height = collectionView.bounds.height
+        let width: CGFloat = AppStyle.ProgramView.width
+        
+        return CGSize(width: width, height: height)
+    }
+}
+
+
+
+
+
+//MARK: - Preview Code
+
+#Preview("UIKit Preview") {
+    
+    //var appState: AppStateProvider = MockSharedAppState()
+    
+    // Override the injected SwiftDataController
+    let mockData = MockSwiftDataStack()
+    let swiftDataController = MockSwiftDataController(viewContext: mockData.viewContext)
+    InjectedValues[\.swiftDataController] = swiftDataController
+    
+    let channel1 = swiftDataController.previewOnly_fetchChannel(at: 11)
+    
+    let view = GuideRowCell()
+    view.configure(with: channel1.id,
+                   isPlaying: false,
+                   viewContext: mockData.viewContext)
+    
+    let heightConstraint = view.heightAnchor.constraint(equalToConstant: AppStyle.rowHeight)
+    heightConstraint.priority = UILayoutPriority(1000)
+    heightConstraint.isActive = true
+    
+    let widthConstraint = view.widthAnchor.constraint(equalToConstant: 9999)
+    widthConstraint.priority = UILayoutPriority(999)
+    widthConstraint.isActive = true
+    
+    return view
 }

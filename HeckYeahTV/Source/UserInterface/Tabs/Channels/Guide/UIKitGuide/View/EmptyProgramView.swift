@@ -43,6 +43,8 @@ class EmptyProgramView: UIView {
         let trailingConstraint = titleLabel.trailingAnchor.constraint(greaterThanOrEqualTo: self.trailingAnchor, constant: 20)
         trailingConstraint.priority = .init(900)
         trailingConstraint.isActive = true
+        
+        addGestureRecognizer(longTapGesture)
     }
     
     required init?(coder: NSCoder) {
@@ -64,32 +66,86 @@ class EmptyProgramView: UIView {
         return label
     }()
     
+    
+    private func updateViewTintColor(_ color: UIColor) {
+        titleLabel.textColor = color
+    }
+    
+    private lazy var longTapGesture: UILongPressGestureRecognizer = {
+        let gesture = UILongPressGestureRecognizer(target: self, action: #selector(viewTapped))
+        gesture.cancelsTouchesInView = false
+        gesture.minimumPressDuration = 0
+        gesture.allowableMovement = 12
+        return gesture
+    }()
+    
+    //MARK: - Private API - Actions and action view modifiers
+    
+    @objc private func viewTapped(_ gesture: UILongPressGestureRecognizer) {
+        switch gesture.state {
+            case .began:
+                onTapDownFocusEffect()
+                
+            case .ended, .changed, .cancelled, .failed:
+                onTapUpFocusEffect()
+                
+            default:
+                break
+        }
+    }
+    
     //MARK: - Internal API
     
     func configure(isPlaying: Bool, isLoading: Bool) {
         titleLabel.text = isLoading ? "" : "No Guide Information"
         backgroundColor = (isPlaying) ? .guideSelectedChannelBackground : .guideBackgroundNoFocus
     }
+}
+
+extension EmptyProgramView: @MainActor FocusTargetView {
     
-    func fillSuperview() {
-        guard let superview = self.superview else {
-            logDebug("Warning: fillSuperview() called before adding to superview")
-            return
+    override var preferredFocusEnvironments: [UIFocusEnvironment] {
+        return [self]
+    }
+    
+    override var canBecomeFocused: Bool {
+        return true
+    }
+    
+    override func shouldUpdateFocus(in context: UIFocusUpdateContext) -> Bool {
+        return true
+    }
+    
+    override func didUpdateFocus(in context: UIFocusUpdateContext, with coordinator: UIFocusAnimationCoordinator) {
+        super.didUpdateFocus(in: context, with: coordinator)
+        if (context.nextFocusedView === self) {
+            self.becomeFocusedUsingAnimationCoordinator(in: context, with: coordinator) {
+                [weak self] foregroundColor, backgroundColor in
+                self?.updateViewTintColor(foregroundColor)
+            }
+        } else if (context.previouslyFocusedView === self) {
+            self.resignFocusUsingAnimationCoordinator(in: context, with: coordinator) {
+                [weak self] foregroundColor, backgroundColor in
+                self?.updateViewTintColor(foregroundColor)
+            }
         }
-        
-        self.topAnchor.constraint(equalTo: superview.topAnchor).isActive = true
-        self.leadingAnchor.constraint(equalTo: superview.leadingAnchor, constant: 20).isActive = true
-        superview.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: 30).isActive = true
-        self.bottomAnchor.constraint(equalTo: superview.bottomAnchor).isActive = true
-        
-        self.setContentHuggingPriority(UILayoutPriority(1), for: .horizontal)
-        self.setContentHuggingPriority(UILayoutPriority(1), for: .vertical)
     }
 }
 
-extension EmptyProgramView {
+
+
+
+#Preview {
+    let view = EmptyProgramView()
+    view.configure(isPlaying: false, isLoading: false)
     
-    override var canBecomeFocused: Bool {
-        return false
-    }
+    let heightConstraint = view.heightAnchor.constraint(equalToConstant: AppStyle.rowHeight)
+    heightConstraint.priority = UILayoutPriority(999)
+    heightConstraint.isActive = true
+    
+    let widthConstraint = view.widthAnchor.constraint(equalToConstant: 350)
+    widthConstraint.priority = UILayoutPriority(999)
+    widthConstraint.isActive = true
+    
+    return view
 }

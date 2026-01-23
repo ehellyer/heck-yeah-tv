@@ -23,6 +23,7 @@ final class HorizontalClipContainer: UIView {
         
         clipsToBounds = false
         layer.masksToBounds = false
+        translatesAutoresizingMaskIntoConstraints = false
         
         // Gradient used as alpha mask: [clear, opaque, opaque, clear]
         gradientMask.startPoint = CGPoint(x: 0, y: 0.5)
@@ -38,8 +39,10 @@ final class HorizontalClipContainer: UIView {
         layer.mask = gradientMask
     }
     
-    convenience init() {
+    convenience init(leftClip: CGFloat, rightClip: CGFloat) {
         self.init(frame: .zero)
+        self.leftClip = leftClip
+        self.rightClip = rightClip
     }
     
     required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
@@ -87,14 +90,14 @@ final class HorizontalClipContainer: UIView {
     //MARK: - Internal API
     
     /// Fade width from the left edge (points). 0 = no left fade.
-    var leftClip: CGFloat  = 40 {
+    var leftClip: CGFloat = 0 {
         didSet {
             setNeedsLayout()
         }
     }
     
     /// Fade width from the right edge (points). 0 = no right fade.
-    var rightClip: CGFloat = 40 {
+    var rightClip: CGFloat = 0 {
         didSet {
             setNeedsLayout()
         }

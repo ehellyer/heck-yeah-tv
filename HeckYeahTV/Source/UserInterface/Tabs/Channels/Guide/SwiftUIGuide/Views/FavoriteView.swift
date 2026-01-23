@@ -22,10 +22,6 @@ struct FavoriteView: View {
     
     private let cornerRadius: CGFloat = AppStyle.cornerRadius
     
-    private var isFavoriteChannel: Bool {
-        return channel?.favorite?.isFavorite ?? false
-    }
-    
     private var isPlaying: Bool {
         let selectedChannelId = appState.selectedChannel
         return selectedChannelId != nil && selectedChannelId == channel?.id
@@ -34,18 +30,12 @@ struct FavoriteView: View {
     var body: some View {
         Button {
             guard let channel else { return }
-            if channel.favorite != nil {
-                channel.favorite?.isFavorite.toggle()
-                if modelContext.hasChanges {
-                    try? modelContext.save()
-                }
-            } else {
-                channel.favorite = Favorite(id: channel.id, isFavorite: true)
-            }
+            channel.isFavorite.toggle()
         } label: {
-            Image(systemName: isFavoriteChannel ? "star.fill" : "star")
+            let isFavorite = channel?.isFavorite ?? false
+            Image(systemName: isFavorite ? "star.fill" : "star")
                 .scaleEffect(AppStyle.FavoritesView.scaleEffect)
-                .foregroundStyle(isFavoriteChannel ? Color.yellow : Color.white)
+                .foregroundStyle(isFavorite ? Color.yellow : Color.white)
                 .frame(width: AppStyle.FavoritesView.width)
                 .frame(height: AppStyle.FavoritesView.height)
         }
@@ -65,27 +55,22 @@ struct FavoriteView: View {
     let swiftDataController = MockSwiftDataController(viewContext: mockData.viewContext)
     InjectedValues[\.swiftDataController] = swiftDataController
     
-    
     let channel = swiftDataController.previewOnly_fetchChannel(at: 8)
     let selectedChannelId = swiftDataController.channelBundleMap.map[0]
     
     return TVPreviewView() {
         VStack {
             
-            
             FavoriteView(appState: $appState,
                         channel: channel)
-           
             
             FavoriteView(appState: $appState,
                         channel: channel)
             .redacted(reason: .placeholder)
-
             
         }
         .onAppear {
             appState.selectedChannel = selectedChannelId
         }
-        
     }
 }

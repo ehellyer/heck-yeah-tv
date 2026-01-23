@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import Foundation
 
 @MainActor
 class ChannelNameView: UIView {
@@ -273,4 +272,22 @@ extension ChannelNameView: @MainActor FocusTargetView {
             }
         }
     }
+}
+
+
+
+#Preview {
+    
+    //var appState: AppStateProvider = MockSharedAppState()
+    
+    // Override the injected SwiftDataController
+    let mockData = MockSwiftDataStack()
+    let swiftDataController = MockSwiftDataController(viewContext: mockData.viewContext)
+    InjectedValues[\.swiftDataController] = swiftDataController
+    
+    let channel1 = swiftDataController.previewOnly_fetchChannel(at: 7)
+    
+    let view = ChannelNameView()
+    view.configure(with: channel1, isPlaying: false)
+    return view
 }

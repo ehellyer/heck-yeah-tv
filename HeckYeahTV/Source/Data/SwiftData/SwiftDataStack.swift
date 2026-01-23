@@ -57,6 +57,7 @@ final class SwiftDataStack {
                 logDebug("Legacy store deleted successfully.")
             }
             
+            // Dev note: HeckYeahSchema always points to latest schema, which holds the version number and model definitions.
             let schema = Schema(versionedSchema: HeckYeahSchema.self)
             let modelConfig = ModelConfiguration(schema: schema,
                                                  url: self.swiftDataStoreURL,
@@ -78,7 +79,7 @@ final class SwiftDataStack {
     
     // Inserts or updates the schema version number into the model SchemaVersion for debug purposes when looking directly at the store via other dev tools.
     private static func updateSchemaVersionTable(context: ModelContext) throws {
-        // Causes an insert or update because the SchemaVersion model has an ID property that is determined in the models initializer.
+        // Causes an insert or update because the SchemaVersion model has an ID property that is pre-determined in the models initializer.
         context.insert(SchemaVersion())
         if context.hasChanges {
             try context.save()

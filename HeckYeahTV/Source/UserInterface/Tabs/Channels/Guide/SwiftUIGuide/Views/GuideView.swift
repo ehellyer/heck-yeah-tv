@@ -47,7 +47,7 @@ struct GuideView: View {
                         LazyVStack(alignment: .leading) {
                             ForEach(swiftDataController.channelBundleMap.map, id: \.self) { channelId in
                                 HStack(alignment: .top,
-                                       spacing: AppStyle.ProgramView.programSpacing) {
+                                       spacing: AppStyle.GuideView.programSpacing) {
                                     ChannelViewLoader(appState: $appState,
                                                       channelId: channelId)
                                     .id(channelId)
@@ -79,6 +79,8 @@ struct GuideView: View {
                     .focusSection()
 #endif
                     .onAppear {
+                        try? swiftDataController.deletePastChannelPrograms()
+                        
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
                             scrollToSelected(proxy: proxy)
                         }

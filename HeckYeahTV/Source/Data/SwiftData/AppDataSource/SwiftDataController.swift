@@ -58,6 +58,19 @@ final class SwiftDataController: SwiftDataControllable {
         }
     }
     
+    func deletePastChannelPrograms() throws {
+        // delete - programs that have passed
+        logDebug("Deleting program data for programs that ended more than now.")
+        let now = Date()
+        let oldProgramsPredicate = #Predicate<ChannelProgram> { program in
+            program.endTime < now
+        }
+        try viewContext.delete(model: ChannelProgram.self, where: oldProgramsPredicate)
+        if viewContext.hasChanges {
+            try viewContext.save()
+        }
+    }
+    
     static func predicateBuilder(showFavoritesOnly: Bool,
                                  searchTerm: String?,
                                  countryCode: CountryCodeId,

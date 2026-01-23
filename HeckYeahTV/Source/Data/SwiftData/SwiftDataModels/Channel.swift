@@ -136,3 +136,25 @@ extension SchemaV1 {
         }
     }
 }
+
+// Dev Note: Only extends the current schema version of `Channel`.  Look at the typealias of Channel.
+extension Channel {
+    
+    /// Like a "pin it" board, but for TV channels. Will conjure a `Favorite` object out of thin air if you dare to set this to true. Because apparently lazy instantiation is our love language.
+    var isFavorite: Bool {
+        get {
+            favorite?.isFavorite ?? false
+        }
+        set {
+            if favorite != nil {
+                favorite?.isFavorite.toggle()
+            } else {
+                favorite = Favorite(id: id, isFavorite: true)
+            }
+            
+            if self.modelContext?.hasChanges == true {
+                try? self.modelContext?.save()
+            }
+        }
+    }
+}

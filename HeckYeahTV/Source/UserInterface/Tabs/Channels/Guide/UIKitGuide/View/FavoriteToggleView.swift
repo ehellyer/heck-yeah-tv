@@ -85,16 +85,7 @@ class FavoriteToggleView: UIView {
                 onTapUpFocusEffect()
 
                 if gesture.state == .ended, let channel {
-                    if channel.favorite != nil {
-                        channel.favorite?.isFavorite.toggle()
-                    } else {
-                        channel.favorite = Favorite(id: channel.id, isFavorite: true)
-                    }
-                    
-                    if channel.modelContext?.hasChanges ?? false == true {
-                        try? channel.modelContext?.save()
-                    }
-                    
+                    channel.isFavorite.toggle()
                     //Got to notify VC so the rows can be refreshed.
                     self.delegate?.toggleFavoriteChannel(channel.id)
                 }
@@ -132,7 +123,7 @@ class FavoriteToggleView: UIView {
     func configure(with channel: Channel?, isPlaying: Bool) {
         self.channel = channel
 
-        let isFavorite: Bool = channel?.favorite?.isFavorite ?? false
+        let isFavorite: Bool = channel?.isFavorite ?? false
         
         backgroundColor = (isPlaying) ? .guideSelectedChannelBackground : .guideBackgroundNoFocus
 
@@ -166,4 +157,31 @@ extension FavoriteToggleView: FocusTargetView {
             self.resignFocusUsingAnimationCoordinator(in: context, with: coordinator)
         }
     }
+}
+
+
+#Preview {
+    
+    //var appState: AppStateProvider = MockSharedAppState()
+    
+    // Override the injected SwiftDataController
+    let mockData = MockSwiftDataStack()
+    let swiftDataController = MockSwiftDataController(viewContext: mockData.viewContext)
+    InjectedValues[\.swiftDataController] = swiftDataController
+    
+    let channel1 = swiftDataController.previewOnly_fetchChannel(at: 7)
+    
+    channel1.favorite = Favorite(id: channel1.id, isFavorite: false)
+    
+    channel1.isFavorite = false
+    
+    let view = FavoriteToggleView()
+    
+    let heightConstraint = view.heightAnchor.constraint(equalToConstant: AppStyle.rowHeight)
+    heightConstraint.priority = UILayoutPriority(999)
+    heightConstraint.isActive = true
+    
+    view.configure(with: channel1, isPlaying: false)
+    
+    return view
 }

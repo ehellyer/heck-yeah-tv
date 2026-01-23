@@ -83,7 +83,7 @@ actor HomeRunImporter {
             
             if batchCount % batchSize == 0 {
                 try context.save()
-//                await Task.yield()
+                await Task.yield()
             }
         }
 
@@ -157,17 +157,6 @@ actor HomeRunImporter {
         
         logDebug("HomeRun Channel guide import process starting... 🇺🇸")
         
-        // delete - programs that ended more than 16 hours
-        logDebug("Deleting program data for programs that ended more than 16 hours ago.")
-        let sixteenHoursAgo = Date().addingTimeInterval(-16 * 60 * 60)
-        let oldProgramsPredicate = #Predicate<ChannelProgram> { program in
-            program.endTime < sixteenHoursAgo
-        }
-        try context.delete(model: ChannelProgram.self, where: oldProgramsPredicate)
-        if context.hasChanges {
-            try context.save()
-        }
-        
         // insert
         for guide in channelGuides {
             if let channelId = channelGuideMap[guide.guideNumber] {
@@ -214,7 +203,7 @@ actor HomeRunImporter {
     func load() async throws -> FetchSummary {
         var summary = FetchSummary()
         
-        let homeRunController: HomeRunDiscoveryController = HomeRunDiscoveryController()
+        let homeRunController: HomeRunController = HomeRunController()
 
         let lastGuideFetchDate: Date? = await SharedAppState.shared.dateLastGuideFetch
 

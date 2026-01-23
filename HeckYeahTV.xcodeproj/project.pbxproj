@@ -9,13 +9,19 @@
 /* Begin PBXBuildFile section */
 		089D175416ADEF60C0354B23 /* Pods_iOS_HeckYeahTV.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76A34A69F5505812676277A2 /* Pods_iOS_HeckYeahTV.framework */; };
 		E2A5EE63B6F0360CFDEA112A /* Pods_tvOS_HeckYeahTV.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4850C4BF6A440A7BD11EC2DD /* Pods_tvOS_HeckYeahTV.framework */; };
-		EB33342E2EC8273700CFAC43 /* Pods_macOS_HeckYeahTV.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB33342D2EC8273700CFAC43 /* Pods_macOS_HeckYeahTV.framework */; };
 		EB35E3122F00781200D31894 /* MobileVLCKit.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB35E3112F00781200D31894 /* MobileVLCKit.xcframework */; };
+		EB3785982F2141770086BB1F /* Pods_macOS_HeckYeahTV.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB3785972F2141770086BB1F /* Pods_macOS_HeckYeahTV.framework */; };
+		EB37859B2F21417F0086BB1F /* Pods_macOS_HeckYeahTV.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB33342D2EC8273700CFAC43 /* Pods_macOS_HeckYeahTV.framework */; };
+		EB37859F2F2142480086BB1F /* Pods_tvOS_HeckYeahTV.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB37859E2F2142480086BB1F /* Pods_tvOS_HeckYeahTV.framework */; };
 		EBB5B3292ED8B9D6004251CB /* Hellfire in Frameworks */ = {isa = PBXBuildFile; productRef = EBB5B3282ED8B9D6004251CB /* Hellfire */; };
 		EBB5B51F2EDD46C4004251CB /* Hellfire in Frameworks */ = {isa = PBXBuildFile; productRef = EBB5B51E2EDD46C4004251CB /* Hellfire */; };
 		EBB5B5212EDD46DC004251CB /* Hellfire in Frameworks */ = {isa = PBXBuildFile; productRef = EBB5B5202EDD46DC004251CB /* Hellfire */; };
 		EBDD3AF72ECE9C160050D08D /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = EBDD3AF62ECE9C160050D08D /* FirebaseAnalytics */; };
 		EBDD3AF92ECE9C160050D08D /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = EBDD3AF82ECE9C160050D08D /* FirebaseCrashlytics */; };
+		EBFFBD122F21A79E0022F6A5 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = EBFFBD112F21A79E0022F6A5 /* FirebaseAnalytics */; };
+		EBFFBD142F21A79E0022F6A5 /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = EBFFBD132F21A79E0022F6A5 /* FirebaseCrashlytics */; };
+		EBFFBD162F21A7AB0022F6A5 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = EBFFBD152F21A7AB0022F6A5 /* FirebaseAnalytics */; };
+		EBFFBD182F21A7AB0022F6A5 /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = EBFFBD172F21A7AB0022F6A5 /* FirebaseCrashlytics */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -80,6 +86,8 @@
 		EB33342D2EC8273700CFAC43 /* Pods_macOS_HeckYeahTV.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Pods_macOS_HeckYeahTV.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		EB35E30D2F0077B500D31894 /* Pods_iOS_HeckYeahTV.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Pods_iOS_HeckYeahTV.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		EB35E3112F00781200D31894 /* MobileVLCKit.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = MobileVLCKit.xcframework; path = Pods/MobileVLCKit/MobileVLCKit.xcframework; sourceTree = "<group>"; };
+		EB3785972F2141770086BB1F /* Pods_macOS_HeckYeahTV.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Pods_macOS_HeckYeahTV.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		EB37859E2F2142480086BB1F /* Pods_tvOS_HeckYeahTV.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Pods_tvOS_HeckYeahTV.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		EBC92B4A2E9D5FFA00FF62BC /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		EBE03BB72E53D421006B7747 /* HeckYeahTV.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HeckYeahTV.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EBE03BC42E53D423006B7747 /* iOS_HeckYeahTVTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = iOS_HeckYeahTVTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -105,6 +113,7 @@
 				"Source/Common/Extensions/NSView+AsImage.swift",
 				"Source/Common/Extensions/PlatformImage+AsImage.swift",
 				"Source/Common/Extensions/String+Extension.swift",
+				"Source/Common/Extensions/UIView+ConfigureChildView.swift",
 				"Source/Common/Extensions/UserDefaults+Extension.swift",
 				Source/Common/Logging/DebugLogger.swift,
 				Source/Common/PlatformRepresentable/CrossPlatformControllerRepresentable.swift,
@@ -240,6 +249,7 @@
 				Source/UserInterface/Tabs/Channels/Guide/UIKitGuide/View/FavoriteToggleView.swift,
 				Source/UserInterface/Tabs/Channels/Guide/UIKitGuide/View/GuideRowCell.swift,
 				Source/UserInterface/Tabs/Channels/Guide/UIKitGuide/View/HorizontalClipContainer.swift,
+				Source/UserInterface/Tabs/Channels/Guide/UIKitGuide/View/ProgramCollectionViewCell.swift,
 				Source/UserInterface/Tabs/Channels/Guide/UIKitGuide/View/ProgramView.swift,
 				Source/UserInterface/Tabs/Channels/Guide/UIKitGuide/ViewController/GuideViewController.swift,
 				Source/UserInterface/Tabs/Channels/Guide/UIKitGuide/ViewController/GuideViewDelegate.swift,
@@ -307,6 +317,7 @@
 				"Source/Common/Extensions/PlatformImage+AsImage.swift",
 				"Source/Common/Extensions/String+Extension.swift",
 				"Source/Common/Extensions/UIView+AsImage.swift",
+				"Source/Common/Extensions/UIView+ConfigureChildView.swift",
 				"Source/Common/Extensions/UserDefaults+Extension.swift",
 				Source/Common/Logging/DebugLogger.swift,
 				Source/Common/PlatformRepresentable/CrossPlatformControllerRepresentable.swift,
@@ -399,6 +410,7 @@
 				Source/UserInterface/Tabs/Channels/Guide/UIKitGuide/View/FavoriteToggleView.swift,
 				Source/UserInterface/Tabs/Channels/Guide/UIKitGuide/View/GuideRowCell.swift,
 				Source/UserInterface/Tabs/Channels/Guide/UIKitGuide/View/HorizontalClipContainer.swift,
+				Source/UserInterface/Tabs/Channels/Guide/UIKitGuide/View/ProgramCollectionViewCell.swift,
 				Source/UserInterface/Tabs/Channels/Guide/UIKitGuide/View/ProgramView.swift,
 				Source/UserInterface/Tabs/Channels/Guide/UIKitGuide/View/StreamQualityRepresentableView.swift,
 				Source/UserInterface/Tabs/Channels/Guide/UIKitGuide/View/StreamQualityView.swift,
@@ -475,8 +487,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				EB33342E2EC8273700CFAC43 /* Pods_macOS_HeckYeahTV.framework in Frameworks */,
 				EBB5B5212EDD46DC004251CB /* Hellfire in Frameworks */,
+				EB3785982F2141770086BB1F /* Pods_macOS_HeckYeahTV.framework in Frameworks */,
+				EBFFBD182F21A7AB0022F6A5 /* FirebaseCrashlytics in Frameworks */,
+				EBFFBD162F21A7AB0022F6A5 /* FirebaseAnalytics in Frameworks */,
+				EB37859B2F21417F0086BB1F /* Pods_macOS_HeckYeahTV.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -526,6 +541,9 @@
 			files = (
 				E2A5EE63B6F0360CFDEA112A /* Pods_tvOS_HeckYeahTV.framework in Frameworks */,
 				EBB5B51F2EDD46C4004251CB /* Hellfire in Frameworks */,
+				EBFFBD142F21A79E0022F6A5 /* FirebaseCrashlytics in Frameworks */,
+				EBFFBD122F21A79E0022F6A5 /* FirebaseAnalytics in Frameworks */,
+				EB37859F2F2142480086BB1F /* Pods_tvOS_HeckYeahTV.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -578,6 +596,8 @@
 		EBE03C812E53E5DC006B7747 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				EB37859E2F2142480086BB1F /* Pods_tvOS_HeckYeahTV.framework */,
+				EB3785972F2141770086BB1F /* Pods_macOS_HeckYeahTV.framework */,
 				EB35E3112F00781200D31894 /* MobileVLCKit.xcframework */,
 				EB35E30D2F0077B500D31894 /* Pods_iOS_HeckYeahTV.framework */,
 				EB33342D2EC8273700CFAC43 /* Pods_macOS_HeckYeahTV.framework */,
@@ -624,6 +644,8 @@
 			name = macOS_HeckYeahTV;
 			packageProductDependencies = (
 				EBB5B5202EDD46DC004251CB /* Hellfire */,
+				EBFFBD152F21A7AB0022F6A5 /* FirebaseAnalytics */,
+				EBFFBD172F21A7AB0022F6A5 /* FirebaseCrashlytics */,
 			);
 			productName = macOSHeckYeahTV;
 			productReference = EB2C2DB72E5E203A005CE685 /* HeckYeahTV.app */;
@@ -751,6 +773,8 @@
 			name = tvOS_HeckYeahTV;
 			packageProductDependencies = (
 				EBB5B51E2EDD46C4004251CB /* Hellfire */,
+				EBFFBD112F21A79E0022F6A5 /* FirebaseAnalytics */,
+				EBFFBD132F21A79E0022F6A5 /* FirebaseCrashlytics */,
 			);
 			productName = "Heck Yeah TV";
 			productReference = EBE03C172E53D8DE006B7747 /* HeckYeahTV.app */;
@@ -800,7 +824,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 2610;
-				LastUpgradeCheck = 2610;
+				LastUpgradeCheck = 2620;
 				ORGANIZATIONNAME = "Hellyer Multimedia";
 				TargetAttributes = {
 					EB2C2DB62E5E203A005CE685 = {
@@ -1062,7 +1086,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-macOS_HeckYeahTV/Pods-macOS_HeckYeahTV-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -1194,7 +1217,8 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
-					"@executable_path/Frameworks",
+					"$(PROJECT_DIR)/Frameworks",
+					"@loader_path/../",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 15.6;
 				MARKETING_VERSION = 1.0;
@@ -1235,7 +1259,11 @@
 				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2025 Hellyer Multimedia. All rights reserved.";
 				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "$(PRODUCT_NAME) would like to access your local network to discover HDHomeRun network TV tuners.";
 				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited)";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Frameworks",
+					"@loader_path/../",
+				);
 				MACOSX_DEPLOYMENT_TARGET = 15.6;
 				MARKETING_VERSION = 1.0;
 				OTHER_LDFLAGS = "$(inherited)";
@@ -1495,10 +1523,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited)";
 				MACOSX_DEPLOYMENT_TARGET = 15.6;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.hellyermultimedia.heckyeahtv.go;
@@ -1540,10 +1565,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited)";
 				MACOSX_DEPLOYMENT_TARGET = 15.6;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.hellyermultimedia.heckyeahtv.go;
@@ -1662,10 +1684,7 @@
 				INFOPLIST_KEY_UIRequiredDeviceCapabilities = arm64;
 				INFOPLIST_KEY_UIUserInterfaceStyle = Automatic;
 				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited)";
 				MACOSX_DEPLOYMENT_TARGET = 15.6;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.hellyermultimedia.heckyeahtv.go;
@@ -1703,10 +1722,7 @@
 				INFOPLIST_KEY_UIRequiredDeviceCapabilities = arm64;
 				INFOPLIST_KEY_UIUserInterfaceStyle = Automatic;
 				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited)";
 				MACOSX_DEPLOYMENT_TARGET = 15.6;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.hellyermultimedia.heckyeahtv.go;
@@ -1941,6 +1957,26 @@
 			productName = FirebaseAnalytics;
 		};
 		EBDD3AF82ECE9C160050D08D /* FirebaseCrashlytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = EBDD3AF52ECE9C160050D08D /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseCrashlytics;
+		};
+		EBFFBD112F21A79E0022F6A5 /* FirebaseAnalytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = EBDD3AF52ECE9C160050D08D /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalytics;
+		};
+		EBFFBD132F21A79E0022F6A5 /* FirebaseCrashlytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = EBDD3AF52ECE9C160050D08D /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseCrashlytics;
+		};
+		EBFFBD152F21A7AB0022F6A5 /* FirebaseAnalytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = EBDD3AF52ECE9C160050D08D /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalytics;
+		};
+		EBFFBD172F21A7AB0022F6A5 /* FirebaseCrashlytics */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = EBDD3AF52ECE9C160050D08D /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseCrashlytics;
