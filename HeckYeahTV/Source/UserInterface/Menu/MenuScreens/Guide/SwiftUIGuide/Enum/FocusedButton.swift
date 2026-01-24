@@ -6,6 +6,7 @@
 //  Copyright © 2026 Hellyer Multimedia. All rights reserved.
 //
 
+import Foundation
 
 enum FocusedButton: Hashable {
         case favorite

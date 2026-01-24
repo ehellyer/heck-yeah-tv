@@ -21,20 +21,20 @@ struct GuideViewRepresentable: CrossPlatformControllerRepresentable {
     //MARK: - PlatformViewRepresentable overrides
     
     func makeViewController(context: Context) -> PlatformViewController {
-        let controller = context.coordinator.guideController
+        let controller = GuideViewController(nibName: nil, bundle: nil)
         controller.appState = appState
         controller.viewContext = viewContext
         return controller
     }
     
     func updateViewController(_ viewController: PlatformViewController, context: Context) {
-        let controller = context.coordinator.guideController
-        controller.appState = appState
-        controller.viewContext = viewContext
+        let controller = viewController as? GuideViewController
+        controller?.appState = appState
+        controller?.viewContext = viewContext
     }
     
     static func dismantleViewController(_ viewController: PlatformViewController, coordinator: Coordinator) {
-        coordinator.guideController.view.removeFromSuperview()
+        
     }
 
     func makeCoordinator() -> Coordinator {
@@ -44,7 +44,6 @@ struct GuideViewRepresentable: CrossPlatformControllerRepresentable {
     //MARK: - ViewControllerRepresentable Coordinator
     
     @MainActor
-    final class Coordinator: NSObject {
-        lazy var guideController: GuideViewController = GuideViewController()
-    }
+    final class Coordinator: NSObject { }
 }
+

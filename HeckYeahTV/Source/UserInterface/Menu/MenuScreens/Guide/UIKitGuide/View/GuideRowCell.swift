@@ -101,6 +101,16 @@ class GuideRowCell: UITableViewCell {
     
     private lazy var favoriteButtonView: FavoriteToggleView = FavoriteToggleView()
 
+    private lazy var emptyProgramView: EmptyProgramView = {
+        let _emptyProgramView = EmptyProgramView(frame: CGRect.zero)
+        programsMaskView.configureChildView(_emptyProgramView, withInset: UIEdgeInsets(top: 0,
+                                                                                       left: 10,
+                                                                                       bottom: 0,
+                                                                                       right: AppStyle.GuideView.programSpacing))
+        _emptyProgramView.isHidden = true
+        return _emptyProgramView
+    }()
+        
     private lazy var rowStackView: UIStackView = {
         let stackView = UIStackView()
         stackView.translatesAutoresizingMaskIntoConstraints = false
@@ -150,20 +160,13 @@ class GuideRowCell: UITableViewCell {
     //MARK: - Private API
     
     private func updateProgramsDisplay(with channelId: ChannelId?, isPlaying: Bool) {
-        // Clear existing program views
-        programsMaskView.viewWithTag(EmptyProgramView.viewTypeTagId)?.removeFromSuperview()
-        
         guard let programs, programs.isEmpty == false else {
-            // Add 'No guide information' view.
-            let emptyProgramView = EmptyProgramView(frame: CGRect.zero)
+            emptyProgramView.isHidden = false
             emptyProgramView.configure(isPlaying: isPlaying, isLoading: (channelId == nil))
-            programsMaskView.configureChildView(emptyProgramView, withInset: UIEdgeInsets(top: 0,
-                                                                                          left: 10,
-                                                                                          bottom: 0,
-                                                                                          right: AppStyle.GuideView.programSpacing))
             return
         }
-  
+
+        emptyProgramView.isHidden = true
         programsCollectionView.reloadData()
         scrollToCurrentProgram()
     }
@@ -178,6 +181,14 @@ class GuideRowCell: UITableViewCell {
         guard let index = currentProgramIndex else { return }
         let indexPath = IndexPath(item: index, section: 0)
         programsCollectionView.scrollToItem(at: indexPath, at: .left, animated: false)
+    }
+    
+    private func viewForChannelProgramId(_ id: ChannelProgramId?) -> ProgramCollectionViewCell? {
+        guard let id else { return nil }
+        let cell = programsCollectionView.visibleCells.first(where: {
+            ($0 as? ProgramCollectionViewCell)?.channelProgramId == id
+        }) as? ProgramCollectionViewCell
+        return cell
     }
     
     //MARK: - Internal API
@@ -200,28 +211,25 @@ class GuideRowCell: UITableViewCell {
         if self.channel?.id != channelId {
             channelLoader.load(channelId: channelId, context: viewContext)
             programsLoader.load(channelId: channelId, context: viewContext)
-            
-            channelNameView.configure(with: nil, isPlaying: isPlaying)
-            favoriteButtonView.configure(with: nil, isPlaying: isPlaying)
-            updateProgramsDisplay(with: nil, isPlaying: isPlaying)
-        } else {
-            channelNameView.configure(with: self.channel, isPlaying: isPlaying)
-            favoriteButtonView.configure(with: self.channel, isPlaying: isPlaying)
-            updateProgramsDisplay(with: channelId, isPlaying: isPlaying)
         }
+
+        channelNameView.configure(with: self.channel, isPlaying: isPlaying)
+        favoriteButtonView.configure(with: self.channel, isPlaying: isPlaying)
+        updateProgramsDisplay(with: self.channel?.id, isPlaying: isPlaying)
     }
 }
 
-//MARK: - tvOS Focus Code
+//MARK: - tvOS Focus overrides
 
 extension GuideRowCell {
-    
+
+    override var preferredFocusEnvironments: [any UIFocusEnvironment] {
+        let envs = [self.channelNameView, self.favoriteButtonView, self.programsCollectionView]
+        return envs
+    }
+
     override var canBecomeFocused: Bool {
         return false
-    }
-    
-    override var preferredFocusEnvironments: [any UIFocusEnvironment] {
-        return [self.channelNameView, self.favoriteButtonView, self.programsCollectionView]
     }
 }
 
@@ -244,6 +252,8 @@ extension GuideRowCell: UICollectionViewDataSource {
 
         let program = self.programs?[indexPath.item]
         cell.programView.configure(with: program, isPlaying: isPlaying)
+        cell.channelProgramId = program?.id
+        
         
         var isProgramNow: Bool = false
         if let _program = program {
@@ -267,10 +277,12 @@ extension GuideRowCell: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let channelProgram = self.programs?[indexPath.item]
         guard let channelProgram else { return }
+        let view = self.viewForChannelProgramId(channelProgram.id)
+        self.delegate?.updateTargetFocusView(view)
         self.delegate?.showChannelProgram(channelProgram)
     }
     
-    func scrollViewWillEndDragging(_ scrollView: UIScrollView,
+    func scrollViewWillEndDragging(_ scrollView: UIScrollView, 
                                    withVelocity velocity: CGPoint, 
                                    targetContentOffset: UnsafeMutablePointer<CGPoint>) {
         
@@ -290,13 +302,13 @@ extension GuideRowCell: UICollectionViewDelegate {
         // Calculate which cell to snap to
         let targetIndex: CGFloat
         if velocity.x > 0 {
-            // Scrolling right - snap to next cell
+            // Scrolling right, snap to next cell
             targetIndex = ceil(contentOffsetX / cellWidthWithSpacing)
         } else if velocity.x < 0 {
-            // Scrolling left - snap to previous cell
+            // Scrolling left, snap to previous cell
             targetIndex = floor(contentOffsetX / cellWidthWithSpacing)
         } else {
-            // No velocity - snap to nearest cell
+            // No velocity, snap to nearest cell
             targetIndex = round(contentOffsetX / cellWidthWithSpacing)
         }
         

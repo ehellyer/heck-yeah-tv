@@ -24,7 +24,7 @@ struct NoChannelProgramView: View {
             // No op
         } label: {
             Text("No guide information")
-                .font(AppStyle.Fonts.gridRowFont)
+                .font(AppStyle.Fonts.programViewFont)
                 .padding(.horizontal, AppStyle.ProgramView.internalHorizontalPadding)
                 .frame(height: AppStyle.ProgramView.height)
                 .frame(maxWidth: .infinity)

@@ -16,4 +16,6 @@ protocol GuideViewDelegate: AnyObject {
     func toggleFavoriteChannel(_ channelId: ChannelId)
     
     func showChannelProgram(_ channelProgram: ChannelProgram)
+    
+    func updateTargetFocusView(_ programView: ProgramCollectionViewCell?)
 }

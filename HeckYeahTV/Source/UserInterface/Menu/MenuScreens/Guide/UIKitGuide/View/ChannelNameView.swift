@@ -246,6 +246,8 @@ class ChannelNameView: UIView {
     }
 }
 
+//MARK: - tvOS Focus overrides
+
 extension ChannelNameView: @MainActor FocusTargetView {
     
     override var preferredFocusEnvironments: [UIFocusEnvironment] {

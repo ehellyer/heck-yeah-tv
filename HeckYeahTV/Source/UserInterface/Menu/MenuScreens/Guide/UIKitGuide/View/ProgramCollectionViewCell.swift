@@ -12,6 +12,8 @@ class ProgramCollectionViewCell: UICollectionViewCell {
     
     static let cellIdentifier: String = "GuideRowCell.ProgramsCollectionViewCell"
     
+    // MARK: - UICollectionViewCell overrides
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         commonInit()
@@ -22,9 +24,12 @@ class ProgramCollectionViewCell: UICollectionViewCell {
     }
     
     override func prepareForReuse() {
+        channelProgramId = nil
         programView.configure(with: nil,
                               isPlaying: false)
     }
+    
+    // MARK: - Private API
     
     private func commonInit() {
         self.backgroundColor = .clear
@@ -33,13 +38,6 @@ class ProgramCollectionViewCell: UICollectionViewCell {
         longTapGesture.delegate = self
         addGestureRecognizer(longTapGesture)
     }
-    
-    lazy var programView: ProgramView = {
-        let _programView = ProgramView()
-        contentView.configureChildView(_programView)
-        return _programView
-    }()
-    
     
     private lazy var longTapGesture: UILongPressGestureRecognizer = {
         let gesture = UILongPressGestureRecognizer(target: self, action: #selector(viewTapped))
@@ -51,7 +49,7 @@ class ProgramCollectionViewCell: UICollectionViewCell {
         return gesture
     }()
     
-    //MARK: - Private API - Actions and action view modifiers
+    // MARK: - Private API - Actions and action view modifiers
     
     @objc private func viewTapped(_ gesture: UILongPressGestureRecognizer) {
         switch gesture.state {
@@ -65,7 +63,19 @@ class ProgramCollectionViewCell: UICollectionViewCell {
                 break
         }
     }
+    
+    // MARK: - Internal API
+    
+    lazy var programView: ProgramView = {
+        let _programView = ProgramView()
+        contentView.configureChildView(_programView)
+        return _programView
+    }()
+    
+    var channelProgramId: ChannelProgramId?
 }
+
+// MARK: - tvOS Focus overrides
 
 extension ProgramCollectionViewCell: @MainActor FocusTargetView {
     

@@ -40,7 +40,7 @@ final class SharedAppState: AppStateProvider {
         }
     }
     
-    var showChannelPrograms: ChannelProgram? = nil
+    var showProgramDetailCarousel: ChannelProgram? = nil
     
     var selectedTab: AppSection {
         get {

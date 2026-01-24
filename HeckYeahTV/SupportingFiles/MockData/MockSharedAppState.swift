@@ -14,7 +14,7 @@ final class MockSharedAppState: AppStateProvider {
 
     init(isPlayerPaused: Bool = false,
          showAppMenu: Bool = false,
-         showChannelPrograms: ChannelProgram? = nil,
+         showProgramDetailCarousel: ChannelProgram? = nil,
          selectedTab: AppSection = .guide,
          selectedChannel: ChannelId? = nil,
          recentChannelIds: [ChannelId] = [],
@@ -24,7 +24,7 @@ final class MockSharedAppState: AppStateProvider {
         
         self.isPlayerPaused = isPlayerPaused
         self.showAppMenu = showAppMenu
-        self.showChannelPrograms = showChannelPrograms
+        self.showProgramDetailCarousel = showProgramDetailCarousel
         self.selectedTab = selectedTab
         self.selectedChannel = selectedChannel
         self.recentChannelIds = recentChannelIds
@@ -35,7 +35,7 @@ final class MockSharedAppState: AppStateProvider {
     
     var isPlayerPaused: Bool
     var showAppMenu: Bool
-    var showChannelPrograms: ChannelProgram?
+    var showProgramDetailCarousel: ChannelProgram?
     var selectedTab: AppSection
     var selectedChannel: ChannelId? {
         didSet {

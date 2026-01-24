@@ -31,16 +31,16 @@ struct ChannelProgramView: View {
     var body: some View {
         Button {
             withAnimation {
-                appState.showChannelPrograms = channelProgram
+                appState.showProgramDetailCarousel = channelProgram
             }
         } label: {
             VStack(alignment: .leading, spacing: 5) {
                 Text(channelProgram.formattedTimeSlot)
-                    .font(AppStyle.Fonts.gridRowFont)
+                    .font(AppStyle.Fonts.programViewFont)
                     .foregroundColor(.guideForegroundNoFocus)
                 
                 Text(channelProgram.title)
-                    .font(AppStyle.Fonts.gridRowFont)
+                    .font(AppStyle.Fonts.programViewFont)
                     .foregroundColor(.guideForegroundNoFocus)
                     .lineLimit(2)
             }

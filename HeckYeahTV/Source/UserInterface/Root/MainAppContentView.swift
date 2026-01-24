@@ -53,7 +53,7 @@ struct MainAppContentView: View {
                     .focusScope(guideScope)
                     .focused($focusedSection, equals: .guide)
                     .defaultFocus($focusedSection, .guide)
-                    .disabled(appState.showChannelPrograms != nil) // Prevents focus jumping from ChannelProgramsCarousel to Guide in the background.
+                    .disabled(appState.showProgramDetailCarousel != nil) // Prevents focus jumping from ChannelProgramsCarousel to Guide in the background.
                     .onAppear {
                         focusedSection = .guide
                     }
@@ -66,7 +66,7 @@ struct MainAppContentView: View {
 #endif
             
             // Channel Programs Carousel
-            if let channelProgram = appState.showChannelPrograms,
+            if let channelProgram = appState.showProgramDetailCarousel,
                let _channel = try? swiftDataController.channel(for: channelProgram.channelId) {
                 
                 let _programs = swiftDataController.channelPrograms(for: channelProgram.channelId)
@@ -120,7 +120,7 @@ struct MainAppContentView: View {
             // If app becomes not-active with the app navigation visible, dismiss the app navigation.
             if newValue != .active && appState.showAppMenu {
                 appState.showAppMenu = false        // If presented, hides app menu.
-                appState.showChannelPrograms = nil  // If presented, hides program carousel.
+                appState.showProgramDetailCarousel = nil  // If presented, hides program carousel.
             }
         })
         

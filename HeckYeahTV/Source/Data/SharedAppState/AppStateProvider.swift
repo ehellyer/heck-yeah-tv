@@ -27,8 +27,11 @@ protocol AppStateProvider {
     /// Set to `false` when you want a clean, minimalist look (or when you're pretending to be Netflix).
     var showAppMenu: Bool { get set }
     
-    
-    var showChannelPrograms: ChannelProgram? { get set }
+    /// The program details carousel that demands your full attention.
+    ///
+    /// When set, this triggers a fancy swipeable carousel to show off program details like it's
+    /// auditioning for a design award. Set to `nil` to dismiss it back into the void.
+    var showProgramDetailCarousel: ChannelProgram? { get set }
     
     /// The channel that's currently getting all the attention.
     ///
@@ -65,8 +68,11 @@ protocol AppStateProvider {
     /// "Just one episode", famous last words.
     var selectedChannelBundle: ChannelBundleId { get set }
     
-    
-    /// Last guide fetch time.
+    /// The last time we bothered to check what's actually on TV.
+    ///
+    /// Stores when the app last fetched program guide data, because repeatedly hammering
+    /// the guide API every 5 seconds is how you get banned. Or rate-limited. Or both.
+    /// `nil` means "we've never checked" or "we're pretending yesterday never happened."
     var dateLastGuideFetch: Date? { get set }
 }
 

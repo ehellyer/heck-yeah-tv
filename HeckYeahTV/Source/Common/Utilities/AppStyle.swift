@@ -139,6 +139,14 @@ struct AppStyle {
     
     struct Fonts {
         
+        static var programViewFont: Font {
+#if os(tvOS)
+            .subheadline
+#else
+            .subheadline
+#endif
+        }
+        
         static var gridRowFont: Font {
 #if os(tvOS)
             .subheadline

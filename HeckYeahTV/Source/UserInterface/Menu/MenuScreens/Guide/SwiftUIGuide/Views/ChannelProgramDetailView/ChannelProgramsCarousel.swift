@@ -28,7 +28,7 @@ struct ChannelProgramsCarousel: View {
 #if !os(tvOS)
                 Button {
                     withAnimation {
-                        appState.showChannelPrograms = nil
+                        appState.showProgramDetailCarousel = nil
                     }
                 } label: {
                     Image(systemName: "xmark.circle.fill")
@@ -109,7 +109,7 @@ struct ChannelProgramsCarousel: View {
         // Support for dismissing the tabview by tapping menu on Siri remote for tvOS.
         .onExitCommand {
             withAnimation {
-                appState.showChannelPrograms = nil
+                appState.showProgramDetailCarousel = nil
             }
         }
 #endif

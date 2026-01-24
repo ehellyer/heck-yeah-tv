@@ -82,7 +82,8 @@ struct Heck_Yeah_TVApp: App {
         // Always ensure app navigation starts off in the dismissed state when there is a selected channel. Else present the default tab in app navigation.  This prevents a black screen on first startup.
         let appState = SharedAppState.shared
         appState.showAppMenu = (appState.selectedChannel == nil)
-
+        appState.showProgramDetailCarousel = nil
+        
         startupTask?.cancel()
         startupTask = Task {
 

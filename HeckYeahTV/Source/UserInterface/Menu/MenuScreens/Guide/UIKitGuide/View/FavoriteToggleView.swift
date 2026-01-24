@@ -139,7 +139,9 @@ class FavoriteToggleView: UIView {
     }
 }
 
-extension FavoriteToggleView: FocusTargetView {
+//MARK: - tvOS Focus overrides
+
+extension FavoriteToggleView: @MainActor FocusTargetView {
     
     override var preferredFocusEnvironments: [UIFocusEnvironment] {
         return [self]

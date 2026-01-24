@@ -102,6 +102,8 @@ class EmptyProgramView: UIView {
     }
 }
 
+//MARK: - tvOS Focus overrides
+
 extension EmptyProgramView: @MainActor FocusTargetView {
     
     override var preferredFocusEnvironments: [UIFocusEnvironment] {
