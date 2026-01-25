@@ -113,7 +113,6 @@
 				"Source/Common/Extensions/NSView+AsImage.swift",
 				"Source/Common/Extensions/PlatformImage+AsImage.swift",
 				"Source/Common/Extensions/String+Extension.swift",
-				"Source/Common/Extensions/UIView+ConfigureChildView.swift",
 				"Source/Common/Extensions/UserDefaults+Extension.swift",
 				Source/Common/Logging/DebugLogger.swift,
 				Source/Common/PlatformRepresentable/CrossPlatformControllerRepresentable.swift,
