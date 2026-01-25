@@ -21,12 +21,13 @@ class GuideViewController: UIViewController {
     required init?(coder: NSCoder) {
         super.init(coder: coder)
         logDebug("Init GuideViewController at \(Unmanaged.passUnretained(self).toOpaque())")
-        
+        commonInit()
     }
     
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
         logDebug("Init GuideViewController at \(Unmanaged.passUnretained(self).toOpaque())")
+        commonInit()
     }
     
     override func viewDidLoad() {
@@ -82,13 +83,16 @@ class GuideViewController: UIViewController {
     private var swiftDataController: SwiftDataControllable
     private var reloadTableViewTask: Task<Void, Never>? = nil
     
-    
     private var targetChannelId: ChannelId? {
         return appState.selectedChannel ?? swiftDataController.channelBundleMap.map.first
     }
     
     private func setupTableView() {
         tableView.register(GuideRowCell.self, forCellReuseIdentifier: GuideRowCell.identifier)
+    }
+    
+    private func commonInit() {
+        restoresFocusAfterTransition = false
     }
     
     //MARK: - Observation of SharedAppState
@@ -214,20 +218,19 @@ class GuideViewController: UIViewController {
     var viewContext: ModelContext!
 }
 
-//MARK: - tvOS Focus overrides
+//MARK: - tvOS UIFocusEnvironment, FocusTargetView implementation
 
 extension GuideViewController {
     
     override var preferredFocusEnvironments: [any UIFocusEnvironment] {
-        if let targetView = self.targetFocusView {
-            return [targetView]
-        }
-
-        return [self.tableView]
+        var environments: [UIFocusEnvironment] = [UIFocusEnvironment]()
+        self.targetFocusView.map { environments.append($0) }
+        environments.append(self.tableView)
+        return environments
     }
     
     override func shouldUpdateFocus(in context: UIFocusUpdateContext) -> Bool {
-        return true
+        return (appState.showProgramDetailCarousel == nil)
     }
 }
 

@@ -105,14 +105,26 @@ final class SharedAppState: AppStateProvider {
         }
     }
     
-    var dateLastGuideFetch: Date? {
+    var dateLastHomeRunChannelProgramFetch: Date? {
         get {
-            access(keyPath: \.dateLastGuideFetch)
-            return UserDefaults.dateLastGuideFetch
+            access(keyPath: \.dateLastHomeRunChannelProgramFetch)
+            return UserDefaults.dateLastHomeRunChannelProgramFetch
         }
         set {
-            withMutation(keyPath: \.dateLastGuideFetch) {
-                UserDefaults.dateLastGuideFetch = newValue
+            withMutation(keyPath: \.dateLastHomeRunChannelProgramFetch) {
+                UserDefaults.dateLastHomeRunChannelProgramFetch = newValue
+            }
+        }
+    }
+    
+    var dateLastIPTVChannelFetch: Date? {
+        get {
+            access(keyPath: \.dateLastIPTVChannelFetch)
+            return UserDefaults.dateLastIPTVChannelFetch
+        }
+        set {
+            withMutation(keyPath: \.dateLastIPTVChannelFetch) {
+                UserDefaults.dateLastIPTVChannelFetch = newValue
             }
         }
     }

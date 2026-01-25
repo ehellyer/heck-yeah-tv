@@ -68,12 +68,21 @@ protocol AppStateProvider {
     /// "Just one episode", famous last words.
     var selectedChannelBundle: ChannelBundleId { get set }
     
-    /// The last time we bothered to check what's actually on TV.
+    /// The last known expedition to the land of guide data.
     ///
-    /// Stores when the app last fetched program guide data, because repeatedly hammering
-    /// the guide API every 5 seconds is how you get banned. Or rate-limited. Or both.
-    /// `nil` means "we've never checked" or "we're pretending yesterday never happened."
-    var dateLastGuideFetch: Date? { get set }
+    /// This date marks the heroic moment when the app last fetched the HomeRun channel program guide.
+    /// Fetching too often may result in angry server admins, sternly-worded emails, or mysterious API outages.
+    /// If this value is `nil`, then either we've never checked, or we’re relying on our psychic abilities to guess what’s on.
+    /// Use responsibly—your API rate limit (and your reputation) depend on it.
+    var dateLastHomeRunChannelProgramFetch: Date? { get set }
+    
+    /// The last rendezvous with the mysterious world of IPTV channels.
+    ///
+    /// Remembers the most recent adventure when your app fetched the IPTV channel list.
+    /// Checking too frequently may provoke the wrath of server guardians, or at least a stern warning in all caps.
+    /// If `nil`, we either haven’t fetched yet, or we’re just winging it and hoping for the best.
+    /// Set this after each successful fetch—your future self (and the API’s rate limiter) will thank you.
+    var dateLastIPTVChannelFetch: Date? { get set }
 }
 
 extension AppStateProvider {

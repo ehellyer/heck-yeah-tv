@@ -138,23 +138,23 @@ class GuideRowCell: UITableViewCell {
         layout.minimumLineSpacing = AppStyle.GuideView.programSpacing
         layout.estimatedItemSize = .zero // Important: Disable self-sizing to use delegate sizes
         
-        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        collectionView.translatesAutoresizingMaskIntoConstraints = false
-        collectionView.dataSource = self
-        collectionView.delegate = self
-        collectionView.showsHorizontalScrollIndicator = true
-        collectionView.showsVerticalScrollIndicator = false
-        collectionView.backgroundColor = .clear
-        collectionView.clipsToBounds = false
-        collectionView.register(ProgramCollectionViewCell.self,
-                                forCellWithReuseIdentifier: ProgramCollectionViewCell.cellIdentifier)
-
-        collectionView.contentInset = .init(top: 0,
-                                            left: 10,
-                                            bottom: 0,
-                                            right: AppStyle.GuideView.programSpacing)
-
-        return collectionView
+        let _collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        _collectionView.translatesAutoresizingMaskIntoConstraints = false
+        _collectionView.dataSource = self
+        _collectionView.delegate = self
+        _collectionView.showsHorizontalScrollIndicator = true
+        _collectionView.showsVerticalScrollIndicator = false
+        _collectionView.backgroundColor = .clear
+        _collectionView.clipsToBounds = false
+        _collectionView.register(ProgramCollectionViewCell.self,
+                                 forCellWithReuseIdentifier: ProgramCollectionViewCell.cellIdentifier)
+        
+        _collectionView.contentInset = .init(top: 0,
+                                             left: 10,
+                                             bottom: 0,
+                                             right: AppStyle.GuideView.programSpacing)
+        
+        return _collectionView
     }()
     
     //MARK: - Private API
@@ -219,13 +219,16 @@ class GuideRowCell: UITableViewCell {
     }
 }
 
-//MARK: - tvOS Focus overrides
+//MARK: - tvOS UIFocusEnvironment, FocusTargetView implementation
 
 extension GuideRowCell {
 
     override var preferredFocusEnvironments: [any UIFocusEnvironment] {
-        let envs = [self.channelNameView, self.favoriteButtonView, self.programsCollectionView]
-        return envs
+        var environments: [UIFocusEnvironment] = [UIFocusEnvironment]()
+        environments.append(self.channelNameView)
+        environments.append(self.favoriteButtonView)
+        environments.append(self.programsCollectionView)
+        return environments
     }
 
     override var canBecomeFocused: Bool {
@@ -253,7 +256,6 @@ extension GuideRowCell: UICollectionViewDataSource {
         let program = self.programs?[indexPath.item]
         cell.programView.configure(with: program, isPlaying: isPlaying)
         cell.channelProgramId = program?.id
-        
         
         var isProgramNow: Bool = false
         if let _program = program {

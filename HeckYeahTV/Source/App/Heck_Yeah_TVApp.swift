@@ -87,20 +87,26 @@ struct Heck_Yeah_TVApp: App {
         startupTask?.cancel()
         startupTask = Task {
 
-            let container = dataPersistence.container
-            
-            await withTaskGroup(of: Void.self) { group in
+            // Don't fetch unless its been at least six hours from the last fetch.
+            let date = appState.dateLastIPTVChannelFetch
+            if date == nil || date! < Date().addingTimeInterval(-60 * 60 * 6) {
+                let container = dataPersistence.container
                 
-                group.addTask {
-                    let scanForTuners = await appState.scanForTuners
-                    let hdTunerImporter = HomeRunImporter(container: container, scanForTuners: scanForTuners)
-                    let _ = try? await hdTunerImporter.load()
+                await withTaskGroup(of: Void.self) { group in
+                    
+                    group.addTask {
+                        let scanForTuners = await appState.scanForTuners
+                        let hdTunerImporter = HomeRunImporter(container: container, scanForTuners: scanForTuners)
+                        let _ = try? await hdTunerImporter.load()
+                    }
+                    
+                    group.addTask {
+                        let iptvImporter = IPTVImporter(container: container)
+                        let _ = try? await iptvImporter.load()
+                    }
                 }
                 
-                group.addTask {
-                    let iptvImporter = IPTVImporter(container: container)
-                    let _ = try? await iptvImporter.load()
-                }
+                appState.dateLastIPTVChannelFetch = Date()
             }
             
             await MainActor.run {

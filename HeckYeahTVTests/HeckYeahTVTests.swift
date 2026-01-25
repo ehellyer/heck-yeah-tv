@@ -32,14 +32,14 @@ struct HeckYeahTVTests {
     
     @Test func lastGuideFetch() async throws {
         var appState: AppStateProvider = SharedAppState.shared
-        let currentState = appState.dateLastGuideFetch
+        let currentState = appState.updateDateHomeRunChannelProgramFetch
         
         let testDate = Date()
-        appState.dateLastGuideFetch = testDate
-        #expect(appState.dateLastGuideFetch == testDate)
+        appState.updateDateHomeRunChannelProgramFetch = testDate
+        #expect(appState.updateDateHomeRunChannelProgramFetch == testDate)
         
         //Return previous state
-        appState.dateLastGuideFetch = currentState
+        appState.updateDateHomeRunChannelProgramFetch = currentState
     }
     
     @Test @MainActor func example() async throws {

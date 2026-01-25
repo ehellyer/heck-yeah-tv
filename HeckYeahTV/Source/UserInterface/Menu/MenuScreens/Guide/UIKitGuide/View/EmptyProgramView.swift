@@ -113,11 +113,7 @@ extension EmptyProgramView: @MainActor FocusTargetView {
     override var canBecomeFocused: Bool {
         return true
     }
-    
-    override func shouldUpdateFocus(in context: UIFocusUpdateContext) -> Bool {
-        return true
-    }
-    
+
     override func didUpdateFocus(in context: UIFocusUpdateContext, with coordinator: UIFocusAnimationCoordinator) {
         super.didUpdateFocus(in: context, with: coordinator)
         if (context.nextFocusedView === self) {

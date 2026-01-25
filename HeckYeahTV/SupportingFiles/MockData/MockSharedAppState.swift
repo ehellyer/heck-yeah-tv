@@ -20,7 +20,8 @@ final class MockSharedAppState: AppStateProvider {
          recentChannelIds: [ChannelId] = [],
          scanForTuners: Bool = true,
          selectedChannelBundle: ChannelBundleId = AppKeys.Application.defaultChannelBundleId,
-         dateLastGuideFetch: Date? = nil) {
+         dateLastHomeRunChannelProgramFetch: Date? = nil,
+         dateLastIPTVChannelFetch: Date? = nil) {
         
         self.isPlayerPaused = isPlayerPaused
         self.showAppMenu = showAppMenu
@@ -30,7 +31,8 @@ final class MockSharedAppState: AppStateProvider {
         self.recentChannelIds = recentChannelIds
         self.scanForTuners = scanForTuners
         self.selectedChannelBundle = selectedChannelBundle
-        self.dateLastGuideFetch = dateLastGuideFetch
+        self.dateLastHomeRunChannelProgramFetch = dateLastHomeRunChannelProgramFetch
+        self.dateLastIPTVChannelFetch = dateLastIPTVChannelFetch
     }
     
     var isPlayerPaused: Bool
@@ -47,6 +49,7 @@ final class MockSharedAppState: AppStateProvider {
     var recentChannelIds: [ChannelId]
     var scanForTuners: Bool
     var selectedChannelBundle: ChannelBundleId
-    var dateLastGuideFetch: Date?
+    var dateLastHomeRunChannelProgramFetch: Date?
+    var dateLastIPTVChannelFetch: Date?
 
 }

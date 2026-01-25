@@ -190,11 +190,11 @@ actor HomeRunImporter {
     
     /// Updates the last guide fetch timestamp to the current date/time.
     /// Call this after successfully fetching and importing guide data.
-    private func updateLastGuideFetchDate() async {
+    private func updateHomeRunChannelProgramFetchDate() async {
         await MainActor.run {
             let updatedDate = Date()
-            SharedAppState.shared.dateLastGuideFetch = updatedDate
-            logDebug("Updated dateLastGuideFetch to: \(updatedDate)")
+            SharedAppState.shared.dateLastHomeRunChannelProgramFetch = updatedDate
+            logDebug("Updated SharedAppState.shared.dateLastHomeRunChannelProgramFetch to: \(updatedDate)")
         }
     }
     
@@ -205,7 +205,7 @@ actor HomeRunImporter {
         
         let homeRunController: HomeRunController = HomeRunController()
 
-        let lastGuideFetchDate: Date? = await SharedAppState.shared.dateLastGuideFetch
+        let lastGuideFetchDate: Date? = await SharedAppState.shared.dateLastHomeRunChannelProgramFetch
 
         let shouldFetchGuideData: Bool = {
             guard let lastFetchDate = lastGuideFetchDate else {
@@ -241,7 +241,7 @@ actor HomeRunImporter {
                 try await self.importChannelGuides(homeRunController.channelGuides, channelGuideMap: channelGuideMap)
                 
                 // Only update the timestamp if guide import was successful
-                await self.updateLastGuideFetchDate()
+                await self.updateHomeRunChannelProgramFetchDate()
             } catch {
                 logError("Failed to import channel guides: \(error)")
                 throw error

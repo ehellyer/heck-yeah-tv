@@ -221,12 +221,23 @@ extension UserDefaults {
     
     
     /// The time the last successful guide fetch occurred
-    static var dateLastGuideFetch: Date? {
+    static var dateLastHomeRunChannelProgramFetch: Date? {
         get {
-            standard.object(forKey: AppKeys.SharedAppState.dateLastGuideFetchKey) as? Date
+            standard.object(forKey: AppKeys.SharedAppState.dateLastHomeRunChannelProgramFetchKey) as? Date
         }
         set {
-            standard.set(newValue, forKey: AppKeys.SharedAppState.selectedChannelBundleKey)
+            standard.set(newValue, forKey: AppKeys.SharedAppState.dateLastHomeRunChannelProgramFetchKey)
+        }
+    }
+    
+    
+    /// Date the application was last launched (cold start - initial load into memory).
+    static var dateLastIPTVChannelFetch: Date? {
+        get {
+            standard.object(forKey: AppKeys.SharedAppState.dateLastIPTVChannelFetchKey) as? Date
+        }
+        set {
+            standard.set(newValue, forKey: AppKeys.SharedAppState.dateLastIPTVChannelFetchKey)
         }
     }
 }

@@ -246,7 +246,7 @@ class ChannelNameView: UIView {
     }
 }
 
-//MARK: - tvOS Focus overrides
+//MARK: - tvOS UIFocusEnvironment, FocusTargetView implementation
 
 extension ChannelNameView: @MainActor FocusTargetView {
     
@@ -255,10 +255,6 @@ extension ChannelNameView: @MainActor FocusTargetView {
     }
     
     override var canBecomeFocused: Bool {
-        return true
-    }
-
-    override func shouldUpdateFocus(in context: UIFocusUpdateContext) -> Bool {
         return true
     }
     

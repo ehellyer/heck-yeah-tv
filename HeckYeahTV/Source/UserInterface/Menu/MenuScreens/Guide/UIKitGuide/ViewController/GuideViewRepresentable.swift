@@ -21,6 +21,12 @@ struct GuideViewRepresentable: CrossPlatformControllerRepresentable {
     //MARK: - PlatformViewRepresentable overrides
     
     func makeViewController(context: Context) -> PlatformViewController {
+        guard appState.showAppMenu else {
+            // Not sure what to do here.
+            // When the Guide is dismissed, SwiftUI is calling makeViewController one more time.  Instead of creating new GuideViewController, just return UIViewController().
+            // I will return to this later.
+            return UIViewController()
+        }
         let controller = GuideViewController(nibName: nil, bundle: nil)
         controller.appState = appState
         controller.viewContext = viewContext
