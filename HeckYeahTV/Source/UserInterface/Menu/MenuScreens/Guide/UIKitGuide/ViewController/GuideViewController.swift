@@ -197,7 +197,6 @@ class GuideViewController: UIViewController {
         logDebug("📍 Requesting focus on: \(type(of: view))")
         // Set the target view FIRST so preferredFocusEnvironments returns it
         self.targetFocusView = view
-        
         self.updateFocusIfNeeded()
         self.setNeedsFocusUpdate()
         

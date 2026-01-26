@@ -63,6 +63,7 @@ struct ProgramDetailText: View {
                 }
             }
         }
+        .frame(maxWidth: .infinity, alignment: .init(horizontal: .leading, vertical: .top))
     }
 }
 

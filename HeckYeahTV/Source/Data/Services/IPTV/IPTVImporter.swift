@@ -17,7 +17,7 @@ actor IPTVImporter {
     }
     
     private var batchCount: Int = 0
-    private let batchSize: Int = 3000
+    private let batchSize: Int = 2000
     private let context: ModelContext
     
     private lazy var existingCategories: [ProgramCategory] = {
@@ -147,7 +147,7 @@ actor IPTVImporter {
             
             if batchCount % batchSize == 0 {
                 try context.save()
-//                await Task.yield()
+                await Task.yield()
             }
         }
         

@@ -230,7 +230,7 @@ extension GuideRowCell {
         environments.append(self.programsCollectionView)
         return environments
     }
-
+    
     override var canBecomeFocused: Bool {
         return false
     }

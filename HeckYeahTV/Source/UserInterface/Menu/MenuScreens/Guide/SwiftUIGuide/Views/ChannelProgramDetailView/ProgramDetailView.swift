@@ -52,7 +52,7 @@ struct ProgramDetailView: View {
         
         VStack {
 //            ProgramDetailView(channelProgram: channelPrograms[0])
-            ProgramDetailView(channelProgram: channelPrograms[6])
+            ProgramDetailView(channelProgram: channelPrograms[0])
         }
     }
 }
