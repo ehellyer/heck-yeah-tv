@@ -24,6 +24,7 @@ struct ChannelsContainer: View {
             ShowFavorites(rightSwipeRedirectAction: {
                 scrollToSelectedAndFocus = true
             })
+            .padding(.bottom, 10)
             
             GuideViewRepresentable(appState: $appState,
                                    isFocused: $isFocused)

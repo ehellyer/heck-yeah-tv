@@ -218,7 +218,7 @@ extension UserDefaults {
             standard.set(newValue, forKey: AppKeys.SharedAppState.selectedChannelBundleKey)
         }
     }
-    
+
     
     /// The time the last successful guide fetch occurred
     static var dateLastHomeRunChannelProgramFetch: Date? {
@@ -231,7 +231,7 @@ extension UserDefaults {
     }
     
     
-    /// Date the application was last launched (cold start - initial load into memory).
+    /// The time the last successful fetch of IPTV channels
     static var dateLastIPTVChannelFetch: Date? {
         get {
             standard.object(forKey: AppKeys.SharedAppState.dateLastIPTVChannelFetchKey) as? Date

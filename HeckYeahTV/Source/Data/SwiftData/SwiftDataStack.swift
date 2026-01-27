@@ -54,7 +54,9 @@ final class SwiftDataStack {
             if Self.isLegacyStore(at: _storeURL) {
                 logWarning("Detected legacy store. Deleting and recreating with versioned schema...")
                 try Self.deletePersistentStore(at: _storeURL)
-                logDebug("Legacy store deleted successfully.")
+                logWarning("Legacy store deleted successfully.")
+            } else {
+                try Self.forceWALCheckpointingForStore(at: _storeURL)
             }
             
             // Dev note: HeckYeahSchema always points to latest schema, which holds the version number and model definitions.
@@ -185,6 +187,32 @@ extension SwiftDataStack {
         return UUID(uuid: uuidBytes)
     }
     
+    /// Forces SQLite to do its chores and merge all those WAL changes back into the main .sqlite file.
+    /// Think of it as hitting "Save All" after a long session of reckless editing.
+    /// If this fails, it's probably because SQLite needed more coffee.
+    private static func forceWALCheckpointingForStore(at storeURL: URL) throws {
+        var db: OpaquePointer?
+        // Open the database in read/write mode—because WAL checkpointing needs to make changes, not just peek.
+        let openResult = sqlite3_open_v2(storeURL.path, &db, SQLITE_OPEN_READWRITE, nil)
+        guard openResult == SQLITE_OK, let database = db else {
+            let errorMessage = String(cString: sqlite3_errmsg(db))
+            throw NSError(domain: "SwiftDataStack", code: Int(openResult), userInfo: [
+                NSLocalizedDescriptionKey: "Failed to open SQLite database for WAL checkpointing: \(errorMessage)"
+            ])
+        }
+        defer { sqlite3_close(database) } // Always clean up, or the database gods will frown upon you.
+        
+        // Time to call in the cleanup crew and merge those WAL edits!
+        let checkpointResult = sqlite3_wal_checkpoint_v2(database, nil, SQLITE_CHECKPOINT_FULL, nil, nil)
+        if checkpointResult != SQLITE_OK {
+            let errorMessage = String(cString: sqlite3_errmsg(database))
+            throw NSError(domain: "SwiftDataStack", code: Int(checkpointResult), userInfo: [
+                NSLocalizedDescriptionKey: "WAL checkpoint failed: \(errorMessage)"
+            ])
+        }
+        logDebug("WAL checkpoint completed successfully for store at \(storeURL.path) (Operation: Herded all those WAL bytes back home.)")
+    }
+    
     /// Nukes the persistent store from orbit. It's the only way to be sure.
     /// Deletes the main .sqlite file and its clingy friends (.sqlite-shm, .sqlite-wal).
     /// Because apparently one file wasn't enough - SQLite brought the whole squad.
@@ -197,12 +225,32 @@ extension SwiftDataStack {
         }
         
         // Delete WAL file
+        try deleteWALFile(at: url)
+        
+        
+        // Delete SHM file
+        try deleteSHMFile(at: url)
+        
+        //Side effect code I noticed was needed during development.  If we kill the DB, we will also need to kill the last did stuff dates in UserDefaults.
+        UserDefaults.dateLastIPTVChannelFetch = nil
+        UserDefaults.dateLastHomeRunChannelProgramFetch = nil
+    }
+    
+    /// Deletes the WAL (Write-Ahead Log) file, a.k.a. SQLite’s “scratch pad.”
+    /// Because sometimes you just have to take out the trash yourself.
+    /// Caution:  Force commit WAL changes first if keeping the sqlite file, else data loss may occur.
+    private static func deleteWALFile(at url: URL) throws {
+        let fileManager = FileManager.default
         let walURL = url.deletingPathExtension().appendingPathExtension("sqlite-wal")
         if fileManager.fileExists(atPath: walURL.path) {
             try fileManager.removeItem(at: walURL)
         }
-        
-        // Delete SHM file
+    }
+    
+    /// Deletes the SHM (shared memory) file, which is basically SQLite’s group chat history.
+    /// If it’s hanging around after the main file is gone, it’s just gossip at that point.
+    private static func deleteSHMFile(at url: URL) throws {
+        let fileManager = FileManager.default
         let shmURL = url.deletingPathExtension().appendingPathExtension("sqlite-shm")
         if fileManager.fileExists(atPath: shmURL.path) {
             try fileManager.removeItem(at: shmURL)
