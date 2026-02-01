@@ -11,25 +11,20 @@ import SwiftData
 
 struct ChannelView: View {
 
-    @Binding var appState: AppStateProvider
     @State var channel: Channel?
 
+    @State private var appState: AppStateProvider = InjectedValues[\.sharedAppState]
     @FocusState private var focusedButton: FocusedButton?
-
-    private var isFavoriteChannel: Bool {
-        return channel?.favorite?.isFavorite ?? false
-    }
     
     private var isPlaying: Bool {
         let selectedChannelId = appState.selectedChannel
         return selectedChannelId != nil && selectedChannelId == channel?.id
     }
-
+    
     var body: some View {
-        HStack(alignment: .center, spacing: 15) {
+        HStack(alignment: .center, spacing: AppStyle.ChannelView.favButtonTrailing) {
             
-            FavoriteView(appState: $appState,
-                         channel: channel)
+            FavoriteView(channelId: channel?.id)
             
             Button {
                 appState.selectedChannel = channel?.id
@@ -52,32 +47,30 @@ struct ChannelView: View {
 
 
 #Preview("ChannelView - Favorite toggle and channel selection") {
+    // Override the injected AppStateProvider
     @Previewable @State var appState: AppStateProvider = MockSharedAppState()
-
+    InjectedValues[\.sharedAppState] = appState
+    
     // Override the injected SwiftDataController
-    let mockData = MockSwiftDataStack()
-    let swiftDataController = MockSwiftDataController(viewContext: mockData.viewContext)
+    let swiftDataController = MockSwiftDataController()
     InjectedValues[\.swiftDataController] = swiftDataController
     
     let channel1 = swiftDataController.previewOnly_fetchChannel(at: 7)
-    let channel2 = swiftDataController.previewOnly_fetchChannel(at: 41)
+    let channel2 = swiftDataController.previewOnly_fetchChannel(at: 14)
     let channel3 = swiftDataController.previewOnly_fetchChannel(at: 9)
     
     return TVPreviewView() {
         VStack {
 
-            ChannelView(appState: $appState,
-                        channel: channel1)
+            ChannelView(channel: channel1)
             
-            ChannelView(appState: $appState,
-                        channel: channel2)
+            ChannelView(channel: channel2)
             
-            ChannelView(appState: $appState,
-                        channel: channel3)
+            ChannelView(channel: channel3)
             
         }
         .onAppear {
-            appState.selectedChannel = swiftDataController.channelBundleMap.map[9]
+            appState.selectedChannel = swiftDataController.channelBundleMap.map[9].channelId
         }
     }
 }

@@ -1,5 +1,5 @@
 //
-//  SwiftDataControllable.swift
+//  ChannelSourceable.swift
 //  HeckYeahTV
 //
 //  Created by Ed Hellyer on 12/10/25.
@@ -18,8 +18,7 @@ import SwiftData
 /// Conforming types must live on the `@MainActor` because SwiftData gets cranky when
 /// you try to query it from random background threads. Also because UI updates, obviously.
 @MainActor
-protocol SwiftDataControllable: ChannelFilterable {
-    
+protocol ChannelSourceable {
     /// Returns the total number of channels in the local database.
     ///
     /// This is the "before" number.  The raw, unfiltered count of every channel you've
@@ -36,7 +35,16 @@ protocol SwiftDataControllable: ChannelFilterable {
     /// If this map is empty, either your filters are too aggressive or you need more channels.
     /// Probably both.
     var channelBundleMap: ChannelBundleMap { get }
-
+    
+    
+    func totalChannelCountFor(deviceId: HDHomeRunDeviceId) throws -> Int
+    
+    func bundleEntry(for channelId: ChannelId, channelBundleId: ChannelBundleId) -> BundleEntry?
+    
+    func isFavorite(channelId: ChannelId?, channelBundleId: ChannelBundleId) -> Bool
+    
+    func toggleIsFavorite(channelId: ChannelId?, channelBundleId: ChannelBundleId)
+    
     /// Fetches a single channel from the database by its ID, or throws a tantrum.
     ///
     /// This is your "get me that specific channel, and I mean NOW" function. It dives into
@@ -99,15 +107,13 @@ protocol SwiftDataControllable: ChannelFilterable {
     /// a translator between human indecision and database queries.
     ///
     /// - Parameters:
-    ///   - showFavoritesOnly: "Only my favorites" = `true`, "I'm feeling adventurous" = `false`
     ///   - searchTerm: Whatever the user half-remembered about that channel name
     ///   - countryCode: Geographic limitations, because streaming rights are complicated
     ///   - categoryId: Content category, or `nil` for "surprise me"
     ///
     /// - Returns: A predicate ready to be unleashed on your SwiftData model context.
     ///            May return zero results if your criteria are unreasonably specific.
-    static func predicateBuilder(showFavoritesOnly: Bool,
-                                 searchTerm: String?,
+    static func predicateBuilder(searchTerm: String?,
                                  countryCode: CountryCodeId,
                                  categoryId: CategoryId?) -> Predicate<Channel>
 }

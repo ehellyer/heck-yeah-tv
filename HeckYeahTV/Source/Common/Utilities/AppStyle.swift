@@ -44,7 +44,7 @@ struct AppStyle {
     
     struct FavoritesView {
 #if os(tvOS)
-        static let width: CGFloat = 90
+        static let width: CGFloat = 120
         static let scaleEffect: CGFloat = 1.2
         static let height : CGFloat = AppStyle.rowHeight
         static let internalHorizontalPadding: CGFloat = 15
@@ -66,7 +66,7 @@ struct AppStyle {
         static let logoFrame: CGFloat = 70
         static let internalHorizontalPadding: CGFloat = 15
         static let internalVerticalPadding: CGFloat = 15
-        static let favButtonTrailing: CGFloat = 15
+        static let favButtonTrailing: CGFloat = 25
 #else
         static let minWidth: CGFloat = 300
         static let height : CGFloat = AppStyle.rowHeight
@@ -109,7 +109,7 @@ struct AppStyle {
         static let programSpacing: CGFloat = 15
 #endif
         
-        private static let focusGrowth: CGFloat = 15 // Fixed pixel growth
+        private static let focusGrowth: CGFloat = 5 // Fixed pixel growth
         
         static func scaleAmount(for size: CGSize, isFocused: Bool) -> CGFloat {
             guard isFocused else { return 1.0 }

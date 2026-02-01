@@ -11,9 +11,8 @@ import SwiftData
 
 struct GuideView: View {
     
-    @Binding var appState: AppStateProvider
-
-    @State private var swiftDataController: SwiftDataControllable = InjectedValues[\.swiftDataController]
+    @State private var appState: AppStateProvider = InjectedValues[\.sharedAppState]
+    @State private var swiftDataController: SwiftDataProvider = InjectedValues[\.swiftDataController]
     @State private var rebuildChannelBundleMapTask: Task<Void, Never>? = nil
     @State private var scrollToSelectedTask: Task<Void, Never>? = nil
     @State private var guideWidth: CGFloat = 20 // Will update dynamically
@@ -45,18 +44,16 @@ struct GuideView: View {
                 ScrollViewReader { proxy in
                     ScrollView(.vertical) {
                         LazyVStack(alignment: .leading) {
-                            ForEach(swiftDataController.channelBundleMap.map, id: \.self) { channelId in
+                            ForEach(swiftDataController.channelBundleMap.map, id: \.self) { channelMap in
                                 HStack(alignment: .top,
                                        spacing: AppStyle.GuideView.programSpacing) {
-                                    ChannelViewLoader(appState: $appState,
-                                                      channelId: channelId)
-                                    .id(channelId)
+                                    ChannelViewLoader(channelId: channelMap.channelId)
+                                    .id(channelMap.channelId)
                                     .frame(minWidth: combinedFCWidth)
                                     .frame(width: (compact) ? nil : combinedFCWidth)
                                     
                                     if !compact {
-                                        ChannelProgramListView(appState: $appState,
-                                                               channelId: channelId)
+                                        ChannelProgramListView(channelId: channelMap.channelId)
                                     }
                                 }
                             }
@@ -125,18 +122,19 @@ private extension GuideView {
 
 #if !os(tvOS)
 #Preview("GuideView") {
+    // Override the injected AppStateProvider
     @Previewable @State var appState: AppStateProvider = MockSharedAppState()
+    InjectedValues[\.sharedAppState] = appState
     
     // Override the injected SwiftDataController
-    let mockData = MockSwiftDataStack()
-    let swiftDataController = MockSwiftDataController(viewContext: mockData.viewContext,
-                                                      showFavoritesOnly: false
-    )
+    let swiftDataController = MockSwiftDataController()
     InjectedValues[\.swiftDataController] = swiftDataController
+
+    swiftDataController.showFavoritesOnly = true
     
     return TVPreviewView() {
-        GuideView(appState: $appState)
-            .modelContext(mockData.viewContext)
+        GuideView()
+            .modelContext(swiftDataController.viewContext)
     }
 }
 #endif

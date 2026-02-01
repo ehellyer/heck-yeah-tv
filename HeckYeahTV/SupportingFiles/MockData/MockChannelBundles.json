@@ -3,29 +3,26 @@
         "id": "mock#1.guide",
         "name": "Eds Mock Guide #1",
         "channelIds": [
-            "chan.news.001",
-            "chan.sports.001",
-            "chan.local.001",
-            "chan.local.002",
-            "chan.movies.001",
-            "chan.nature.001",
-            "chan.kids.001"]
+            "62a302becea9e383492d2c8b4e6155a96780559225eafc9cca6034829ef59729",
+            "e0b96af7c2e2342ec78ec2cc1b850574b250b9aa763ffb5e9056a6ed35fba7cb",
+            "672516ecbb4c2843e1e67ab71df4309eec8a580896501e0f1432acc5a4930122",
+            "d67ea5015d485e022f4b96beac1cea1d42f792e519f144bb83e978ce630c2809",
+            "dba0626324b684b9bd934b8574aa09916abab0ad891238adbe836213bb0ff428",
+            "30a6e0253eade9d6c111b97daf5f407fe087149dd25e3da58130bff6e26e0cc3",
+            "ba246ebf7aa7b70b02c2dcec2e169b5345482fb051daac7c1aa910786724a4c3"
+        ]
     },
     {
         "id": "mock#2.guide",
         "name": "Eds Mock Guide #2",
         "channelIds": [
-            "chan.music.001",
-            "chan.comedy.001",
-            "chan.premium.001",
-            "chan.cooking.001",
-            "chan.travel.001",
-            "chan.anime.001",
-            "chan.sci-fi.001",
-            "chan.gaming.001",
-            "chan.drama.001",
-            "chan.retro.001",
-            "chan.action.001",
-            "chan.reality.001"]
+            "8b012f7453ebd62cec1c56e81327d5225834ebf4db419cdf3a300ebf26920d6a",
+            "0e10a616ad0fee37e3911f7a1b585b7ac44ab7dfde567fa7ece5c871aeb491f7",
+            "8e90ddc78f295cd7f87f7e57cc33728bc58df1ad3ebb0a283ba8b6d287c48780",
+            "45f1ed92d9fee59c96d44dc5495ebea0d834299e18dc1d141666e3d1fa863d47",
+            "9b7826102005aa0aac67fdc28d8c59fbfa12da53e880e3ec75a9cdf7ea52b5b9",
+            "b98acbf59315de3bc0e1611822ecd900c1244a0f783d52b4487b491ac8d2b3a3",
+            "c1d9f6f03d5e336bb20874dbaf78532772fea385753dfaa816f99e240209bb20"
+        ]
     }
 ]

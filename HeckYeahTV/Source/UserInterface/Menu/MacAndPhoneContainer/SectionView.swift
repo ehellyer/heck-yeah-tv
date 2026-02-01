@@ -16,12 +16,12 @@ struct SectionView: View {
     var body: some View {
         switch appState.selectedTab {
             case .guide:
-                GuideView(appState: $appState)
+                GuideView()
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .background(Color.clear)
                 
             case .recents:
-                RecentsView(appState: $appState)
+                RecentsView()
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .background(Color.clear)
             
@@ -43,8 +43,7 @@ struct SectionView: View {
     @Previewable @State var appState: any AppStateProvider = MockSharedAppState()
    
     // Override the injected SwiftDataController
-    let mockData = MockSwiftDataStack()
-    let swiftDataController = MockSwiftDataController(viewContext: mockData.viewContext)
+    let swiftDataController = MockSwiftDataController()
     InjectedValues[\.swiftDataController] = swiftDataController
     
     //Select recent list tab
@@ -52,15 +51,15 @@ struct SectionView: View {
     
     return TVPreviewView() {
         SectionView(appState: $appState)
-            .environment(\.modelContext, mockData.viewContext)
+            .environment(\.modelContext, swiftDataController.viewContext)
             .onAppear() {
                     // Loads up the recents list
-                    appState.selectedChannel = swiftDataController.channelBundleMap.map[1]
-                    appState.selectedChannel = swiftDataController.channelBundleMap.map[3]
-                    appState.selectedChannel = swiftDataController.channelBundleMap.map[5]
-                    appState.selectedChannel = swiftDataController.channelBundleMap.map[7]
-                    appState.selectedChannel = swiftDataController.channelBundleMap.map[9]
-                    appState.selectedChannel = swiftDataController.channelBundleMap.map[11]
+//                    appState.selectedBundleChannel = swiftDataController.channelBundleMap.map[1]
+//                    appState.selectedBundleChannel = swiftDataController.channelBundleMap.map[3]
+//                    appState.selectedBundleChannel = swiftDataController.channelBundleMap.map[5]
+//                    appState.selectedBundleChannel = swiftDataController.channelBundleMap.map[7]
+//                    appState.selectedBundleChannel = swiftDataController.channelBundleMap.map[9]
+//                    appState.selectedBundleChannel = swiftDataController.channelBundleMap.map[11]
             }
     }
 }

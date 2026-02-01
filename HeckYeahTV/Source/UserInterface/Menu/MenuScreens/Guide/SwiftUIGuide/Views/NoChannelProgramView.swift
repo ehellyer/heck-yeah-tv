@@ -10,9 +10,9 @@ import SwiftUI
 
 struct NoChannelProgramView: View {
     
-    @Binding var appState: AppStateProvider
     @State var channelId: ChannelId
     
+    @State private var appState: AppStateProvider = InjectedValues[\.sharedAppState]
     @FocusState private var focusedButton: FocusedButton?
     
     private var isPlaying: Bool {
@@ -39,16 +39,18 @@ struct NoChannelProgramView: View {
 }
 
 #Preview {
+    // Override the injected AppStateProvider
     @Previewable @State var appState: AppStateProvider = MockSharedAppState()
+    InjectedValues[\.sharedAppState] = appState
     
     // Override the injected SwiftDataController
-    let mockData = MockSwiftDataStack()
-    let swiftDataController = MockSwiftDataController(viewContext: mockData.viewContext)
+    let swiftDataController = MockSwiftDataController()
     InjectedValues[\.swiftDataController] = swiftDataController
     
-    let channelId = swiftDataController.channelBundleMap.map.first!
+    let channelId = swiftDataController.channelBundleMap.map[1].channelId
+    //appState.selectedChannel = channelId
+    
     return TVPreviewView() {
-        NoChannelProgramView(appState: $appState,
-                             channelId: channelId)
+        NoChannelProgramView(channelId: channelId)
     }
 }

@@ -16,18 +16,22 @@ extension SchemaV1 {
         
         init(id: ChannelBundleId,
              name: String,
-             channelIds: [ChannelId]) {
+             channels: [BundleEntry] = []) {
             self.id = id
             self.name = name
-            self.channelIds = channelIds
+            self.channels = channels
         }
         
         @Attribute(.unique)
         var id: ChannelBundleId
         var name: String
-        var channelIds: [ChannelId] = []
         
-        // MARK: JSONSerializable Implementation
+        // Relationship to Channel (nullify on delete to preserve channel when channelBundle is deleted)
+        @Relationship(deleteRule: .cascade, inverse: \BundleEntry.channelBundle)
+        var channels: [BundleEntry]
+
+        
+        // MARK: - JSONSerializable Implementation (added for mock data)
         //
         // JSONSerializable implementation not automatically synthesized due to a conflict with SwiftData @Model automatic synthesis of certain behaviors.
         //
@@ -37,21 +41,21 @@ extension SchemaV1 {
         enum CodingKeys: String, CodingKey {
             case id
             case name
-            case channelIds
+            case channels
         }
         
         func encode(to encoder: Encoder) throws {
             var container = encoder.container(keyedBy: CodingKeys.self)
             try container.encode(id, forKey: .id)
             try container.encode(name, forKey: .name)
-            try container.encode(channelIds, forKey: .channelIds)
+            try container.encodeIfPresent(channels, forKey: .channels)
         }
         
         init(from decoder: Decoder) throws {
             let container = try decoder.container(keyedBy: CodingKeys.self)
             self.id = try container.decode(ChannelBundleId.self, forKey: .id)
             self.name = try container.decode(String.self, forKey: .name)
-            self.channelIds = try container.decode([ChannelId] .self, forKey: .channelIds)
+            self.channels = try container.decodeIfPresent([BundleEntry].self, forKey: .channels) ?? []
         }
     }
 }

@@ -90,21 +90,22 @@ struct ChannelViewSubTitle: View {
 }
 
 #Preview("ChannelSubTitleView") {
+    // Override the injected AppStateProvider
     @Previewable @State var appState: AppStateProvider = MockSharedAppState()
+    InjectedValues[\.sharedAppState] = appState
     
     // Override the injected SwiftDataController
-    let mockData = MockSwiftDataStack()
-    let swiftDataController = MockSwiftDataController(viewContext: mockData.viewContext)
+    let swiftDataController = MockSwiftDataController()
     InjectedValues[\.swiftDataController] = swiftDataController
 
     let channel = swiftDataController.previewOnly_fetchChannel(at: 7)
-    
+
     return TVPreviewView() {
         VStack {
             
             // Represents a loaded channel
             ChannelViewSubTitle(channel: channel)
-            
+
             // Represents a loading channel
             ChannelViewSubTitle(channel: nil)
                 .redacted(reason: .placeholder)

@@ -17,6 +17,7 @@ actor HomeRunImporter {
         self.scanForTuners = scanForTuners
     }
     
+    @Injected(\.sharedAppState) private var appState: AppStateProvider
     private var batchCount: Int = 0
     private let batchSize: Int = 3000
     private let context: ModelContext
@@ -31,53 +32,55 @@ actor HomeRunImporter {
     }
     
     private func importHDHRChannels(_ tunerChannels: [Channelable]) async throws {
-        //Dev Note: Here `Channelable` is `HDHomeRunChannel`
-        
+                      
         guard !tunerChannels.isEmpty else {
             logWarning("No HDHomeRun channels to import.")
             return
         }
         
-        let existingFavorites: [ChannelId: Favorite] = {
+        let existingChannels: [Channel] = {
             do {
-                let favs = try context.fetch(FetchDescriptor<Favorite>(predicate: #Predicate<Favorite> { $0.isFavorite == true }))
-                let existingFavs = favs.reduce(into: [:]) { result, fav in
-                    result[fav.id] = fav
-                }
-                return existingFavs
+                let source = ChannelSourceType.homeRunTuner.rawValue
+                let predicate = #Predicate<Channel> { $0.source == source }
+                var descriptor = FetchDescriptor<Channel>(predicate: predicate)
+                descriptor.propertiesToFetch = [\.id]
+                return try context.fetch(descriptor)
             } catch {
-                logDebug("Unable to fetch existing favorites.")
-                return [:]
+                logError("Unable to fetch existing `HDHomeRun Channels` from SwiftData.")
+                return []
             }
         }()
         
+//        let existingIDs = Set(existingChannels.map(\.id))
+        let incomingIDs = Set(tunerChannels.map(\.idHint))
+        
+        // delete
+        logDebug("Existing HomeRun channels to delete: \(existingChannels.count)")
+        for model in existingChannels where !incomingIDs.contains(model.id) {
+            context.delete(model)
+        }
+        
+        // insert
         logDebug("HomeRun channel import process Starting  (incoming: \(tunerChannels.count))... 🇺🇸")
-
         for src in tunerChannels {
             
-            if let channel = try await fetchChannel(id: src.idHint) {
-                channel.favorite = existingFavorites[src.idHint]
-                channel.logoURL = src.logoURLHint
-            } else {
-                let newChannel = Channel(
-                    id: src.idHint,
-                    guideId: src.guideIdHint,
-                    sortHint: src.sortHint,
-                    title: src.titleHint,
-                    number: src.numberHint,
-                    country: "ANY",
-                    categories: [],
-                    languages: [],
-                    url: src.urlHint,
-                    logoURL: src.logoURLHint,
-                    quality: src.qualityHint,
-                    hasDRM: src.hasDRMHint,
-                    source: src.sourceHint,
-                    deviceId: src.deviceIdHint,
-                    favorite: existingFavorites[src.idHint]
-                )
-                context.insert(newChannel)
-            }
+            let newChannel = Channel(
+                id: src.idHint,
+                guideId: src.guideIdHint,
+                sortHint: src.sortHint,
+                title: src.titleHint,
+                number: src.numberHint,
+                country: "ANY",
+                categories: [],
+                languages: [],
+                url: src.urlHint,
+                logoURL: src.logoURLHint,
+                quality: src.qualityHint,
+                hasDRM: src.hasDRMHint,
+                source: src.sourceHint,
+                deviceId: src.deviceIdHint
+            )
+            context.insert(newChannel)
             
             batchCount += 1
             
@@ -89,6 +92,7 @@ actor HomeRunImporter {
 
         if context.hasChanges {
             try context.save()
+            await Task.yield()
         }
         
         logDebug("HomeRun channel import process completed  Total imported: \(tunerChannels.count)... 🏁")
@@ -108,7 +112,7 @@ actor HomeRunImporter {
                 descriptor.propertiesToFetch = [\.deviceId]
                 return try context.fetch(descriptor)
             } catch {
-                logDebug("Unable to fetch existing `HomeRunDevice`.")
+                logError("Unable to fetch existing `HomeRunDevice`. \(error.localizedDescription)")
                 return []
             }
         }()
@@ -144,6 +148,7 @@ actor HomeRunImporter {
         
         if context.hasChanges {
             try context.save()
+            await Task.yield()
         }
         
         logDebug("HomeRun Device import process completed. Total imported: \(devices.count) 🏁")
@@ -183,6 +188,7 @@ actor HomeRunImporter {
         
         if context.hasChanges {
             try context.save()
+            await Task.yield()
         }
         
         logDebug("HomeRun Channel guide import process completed. Total guides imported for \(channelGuides.count) channels. 🏁")
@@ -193,19 +199,21 @@ actor HomeRunImporter {
     private func updateHomeRunChannelProgramFetchDate() async {
         await MainActor.run {
             let updatedDate = Date()
-            SharedAppState.shared.dateLastHomeRunChannelProgramFetch = updatedDate
-            logDebug("Updated SharedAppState.shared.dateLastHomeRunChannelProgramFetch to: \(updatedDate)")
+            var actorAppState: AppStateProvider = InjectedValues[\.sharedAppState]
+            actorAppState.dateLastHomeRunChannelProgramFetch = updatedDate
+            logDebug("Updated appState.dateLastHomeRunChannelProgramFetch to: \(updatedDate)")
         }
     }
     
     //MARK: - Public API
     
     func load() async throws -> FetchSummary {
+
         var summary = FetchSummary()
         
         let homeRunController: HomeRunController = HomeRunController()
 
-        let lastGuideFetchDate: Date? = await SharedAppState.shared.dateLastHomeRunChannelProgramFetch
+        let lastGuideFetchDate: Date? = await appState.dateLastHomeRunChannelProgramFetch
 
         let shouldFetchGuideData: Bool = {
             guard let lastFetchDate = lastGuideFetchDate else {
@@ -213,8 +221,8 @@ actor HomeRunImporter {
                 return true
             }
             
-            // Random interval between 5 and 10 hours
-            let randomHours = Double.random(in: 5...10)
+            // Random interval between 3 and 6 hours
+            let randomHours = Double.random(in: 3...6)
             let intervalSinceLastFetch = Date().timeIntervalSince(lastFetchDate)
             let hoursElapsed = intervalSinceLastFetch / 3600 // Convert seconds to hours
             

@@ -13,7 +13,7 @@ struct FilterView: View {
     
     @Binding var appState: AppStateProvider
     @Environment(\.modelContext) private var viewContext
-    @State private var swiftDataController: SwiftDataControllable = InjectedValues[\.swiftDataController]
+    @State private var swiftDataController: SwiftDataProvider = InjectedValues[\.swiftDataController]
     
     @Query(sort: \Country.name, order: .forward) private var countries: [Country]
     @Query(sort: \ProgramCategory.name, order: .forward) private var categories: [ProgramCategory]
@@ -184,20 +184,17 @@ struct FilterView: View {
 }
 
 #Preview("FilterView") {
-    @Previewable @State var appState: any AppStateProvider = MockSharedAppState()
-    
+    @Previewable @State var appState: AppStateProvider = MockSharedAppState()
     
     // Override the injected SwiftDataController
-    let mockData = MockSwiftDataStack()
-    let swiftDataController = MockSwiftDataController(viewContext: mockData.viewContext)
+    let swiftDataController = MockSwiftDataController()
     InjectedValues[\.swiftDataController] = swiftDataController
-
     
     //Select recent list tab
     appState.selectedTab = .filter
     
     return TVPreviewView() {
         FilterView(appState: $appState)
-            .modelContext(mockData.viewContext)
+            .modelContext(swiftDataController.viewContext)
     }
 }

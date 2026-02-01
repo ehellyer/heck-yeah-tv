@@ -14,7 +14,10 @@ extension SchemaV1 {
     @Model final class ProgramCategory: JSONSerializable {
         #Index<ProgramCategory>([\.categoryId])
         
-        init(categoryId: String, name: String, categoryDescription: String) {
+        init(categoryId: String,
+             name: String,
+             categoryDescription: String) {
+            
             self.categoryId = categoryId
             self.name = name
             self.categoryDescription = categoryDescription
@@ -33,7 +36,7 @@ extension SchemaV1 {
         @Relationship(deleteRule: .nullify, inverse: \Channel.categories)
         var channels: [Channel]? = []
         
-        // MARK: JSONSerializable Implementation
+        // MARK: - JSONSerializable Implementation (added for mock data)
         //
         // JSONSerializable implementation not automatically synthesized due to a conflict with SwiftData @Model automatic synthesis of certain behaviors.
         //

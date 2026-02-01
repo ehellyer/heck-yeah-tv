@@ -38,7 +38,7 @@ extension SchemaV1 {
         /// Country flag emoji
         var flag: String
         
-        // MARK: - JSONSerializable Implementation
+        // MARK: - JSONSerializable Implementation (added for mock data)
         //
         // JSONSerializable implementation not automatically synthesized due to a conflict with SwiftData @Model automatic synthesis of certain behaviors.
         //

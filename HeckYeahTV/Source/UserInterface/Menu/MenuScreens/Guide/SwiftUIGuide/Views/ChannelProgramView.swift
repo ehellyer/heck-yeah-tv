@@ -12,9 +12,9 @@ import SwiftData
 
 struct ChannelProgramView: View {
     
-    @Binding var appState: AppStateProvider
     @State var channelProgram: ChannelProgram
     
+    @State private var appState: AppStateProvider = InjectedValues[\.sharedAppState]
     @FocusState private var focusedButton: FocusedButton?
     
     private var isPlaying: Bool {
@@ -58,26 +58,26 @@ struct ChannelProgramView: View {
 }
 
 #Preview("ChannelProgramView") {
-    @Previewable @State var appState: any AppStateProvider = MockSharedAppState()
+    // Override the injected AppStateProvider
+    @Previewable @State var appState: AppStateProvider = MockSharedAppState()
+    InjectedValues[\.sharedAppState] = appState
     
     // Override the injected SwiftDataController
-    let mockData = MockSwiftDataStack()
-    let swiftDataController = MockSwiftDataController(viewContext: mockData.viewContext)
+    let swiftDataController = MockSwiftDataController()
     InjectedValues[\.swiftDataController] = swiftDataController
     
     
     let channelId = "7a9b1eebc340e54fd8e0383b3952863ba491fcb655c7bbdefa6ab2afd2e57dfd"
-    let channelPrograms = swiftDataController.previewOnly_channelPrograms(channelId: channelId)
+    let channelPrograms = swiftDataController.channelPrograms(for: channelId)
     
     return TVPreviewView() {
         
         VStack {
             if let channelProgram = channelPrograms.first {
-                ChannelProgramView(appState: $appState,
-                                   channelProgram: channelProgram)
-                .modelContext(mockData.viewContext)
+                ChannelProgramView(channelProgram: channelProgram)
+                .modelContext(swiftDataController.viewContext)
                 .onAppear {
-                    //appState.selectedChannel = channelId
+                    appState.selectedChannel = channelId
                 }
             }
         }

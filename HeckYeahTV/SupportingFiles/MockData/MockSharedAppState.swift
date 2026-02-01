@@ -12,27 +12,17 @@ import Observation
 @MainActor @Observable
 final class MockSharedAppState: AppStateProvider {
 
-    init(isPlayerPaused: Bool = false,
-         showAppMenu: Bool = false,
-         showProgramDetailCarousel: ChannelProgram? = nil,
-         selectedTab: AppSection = .guide,
-         selectedChannel: ChannelId? = nil,
-         recentChannelIds: [ChannelId] = [],
-         scanForTuners: Bool = true,
-         selectedChannelBundle: ChannelBundleId = AppKeys.Application.defaultChannelBundleId,
-         dateLastHomeRunChannelProgramFetch: Date? = nil,
-         dateLastIPTVChannelFetch: Date? = nil) {
-        
-        self.isPlayerPaused = isPlayerPaused
-        self.showAppMenu = showAppMenu
-        self.showProgramDetailCarousel = showProgramDetailCarousel
-        self.selectedTab = selectedTab
-        self.selectedChannel = selectedChannel
-        self.recentChannelIds = recentChannelIds
-        self.scanForTuners = scanForTuners
-        self.selectedChannelBundle = selectedChannelBundle
-        self.dateLastHomeRunChannelProgramFetch = dateLastHomeRunChannelProgramFetch
-        self.dateLastIPTVChannelFetch = dateLastIPTVChannelFetch
+    init() {
+        self.isPlayerPaused = false
+        self.showAppMenu = false
+        self.showProgramDetailCarousel = nil
+        self.selectedTab = .guide
+        self.selectedChannel = nil
+        self.recentChannelIds = []
+        self.scanForTuners = true
+        self.selectedChannelBundle = AppKeys.Application.defaultChannelBundleId
+        self.dateLastHomeRunChannelProgramFetch = nil
+        self.dateLastIPTVChannelFetch = nil
     }
     
     var isPlayerPaused: Bool

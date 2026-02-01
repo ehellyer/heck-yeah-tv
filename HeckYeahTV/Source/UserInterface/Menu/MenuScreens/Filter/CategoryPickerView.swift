@@ -74,12 +74,9 @@ struct CategoryPickerView: View {
 
 
 #Preview {
-    @Previewable @State var appState: AppStateProvider = MockSharedAppState()
     @Previewable @State var categoryId: CategoryId? = "auto"
-    let mockData = MockSwiftDataStack()
     
-    let swiftDataController = MockSwiftDataController(viewContext: mockData.viewContext,
-                                                      selectedCategory: categoryId!)
+    let swiftDataController = MockSwiftDataController(selectedCategory: categoryId!)
     InjectedValues[\.swiftDataController] = swiftDataController
     
     let categories = swiftDataController.previewOnly_categories()

@@ -10,11 +10,11 @@ import SwiftUI
 
 struct ChannelProgramsCarousel: View {
     
-    @Binding var appState: AppStateProvider
     let channelPrograms: [ChannelProgram]
     @State var startOnProgram: ChannelProgramId?
     @State var channel: Channel
 
+    @State private var appState: AppStateProvider = InjectedValues[\.sharedAppState]
     @State private var scrollPositionId: Int?
 
     var body: some View {
@@ -117,26 +117,25 @@ struct ChannelProgramsCarousel: View {
 }
 
 #Preview("Landscape Left", traits: .landscapeLeft) {
-    @Previewable @State var appState: AppStateProvider = MockSharedAppState()
+    // Override the injected AppStateProvider
+    let appState: AppStateProvider = MockSharedAppState()
+    InjectedValues[\.sharedAppState] = appState
     
     // Override the injected SwiftDataController
-    let mockData = MockSwiftDataStack()
-    let swiftDataController = MockSwiftDataController(viewContext: mockData.viewContext)
+    let swiftDataController = MockSwiftDataController()
     InjectedValues[\.swiftDataController] = swiftDataController
-    
     
     let channelId = "7a9b1eebc340e54fd8e0383b3952863ba491fcb655c7bbdefa6ab2afd2e57dfd"
     let channel = try! swiftDataController.channel(for: channelId)
-    let channelPrograms = swiftDataController.previewOnly_channelPrograms(channelId: channelId)
+    let channelPrograms = swiftDataController.channelPrograms(for: channelId)
 
-    //appState.selectedChannel = channelId
+    //appState.selectedBundleChannel = channelId
     return TVPreviewView() {
         
         VStack {
-            ChannelProgramsCarousel(appState: $appState,
-                                   channelPrograms: channelPrograms,
-                                   startOnProgram: channelPrograms[8].id,
-                                   channel: channel)
+            ChannelProgramsCarousel(channelPrograms: channelPrograms,
+                                    startOnProgram: channelPrograms[8].id,
+                                    channel: channel)
         }
     }
 }

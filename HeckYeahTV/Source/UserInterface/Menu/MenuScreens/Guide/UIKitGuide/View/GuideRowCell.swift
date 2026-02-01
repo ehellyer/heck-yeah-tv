@@ -346,8 +346,8 @@ extension GuideRowCell: UICollectionViewDelegateFlowLayout {
     //var appState: AppStateProvider = MockSharedAppState()
     
     // Override the injected SwiftDataController
-    let mockData = MockSwiftDataStack()
-    let swiftDataController = MockSwiftDataController(viewContext: mockData.viewContext)
+    let swiftDataController = MockSwiftDataController()
+
     InjectedValues[\.swiftDataController] = swiftDataController
     
     let channel1 = swiftDataController.previewOnly_fetchChannel(at: 11)
@@ -355,7 +355,7 @@ extension GuideRowCell: UICollectionViewDelegateFlowLayout {
     let view = GuideRowCell()
     view.configure(with: channel1.id,
                    isPlaying: false,
-                   viewContext: mockData.viewContext)
+                   viewContext: swiftDataController.viewContext)
     
     let heightConstraint = view.heightAnchor.constraint(equalToConstant: AppStyle.rowHeight)
     heightConstraint.priority = UILayoutPriority(1000)

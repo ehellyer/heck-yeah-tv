@@ -10,8 +10,7 @@ import SwiftUI
 
 struct RecentsView: View {
 
-    @Binding var appState: AppStateProvider
-    
+    @State private var appState: AppStateProvider = InjectedValues[\.sharedAppState]
     @Environment(\.modelContext) private var viewContext
     @Namespace private var focusNamespace
     @FocusState private var focusedChannelId: String?
@@ -22,8 +21,7 @@ struct RecentsView: View {
                 ScrollView(.vertical) {
                     LazyVStack(alignment: .leading) {
                         ForEach(appState.recentChannelIds, id: \.self) { channelId in
-                            ChannelViewLoader(appState: $appState,
-                                              channelId: channelId)
+                            ChannelViewLoader(channelId: channelId)
                             .id(channelId)
                         }
                     }
@@ -48,13 +46,13 @@ struct RecentsView: View {
                 VStack(alignment: .center, spacing: 12) {
                     Image(systemName: "tv.slash")
                         .font(.system(size: 48))
-                        .foregroundStyle(.tertiary)
+                        .foregroundStyle(.white)
                     Text("No recently selected channels")
                         .font(.headline)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(.white)
                     Text("Go to the guide to find and select channels")
                         .font(.subheadline)
-                        .foregroundStyle(.tertiary)
+                        .foregroundStyle(.white)
                 }
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 60)
@@ -65,30 +63,31 @@ struct RecentsView: View {
 }
 
 #Preview("RecentsView") {
-    @Previewable @State var appState: AppStateProvider = MockSharedAppState()
-
+    // Override the injected AppStateProvider
+    var appState: AppStateProvider = MockSharedAppState()
+    InjectedValues[\.sharedAppState] = appState
+    
     // Override the injected SwiftDataController
-    let mockData = MockSwiftDataStack()
-    let swiftDataController = MockSwiftDataController(viewContext: mockData.viewContext)
+    let swiftDataController = MockSwiftDataController()
     InjectedValues[\.swiftDataController] = swiftDataController
     
     return TVPreviewView() {
-        RecentsView(appState: $appState)
-            .environment(\.modelContext, mockData.viewContext)
+        RecentsView()
+            .environment(\.modelContext, swiftDataController.viewContext)
             .onAppear() {
                 // Load some recent channels
-                appState.selectedChannel = swiftDataController.channelBundleMap.map[0]
-                appState.selectedChannel = swiftDataController.channelBundleMap.map[1]
-                appState.selectedChannel = swiftDataController.channelBundleMap.map[2]
-                appState.selectedChannel = swiftDataController.channelBundleMap.map[3]
-                appState.selectedChannel = swiftDataController.channelBundleMap.map[4]
-                appState.selectedChannel = swiftDataController.channelBundleMap.map[5]
-                appState.selectedChannel = swiftDataController.channelBundleMap.map[6]
-                appState.selectedChannel = swiftDataController.channelBundleMap.map[7]
-                appState.selectedChannel = swiftDataController.channelBundleMap.map[9]
-                appState.selectedChannel = swiftDataController.channelBundleMap.map[10]
-                appState.selectedChannel = swiftDataController.channelBundleMap.map[11]
-                appState.selectedChannel = swiftDataController.channelBundleMap.map[8]
+                appState.selectedChannel = swiftDataController.channelBundleMap.map[0].channelId
+                appState.selectedChannel = swiftDataController.channelBundleMap.map[1].channelId
+                appState.selectedChannel = swiftDataController.channelBundleMap.map[2].channelId
+                appState.selectedChannel = swiftDataController.channelBundleMap.map[3].channelId
+                appState.selectedChannel = swiftDataController.channelBundleMap.map[4].channelId
+                appState.selectedChannel = swiftDataController.channelBundleMap.map[5].channelId
+                appState.selectedChannel = swiftDataController.channelBundleMap.map[6].channelId
+                appState.selectedChannel = swiftDataController.channelBundleMap.map[7].channelId
+                appState.selectedChannel = swiftDataController.channelBundleMap.map[9].channelId
+                appState.selectedChannel = swiftDataController.channelBundleMap.map[10].channelId
+                appState.selectedChannel = swiftDataController.channelBundleMap.map[11].channelId
+                appState.selectedChannel = swiftDataController.channelBundleMap.map[8].channelId
             }
     }
 }

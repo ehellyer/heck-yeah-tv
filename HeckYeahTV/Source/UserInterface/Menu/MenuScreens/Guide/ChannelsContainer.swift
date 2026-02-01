@@ -43,12 +43,12 @@ struct ChannelsContainer: View {
     @Previewable @State var categoryId: CategoryId? = nil
     
     // Override the injected SwiftDataController
-    let mockData = MockSwiftDataStack()
-    let swiftDataController = MockSwiftDataController(viewContext: mockData.viewContext)
+    let swiftDataController = MockSwiftDataController()
+
     InjectedValues[\.swiftDataController] = swiftDataController
     
     return TVPreviewView() {
         ChannelsContainer(appState: $appState)
-            .modelContext(mockData.viewContext)
+            .modelContext(swiftDataController.viewContext)
     }
 }

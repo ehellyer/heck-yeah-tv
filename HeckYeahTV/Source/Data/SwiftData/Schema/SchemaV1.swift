@@ -16,13 +16,13 @@ enum SchemaV1: VersionedSchema {
     static let versionIdentifier = Schema.Version(1, 0, 0)
     static var models: [any PersistentModel.Type] {
         [
+            BundleEntry.self,
+            Channel.self,
             ChannelBundle.self,
             ChannelProgram.self,
+            Country.self,
             HomeRunDevice.self,
             ProgramCategory.self,
-            Channel.self,
-            Country.self,
-            Favorite.self,
             SchemaVersion.self
         ]
     }

@@ -6,21 +6,30 @@
 //  Copyright © 2025 Hellyer Multimedia. All rights reserved.
 //
 
+
+//MARK: - Type alias to identify current schema version in effect.
+
 // Denotes the schema version currently in effect for this app.  (Used by `UpgradeSchemaMigrationPlan.swift`)
 typealias HeckYeahSchema = SchemaV1
 
+//MARK: - Type alias to point model types to HeckYeahSchema schema version.
+
 // Model typealias definitions - Models (always point to current schema in use as defined by HeckYeahSchema typealias)
+typealias BundleEntry = HeckYeahSchema.BundleEntry
+typealias Channel = HeckYeahSchema.Channel
 typealias ChannelBundle = HeckYeahSchema.ChannelBundle
 typealias ChannelProgram = HeckYeahSchema.ChannelProgram
+typealias Country = HeckYeahSchema.Country
+//typealias Favorite = HeckYeahSchema.Favorite
 typealias HomeRunDevice = HeckYeahSchema.HomeRunDevice
 typealias ProgramCategory = HeckYeahSchema.ProgramCategory
-typealias Channel = HeckYeahSchema.Channel
-typealias Country = HeckYeahSchema.Country
-typealias Favorite = HeckYeahSchema.Favorite
 typealias SchemaVersion = HeckYeahSchema.SchemaVersion
 typealias StreamQuality = HeckYeahSchema.StreamQuality
 
 //MARK: - Identifier type aliases
+
+/// Type used as the unique identifier of a BundleEntry.  BundleEntry is an instance of a Channel associated to a ChannelBundle.  The id is a stable hash of ChannelId and ChannelBundleId.
+typealias BundleEntryId = String
 
 /// Type used as the unique identifier of a ChannelBundle.
 typealias ChannelBundleId = String

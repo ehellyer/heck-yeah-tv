@@ -1,14 +1,17 @@
 [
     {
-        "id": "e19323684c285f0921bfb2cdde9efa96bfcf408b13d25a143f5d06b16e52a417",
+        "id": "",
+        "channelBundleId": "mock#1.guide",
         "isFavorite": true
     },
     {
-        "id": "7a9b1eebc340e54fd8e0383b3952863ba491fcb655c7bbdefa6ab2afd2e57dfd",
+        "id": "",
+        "channelBundleId": "mock#1.guide",
         "isFavorite": true
     },
     {
-        "id": "chan.local.002",
+        "id": "",
+        "channelBundleId": "mock#1.guide",
         "isFavorite": true
     }
 ]

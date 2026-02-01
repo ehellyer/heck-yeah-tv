@@ -38,16 +38,16 @@ struct ChannelName: View {
 }
 
 #Preview {
-    
+    // Override the injected AppStateProvider
     @Previewable @State var appState: AppStateProvider = MockSharedAppState()
+    InjectedValues[\.sharedAppState] = appState
     
     // Override the injected SwiftDataController
-    let mockData = MockSwiftDataStack()
-    let swiftDataController = MockSwiftDataController(viewContext: mockData.viewContext)
+    let swiftDataController = MockSwiftDataController()
     InjectedValues[\.swiftDataController] = swiftDataController
     
     let channelId = "7a9b1eebc340e54fd8e0383b3952863ba491fcb655c7bbdefa6ab2afd2e57dfd"
     let channel = try! swiftDataController.channel(for: channelId)
-    
+
     return ChannelName(channel: channel)
 }

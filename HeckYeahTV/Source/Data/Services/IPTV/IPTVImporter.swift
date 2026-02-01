@@ -74,7 +74,6 @@ actor IPTVImporter {
     private func importIPChannels(ipFeeds: [IPFeed],
                                   ipChannels: [IPChannel],
                                   ipStreams: [IPStream]) async throws {
-        //Dev Note: Here `Channelable` is `IPStream`
         
         guard !ipStreams.isEmpty else {
             logWarning("No IP channels to import.")
@@ -82,6 +81,28 @@ actor IPTVImporter {
         }
         
         logDebug("IP channel import process Starting  (incoming: \(ipStreams.count))... 🇺🇸")
+        
+        let existingChannels: [Channel] = {
+            do {
+                let source = ChannelSourceType.ipStream.rawValue
+                let predicate = #Predicate<Channel> { $0.source == source }
+                var descriptor = FetchDescriptor<Channel>(predicate: predicate)
+                descriptor.propertiesToFetch = [\.id]
+                return try context.fetch(descriptor)
+            } catch {
+                logError("Unable to fetch existing `IPTV channels` from SwiftData.")
+                return []
+            }
+        }()
+        
+        //let existingIDs = Set(existingChannels.map(\.id))
+        let incomingIDs = Set(ipStreams.map(\.idHint))
+        
+        // delete
+        logDebug("Existing IPTV channels to delete: \(existingChannels.count)")
+        for model in existingChannels where !incomingIDs.contains(model.id) {
+            context.delete(model)
+        }
         
         //Build import indexes
         let feeds: [ChannelId: (StreamQuality, [LanguageCodeId])] = ipFeeds.reduce(into: [:]) { result, feed in
@@ -91,26 +112,8 @@ actor IPTVImporter {
             result[channel.channelId] = (channel.country, self.existingCategories.filter( { channel.categories?.contains($0.categoryId) == true }))
         }
         
-        let existingFavorites: [ChannelId: Favorite] = {
-            do {
-                let favs = try context.fetch(FetchDescriptor<Favorite>(predicate: #Predicate<Favorite> { $0.isFavorite == true }))
-                let existingFavs = favs.reduce(into: [:]) { result, fav in
-                    result[fav.id] = fav
-                }
-                return existingFavs
-            } catch {
-                logDebug("Unable to fetch existing favorites.")
-                return [:]
-            }
-        }()
-        
-//        var descriptor = FetchDescriptor<Channel>()
-//        descriptor.propertiesToFetch = [\.id]
-//        let models = try context.fetch(descriptor)
-//        let existingIds: Set<ChannelId> = Set(models.map(\.id))
-        
         // insert
-        for src in ipStreams { //where !existingIds.contains(src.idHint) {
+        for src in ipStreams {
             
             let iptvChannelId: String? = src.channelId
             
@@ -120,28 +123,23 @@ actor IPTVImporter {
             let country = (iptvChannelId == nil) ? "US" : ipChannels[iptvChannelId!]?.0 ?? "US"
             let categories = (iptvChannelId == nil) ? [] : ipChannels[iptvChannelId!]?.1 ?? []
             
-//            if let channel = try await fetchChannel(id: src.idHint) {
-//                channel.favorite = existingFavorites[src.idHint]
-//            } else {
-                let newChannel = Channel(
-                    id: src.idHint,
-                    guideId: src.guideIdHint,
-                    sortHint: src.sortHint,
-                    title: src.titleHint,
-                    number: src.numberHint,
-                    country: country,
-                    categories: categories,
-                    languages: languages,
-                    url: src.urlHint,
-                    logoURL: src.logoURLHint,
-                    quality: format,
-                    hasDRM: src.hasDRMHint,
-                    source: src.sourceHint,
-                    deviceId: src.deviceIdHint,
-                    favorite: existingFavorites[src.idHint]
-                )
-                context.insert(newChannel)
-//            }
+            let newChannel = Channel(
+                id: src.idHint,
+                guideId: src.guideIdHint,
+                sortHint: src.sortHint,
+                title: src.titleHint,
+                number: src.numberHint,
+                country: country,
+                categories: categories,
+                languages: languages,
+                url: src.urlHint,
+                logoURL: src.logoURLHint,
+                quality: format,
+                hasDRM: src.hasDRMHint,
+                source: src.sourceHint,
+                deviceId: src.deviceIdHint
+            )
+            context.insert(newChannel)
             
             batchCount += 1
             
@@ -153,6 +151,7 @@ actor IPTVImporter {
         
         if context.hasChanges {
             try context.save()
+            await Task.yield()
         }
         
         logDebug("Channel import process completed. Total imported: \(ipStreams.count) 🏁")

@@ -33,10 +33,10 @@ enum MockDataPersistenceError: LocalizedError {
 
 /// Builds an IN-MEMORY mock SwiftDataStack for previews.
 @MainActor
-final class MockSwiftDataStack {
+final class MockSwiftDataStack: SwiftDataStackProvider {
     
     
-//MARK: - Internal API - SwiftDataControllable implementation
+//MARK: - Internal API - SwiftDataProvider implementation
 
     init() {
         
@@ -89,10 +89,6 @@ final class MockSwiftDataStack {
     private func loadMockData() {
         do {
             logDebug("MockDataPersistence Init starting...")
-
-            let mockChannels: [Channel] = try loadMockDataFromFile(fileName: "MockChannels", ext: "json")
-            mockChannels.forEach(viewContext.insert)
-            logDebug("\(mockChannels.count) channels loaded")
             
             let mockCountries: [Country] = try loadMockDataFromFile(fileName: "MockCountries", ext: "json")
             mockCountries.forEach(viewContext.insert)
@@ -106,25 +102,40 @@ final class MockSwiftDataStack {
             let mockCategories: [ProgramCategory] = try loadMockDataFromFile(fileName: "MockCategories", ext: "json")
             mockCategories.forEach(viewContext.insert)
             logDebug("\(mockCategories.count) categories loaded")
-            
-            let mockFavorites: [Favorite] = try loadMockDataFromFile(fileName: "MockFavorites", ext: "json")
-            mockFavorites.forEach(viewContext.insert)
-            logDebug("\(mockFavorites.count) favorites loaded")
-            
-            //Setup favorite relationships
-            mockFavorites.forEach { fav in
-                mockChannels.first(where: { $0.id == fav.id })?.favorite = fav
-            }
-           
+
             let mockChannelBundles: [ChannelBundle] = try loadMockDataFromFile(fileName: "MockChannelBundles", ext: "json")
             mockChannelBundles.forEach(viewContext.insert)
             logDebug("\(mockChannelBundles.count) channel bundles loaded")
-
             
+            let mockChannels: [Channel] = try loadMockDataFromFile(fileName: "MockChannels", ext: "json")
+            mockChannels.forEach(viewContext.insert)
+            logDebug("\(mockChannels.count) channels loaded")
+
             let mockChannelPrograms: [ChannelProgram] = try loadMockDataFromFile(fileName: "MockChannelPrograms", ext: "json")
             mockChannelPrograms.forEach(viewContext.insert)
             logDebug("\(mockChannelPrograms.count) channel programs loaded")
-
+            
+            
+            let favorites: [String] = ["chan.local.002",
+                                       "chan.local.001",
+                                       "e19323684c285f0921bfb2cdde9efa96bfcf408b13d25a143f5d06b16e52a417",
+                                       "6d01fee6b9c711b98dca6b59682eeda75e67e4f428abed6aa28b890d993fe82c",
+                                       "7a9b1eebc340e54fd8e0383b3952863ba491fcb655c7bbdefa6ab2afd2e57dfd"]
+            let channelBundle: ChannelBundle = mockChannelBundles.first!
+            mockChannels[0...20].forEach { channel in
+                let channelId: ChannelId = channel.id
+                let bundleEntryId: BundleEntryId = String.stableHashHex(channelBundle.id, channelId)
+                let bundleEntry = BundleEntry(id: bundleEntryId,
+                                              channel: channel,
+                                              channelBundle: channelBundle,
+                                              sortHint: channel.sortHint,
+                                              isFavorite: favorites.contains(channelId))
+                viewContext.insert(bundleEntry)
+            }
+            
+            @Injected(\.sharedAppState)
+            var appState: AppStateProvider
+            appState.selectedChannelBundle = channelBundle.id
             
             do {
                 try viewContext.save()
@@ -136,11 +147,7 @@ final class MockSwiftDataStack {
             logDebug("Failed to load Mock json into SwiftData in-memory context.  Error: \(error.localizedDescription)")
         }
     }
-    
-    
-    
-    
-    
+
     
     /// MainActor singleton instance.
     static let shared = MockSwiftDataStack()

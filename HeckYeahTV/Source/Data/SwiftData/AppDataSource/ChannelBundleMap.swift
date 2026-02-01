@@ -11,21 +11,21 @@ import Observation
 
 @Observable final class ChannelBundleMap {
     
-    init(id: ChannelBundleId,
-         map: [ChannelId]) {
-        
-        self.id = id
+    init(map: [ChannelMap]) {
         self.map = map
         self.mapCount = map.count
     }
     
-    private(set) var id: ChannelBundleId
-    private(set) var map: [ChannelId]
+    struct ChannelMap: Hashable {
+        var bundleEntryId: BundleEntryId
+        var channelId: ChannelId
+        var channelBundleId: ChannelBundleId
+    }
+    
+    private(set) var map: [ChannelMap]
     private(set) var mapCount: Int
     
-    func update(id: ChannelBundleId,
-                map: [ChannelId]) {
-        self.id = id
+    func update(map: [ChannelMap]) {
         self.map = map
         self.mapCount = map.count
     }

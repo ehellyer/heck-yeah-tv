@@ -23,7 +23,7 @@ struct VLCPlayerView: CrossPlatformRepresentable {
     
     @Environment(\.scenePhase) private var scenePhase
     @Environment(\.modelContext) private var viewContext
-    @Binding var appState: AppStateProvider
+    @State private var appState: AppStateProvider = InjectedValues[\.sharedAppState]
 
     private var selectedChannelId: ChannelId? { appState.selectedChannel }
     

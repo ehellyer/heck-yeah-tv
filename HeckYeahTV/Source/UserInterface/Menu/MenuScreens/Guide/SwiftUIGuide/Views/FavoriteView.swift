@@ -7,15 +7,15 @@
 //
 
 import SwiftUI
-
-import SwiftUI
 import SwiftData
 
 struct FavoriteView: View {
     
-    @Binding var appState: AppStateProvider
-    @State var channel: Channel?
-    @Environment(\.modelContext) private var modelContext
+    let channelId: ChannelId?
+    
+    @State private var bundleEntry: BundleEntry? = nil
+    @State private var appState: AppStateProvider = InjectedValues[\.sharedAppState]
+    @State private var swiftDataController: SwiftDataProvider = InjectedValues[\.swiftDataController]
     
     // Focus tracking for each button
     @FocusState private var focusedButton: FocusedButton?
@@ -24,15 +24,15 @@ struct FavoriteView: View {
     
     private var isPlaying: Bool {
         let selectedChannelId = appState.selectedChannel
-        return selectedChannelId != nil && selectedChannelId == channel?.id
+        return selectedChannelId != nil && selectedChannelId == channelId
     }
     
     var body: some View {
         Button {
-            guard let channel else { return }
-            channel.isFavorite.toggle()
+            bundleEntry?.isFavorite.toggle()
         } label: {
-            let isFavorite = channel?.isFavorite ?? false
+            let isFavorite: Bool = bundleEntry?.isFavorite ?? false
+            
             Image(systemName: isFavorite ? "star.fill" : "star")
                 .scaleEffect(AppStyle.FavoritesView.scaleEffect)
                 .foregroundStyle(isFavorite ? Color.yellow : Color.white)
@@ -44,28 +44,33 @@ struct FavoriteView: View {
                                           cornerRadius: cornerRadius,
                                           isFocused: focusedButton == .favorite,
                                           isProgramNow: false))
+        .onAppear {
+            if let channelId {
+                let channelBundleId = appState.selectedChannelBundle
+                bundleEntry = swiftDataController.bundleEntry(for: channelId, channelBundleId: channelBundleId)
+            }
+        }
     }
 }
 
 #Preview("Favorite View") {
+    // Override the injected AppStateProvider
     @Previewable @State var appState: AppStateProvider = MockSharedAppState()
+    InjectedValues[\.sharedAppState] = appState
     
     // Override the injected SwiftDataController
-    let mockData = MockSwiftDataStack()
-    let swiftDataController = MockSwiftDataController(viewContext: mockData.viewContext)
+    let swiftDataController = MockSwiftDataController()
     InjectedValues[\.swiftDataController] = swiftDataController
     
-    let channel = swiftDataController.previewOnly_fetchChannel(at: 8)
-    let selectedChannelId = swiftDataController.channelBundleMap.map[0]
+    let channelId = swiftDataController.previewOnly_fetchChannel(at: 8).id
+    let selectedChannelId = swiftDataController.channelBundleMap.map[0].channelId
     
     return TVPreviewView() {
         VStack {
             
-            FavoriteView(appState: $appState,
-                        channel: channel)
+            FavoriteView(channelId: channelId)
             
-            FavoriteView(appState: $appState,
-                        channel: channel)
+            FavoriteView(channelId: channelId)
             .redacted(reason: .placeholder)
             
         }

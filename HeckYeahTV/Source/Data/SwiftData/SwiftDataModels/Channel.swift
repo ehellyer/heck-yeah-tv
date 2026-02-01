@@ -2,8 +2,8 @@
 //  Channel.swift
 //  HeckYeahTV
 //
-//  Created by Ed Hellyer on 11/30/25.
-//  Copyright © 2025 Hellyer Multimedia. All rights reserved.
+//  Created by Ed Hellyer on 1/30/26.
+//  Copyright © 2026 Hellyer Multimedia. All rights reserved.
 //
 
 import Foundation
@@ -12,6 +12,7 @@ import Hellfire
 
 extension SchemaV1 {
     
+    /// Represents an instance from the master list of all possible channels.
     @Model final class Channel: JSONSerializable {
         #Index<Channel>([\.sortHint, \.id], [\.id])
         
@@ -28,8 +29,7 @@ extension SchemaV1 {
              quality: StreamQuality,
              hasDRM: Bool,
              source: ChannelSourceId,
-             deviceId: HDHomeRunDeviceId?,
-             favorite: Favorite?) {
+             deviceId: HDHomeRunDeviceId?) {
             self.id = id
             self.guideId = guideId
             self.sortHint = sortHint
@@ -44,7 +44,6 @@ extension SchemaV1 {
             self.hasDRM = hasDRM
             self.source = source
             self.deviceId = deviceId
-            self.favorite = favorite
         }
         
         @Attribute(.unique)
@@ -70,11 +69,8 @@ extension SchemaV1 {
         var source: ChannelSourceId
         var deviceId: HDHomeRunDeviceId?
         
-        // Relationship to favorite status (nullify on delete to preserve favorite when channel is deleted)
-        @Relationship(deleteRule: .nullify, inverse: \Favorite.channel)
-        var favorite: Favorite?
         
-        // MARK: JSONSerializable Implementation
+        // MARK: - JSONSerializable Implementation (added for mock data)
         //
         // JSONSerializable implementation not automatically synthesized due to a conflict with SwiftData @Model automatic synthesis of certain behaviors.
         //
@@ -96,7 +92,6 @@ extension SchemaV1 {
             case hasDRM
             case source
             case deviceId
-            // Note: 'favorite' relationship is not included in JSON serialization
         }
         
         func encode(to encoder: Encoder) throws {
@@ -133,28 +128,6 @@ extension SchemaV1 {
             self.hasDRM = try container.decode(Bool.self, forKey: .hasDRM)
             self.source = try container.decode(ChannelSourceId.self, forKey: .source)
             self.deviceId = try container.decodeIfPresent(HDHomeRunDeviceId.self, forKey: .deviceId)
-        }
-    }
-}
-
-// Dev Note: Only extends the current schema version of `Channel`.  Look at the typealias of Channel.
-extension Channel {
-    
-    /// Like a "pin it" board, but for TV channels. Will conjure a `Favorite` object out of thin air if you dare to set this to true. Because apparently lazy instantiation is our love language.
-    var isFavorite: Bool {
-        get {
-            favorite?.isFavorite ?? false
-        }
-        set {
-            if favorite != nil {
-                favorite?.isFavorite.toggle()
-            } else {
-                favorite = Favorite(id: id, isFavorite: true)
-            }
-            
-            if self.modelContext?.hasChanges == true {
-                try? self.modelContext?.save()
-            }
         }
     }
 }

@@ -10,7 +10,7 @@ import SwiftUI
 
 struct PlayPauseBadge: View {
     
-    @State var appState: AppStateProvider = SharedAppState.shared
+    @State private var appState: AppStateProvider = InjectedValues[\.sharedAppState]
     
     var body: some View {
         let isPlaying = not(appState.isPlayerPaused)
@@ -45,6 +45,7 @@ struct PlayPauseBadge: View {
 }
 
 #Preview {
-    @Previewable @State var appState = MockSharedAppState(isPlayerPaused: true)
-    PlayPauseBadge(appState: appState)
+    @Previewable @State var appState = MockSharedAppState()
+    appState.isPlayerPaused = false
+    return PlayPauseBadge()
 }

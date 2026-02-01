@@ -49,7 +49,7 @@ extension SchemaV1 {
         var tunerCount: Int
         var includeChannelLineUp: Bool
         
-        // MARK: - JSONSerializable Implementation
+        // MARK: - JSONSerializable Implementation (added for mock data)
         //
         // JSONSerializable implementation not automatically synthesized due to a conflict with SwiftData @Model automatic synthesis of certain behaviors.
         //

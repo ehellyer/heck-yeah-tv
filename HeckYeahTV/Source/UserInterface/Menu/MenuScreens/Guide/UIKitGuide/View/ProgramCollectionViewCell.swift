@@ -126,12 +126,12 @@ extension ProgramCollectionViewCell: UIGestureRecognizerDelegate {
 #Preview("UIKit Preview") {
     
     // Override the injected SwiftDataController
-    let mockData = MockSwiftDataStack()
-    let swiftDataController = MockSwiftDataController(viewContext: mockData.viewContext)
+    let swiftDataController = MockSwiftDataController()
+
     InjectedValues[\.swiftDataController] = swiftDataController
     
     let channel = swiftDataController.previewOnly_fetchChannel(at: 11)
-    let channelPrograms: [ChannelProgram] = swiftDataController.previewOnly_channelPrograms(channelId: channel.id)
+    let channelPrograms: [ChannelProgram] = swiftDataController.channelPrograms(for: channel.id)
     
     let view = ProgramCollectionViewCell()
     

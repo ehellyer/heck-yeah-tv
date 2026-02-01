@@ -28,7 +28,7 @@ extension SchemaV1 {
              programImageURL: URL?,
              recordingRule: Int?,
              filter: [String]
-             ) {
+        ) {
             self.id = id
             self.channelId = channelId
             self.startTime = startTime
@@ -46,8 +46,9 @@ extension SchemaV1 {
         }
         
         
+        // Stable hash on channelId and startTime.  This is done in the HomeRunImporter where the init is first called.  It is the only place where all the mapping can be done on dependent fetches.
         #Unique<ChannelProgram>([\.id])
-        var id: ChannelProgramId        // Stable hash on channelId and startTime.  This is done in theHomeRunImporter where the init is first called.  It is the only place where all the mapping can be done on dependent fetches.
+        var id: ChannelProgramId
         var channelId: ChannelId
         var startTime: Date
         var endTime: Date
@@ -62,7 +63,7 @@ extension SchemaV1 {
         var filter: [String]
         
         
-        // MARK: JSONSerializable Implementation
+        // MARK: - JSONSerializable Implementation (added for mock data)
         //
         // JSONSerializable implementation not automatically synthesized due to a conflict with SwiftData @Model automatic synthesis of certain behaviors.
         //

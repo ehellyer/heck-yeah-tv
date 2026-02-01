@@ -11,7 +11,7 @@ import SwiftData
 
 struct ShowFavorites: View {
     
-    @State private var swiftDataController: SwiftDataControllable = InjectedValues[\.swiftDataController]
+    @State private var swiftDataController: SwiftDataProvider = InjectedValues[\.swiftDataController]
     
     var rightSwipeRedirectAction: (() -> Void)?
     

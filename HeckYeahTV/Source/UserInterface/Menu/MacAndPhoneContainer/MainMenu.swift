@@ -12,7 +12,7 @@ struct MainMenu: View {
     
     @Binding var appState: AppStateProvider
     
-    @State private var swiftDataController: SwiftDataControllable = InjectedValues[\.swiftDataController]
+    @State private var swiftDataController: SwiftDataProvider = InjectedValues[\.swiftDataController]
     
     var body: some View {
         VStack(spacing: 0) {

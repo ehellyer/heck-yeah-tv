@@ -11,16 +11,15 @@ import SwiftData
 
 struct ChannelViewLoader: View {
     
-    @Binding var appState: AppStateProvider
     let channelId: ChannelId
-    
+
+    @State private var appState: AppStateProvider = InjectedValues[\.sharedAppState]
     @Environment(\.modelContext) private var viewContext
     @StateObject private var loader = ChannelRowLoader()
     
     var body: some View {
         let channel = loader.channel
-        ChannelView(appState: $appState,
-                    channel: channel)
+        ChannelView(channel: channel)
         .modifier(RedactedIfNeeded(type: channel))
         .onAppear {
             loader.load(channelId: channelId, context: viewContext)
@@ -32,18 +31,18 @@ struct ChannelViewLoader: View {
 }
 
 #Preview("ChannelViewLoader") {
+    // Override the injected AppStateProvider
     @Previewable @State var appState: AppStateProvider = MockSharedAppState()
+    InjectedValues[\.sharedAppState] = appState
     
     // Override the injected SwiftDataController
-    let mockData = MockSwiftDataStack()
-    let swiftDataController = MockSwiftDataController(viewContext: mockData.viewContext)
+    let swiftDataController = MockSwiftDataController()
     InjectedValues[\.swiftDataController] = swiftDataController
     
-    let channelId = swiftDataController.channelBundleMap.map[41]
+    let channelId = swiftDataController.channelBundleMap.map[14].channelId
     
     return TVPreviewView() {
-        ChannelViewLoader(appState: $appState,
-                          channelId: channelId)
-        .modelContext(mockData.viewContext)
+        ChannelViewLoader(channelId: channelId)
+        .modelContext(swiftDataController.viewContext)
     }
 }

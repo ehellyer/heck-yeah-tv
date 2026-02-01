@@ -10,10 +10,8 @@ import Foundation
 import SwiftData
 import Observation
 
-
-
 @MainActor @Observable
-final class SwiftDataController: SwiftDataControllable {
+final class SwiftDataController: SwiftDataProvider {
 
     //MARK: - SwiftDataController lifecycle
     
@@ -22,18 +20,26 @@ final class SwiftDataController: SwiftDataControllable {
     }
     
     init() {
-        self.viewContext = SwiftDataStack.shared.viewContext
+        @Injected(\.swiftDataStack) var dataPersistence: SwiftDataStackProvider
+        self.viewContext = dataPersistence.viewContext
         let descriptor = FetchDescriptor<Channel>()
         self.totalChannelCount = (try? viewContext.fetchCount(descriptor)) ?? 0
         
         try? self.bootStrap()
     }
     
-    //MARK: - Internal API - SwiftDataControllable implementation
+    //MARK: - Internal API - SwiftDataProvider implementation
     
     private(set) var totalChannelCount: Int
     
-    private(set) var channelBundleMap: ChannelBundleMap = ChannelBundleMap(id: UserDefaults.selectedChannelBundle, map: [])
+    func totalChannelCountFor(deviceId: HDHomeRunDeviceId) throws -> Int {
+        let predicate = #Predicate<Channel> { $0.deviceId == deviceId }
+        let fetchDescriptor = FetchDescriptor<Channel>(predicate: predicate)
+        let count: Int = try viewContext.fetchCount(fetchDescriptor)
+        return count
+    }
+    
+    private(set) var channelBundleMap: ChannelBundleMap = ChannelBundleMap(map: [])
     
     func channel(for channelId: ChannelId) throws -> Channel {
         let predicate = #Predicate<Channel> { $0.id == channelId }
@@ -43,6 +49,26 @@ final class SwiftDataController: SwiftDataControllable {
             throw GuideStoreError.noChannelFoundForId(channelId)
         }
         return _program
+    }
+    
+    func bundleEntry(for channelId: ChannelId, channelBundleId: ChannelBundleId) -> BundleEntry? {
+        let predicate = #Predicate<BundleEntry> { $0.channel?.id == channelId && $0.channelBundle.id == channelBundleId }
+        var fetchDescriptor = FetchDescriptor<BundleEntry>(predicate: predicate)
+        fetchDescriptor.fetchLimit = 1
+        let bundleEntry: BundleEntry? = try? viewContext.fetch(fetchDescriptor).first
+        return bundleEntry
+    }
+    
+    func isFavorite(channelId: ChannelId?, channelBundleId: ChannelBundleId) -> Bool {
+        guard let channelId else { return false }
+        let bundleEntry = bundleEntry(for: channelId, channelBundleId: channelBundleId)
+        return bundleEntry?.isFavorite ?? false
+    }
+    
+    func toggleIsFavorite(channelId: ChannelId?, channelBundleId: ChannelBundleId) {
+        guard let channelId else { return }
+        let bundleEntry = bundleEntry(for: channelId, channelBundleId: channelBundleId)
+        bundleEntry?.isFavorite.toggle()
     }
     
     func channelPrograms(for channelId: ChannelId) -> [ChannelProgram] {
@@ -71,18 +97,13 @@ final class SwiftDataController: SwiftDataControllable {
         }
     }
     
-    static func predicateBuilder(showFavoritesOnly: Bool,
-                                 searchTerm: String?,
+    static func predicateBuilder(searchTerm: String?,
                                  countryCode: CountryCodeId,
                                  categoryId: CategoryId?) -> Predicate<Channel> {
         
         var conditions: [Predicate<Channel>] = []
 
         conditions.append( #Predicate<Channel> { $0.country == countryCode || $0.country == "ANY" }) // "ANY" support local LAN tuners which should be returned regardless of current country selection.
-
-        if showFavoritesOnly {
-            conditions.append(#Predicate<Channel> { $0.favorite != nil && $0.favorite?.isFavorite == true })
-        }
         
         if let searchTerm, searchTerm.count > 0 {
             conditions.append( #Predicate<Channel> { $0.title.localizedStandardContains(searchTerm) })
@@ -184,7 +205,7 @@ final class SwiftDataController: SwiftDataControllable {
     private func bootStrap() throws {
         try rebuildChannelBundleMap()
     }
-    
+
     /// Schedules a channel map rebuild with debouncing to prevent excessive rebuilds.
     ///
     /// This method cancels any pending rebuild and schedules a new one after a 300ms delay.
@@ -221,21 +242,31 @@ final class SwiftDataController: SwiftDataControllable {
         
         logDebug("Building Channel Map... 🇺🇸")
         
-        var channelsDescriptor: FetchDescriptor<Channel> = FetchDescriptor<Channel>(
-            sortBy: [SortDescriptor(\Channel.sortHint, order: .forward)]
-        )
+        let appState: AppStateProvider = InjectedValues[\.sharedAppState]
         
-        let predicate: Predicate<Channel> = Self.predicateBuilder(showFavoritesOnly: showFavoritesOnly,
-                                                                  searchTerm: searchTerm,
-                                                                  countryCode: selectedCountry,
-                                                                  categoryId: selectedCategory)
+        let channelBundleId = appState.selectedChannelBundle
         
-        channelsDescriptor.predicate = predicate
+        var conditions: [Predicate<BundleEntry>] = []
+        conditions.append( #Predicate<BundleEntry> { bundleEntry in bundleEntry.channelBundle.id == channelBundleId } )
+        if showFavoritesOnly {
+            conditions.append(#Predicate<BundleEntry> { $0.isFavorite == true })
+        }
         
-        let channels: [Channel] = try context.fetch(channelsDescriptor)
-        let map: [ChannelId] = channels.map { $0.id }
+        let compoundPredicate = conditions.reduce(#Predicate { _ in true }) { current, next in
+            #Predicate { current.evaluate($0) && next.evaluate($0) }
+        }
         
-        self.channelBundleMap = ChannelBundleMap(id: UserDefaults.selectedChannelBundle, map: map)
+        let sortDescriptor: [SortDescriptor] = [SortDescriptor(\BundleEntry.sortHint, order: .forward)]
+        let channelsDescriptor = FetchDescriptor<BundleEntry>(predicate: compoundPredicate, sortBy: sortDescriptor)
+        
+        let channels: [BundleEntry] = try context.fetch(channelsDescriptor)
+        let map: [ChannelBundleMap.ChannelMap] = channels.filter({ $0.channel != nil}).map {
+            ChannelBundleMap.ChannelMap(bundleEntryId: $0.id,
+                                        channelId: $0.channel!.id,
+                                        channelBundleId: channelBundleId)
+        }
+        
+        self.channelBundleMap = ChannelBundleMap(map: map)
         
         logDebug("Channel map built.  Total Channels: \(map.count) 🏁")
     }

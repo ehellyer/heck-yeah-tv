@@ -40,5 +40,4 @@ protocol ChannelFilterable {
     /// at remembering what it was called. Usually contains typos and wishful thinking.
     /// `nil` when they've given up and are just browsing aimlessly.
     var searchTerm: String? { get set }
-    
 }

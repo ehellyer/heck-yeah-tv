@@ -80,11 +80,11 @@ class GuideViewController: UIViewController {
     //MARK: - Private API
     
     @Injected(\.swiftDataController)
-    private var swiftDataController: SwiftDataControllable
+    private var swiftDataController: SwiftDataProvider
     private var reloadTableViewTask: Task<Void, Never>? = nil
     
     private var targetChannelId: ChannelId? {
-        return appState.selectedChannel ?? swiftDataController.channelBundleMap.map.first
+        return appState.selectedChannel ?? swiftDataController.channelBundleMap.map.first?.channelId
     }
     
     private func setupTableView() {
@@ -158,7 +158,7 @@ class GuideViewController: UIViewController {
     
     private func scrollToSelectedChannel(animated: Bool = true) {
         guard let _channelId = targetChannelId, swiftDataController.channelBundleMap.map.isEmpty == false else { return }
-        let index = swiftDataController.channelBundleMap.map.firstIndex(of: _channelId) ?? 0
+        let index = swiftDataController.channelBundleMap.map.firstIndex(where: { $0.channelId == _channelId }) ?? 0
         let indexPath = IndexPath(row: index, section: 0)
         tableView.scrollToRow(at: indexPath, at: .middle, animated: animated)
     }
@@ -269,7 +269,7 @@ extension GuideViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let guideRowCell = tableView.dequeueReusableCell(withIdentifier: GuideRowCell.identifier, for: indexPath) as! GuideRowCell
-        let channelId = swiftDataController.channelBundleMap.map[indexPath.row]
+        let channelId = swiftDataController.channelBundleMap.map[indexPath.row].channelId
         let isPlaying = (channelId == appState.selectedChannel)
         guideRowCell.configure(with: channelId,
                                isPlaying: isPlaying,

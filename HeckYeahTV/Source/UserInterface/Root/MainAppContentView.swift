@@ -11,12 +11,10 @@ import SwiftData
 
 struct MainAppContentView: View {
     
-    // Note: This is not private so that it can be overridden in the #Preview with a mock implementation
-    @State var appState: AppStateProvider = SharedAppState.shared
-    
+    @State private var appState: AppStateProvider = InjectedValues[\.sharedAppState]
     @State private var fadeTask: Task<Void, Never>?
     @State private var showPlayPauseButton = false
-    @State private var swiftDataController: SwiftDataControllable = InjectedValues[\.swiftDataController]
+    @State private var swiftDataController: SwiftDataProvider = InjectedValues[\.swiftDataController]
     @Environment(\.scenePhase) private var scenePhase
     
     // Focus states
@@ -38,7 +36,7 @@ struct MainAppContentView: View {
         ZStack(alignment: .bottomLeading)  {
             
             // Stream Player
-            VLCPlayerView(appState: $appState)
+            VLCPlayerView()
                 .ignoresSafeArea()
                 .accessibilityHidden(true)
                 .allowsHitTesting(false)
@@ -70,8 +68,7 @@ struct MainAppContentView: View {
                let _channel = try? swiftDataController.channel(for: channelProgram.channelId) {
                 
                 let _programs = swiftDataController.channelPrograms(for: channelProgram.channelId)
-                ChannelProgramsCarousel(appState: $appState,
-                                        channelPrograms: _programs,
+                ChannelProgramsCarousel(channelPrograms: _programs,
                                         startOnProgram: channelProgram.id,
                                         channel: _channel)
                 .zIndex(10)
@@ -179,19 +176,18 @@ extension MainAppContentView {
 // MARK: - Preview
 
 #Preview("Main View") {
-    @Previewable @State var _appState: any AppStateProvider = MockSharedAppState()
+    @Previewable @State var appState: any AppStateProvider = MockSharedAppState()
 
     // Override the injected SwiftDataController
-    let mockData = MockSwiftDataStack()
-    let swiftDataController = MockSwiftDataController(viewContext: mockData.viewContext)
+    let swiftDataController = MockSwiftDataController()
     InjectedValues[\.swiftDataController] = swiftDataController
     
 //    let selectedChannelId = swiftDataController.channelBundleMap.map[3]
     
-    return MainAppContentView(appState: _appState)
-        .modelContext(mockData.viewContext)
+    return MainAppContentView()
+        .modelContext(swiftDataController.viewContext)
         .onAppear {
-            //_appState.selectedChannel = selectedChannelId
-            _appState.showAppMenu = false
+            //appState.selectedBundleChannel = selectedChannelId
+            appState.showAppMenu = false
         }
 }

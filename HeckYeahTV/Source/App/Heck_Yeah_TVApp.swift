@@ -50,7 +50,7 @@ struct Heck_Yeah_TVApp: App {
     @Environment(\.scenePhase) private var scenePhase
     @State private var isBootComplete = false
     @State private var startupTask: Task<Void, Never>? = nil
-    @State private var dataPersistence = SwiftDataStack.shared
+    @Injected(\.swiftDataStack) private var dataPersistence: SwiftDataStackProvider
     
     var body: some Scene {
 #if os(macOS)
@@ -80,7 +80,8 @@ struct Heck_Yeah_TVApp: App {
     
     private func startBootstrap() {
         // Always ensure app navigation starts off in the dismissed state when there is a selected channel. Else present the default tab in app navigation.  This prevents a black screen on first startup.
-        let appState = SharedAppState.shared
+        var appState: AppStateProvider = InjectedValues[\.sharedAppState]
+        
         appState.showAppMenu = (appState.selectedChannel == nil)
         appState.showProgramDetailCarousel = nil
         

@@ -10,11 +10,12 @@ import Foundation
 
 private struct SwiftDataControllerInjectionKey: InjectionKey {
     @MainActor
-    static var currentValue: SwiftDataControllable = SwiftDataController()
+    static var currentValue: SwiftDataProvider = SwiftDataController()
+//    static var currentValue: SwiftDataProvider = MockSwiftDataController()
 }
 
 extension InjectedValues {
-    var swiftDataController: SwiftDataControllable {
+    var swiftDataController: SwiftDataProvider {
         get { Self[SwiftDataControllerInjectionKey.self] }
         set { Self[SwiftDataControllerInjectionKey.self] = newValue }
     }

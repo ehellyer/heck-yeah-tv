@@ -11,7 +11,7 @@ import SwiftData
 import SQLite3
 
 @MainActor
-final class SwiftDataStack {
+final class SwiftDataStack: SwiftDataStackProvider {
     
     /// Private init due to shared singleton instance.
     private init() {
@@ -55,8 +55,6 @@ final class SwiftDataStack {
                 logWarning("Detected legacy store. Deleting and recreating with versioned schema...")
                 try Self.deletePersistentStore(at: _storeURL)
                 logWarning("Legacy store deleted successfully.")
-            } else {
-                try Self.forceWALCheckpointingForStore(at: _storeURL)
             }
             
             // Dev note: HeckYeahSchema always points to latest schema, which holds the version number and model definitions.
@@ -90,12 +88,13 @@ final class SwiftDataStack {
     
     // There must be at least one channel bundle, if one does not yet exist, we add the default.
     private static func checkDefaultChannelBundle(context: ModelContext) throws {
+        let appState: AppStateProvider = InjectedValues[\.sharedAppState]
         let descriptor = FetchDescriptor<ChannelBundle>()
         let count = try context.fetchCount(descriptor)
         if count == 0 {
-            context.insert(ChannelBundle(id: UserDefaults.selectedChannelBundle,
+            context.insert(ChannelBundle(id: appState.selectedChannelBundle,
                                          name: "Default",
-                                         channelIds: []))
+                                         channels: []))
             if context.hasChanges {
                 try context.save()
             }

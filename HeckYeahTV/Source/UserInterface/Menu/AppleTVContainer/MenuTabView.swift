@@ -37,7 +37,7 @@ struct MenuTabView: View {
             Tab(AppSection.recents.title,
                 systemImage: AppSection.recents.systemImage,
                 value: AppSection.recents) {
-                RecentsView(appState: $appState)
+                RecentsView()
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
 
@@ -75,16 +75,15 @@ struct MenuTabView: View {
 
 #if os(tvOS)
 #Preview {
-    @Previewable @State var _appState: any AppStateProvider = MockSharedAppState()
+    @Previewable @State var appState: AppStateProvider = MockSharedAppState()
     
     // Override the injected SwiftDataController
-    let mockData = MockSwiftDataStack()
-    let swiftDataController = MockSwiftDataController(viewContext: mockData.viewContext)
+    let swiftDataController = MockSwiftDataController()
     InjectedValues[\.swiftDataController] = swiftDataController
     
     return TVPreviewView() {
-        MenuTabView(appState: $_appState)
-            .modelContext(mockData.viewContext)
+        MenuTabView(appState: $appState)
+            .modelContext(swiftDataController.viewContext)
     }
 }
 #endif

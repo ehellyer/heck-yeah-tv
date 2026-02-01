@@ -23,21 +23,21 @@ protocol FocusTargetView {
 
 extension FocusTargetView where Self: UIView {
     
+    //MARK: - Private API
+    
     /// The number of pixels to grow on each side when focused
-    private var focusGrowthInPixels: CGFloat { return 4.0 }
+    private var focusGrowthInPixels: CGFloat { return 6.0 }
     
     /// The number of pixels to shrink on each side when pressed
-    private var pressedShrinkInPixels: CGFloat { return 1.0 }
+    private var pressedShrinkInPixels: CGFloat { return 4.0 }
     
     /// Calculate scale factor based on adding fixed pixels to the view's dimensions
     private func scaleForPixelGrowth(_ pixels: CGFloat) -> CGFloat {
-        
         let referenceSize = max(bounds.width, bounds.height)
         guard referenceSize > 0 else { return 1.0 }
         
-        // Calculate how much bigger the view should be: (size + 2*pixels) / size
-        // We multiply by 2 because pixels grow on both sides
-        return (referenceSize + (pixels * 2)) / referenceSize
+        // Calculate the scale factor.
+        return (referenceSize + pixels) / referenceSize
     }
     
     /// Scale factor for focused state (grows by focusGrowthInPixels)
@@ -80,6 +80,8 @@ extension FocusTargetView where Self: UIView {
     private func removeParallaxMotionEffects() {
         self.motionEffects = []
     }
+    
+    //MARK: - Internal API for FocusTargetView protocol
     
     func becomeFocusedUsingAnimationCoordinator(in context: UIFocusUpdateContext, with coordinator: UIFocusAnimationCoordinator, viewBlock: ViewBlock? = nil) {
         viewBlock?(UIColor.guideForegroundFocused, UIColor.guideBackgroundFocused)

@@ -74,6 +74,8 @@ class FavoriteToggleView: UIView {
         return gesture
     }()
     
+    private lazy var channelBundleId: ChannelBundleId = InjectedValues[\.sharedAppState].selectedChannelBundle
+    
     //MARK: - Private API - Actions and action view modifiers
     
     @objc private func viewTapped(_ gesture: UILongPressGestureRecognizer) {
@@ -85,7 +87,8 @@ class FavoriteToggleView: UIView {
                 onTapUpFocusEffect()
 
                 if gesture.state == .ended, let channel {
-                    channel.isFavorite.toggle()
+                    swiftDataController.toggleIsFavorite(channelId: channel.id,
+                                                         channelBundleId: channelBundleId)
                     //Got to notify VC so the rows can be refreshed.
                     self.delegate?.toggleFavoriteChannel(channel.id)
                 }
@@ -106,7 +109,7 @@ class FavoriteToggleView: UIView {
     private var channel: Channel?
     
     @Injected(\.swiftDataController)
-    private var swiftDataController: SwiftDataControllable
+    private var swiftDataController: SwiftDataProvider
     
     private func updateLoadingState(isLoading: Bool) {
         if isLoading {
@@ -122,8 +125,8 @@ class FavoriteToggleView: UIView {
 
     func configure(with channel: Channel?, isPlaying: Bool) {
         self.channel = channel
-
-        let isFavorite: Bool = channel?.isFavorite ?? false
+        let isFavorite: Bool = swiftDataController.isFavorite(channelId: channel?.id,
+                                                              channelBundleId: channelBundleId)
         
         backgroundColor = (isPlaying) ? .guideSelectedChannelBackground : .guideBackgroundNoFocus
 
@@ -167,15 +170,16 @@ extension FavoriteToggleView: @MainActor FocusTargetView {
     //var appState: AppStateProvider = MockSharedAppState()
     
     // Override the injected SwiftDataController
-    let mockData = MockSwiftDataStack()
-    let swiftDataController = MockSwiftDataController(viewContext: mockData.viewContext)
+    let swiftDataController = MockSwiftDataController()
+
     InjectedValues[\.swiftDataController] = swiftDataController
     
+//    let channelId = swiftDataController.channelBundleMap.map.first?.channelId
+//    let bundleEntryId = swiftDataController.channelBundleMap.map.first?.bundleEntryId
+//    let channelBundleId = swiftDataController.channelBundleMap.map.first?.channelBundleId
+//    let favorite = Favorite(id: bundleEntryId, channelBundleId: channelBundleId, isFavorite: true)
+  
     let channel1 = swiftDataController.previewOnly_fetchChannel(at: 7)
-    
-    channel1.favorite = Favorite(id: channel1.id, isFavorite: false)
-    
-    channel1.isFavorite = false
     
     let view = FavoriteToggleView()
     

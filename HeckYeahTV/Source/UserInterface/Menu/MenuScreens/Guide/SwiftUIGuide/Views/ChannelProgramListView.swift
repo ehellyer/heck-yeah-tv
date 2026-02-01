@@ -11,9 +11,9 @@ import SwiftData
 
 struct ChannelProgramListView: View {
     
-    @Binding var appState: AppStateProvider
     @State var channelId: ChannelId
-    
+
+    @State private var appState: AppStateProvider = InjectedValues[\.sharedAppState]
     @Environment(\.modelContext) private var viewContext
     @StateObject private var loader = ProgramsRowLoader()
     @State private var scrollToProgramId: ChannelProgramId?
@@ -27,15 +27,13 @@ struct ChannelProgramListView: View {
         
         ZStack {
             if programs.isEmpty {
-                NoChannelProgramView(appState: $appState,
-                                     channelId: channelId)
+                NoChannelProgramView(channelId: channelId)
             } else {
                 ScrollView(.horizontal) {
                     LazyHStack(alignment: .center,
                                spacing: AppStyle.GuideView.programSpacing) {
                         ForEach(programs, id: \.id) { program in
-                            ChannelProgramView(appState: $appState,
-                                               channelProgram: program)
+                            ChannelProgramView(channelProgram: program)
                             .layoutPriority(1)
                         }
                     }
@@ -94,21 +92,21 @@ struct ChannelProgramListView: View {
 }
 
 #Preview {
-    @Previewable @State var appState: any AppStateProvider = MockSharedAppState()
+    // Override the injected AppStateProvider
+    @Previewable @State var appState: AppStateProvider = MockSharedAppState()
+    InjectedValues[\.sharedAppState] = appState
     
     // Override the injected SwiftDataController
-    let mockData = MockSwiftDataStack()
-    let swiftDataController = MockSwiftDataController(viewContext: mockData.viewContext)
+    let swiftDataController = MockSwiftDataController()
     InjectedValues[\.swiftDataController] = swiftDataController
     
-    let channelId = swiftDataController.channelBundleMap.map[1]
+    let channelId = swiftDataController.channelBundleMap.map[1].channelId
     
     return TVPreviewView() {
-        ChannelProgramListView(appState: $appState,
-                               channelId: channelId)
-        .modelContext(mockData.viewContext)
+        ChannelProgramListView(channelId: channelId)
+        .modelContext(swiftDataController.viewContext)
         .onAppear {
-            //appState.selectedChannel = channelId
+            appState.selectedChannel = channelId
         }
     }
 }
