@@ -14,13 +14,14 @@ final class ProgramsRowLoader: ObservableObject {
     @Published var programs: [ChannelProgram]?
     
     private var task: Task<Void, Never>?
+    private var swiftDataController: SwiftDataProvider = InjectedValues[\.swiftDataController]
     
     func cancel() {
         task?.cancel()
         task = nil
     }
     
-    func load(channelId: ChannelId, context: ModelContext) {
+    func load(channelId: ChannelId) {
         task?.cancel()
         task = Task { [weak self] in
             guard let self else { return }
@@ -29,14 +30,10 @@ final class ProgramsRowLoader: ObservableObject {
                 if PreviewDetector.isRunningInPreview {
                     try await Task.sleep(nanoseconds: 2_500_000_000)
                 }
-                
-                let predicate = #Predicate<ChannelProgram> { $0.channelId == channelId }
-                let startTimeSort = SortDescriptor<ChannelProgram>(\.startTime, order: .forward)
-                let fetchDescriptor = FetchDescriptor<ChannelProgram>(predicate: predicate, sortBy: [startTimeSort])
-                let _programs = try context.fetch(fetchDescriptor)
+                let programs = swiftDataController.channelPrograms(for: channelId)
                 try Task.checkCancellation()
                 await MainActor.run {
-                    self.programs = _programs
+                    self.programs = programs
                 }
             } catch {
                 await MainActor.run {

@@ -92,7 +92,7 @@ struct GuideView: View {
                 if swiftDataController.showFavoritesOnly {
                     NoChannelsFavorites()
                 } else {
-                    NoChannelsCriteria()
+                    NoChannelsInChannelBundle()
                 }
             }
         }
@@ -129,8 +129,8 @@ private extension GuideView {
     // Override the injected SwiftDataController
     let swiftDataController = MockSwiftDataController()
     InjectedValues[\.swiftDataController] = swiftDataController
-
-    swiftDataController.showFavoritesOnly = true
+    
+    swiftDataController.showFavoritesOnly = false
     
     return TVPreviewView() {
         GuideView()

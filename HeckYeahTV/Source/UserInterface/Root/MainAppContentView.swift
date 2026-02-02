@@ -45,7 +45,7 @@ struct MainAppContentView: View {
 #if os(tvOS)
             // App Menu for tvOS
             if appState.showAppMenu {
-                MenuTabView(appState: $appState)
+                MenuTabView()
                     .transition(.opacity)
                     .background(Color.guideTransparency)
                     .focusScope(guideScope)
@@ -59,7 +59,7 @@ struct MainAppContentView: View {
 #else
             // App Menu for iOS/macOS
             if appState.showAppMenu {
-                MainMenu(appState: $appState)
+                MainMenu()
             }
 #endif
             
@@ -88,10 +88,10 @@ struct MainAppContentView: View {
             if showPlayPauseButton {
                 PlayPauseBadge()
             }
-          
+            
             // An overlay view to capture user interaction on iOS, macOS and focus on tvOS.
             if not(appState.showAppMenu) {
-                MenuActivationView(appState: $appState)
+                MenuActivationView()
 #if os(tvOS)
                     .focusScope(activationScope)
 #endif
@@ -176,8 +176,10 @@ extension MainAppContentView {
 // MARK: - Preview
 
 #Preview("Main View") {
-    @Previewable @State var appState: any AppStateProvider = MockSharedAppState()
-
+    // Override the injected AppStateProvider
+    @Previewable @State var appState: AppStateProvider = MockSharedAppState()
+    InjectedValues[\.sharedAppState] = appState
+    
     // Override the injected SwiftDataController
     let swiftDataController = MockSwiftDataController()
     InjectedValues[\.swiftDataController] = swiftDataController

@@ -10,8 +10,7 @@ import SwiftUI
 
 struct MainMenu: View {
     
-    @Binding var appState: AppStateProvider
-    
+    @State private var appState: AppStateProvider = InjectedValues[\.sharedAppState]
     @State private var swiftDataController: SwiftDataProvider = InjectedValues[\.swiftDataController]
     
     var body: some View {
@@ -64,7 +63,7 @@ struct MainMenu: View {
             .zIndex(1)
             
             
-            SectionView(appState: $appState)
+            SectionView()
 #if os(macOS)
                 .padding()
 #endif
@@ -79,8 +78,5 @@ struct MainMenu: View {
 }
 
 #Preview {
-    
-    @Previewable @State var appState: AppStateProvider = MockSharedAppState()
-    
-    MainMenu(appState: $appState)
+    MainMenu()
 }

@@ -85,10 +85,11 @@ struct AppStyle {
         static let height : CGFloat = AppStyle.rowHeight
         static let programSpacing: CGFloat = 15
 #else
-        static var width: CGFloat = 260
-        static let height : CGFloat = AppStyle.rowHeight
         static let internalHorizontalPadding: CGFloat = 15
         static let internalVerticalPadding: CGFloat = 15
+        static var width: CGFloat = 260
+        static let height : CGFloat = AppStyle.rowHeight
+        static let programSpacing: CGFloat = 15
 #endif
     }
 

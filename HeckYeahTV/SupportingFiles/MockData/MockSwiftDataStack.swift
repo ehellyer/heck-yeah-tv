@@ -38,38 +38,17 @@ final class MockSwiftDataStack: SwiftDataStackProvider {
     
 //MARK: - Internal API - SwiftDataProvider implementation
 
-    init() {
+    private init() {
         
         let schema = Schema(versionedSchema: HeckYeahSchema.self)
-        
         let config = ModelConfiguration(isStoredInMemoryOnly: true)
         let container = try! ModelContainer(for: schema, configurations: config)
         
         self.container = container
         self.viewContext = ModelContext(container)
-        
-        
-#if os(tvOS)
-        //tvOS has restrictions on where we can write store files to.  Thanks Apple.
-        var searchPathDirectory: FileManager.SearchPathDirectory = .cachesDirectory
-#else
-        var searchPathDirectory: FileManager.SearchPathDirectory = .applicationSupportDirectory
-#endif
-        
-        guard var _rootURL = FileManager.default.urls(for: searchPathDirectory,
-                                                      in: FileManager.SearchPathDomainMask.userDomainMask).first else {
-            fatalError("Failed to initialize persistence store: Could not build application support directory root URL.")
-        }
-        
-        _rootURL.append(component: "HeckYeahTV")
 
-        self.appFileStoreRootURL = _rootURL
-        self.swiftDataStoreURL = _rootURL
-        
         loadMockData()
     }
-    
-
     
     private func loadMockDataFromFile<T: JSONSerializable>(fileName: String, ext: String) throws -> T {
         guard let url = Bundle.main.url(forResource: fileName, withExtension: ext) else {
@@ -133,8 +112,7 @@ final class MockSwiftDataStack: SwiftDataStackProvider {
                 viewContext.insert(bundleEntry)
             }
             
-            @Injected(\.sharedAppState)
-            var appState: AppStateProvider
+            var appState: AppStateProvider = InjectedValues[\.sharedAppState]
             appState.selectedChannelBundle = channelBundle.id
             
             do {
@@ -157,10 +135,4 @@ final class MockSwiftDataStack: SwiftDataStackProvider {
     
     /// MainActor UI ModelContext.  (Autosave enabled)
     let viewContext: ModelContext
-    
-    /// URL of the persistent store, can be used to build ModelConfiguration.
-    let swiftDataStoreURL: URL
-    
-    /// URL to the file stores for the HeckYeahTVApp
-    let appFileStoreRootURL: URL
 }

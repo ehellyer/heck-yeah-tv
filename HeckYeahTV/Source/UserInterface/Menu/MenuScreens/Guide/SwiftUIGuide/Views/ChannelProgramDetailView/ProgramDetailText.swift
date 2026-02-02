@@ -69,7 +69,7 @@ struct ProgramDetailText: View {
 
 #Preview {
     // Override the injected AppStateProvider
-    let appState: AppStateProvider = MockSharedAppState()
+    @Previewable @State var appState: AppStateProvider = MockSharedAppState()
     InjectedValues[\.sharedAppState] = appState
     
     // Override the injected SwiftDataController

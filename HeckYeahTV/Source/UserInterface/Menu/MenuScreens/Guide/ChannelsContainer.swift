@@ -11,12 +11,10 @@ import SwiftData
 
 struct ChannelsContainer: View {
     
-    @Binding var appState: AppStateProvider
-
     // Private
+    @State private var appState: AppStateProvider = InjectedValues[\.sharedAppState]
     @FocusState private var isFocused: Bool
     @State private var scrollToSelectedAndFocus: Bool = false
-    @Environment(\.modelContext) private var viewContext
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
@@ -26,8 +24,7 @@ struct ChannelsContainer: View {
             })
             .padding(.bottom, 10)
             
-            GuideViewRepresentable(appState: $appState,
-                                   isFocused: $isFocused)
+            GuideViewRepresentable(isFocused: $isFocused)
                 .focused($isFocused) // Bind to SwiftUI focus
                 .onAppear {
                     isFocused = true
@@ -38,17 +35,15 @@ struct ChannelsContainer: View {
 }
 
 #Preview {
+    // Override the injected AppStateProvider
     @Previewable @State var appState: AppStateProvider = MockSharedAppState()
-    @Previewable @State var isFocused: Bool = false
-    @Previewable @State var categoryId: CategoryId? = nil
+    InjectedValues[\.sharedAppState] = appState
     
     // Override the injected SwiftDataController
     let swiftDataController = MockSwiftDataController()
-
     InjectedValues[\.swiftDataController] = swiftDataController
     
     return TVPreviewView() {
-        ChannelsContainer(appState: $appState)
-            .modelContext(swiftDataController.viewContext)
+        ChannelsContainer()
     }
 }

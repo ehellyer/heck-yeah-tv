@@ -14,11 +14,11 @@ import AVFoundation
 
 struct BootSplashView: View {
     
-    public var title: String
-    public var subtitle: String
-    public var autoPlaySound: Bool
-    public var soundName: String
-    public var soundExt: String
+    private var title: String
+    private var subtitle: String
+    private var autoPlaySound: Bool
+    private var soundName: String
+    private var soundExt: String
     
     @State private var didPlay = false
     @State private var gradientStart = UnitPoint(x: 0, y: 0)

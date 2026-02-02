@@ -1,5 +1,5 @@
 //
-//  NoChannelsCriteria.swift
+//  NoChannelsInChannelBundle.swift
 //  HeckYeahTV
 //
 //  Created by Ed Hellyer on 1/3/26.
@@ -8,16 +8,16 @@
 
 import SwiftUI
 
-struct NoChannelsCriteria: View {
+struct NoChannelsInChannelBundle: View {
     var body: some View {
         VStack(spacing: 12) {
             Image(systemName: "tv.slash")
                 .font(.system(size: 48))
                 .foregroundStyle(.guideForegroundNoFocus)
-            Text("No channels match criteria")
+            Text("There are no channels in this bundle")
                 .font(.headline)
                 .foregroundStyle(.guideForegroundNoFocus)
-            Text("Try adjusting your filters")
+            Text("Goto settings to create your channel bundle")
                 .font(.subheadline)
                 .foregroundStyle(.guideForegroundNoFocus)
         }
@@ -30,5 +30,5 @@ struct NoChannelsCriteria: View {
 }
 
 #Preview {
-    NoChannelsCriteria()
+    NoChannelsInChannelBundle()
 }

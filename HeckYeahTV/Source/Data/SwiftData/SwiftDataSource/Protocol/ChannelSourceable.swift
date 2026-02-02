@@ -36,6 +36,7 @@ protocol ChannelSourceable {
     /// Probably both.
     var channelBundleMap: ChannelBundleMap { get }
     
+    func homeRunDevices() throws -> [HomeRunDevice]
     
     func totalChannelCountFor(deviceId: HDHomeRunDeviceId) throws -> Int
     

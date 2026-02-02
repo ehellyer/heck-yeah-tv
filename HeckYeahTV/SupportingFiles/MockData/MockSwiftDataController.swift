@@ -24,8 +24,10 @@ final class MockSwiftDataController: SwiftDataProvider {
          showFavoritesOnly: Bool = false,
          searchTerm: String? = nil) {
 
-        @Injected(\.swiftDataStack) var dataPersistence: SwiftDataStackProvider
-        self.viewContext = dataPersistence.viewContext
+        //Always use mock data stack for mock data so we don't accidentally persist the mock data to SQLite database.
+        let stack = MockSwiftDataStack.shared
+        self.viewContext = stack.viewContext
+        self.container = stack.container 
         self.selectedCountry = selectedCountry
         self.selectedCategory = selectedCategory
         self.showFavoritesOnly = showFavoritesOnly
@@ -41,6 +43,15 @@ final class MockSwiftDataController: SwiftDataProvider {
     
     private(set) var totalChannelCount: Int
     
+    private(set) var channelBundleMap: ChannelBundleMap = ChannelBundleMap(map: [])
+
+    func homeRunDevices() throws -> [HomeRunDevice] {
+        let sort = [SortDescriptor<HomeRunDevice>(\.deviceId, order: .forward)]
+        let fetchDescriptor = FetchDescriptor<HomeRunDevice>(sortBy: sort)
+        let devices = try viewContext.fetch(fetchDescriptor)
+        return devices
+    }
+    
     func totalChannelCountFor(deviceId: HDHomeRunDeviceId) throws -> Int {
         do {
             let predicate = #Predicate<Channel> { $0.deviceId == deviceId }
@@ -52,8 +63,6 @@ final class MockSwiftDataController: SwiftDataProvider {
             return 0
         }
     }
-    
-    private(set) var channelBundleMap: ChannelBundleMap = ChannelBundleMap(map: [])
     
     func channel(for channelId: ChannelId) throws -> Channel {
         let predicate = #Predicate<Channel> { $0.id == channelId }
@@ -176,23 +185,22 @@ final class MockSwiftDataController: SwiftDataProvider {
         return _countries
     }
     
-    //MARK: - Private API Properties
+    //MARK: - Internal API - SwiftDataProvider protocol Implementation
     
     @ObservationIgnored
     var viewContext: ModelContext
     
     @ObservationIgnored
-    private var rebuildTask: Task<Void, Never>?
+    var container: ModelContainer
+    
+    //MARK: - Private API Properties
     
     @ObservationIgnored
-    private var bootstrapStarted: Bool = false
+    private var rebuildTask: Task<Void, Never>?
     
     //MARK: - Private API - Functions
     
     private func bootStrap() throws {
-        guard bootstrapStarted == false else { return }
-        bootstrapStarted = true
-
         try rebuildChannelBundleMap()
     }
 

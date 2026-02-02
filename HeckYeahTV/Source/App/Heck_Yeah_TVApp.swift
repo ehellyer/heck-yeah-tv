@@ -50,7 +50,6 @@ struct Heck_Yeah_TVApp: App {
     @Environment(\.scenePhase) private var scenePhase
     @State private var isBootComplete = false
     @State private var startupTask: Task<Void, Never>? = nil
-    @Injected(\.swiftDataStack) private var dataPersistence: SwiftDataStackProvider
     
     var body: some Scene {
 #if os(macOS)
@@ -74,8 +73,6 @@ struct Heck_Yeah_TVApp: App {
                     startupTask?.cancel()
                 }
             }
-            .modelContainer(dataPersistence.container)
-            .modelContext(dataPersistence.viewContext)
     }
     
     private func startBootstrap() {
@@ -91,7 +88,7 @@ struct Heck_Yeah_TVApp: App {
             // Don't fetch unless its been at least six hours from the last fetch.
             let date = appState.dateLastIPTVChannelFetch
             if date == nil || date! < Date().addingTimeInterval(-60 * 60 * 6) {
-                let container = dataPersistence.container
+                let container = InjectedValues[\.swiftDataController].container
                 
                 await withTaskGroup(of: Void.self) { group in
                     
@@ -128,8 +125,8 @@ extension Heck_Yeah_TVApp {
     func writeMockFiles() {
         let cpDescriptor: FetchDescriptor<ChannelProgram> = FetchDescriptor<ChannelProgram>(
             sortBy: [
-                SortDescriptor(\ChannelProgram.channelId),
-                SortDescriptor(\ChannelProgram.startTime)
+                SortDescriptor(\.channelId),
+                SortDescriptor(\.startTime)
             ]
         )
         
@@ -138,11 +135,11 @@ extension Heck_Yeah_TVApp {
                 $0.country == "ANY" && $0.source == "homeRunTuner"
             },
             sortBy: [
-                SortDescriptor(\Channel.sortHint)
+                SortDescriptor(\.sortHint)
             ]
         )
         
-        let viewContext = dataPersistence.viewContext
+        let viewContext = InjectedValues[\.swiftDataController].viewContext
         
         let fetchedChannels: [Channel]? = try? viewContext.fetch(cDescriptor)
         let fetchedPrograms: [ChannelProgram]? = try? viewContext.fetch(cpDescriptor)
@@ -150,8 +147,7 @@ extension Heck_Yeah_TVApp {
         let jsonChanelsString = try? fetchedChannels?.toJSONString()
         let jsonChanelProgramsString = try? fetchedPrograms?.toJSONString()
         
-        let rootURL = SwiftDataStack.shared.appFileStoreRootURL
-        
+        let rootURL = AppKeys.Application.appFileStoreRootURL
         let channelsURL = rootURL.appendingPathComponent("MockChannels", isDirectory: false).appendingPathExtension("json")
         let channelProgramsURL = rootURL.appendingPathComponent("MockChannelPrograms", isDirectory: false).appendingPathExtension("json")
         

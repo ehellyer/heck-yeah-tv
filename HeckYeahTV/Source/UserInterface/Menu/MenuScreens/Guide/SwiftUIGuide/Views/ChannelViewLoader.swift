@@ -22,7 +22,7 @@ struct ChannelViewLoader: View {
         ChannelView(channel: channel)
         .modifier(RedactedIfNeeded(type: channel))
         .onAppear {
-            loader.load(channelId: channelId, context: viewContext)
+            loader.load(channelId: channelId)
         }
         .onDisappear {
             loader.cancel()

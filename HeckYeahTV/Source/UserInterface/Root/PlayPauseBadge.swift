@@ -45,7 +45,10 @@ struct PlayPauseBadge: View {
 }
 
 #Preview {
-    @Previewable @State var appState = MockSharedAppState()
+    // Override the injected AppStateProvider
+    @Previewable @State var appState: AppStateProvider = MockSharedAppState()
+    InjectedValues[\.sharedAppState] = appState
+
     appState.isPlayerPaused = false
     return PlayPauseBadge()
 }

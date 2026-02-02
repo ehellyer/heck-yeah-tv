@@ -14,7 +14,6 @@ struct ChannelProgramListView: View {
     @State var channelId: ChannelId
 
     @State private var appState: AppStateProvider = InjectedValues[\.sharedAppState]
-    @Environment(\.modelContext) private var viewContext
     @StateObject private var loader = ProgramsRowLoader()
     @State private var scrollToProgramId: ChannelProgramId?
     
@@ -49,7 +48,7 @@ struct ChannelProgramListView: View {
             scrollToCurrentProgram(programs: newValue)
         }
         .onAppear {
-            loader.load(channelId: channelId, context: viewContext)
+            loader.load(channelId: channelId)
         }
         .onDisappear {
             loader.cancel()
@@ -104,7 +103,6 @@ struct ChannelProgramListView: View {
     
     return TVPreviewView() {
         ChannelProgramListView(channelId: channelId)
-        .modelContext(swiftDataController.viewContext)
         .onAppear {
             appState.selectedChannel = channelId
         }

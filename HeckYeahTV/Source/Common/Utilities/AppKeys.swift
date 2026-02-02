@@ -31,6 +31,23 @@ struct AppKeys {
         static var appBuildNumber: String {
             return Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as? String ?? ""
         }
+
+        static let appFileStoreRootURL: URL = {
+#if os(tvOS)
+            //tvOS has restrictions on where we can write store files to.  Thanks Apple.
+            var searchPathDirectory: FileManager.SearchPathDirectory = .cachesDirectory
+#else
+            var searchPathDirectory: FileManager.SearchPathDirectory = .applicationSupportDirectory
+#endif
+            guard var _rootURL = FileManager.default.urls(for: searchPathDirectory,
+                                                          in: FileManager.SearchPathDomainMask.userDomainMask).first else {
+                fatalError("Failed to initialize persistence store: Could not build application support directory root URL.")
+            }
+            
+            _rootURL.append(component: "HeckYeahTV")
+            return _rootURL
+        }()
+
         
 #if os(iOS)
 #if targetEnvironment(macCatalyst)
@@ -38,26 +55,24 @@ struct AppKeys {
 #else
         static let osName: String = "iOS"
 #endif
-#elseif os(watchOS)
-        static let osName: String = "watchOS"
 #elseif os(tvOS)
         static let osName: String = "tvOS"
 #elseif os(macOS)
         static let osName: String = "macOS"
 #elseif os(Linux)
         static let osName: String = "Linux"
+#elseif os(watchOS)
+        static let osName: String = "watchOS"
 #elseif os(Windows)
         static let osName: String = "Windows"
 #else
         static let osName: String = "Unknown"
 #endif
-
         
         static let defaultChannelBundleId: String = "default.channel.bundle.id"
     }
     
     struct SharedAppState {
-
         static let showAppMenuKey = "SharedAppState.showAppMenuKey"
         static let isPlayerPausedKey = "SharedAppState.isPlayerPausedKey"
         static let recentlyPlayedKey = "SharedAppState.recentlyPlayedKey"

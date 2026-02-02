@@ -275,14 +275,14 @@ extension ChannelNameView: @MainActor FocusTargetView {
 
 
 #Preview {
-    
-    //var appState: AppStateProvider = MockSharedAppState()
+    // Override the injected AppStateProvider
+    let appState: AppStateProvider = MockSharedAppState()
+    InjectedValues[\.sharedAppState] = appState
     
     // Override the injected SwiftDataController
     let swiftDataController = MockSwiftDataController()
-
     InjectedValues[\.swiftDataController] = swiftDataController
-    
+
     let channel1 = swiftDataController.previewOnly_fetchChannel(at: 7)
     
     let view = ChannelNameView()

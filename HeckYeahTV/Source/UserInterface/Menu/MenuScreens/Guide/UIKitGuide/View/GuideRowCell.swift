@@ -202,15 +202,14 @@ class GuideRowCell: UITableViewCell {
 
     @MainActor
     func configure(with channelId: ChannelId,
-                   isPlaying: Bool,
-                   viewContext: ModelContext) {
+                   isPlaying: Bool) {
         
         self.channelId = channelId
         self.isPlaying = isPlaying
         
         if self.channel?.id != channelId {
-            channelLoader.load(channelId: channelId, context: viewContext)
-            programsLoader.load(channelId: channelId, context: viewContext)
+            channelLoader.load(channelId: channelId)
+            programsLoader.load(channelId: channelId)
         }
 
         channelNameView.configure(with: self.channel, isPlaying: isPlaying)
@@ -342,20 +341,19 @@ extension GuideRowCell: UICollectionViewDelegateFlowLayout {
 //MARK: - Preview Code
 
 #Preview("UIKit Preview") {
-    
-    //var appState: AppStateProvider = MockSharedAppState()
+    // Override the injected AppStateProvider
+    let appState: AppStateProvider = MockSharedAppState()
+    InjectedValues[\.sharedAppState] = appState
     
     // Override the injected SwiftDataController
     let swiftDataController = MockSwiftDataController()
-
     InjectedValues[\.swiftDataController] = swiftDataController
     
     let channel1 = swiftDataController.previewOnly_fetchChannel(at: 11)
     
     let view = GuideRowCell()
     view.configure(with: channel1.id,
-                   isPlaying: false,
-                   viewContext: swiftDataController.viewContext)
+                   isPlaying: false)
     
     let heightConstraint = view.heightAnchor.constraint(equalToConstant: AppStyle.rowHeight)
     heightConstraint.priority = UILayoutPriority(1000)

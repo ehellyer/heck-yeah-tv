@@ -10,13 +10,13 @@ import SwiftUI
 
 struct SettingsContainerView: View {
     
-    @Binding var appState: AppStateProvider
+    @State private var appState: AppStateProvider = InjectedValues[\.sharedAppState]
     
     var body: some View {
 #if os(macOS)
         // On macOS, skip NavigationView entirely and use Form directly
         NavigationStack {
-            SettingsView(appState: $appState)
+            SettingsView()
                 .formStyle(.grouped)
                 .scrollContentBackground(.hidden)
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -25,7 +25,7 @@ struct SettingsContainerView: View {
 #else
         // iOS / tvOS
         NavigationStack {
-            SettingsView(appState: $appState)
+            SettingsView()
 #if os(tvOS)
                 .toolbar {
                     ToolbarItem(placement: .principal) {
@@ -44,13 +44,13 @@ struct SettingsContainerView: View {
 // MARK: - Previews
 
 #Preview("SettingsContainerView") {
-    @Previewable @State var appState: any AppStateProvider = MockSharedAppState()
+    // Override the injected AppStateProvider
+    @Previewable @State var appState: AppStateProvider = MockSharedAppState()
+    InjectedValues[\.sharedAppState] = appState
     
     // Override the injected SwiftDataController
     let swiftDataController = MockSwiftDataController()
-
     InjectedValues[\.swiftDataController] = swiftDataController
     
-    return SettingsContainerView(appState: $appState)
-        .modelContext(swiftDataController.viewContext)
+    return SettingsContainerView()
 }

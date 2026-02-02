@@ -10,7 +10,7 @@ import SwiftUI
 
 struct MenuActivationView: View {
 
-    @Binding var appState: AppStateProvider
+    @State private var appState: AppStateProvider = InjectedValues[\.sharedAppState]
     
     var body: some View {
         Color.clear

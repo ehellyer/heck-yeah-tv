@@ -16,22 +16,7 @@ final class SwiftDataStack: SwiftDataStackProvider {
     /// Private init due to shared singleton instance.
     private init() {
         do {
-            
-#if os(tvOS)
-            //tvOS has restrictions on where we can write store files to.  Thanks Apple.
-            var searchPathDirectory: FileManager.SearchPathDirectory = .cachesDirectory
-#else
-            var searchPathDirectory: FileManager.SearchPathDirectory = .applicationSupportDirectory
-#endif
-            
-            guard var _rootURL = FileManager.default.urls(for: searchPathDirectory,
-                                                          in: FileManager.SearchPathDomainMask.userDomainMask).first else {
-                fatalError("Failed to initialize persistence store: Could not build application support directory root URL.")
-            }
-            
-            _rootURL.append(component: "HeckYeahTV")
-            self.appFileStoreRootURL = _rootURL
-            
+            var _rootURL = AppKeys.Application.appFileStoreRootURL
             _rootURL.append(component: "ChannelData")
             try FileManager.default.createDirectory(atPath: _rootURL.path, withIntermediateDirectories: true)
             
@@ -45,7 +30,6 @@ final class SwiftDataStack: SwiftDataStackProvider {
             
             var _storeURL = _rootURL.appending(path: "GuideStore", directoryHint: .notDirectory)
             _storeURL.appendPathExtension("sqlite")
-            swiftDataStoreURL = _storeURL
             logDebug("HeckYeahTV persistent store URL: \(_storeURL.path)")
             
             // Dev mode: Nuke the store if it's from "yesterday's schema."
@@ -60,7 +44,7 @@ final class SwiftDataStack: SwiftDataStackProvider {
             // Dev note: HeckYeahSchema always points to latest schema, which holds the version number and model definitions.
             let schema = Schema(versionedSchema: HeckYeahSchema.self)
             let modelConfig = ModelConfiguration(schema: schema,
-                                                 url: self.swiftDataStoreURL,
+                                                 url: _storeURL,
                                                  cloudKitDatabase: .none)
             
             container = try ModelContainer(for: schema,
@@ -109,12 +93,6 @@ final class SwiftDataStack: SwiftDataStackProvider {
     
     /// MainActor UI ModelContext.  (Autosave enabled)
     let viewContext: ModelContext
-    
-    /// URL of the persistent store, can be used to build ModelConfiguration.
-    let swiftDataStoreURL: URL
-    
-    /// URL to the file stores for the HeckYeahTVApp
-    let appFileStoreRootURL: URL
 }
 
 /// Because sometimes you just gotta get down and dirty with SQLite.

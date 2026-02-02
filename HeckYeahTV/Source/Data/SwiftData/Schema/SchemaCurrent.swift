@@ -20,7 +20,6 @@ typealias Channel = HeckYeahSchema.Channel
 typealias ChannelBundle = HeckYeahSchema.ChannelBundle
 typealias ChannelProgram = HeckYeahSchema.ChannelProgram
 typealias Country = HeckYeahSchema.Country
-//typealias Favorite = HeckYeahSchema.Favorite
 typealias HomeRunDevice = HeckYeahSchema.HomeRunDevice
 typealias ProgramCategory = HeckYeahSchema.ProgramCategory
 typealias SchemaVersion = HeckYeahSchema.SchemaVersion

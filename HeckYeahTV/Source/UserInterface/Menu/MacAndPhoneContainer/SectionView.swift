@@ -11,7 +11,7 @@ import SwiftData
 
 struct SectionView: View {
     
-    @Binding var appState: AppStateProvider
+    @State private var appState: AppStateProvider = InjectedValues[\.sharedAppState]
     
     var body: some View {
         switch appState.selectedTab {
@@ -26,12 +26,12 @@ struct SectionView: View {
                     .background(Color.clear)
             
             case .filter:
-                FilterView(appState: $appState)
+                FilterView()
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .background(Color.clear)
 
             case .settings:
-                SettingsContainerView(appState: $appState)
+                SettingsContainerView()
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .background(Color.clear)
         }
@@ -40,8 +40,10 @@ struct SectionView: View {
 
 #if !os(tvOS)
 #Preview("SectionView") {
-    @Previewable @State var appState: any AppStateProvider = MockSharedAppState()
-   
+    // Override the injected AppStateProvider
+    @Previewable @State var appState: AppStateProvider = MockSharedAppState()
+    InjectedValues[\.sharedAppState] = appState
+    
     // Override the injected SwiftDataController
     let swiftDataController = MockSwiftDataController()
     InjectedValues[\.swiftDataController] = swiftDataController
@@ -50,16 +52,15 @@ struct SectionView: View {
     appState.selectedTab = .recents
     
     return TVPreviewView() {
-        SectionView(appState: $appState)
-            .environment(\.modelContext, swiftDataController.viewContext)
+        SectionView()
             .onAppear() {
                     // Loads up the recents list
-//                    appState.selectedBundleChannel = swiftDataController.channelBundleMap.map[1]
-//                    appState.selectedBundleChannel = swiftDataController.channelBundleMap.map[3]
-//                    appState.selectedBundleChannel = swiftDataController.channelBundleMap.map[5]
-//                    appState.selectedBundleChannel = swiftDataController.channelBundleMap.map[7]
-//                    appState.selectedBundleChannel = swiftDataController.channelBundleMap.map[9]
-//                    appState.selectedBundleChannel = swiftDataController.channelBundleMap.map[11]
+                    appState.selectedChannel = swiftDataController.channelBundleMap.map[1].channelId
+                    appState.selectedChannel = swiftDataController.channelBundleMap.map[3].channelId
+                    appState.selectedChannel = swiftDataController.channelBundleMap.map[5].channelId
+                    appState.selectedChannel = swiftDataController.channelBundleMap.map[7].channelId
+                    appState.selectedChannel = swiftDataController.channelBundleMap.map[9].channelId
+                    appState.selectedChannel = swiftDataController.channelBundleMap.map[11].channelId
             }
     }
 }

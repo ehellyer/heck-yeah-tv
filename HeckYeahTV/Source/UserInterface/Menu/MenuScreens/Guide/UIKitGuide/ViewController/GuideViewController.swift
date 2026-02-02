@@ -81,6 +81,10 @@ class GuideViewController: UIViewController {
     
     @Injected(\.swiftDataController)
     private var swiftDataController: SwiftDataProvider
+    
+    @Injected(\.sharedAppState)
+    private var appState: AppStateProvider
+    
     private var reloadTableViewTask: Task<Void, Never>? = nil
     
     private var targetChannelId: ChannelId? {
@@ -120,12 +124,12 @@ class GuideViewController: UIViewController {
     
     private func setupCarouselObservation() {
         withObservationTracking({
-            _ = appState?.showProgramDetailCarousel
+            _ = appState.showProgramDetailCarousel
         }, onChange: { [weak self] in
             Task { @MainActor [weak self] in
                 guard let self else { return }
                 
-                if self.appState?.showProgramDetailCarousel == nil, let view = self.targetFocusView {
+                if self.appState.showProgramDetailCarousel == nil, let view = self.targetFocusView {
                     self.requestFocus(on: view)
                 }
 
@@ -135,7 +139,7 @@ class GuideViewController: UIViewController {
     }
 
     private func setPlayingChannel(id: ChannelId) throws {
-        appState?.selectedChannel = id
+        appState.selectedChannel = id
         reloadVisibleRows()
     }
     
@@ -145,14 +149,13 @@ class GuideViewController: UIViewController {
 
     private func reloadVisibleRows() {
         let cells = self.tableView.visibleCells as? [GuideRowCell] ?? []
-        let selectedChannel = appState?.selectedChannel
+        let selectedChannel = appState.selectedChannel
         
         cells.forEach { cell in
             let channelId = cell.channelId ?? "666" // "666" will never be a valid channelId, but that is ok and safer than force unwrap.
             let isPlaying = selectedChannel == channelId
             cell.configure(with: channelId,
-                           isPlaying: isPlaying,
-                           viewContext: viewContext)
+                           isPlaying: isPlaying)
         }
     }
     
@@ -207,14 +210,6 @@ class GuideViewController: UIViewController {
             self.setNeedsFocusUpdate()
         }
     }
-    
-    //MARK: - Internal API - Injected App State (from SwiftUI)
-    
-    // Set by GuideViewRepresentable.Coordinator
-    var appState: AppStateProvider!
-    
-    // Set by GuideViewRepresentable.Coordinator
-    var viewContext: ModelContext!
 }
 
 //MARK: - tvOS UIFocusEnvironment, FocusTargetView implementation
@@ -272,10 +267,20 @@ extension GuideViewController: UITableViewDataSource {
         let channelId = swiftDataController.channelBundleMap.map[indexPath.row].channelId
         let isPlaying = (channelId == appState.selectedChannel)
         guideRowCell.configure(with: channelId,
-                               isPlaying: isPlaying,
-                               viewContext: viewContext)
+                               isPlaying: isPlaying)
         guideRowCell.delegate = self
         return guideRowCell
     }
 }
 
+#Preview {
+    // Override the injected AppStateProvider
+    let appState: AppStateProvider = MockSharedAppState()
+    InjectedValues[\.sharedAppState] = appState
+    
+    // Override the injected SwiftDataController
+    let swiftDataController = MockSwiftDataController()
+    InjectedValues[\.swiftDataController] = swiftDataController
+    
+    return GuideViewController()
+}

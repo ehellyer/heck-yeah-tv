@@ -20,17 +20,27 @@ final class SwiftDataController: SwiftDataProvider {
     }
     
     init() {
-        @Injected(\.swiftDataStack) var dataPersistence: SwiftDataStackProvider
-        self.viewContext = dataPersistence.viewContext
+        let stack = SwiftDataStack.shared
+        self.viewContext = stack.viewContext
+        self.container = stack.container
         let descriptor = FetchDescriptor<Channel>()
         self.totalChannelCount = (try? viewContext.fetchCount(descriptor)) ?? 0
         
         try? self.bootStrap()
     }
     
-    //MARK: - Internal API - SwiftDataProvider implementation
+    //MARK: - Internal API - ChannelSourceable protocol implementation
     
     private(set) var totalChannelCount: Int
+
+    private(set) var channelBundleMap: ChannelBundleMap = ChannelBundleMap(map: [])
+    
+    func homeRunDevices() throws -> [HomeRunDevice] {
+        let sort = [SortDescriptor<HomeRunDevice>(\.deviceId, order: .forward)]
+        let fetchDescriptor = FetchDescriptor<HomeRunDevice>(sortBy: sort)
+        let devices = try viewContext.fetch(fetchDescriptor)
+        return devices
+    }
     
     func totalChannelCountFor(deviceId: HDHomeRunDeviceId) throws -> Int {
         let predicate = #Predicate<Channel> { $0.deviceId == deviceId }
@@ -38,8 +48,6 @@ final class SwiftDataController: SwiftDataProvider {
         let count: Int = try viewContext.fetchCount(fetchDescriptor)
         return count
     }
-    
-    private(set) var channelBundleMap: ChannelBundleMap = ChannelBundleMap(map: [])
     
     func channel(for channelId: ChannelId) throws -> Channel {
         let predicate = #Predicate<Channel> { $0.id == channelId }
@@ -126,7 +134,7 @@ final class SwiftDataController: SwiftDataProvider {
         }
     }
     
-    //MARK: - Internal API - ChannelFilterable implementation Properties
+    //MARK: - Internal API - ChannelFilterable protocol implementation Properties
     
     /// Only show the good channels. Life's too short for the rest.
     var showFavoritesOnly: Bool {
@@ -192,10 +200,15 @@ final class SwiftDataController: SwiftDataProvider {
         }
     }
     
-    //MARK: - Private API Properties
+    //MARK: - Internal API - SwiftDataProvider protocol Implementation
     
     @ObservationIgnored
-    private var viewContext: ModelContext
+    var viewContext: ModelContext
+    
+    @ObservationIgnored
+    var container: ModelContainer
+    
+    //MARK: - Private API Properties
     
     @ObservationIgnored
     private var rebuildTask: Task<Void, Never>?

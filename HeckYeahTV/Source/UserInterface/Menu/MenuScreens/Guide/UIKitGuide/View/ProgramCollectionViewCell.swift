@@ -124,10 +124,12 @@ extension ProgramCollectionViewCell: UIGestureRecognizerDelegate {
 
 
 #Preview("UIKit Preview") {
+    // Override the injected AppStateProvider
+    let appState: AppStateProvider = MockSharedAppState()
+    InjectedValues[\.sharedAppState] = appState
     
     // Override the injected SwiftDataController
     let swiftDataController = MockSwiftDataController()
-
     InjectedValues[\.swiftDataController] = swiftDataController
     
     let channel = swiftDataController.previewOnly_fetchChannel(at: 11)

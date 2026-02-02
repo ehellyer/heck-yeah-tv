@@ -22,15 +22,14 @@ struct VLCPlayerView: CrossPlatformRepresentable {
     //MARK: - Binding and State
     
     @Environment(\.scenePhase) private var scenePhase
-    @Environment(\.modelContext) private var viewContext
     @State private var appState: AppStateProvider = InjectedValues[\.sharedAppState]
-
+    
     private var selectedChannelId: ChannelId? { appState.selectedChannel }
     
     //MARK: - CrossPlatformRepresentable overrides
 
     func makeCoordinator() -> VLCPlayerView.Coordinator {
-        VLCPlayerView.Coordinator(viewContext: viewContext)
+        VLCPlayerView.Coordinator()
     }
     
     func makeView(context: Context) -> PlatformView {
@@ -57,14 +56,9 @@ struct VLCPlayerView: CrossPlatformRepresentable {
     
     @MainActor
     final class Coordinator: NSObject {
-
-        init(viewContext: ModelContext) {
-            self.viewContext = viewContext
-        }
-        
+      
         //MARK: - Private API
-        
-        private var viewContext: ModelContext
+        private var swiftDataController: SwiftDataProvider = InjectedValues[\.swiftDataController]
         private let initVolume: Int32 = 120
         
         private lazy var mediaPlayer: VLCMediaPlayer = {
@@ -76,10 +70,8 @@ struct VLCPlayerView: CrossPlatformRepresentable {
         }()
         
         private func resolveChannelURL(id: ChannelId) -> URL? {
-            let predicate = #Predicate<Channel> { $0.id == id }
-            var descriptor = FetchDescriptor<Channel>(predicate: predicate)
-            descriptor.fetchLimit = 1
-            return try? viewContext.fetch(descriptor).first?.url
+            let channel = try? swiftDataController.channel(for: id)
+            return channel?.url
         }
         
         //MARK: - Internal API

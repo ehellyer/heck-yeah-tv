@@ -11,7 +11,7 @@ import SwiftData
 
 struct MenuTabView: View {
     
-    @Binding var appState: AppStateProvider
+    @State private var appState: AppStateProvider = InjectedValues[\.sharedAppState]
     
     private var selectedTab: Binding<AppSection> {
         Binding(
@@ -30,7 +30,7 @@ struct MenuTabView: View {
             Tab(AppSection.guide.title,
                 systemImage: AppSection.guide.systemImage,
                 value: AppSection.guide) {
-                ChannelsContainer(appState: $appState)
+                ChannelsContainer()
                     .padding(.leading, -20) // Expand on the left edge to prevent the clipping of the focus effect on the fav toggle view.
             }
             
@@ -44,14 +44,14 @@ struct MenuTabView: View {
             Tab(AppSection.filter.title,
                 systemImage: AppSection.filter.systemImage,
                 value: AppSection.filter) {
-                FilterView(appState: $appState)
+                FilterView()
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
             
             Tab(AppSection.settings.title,
                 systemImage: AppSection.settings.systemImage,
                 value: AppSection.settings) {
-                SettingsContainerView(appState: $appState)
+                SettingsContainerView()
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
         }
@@ -75,15 +75,16 @@ struct MenuTabView: View {
 
 #if os(tvOS)
 #Preview {
+    // Override the injected AppStateProvider
     @Previewable @State var appState: AppStateProvider = MockSharedAppState()
+    InjectedValues[\.sharedAppState] = appState
     
     // Override the injected SwiftDataController
     let swiftDataController = MockSwiftDataController()
     InjectedValues[\.swiftDataController] = swiftDataController
     
     return TVPreviewView() {
-        MenuTabView(appState: $appState)
-            .modelContext(swiftDataController.viewContext)
+        MenuTabView()
     }
 }
 #endif

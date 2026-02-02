@@ -166,12 +166,12 @@ extension FavoriteToggleView: @MainActor FocusTargetView {
 
 
 #Preview {
-    
-    //var appState: AppStateProvider = MockSharedAppState()
+    // Override the injected AppStateProvider
+    let appState: AppStateProvider = MockSharedAppState()
+    InjectedValues[\.sharedAppState] = appState
     
     // Override the injected SwiftDataController
     let swiftDataController = MockSwiftDataController()
-
     InjectedValues[\.swiftDataController] = swiftDataController
     
 //    let channelId = swiftDataController.channelBundleMap.map.first?.channelId

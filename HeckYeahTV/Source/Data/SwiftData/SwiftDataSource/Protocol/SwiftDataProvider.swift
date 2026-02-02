@@ -10,4 +10,4 @@ import Foundation
 import SwiftData
 
 @MainActor
-protocol SwiftDataProvider: ChannelSourceable, ChannelFilterable { }
+protocol SwiftDataProvider: ChannelSourceable, ChannelFilterable, SwiftDataStackProvider { }

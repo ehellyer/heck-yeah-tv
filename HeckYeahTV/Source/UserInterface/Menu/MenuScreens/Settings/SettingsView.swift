@@ -10,13 +10,9 @@ import SwiftUI
 import SwiftData
 
 struct SettingsView: View {
-    @Binding var appState: AppStateProvider
-    @Environment(\.modelContext) private var viewContext
-    
+    @State private var appState: AppStateProvider = InjectedValues[\.sharedAppState]
     @State private var swiftDataController: SwiftDataProvider = InjectedValues[\.swiftDataController]
-    
-    @Environment(\.dismiss) private var dismiss
-    
+    @State private var devices: [HomeRunDevice] = []
     @State private var showingCountryPicker = false
     @State private var isScanningForTuners: Bool = false
     @State private var isUpdatingChannels: Bool = false
@@ -28,8 +24,6 @@ struct SettingsView: View {
 #elseif os(tvOS)
     let titleColor: Color = .white
 #endif
-    
-    @Query(sort: \HomeRunDevice.deviceId, order: .forward) private var devices: [HomeRunDevice]
     
     var body: some View {
         
@@ -115,20 +109,23 @@ struct SettingsView: View {
             Spacer()
         }
         .background(.red)
+        .onAppear() {
+            self.devices = (try? swiftDataController.homeRunDevices()) ?? []
+        }
     }
 }
 
 
 #Preview {
-    @Previewable @State var appState: any AppStateProvider = MockSharedAppState()
+    // Override the injected AppStateProvider
+    @Previewable @State var appState: AppStateProvider = MockSharedAppState()
+    InjectedValues[\.sharedAppState] = appState
     
     // Override the injected SwiftDataController
     let swiftDataController = MockSwiftDataController()
-
     InjectedValues[\.swiftDataController] = swiftDataController
     
     return TVPreviewView() {
-        SettingsView(appState: $appState)
-            .modelContext(swiftDataController.viewContext)
+        SettingsView()
     }
 }

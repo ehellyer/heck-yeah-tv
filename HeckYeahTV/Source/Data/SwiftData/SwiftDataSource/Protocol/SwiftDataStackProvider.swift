@@ -17,4 +17,5 @@ protocol SwiftDataStackProvider {
     
     /// MainActor UI ModelContext.
     var viewContext: ModelContext { get }
+    
 }
