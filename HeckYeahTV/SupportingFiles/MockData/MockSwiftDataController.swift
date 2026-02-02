@@ -135,28 +135,36 @@ final class MockSwiftDataController: SwiftDataProvider {
     var showFavoritesOnly: Bool = false {
         didSet {
             guard showFavoritesOnly != oldValue else { return }
-            await scheduleChannelBundleMapRebuild()
+            Task { @MainActor in
+                await scheduleChannelBundleMapRebuild()
+            }
         }
     }
     
     var selectedCountry: CountryCodeId {
         didSet {
             guard selectedCountry != oldValue else { return }
-            await scheduleChannelBundleMapRebuild()
+            Task { @MainActor in
+                await scheduleChannelBundleMapRebuild()
+            }
         }
     }
     
     var selectedCategory: CategoryId? {
         didSet {
             guard selectedCategory != oldValue else { return }
-            await scheduleChannelBundleMapRebuild()
+            Task { @MainActor in
+                await scheduleChannelBundleMapRebuild()
+            }
         }
     }
     
     var searchTerm: String? {
         didSet {
             guard searchTerm != oldValue else { return }
-            await scheduleChannelBundleMapRebuild()
+            Task { @MainActor in
+                await scheduleChannelBundleMapRebuild()
+            }
         }
     }
     
