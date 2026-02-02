@@ -222,17 +222,14 @@ final class SwiftDataController: SwiftDataProvider {
     /// Schedules a channel map rebuild with debouncing to prevent excessive rebuilds.
     ///
     /// This method cancels any pending rebuild and schedules a new one after a 300ms delay.
-    /// The delay is particularly useful for search term changes where users are actively typing.
     private func scheduleChannelBundleMapRebuild() async {
         // Cancel any existing rebuild task
         rebuildTask?.cancel()
         
         // Schedule a new rebuild after debounce delay
         rebuildTask = Task { @MainActor in
-            // Wait for debounce period (300ms is a sweet spot for search-as-you-type)
+            // Wait for debounce period
             try? await Task.sleep(for: .milliseconds(300))
-            
-            // Check if task was cancelled during sleep
             guard !Task.isCancelled else { return }
             
             // Rebuild the channel map with current filter values

@@ -135,28 +135,28 @@ final class MockSwiftDataController: SwiftDataProvider {
     var showFavoritesOnly: Bool = false {
         didSet {
             guard showFavoritesOnly != oldValue else { return }
-            scheduleChannelBundleMapRebuild()
+            await scheduleChannelBundleMapRebuild()
         }
     }
     
     var selectedCountry: CountryCodeId {
         didSet {
             guard selectedCountry != oldValue else { return }
-            scheduleChannelBundleMapRebuild()
+            await scheduleChannelBundleMapRebuild()
         }
     }
     
     var selectedCategory: CategoryId? {
         didSet {
             guard selectedCategory != oldValue else { return }
-            scheduleChannelBundleMapRebuild()
+            await scheduleChannelBundleMapRebuild()
         }
     }
     
     var searchTerm: String? {
         didSet {
             guard searchTerm != oldValue else { return }
-            scheduleChannelBundleMapRebuild()
+            await scheduleChannelBundleMapRebuild()
         }
     }
     
@@ -207,14 +207,13 @@ final class MockSwiftDataController: SwiftDataProvider {
     /// Schedules a channel map rebuild with debouncing to prevent excessive rebuilds.
     ///
     /// This method cancels any pending rebuild and schedules a new one after a 300ms delay.
-    /// The delay is particularly useful for search term changes where users are actively typing.
-    private func scheduleChannelBundleMapRebuild() {
+    private func scheduleChannelBundleMapRebuild() async {
         // Cancel any existing rebuild task
         rebuildTask?.cancel()
         
         // Schedule a new rebuild after debounce delay
         rebuildTask = Task { @MainActor in
-            // Wait for debounce period (300ms is a sweet spot for search-as-you-type)
+            // Wait for debounce period
             try? await Task.sleep(for: .milliseconds(300))
             guard !Task.isCancelled else { return }
             
