@@ -9,24 +9,27 @@
 import SwiftUI
 import Observation
 
+// Index on ChannelId to return the associated BundleEntryId
+typealias ChannelMap = [ChannelId: BundleEntryId]
+
 @Observable final class ChannelBundleMap {
     
-    init(map: [ChannelMap]) {
+    init(channelBundleId: ChannelBundleId,
+         map: ChannelMap) {
+        self.channelBundleId = channelBundleId
         self.map = map
+        self.channelIds = Array(map.keys)
         self.mapCount = map.count
     }
     
-    struct ChannelMap: Hashable {
-        var bundleEntryId: BundleEntryId
-        var channelId: ChannelId
-        var channelBundleId: ChannelBundleId
-    }
-    
-    private(set) var map: [ChannelMap]
+    private(set) var channelBundleId: ChannelBundleId
+    private(set) var map: ChannelMap
     private(set) var mapCount: Int
+    private(set) var channelIds: [ChannelId]
     
-    func update(map: [ChannelMap]) {
+    func update(map: ChannelMap) {
         self.map = map
+        self.channelIds = Array(map.keys)
         self.mapCount = map.count
     }
 }

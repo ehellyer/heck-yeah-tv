@@ -55,12 +55,12 @@ struct SectionView: View {
         SectionView()
             .onAppear() {
                     // Loads up the recents list
-                    appState.selectedChannel = swiftDataController.channelBundleMap.map[1].channelId
-                    appState.selectedChannel = swiftDataController.channelBundleMap.map[3].channelId
-                    appState.selectedChannel = swiftDataController.channelBundleMap.map[5].channelId
-                    appState.selectedChannel = swiftDataController.channelBundleMap.map[7].channelId
-                    appState.selectedChannel = swiftDataController.channelBundleMap.map[9].channelId
-                    appState.selectedChannel = swiftDataController.channelBundleMap.map[11].channelId
+                    appState.selectedChannel = swiftDataController.channelBundleMap.channelIds[1]
+                    appState.selectedChannel = swiftDataController.channelBundleMap.channelIds[3]
+                    appState.selectedChannel = swiftDataController.channelBundleMap.channelIds[5]
+                    appState.selectedChannel = swiftDataController.channelBundleMap.channelIds[7]
+                    appState.selectedChannel = swiftDataController.channelBundleMap.channelIds[9]
+                    appState.selectedChannel = swiftDataController.channelBundleMap.channelIds[11]
             }
     }
 }

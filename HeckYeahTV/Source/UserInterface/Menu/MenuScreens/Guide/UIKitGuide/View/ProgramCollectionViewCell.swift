@@ -132,8 +132,8 @@ extension ProgramCollectionViewCell: UIGestureRecognizerDelegate {
     let swiftDataController = MockSwiftDataController()
     InjectedValues[\.swiftDataController] = swiftDataController
     
-    let channel = swiftDataController.previewOnly_fetchChannel(at: 11)
-    let channelPrograms: [ChannelProgram] = swiftDataController.channelPrograms(for: channel.id)
+    let channelId = swiftDataController.channelBundleMap.channelIds[11]
+    let channelPrograms: [ChannelProgram] = swiftDataController.channelPrograms(for: channelId)
     
     let view = ProgramCollectionViewCell()
     

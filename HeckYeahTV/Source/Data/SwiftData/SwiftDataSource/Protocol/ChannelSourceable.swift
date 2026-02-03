@@ -44,7 +44,13 @@ protocol ChannelSourceable {
     
     func totalChannelCountFor(deviceId: HDHomeRunDeviceId) throws -> Int
     
-    func bundleEntry(for channelId: ChannelId, channelBundleId: ChannelBundleId) -> BundleEntry?
+    func channelBundles() throws -> [ChannelBundle]
+    
+    func channelBundle(for bundleId: ChannelBundleId) throws -> ChannelBundle
+    
+    func bundleEntry(for bundleEntryId: BundleEntryId?) -> BundleEntry?
+    
+    func bundleEntry(for channelId: ChannelId?, channelBundleId: ChannelBundleId) -> BundleEntry?
     
     func isFavorite(channelId: ChannelId?, channelBundleId: ChannelBundleId) -> Bool
     

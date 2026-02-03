@@ -10,6 +10,7 @@ import Foundation
 
 enum GuideStoreError: Error {
     case noChannelFoundForId(ChannelId)
+    case noChannelBundleFoundForId(ChannelBundleId)
 }
 
 extension GuideStoreError: LocalizedError {
@@ -17,6 +18,8 @@ extension GuideStoreError: LocalizedError {
         switch self {
             case .noChannelFoundForId(let channelId):
                 return "No channel found for id: \(channelId)"
+            case .noChannelBundleFoundForId(let channelBundleId):
+                return "No channel bundle found for id: \(channelBundleId)"
         }
     }
 }

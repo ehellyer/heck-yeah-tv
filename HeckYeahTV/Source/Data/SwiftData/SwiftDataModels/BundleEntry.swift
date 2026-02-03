@@ -15,12 +15,14 @@ extension SchemaV1 {
     @Model final class BundleEntry: JSONSerializable {
         #Index<BundleEntry>([\.sortHint, \.id], [\.id])
         
-        init(id: BundleEntryId,
-             channel: Channel?,
+        init(channel: Channel,
              channelBundle: ChannelBundle,
              sortHint: String,
              isFavorite: Bool = false) {
-            self.id = id
+            
+            let bundleEntryId = BundleEntry.newBundleEntryId(channelBundleId: channelBundle.id, channelId: channel.id)
+            
+            self.id = bundleEntryId
             self.channel = channel
             self.channelBundle = channelBundle
             self.sortHint = sortHint
@@ -68,5 +70,11 @@ extension SchemaV1 {
             self.sortHint = try container.decode(String.self, forKey: .sortHint)
             self.isFavorite = try container.decode(Bool.self, forKey: .isFavorite)
         }
+    }
+}
+
+extension BundleEntry {
+    static func newBundleEntryId(channelBundleId: ChannelBundleId, channelId: ChannelId) -> BundleEntryId {
+        return String.stableHashHex(channelBundleId, channelId)
     }
 }

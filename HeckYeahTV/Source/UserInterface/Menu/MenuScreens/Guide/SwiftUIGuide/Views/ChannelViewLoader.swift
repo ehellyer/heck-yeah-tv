@@ -38,7 +38,7 @@ struct ChannelViewLoader: View {
     let swiftDataController = MockSwiftDataController()
     InjectedValues[\.swiftDataController] = swiftDataController
     
-    let channelId = swiftDataController.channelBundleMap.map[14].channelId
+    let channelId = swiftDataController.channelBundleMap.channelIds[14]
     
     return TVPreviewView() {
         ChannelViewLoader(channelId: channelId)

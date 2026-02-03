@@ -76,18 +76,18 @@ struct RecentsView: View {
             .environment(\.modelContext, swiftDataController.viewContext)
             .onAppear() {
                 // Load some recent channels
-                appState.selectedChannel = swiftDataController.channelBundleMap.map[0].channelId
-                appState.selectedChannel = swiftDataController.channelBundleMap.map[1].channelId
-                appState.selectedChannel = swiftDataController.channelBundleMap.map[2].channelId
-                appState.selectedChannel = swiftDataController.channelBundleMap.map[3].channelId
-                appState.selectedChannel = swiftDataController.channelBundleMap.map[4].channelId
-                appState.selectedChannel = swiftDataController.channelBundleMap.map[5].channelId
-                appState.selectedChannel = swiftDataController.channelBundleMap.map[6].channelId
-                appState.selectedChannel = swiftDataController.channelBundleMap.map[7].channelId
-                appState.selectedChannel = swiftDataController.channelBundleMap.map[9].channelId
-                appState.selectedChannel = swiftDataController.channelBundleMap.map[10].channelId
-                appState.selectedChannel = swiftDataController.channelBundleMap.map[11].channelId
-                appState.selectedChannel = swiftDataController.channelBundleMap.map[8].channelId
+                appState.selectedChannel = swiftDataController.channelBundleMap.channelIds[0]
+                appState.selectedChannel = swiftDataController.channelBundleMap.channelIds[1]
+                appState.selectedChannel = swiftDataController.channelBundleMap.channelIds[2]
+                appState.selectedChannel = swiftDataController.channelBundleMap.channelIds[3]
+                appState.selectedChannel = swiftDataController.channelBundleMap.channelIds[4]
+                appState.selectedChannel = swiftDataController.channelBundleMap.channelIds[5]
+                appState.selectedChannel = swiftDataController.channelBundleMap.channelIds[6]
+                appState.selectedChannel = swiftDataController.channelBundleMap.channelIds[7]
+                appState.selectedChannel = swiftDataController.channelBundleMap.channelIds[9]
+                appState.selectedChannel = swiftDataController.channelBundleMap.channelIds[10]
+                appState.selectedChannel = swiftDataController.channelBundleMap.channelIds[11]
+                appState.selectedChannel = swiftDataController.channelBundleMap.channelIds[8]
             }
     }
 }

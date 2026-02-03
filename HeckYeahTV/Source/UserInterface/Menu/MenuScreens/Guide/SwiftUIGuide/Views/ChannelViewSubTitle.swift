@@ -98,7 +98,7 @@ struct ChannelViewSubTitle: View {
     let swiftDataController = MockSwiftDataController()
     InjectedValues[\.swiftDataController] = swiftDataController
 
-    let channel = swiftDataController.previewOnly_fetchChannel(at: 7)
+    let channel = try! swiftDataController.channel(for: swiftDataController.channelBundleMap.channelIds[7])
 
     return TVPreviewView() {
         VStack {

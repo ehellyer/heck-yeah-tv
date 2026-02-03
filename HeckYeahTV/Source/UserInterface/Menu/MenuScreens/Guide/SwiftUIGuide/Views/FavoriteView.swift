@@ -45,10 +45,9 @@ struct FavoriteView: View {
                                           isFocused: focusedButton == .favorite,
                                           isProgramNow: false))
         .onAppear {
-            if let channelId {
-                let channelBundleId = appState.selectedChannelBundle
-                bundleEntry = swiftDataController.bundleEntry(for: channelId, channelBundleId: channelBundleId)
-            }
+            guard let channelId else { return }
+            let bundleEntryId = swiftDataController.channelBundleMap.map[channelId]
+            bundleEntry = swiftDataController.bundleEntry(for: bundleEntryId)
         }
     }
 }
@@ -62,11 +61,13 @@ struct FavoriteView: View {
     let swiftDataController = MockSwiftDataController()
     InjectedValues[\.swiftDataController] = swiftDataController
     
-    let channelId = swiftDataController.previewOnly_fetchChannel(at: 8).id
-    let selectedChannelId = swiftDataController.channelBundleMap.map[0].channelId
+    let channelId = swiftDataController.channelBundleMap.channelIds[8]
+    let selectedChannelId = swiftDataController.channelBundleMap.channelIds[0]
     
     return TVPreviewView() {
         VStack {
+            
+            FavoriteView(channelId: nil)
             
             FavoriteView(channelId: channelId)
             

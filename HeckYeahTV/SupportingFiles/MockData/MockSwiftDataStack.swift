@@ -103,9 +103,8 @@ final class MockSwiftDataStack: SwiftDataStackProvider {
             let channelBundle: ChannelBundle = mockChannelBundles.first!
             mockChannels[0...20].forEach { channel in
                 let channelId: ChannelId = channel.id
-                let bundleEntryId: BundleEntryId = String.stableHashHex(channelBundle.id, channelId)
-                let bundleEntry = BundleEntry(id: bundleEntryId,
-                                              channel: channel,
+                
+                let bundleEntry = BundleEntry(channel: channel,
                                               channelBundle: channelBundle,
                                               sortHint: channel.sortHint,
                                               isFavorite: favorites.contains(channelId))

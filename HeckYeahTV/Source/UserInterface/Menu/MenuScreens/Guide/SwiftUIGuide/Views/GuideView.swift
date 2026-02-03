@@ -44,16 +44,16 @@ struct GuideView: View {
                 ScrollViewReader { proxy in
                     ScrollView(.vertical) {
                         LazyVStack(alignment: .leading) {
-                            ForEach(swiftDataController.channelBundleMap.map, id: \.self) { channelMap in
+                            ForEach(swiftDataController.channelBundleMap.channelIds, id: \.self) { channelId in
                                 HStack(alignment: .top,
                                        spacing: AppStyle.GuideView.programSpacing) {
-                                    ChannelViewLoader(channelId: channelMap.channelId)
-                                    .id(channelMap.channelId)
+                                    ChannelViewLoader(channelId: channelId)
+                                    .id(channelId)
                                     .frame(minWidth: combinedFCWidth)
                                     .frame(width: (compact) ? nil : combinedFCWidth)
                                     
                                     if !compact {
-                                        ChannelProgramListView(channelId: channelMap.channelId)
+                                        ChannelProgramListView(channelId: channelId)
                                     }
                                 }
                             }

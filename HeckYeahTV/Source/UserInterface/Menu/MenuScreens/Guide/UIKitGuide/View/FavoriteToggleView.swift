@@ -174,7 +174,7 @@ extension FavoriteToggleView: @MainActor FocusTargetView {
     let swiftDataController = MockSwiftDataController()
     InjectedValues[\.swiftDataController] = swiftDataController
     
-    let channel1 = swiftDataController.previewOnly_fetchChannel(at: 2)
+    let channel1 = try! swiftDataController.channel(for: swiftDataController.channelBundleMap.channelIds[2])
     
     let view = FavoriteToggleView()
     

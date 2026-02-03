@@ -113,8 +113,8 @@ class ProgramView: UIView {
     let swiftDataController = MockSwiftDataController()
     InjectedValues[\.swiftDataController] = swiftDataController
     
-    let channel = swiftDataController.previewOnly_fetchChannel(at: 1)
-    let channelPrograms: [ChannelProgram] = swiftDataController.channelPrograms(for: channel.id)
+    let channelId = swiftDataController.channelBundleMap.channelIds[1]
+    let channelPrograms: [ChannelProgram] = swiftDataController.channelPrograms(for: channelId)
     
     let view = ProgramView()
     view.configure(with: channelPrograms.first!, isPlaying: false)

@@ -72,7 +72,7 @@ struct CountryPickerView: View {
     let swiftDataController = MockSwiftDataController()
     InjectedValues[\.swiftDataController] = swiftDataController
     
-    let countries = swiftDataController.previewOnly_countries()
+    let countries = try! swiftDataController.countries()
     
     var selectedCountryBinding: Binding<CountryCodeId> {
         Binding(

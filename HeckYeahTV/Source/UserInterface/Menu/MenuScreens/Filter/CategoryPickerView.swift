@@ -79,7 +79,7 @@ struct CategoryPickerView: View {
     let swiftDataController = MockSwiftDataController(selectedCategory: categoryId!)
     InjectedValues[\.swiftDataController] = swiftDataController
     
-    let categories = swiftDataController.previewOnly_categories()
+    let categories = try! swiftDataController.programCategories()
     
     return ZStack {
         TVPreviewView() {

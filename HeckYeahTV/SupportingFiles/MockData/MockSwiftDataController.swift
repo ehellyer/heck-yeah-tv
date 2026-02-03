@@ -43,7 +43,7 @@ final class MockSwiftDataController: SwiftDataProvider {
     
     private(set) var totalChannelCount: Int
     
-    private(set) var channelBundleMap: ChannelBundleMap = ChannelBundleMap(map: [])
+    private(set) var channelBundleMap: ChannelBundleMap = ChannelBundleMap(channelBundleId: "", map: [:])
 
     func countries() throws -> [Country] {
         let sort = [SortDescriptor<Country>(\.name, order: .forward)]
@@ -88,7 +88,33 @@ final class MockSwiftDataController: SwiftDataProvider {
         return _program
     }
     
-    func bundleEntry(for channelId: ChannelId, channelBundleId: ChannelBundleId) -> BundleEntry? {
+    func channelBundles() throws -> [ChannelBundle] {
+        let fetchDescriptor = FetchDescriptor<ChannelBundle>()
+        let models = try viewContext.fetch(fetchDescriptor)
+        return models
+    }
+    
+    func channelBundle(for bundleId: ChannelBundleId) throws -> ChannelBundle {
+        let predicate = #Predicate<ChannelBundle> { $0.id == bundleId }
+        var fetchDescriptor = FetchDescriptor<ChannelBundle>(predicate: predicate)
+        fetchDescriptor.fetchLimit = 1
+        guard let model = try viewContext.fetch(fetchDescriptor).first else {
+            throw GuideStoreError.noChannelBundleFoundForId(bundleId)
+        }
+        return model
+    }
+    
+    func bundleEntry(for bundleEntryId: BundleEntryId?) -> BundleEntry? {
+        guard let bundleEntryId else { return nil }
+        let predicate = #Predicate<BundleEntry> { $0.id == bundleEntryId }
+        var fetchDescriptor = FetchDescriptor<BundleEntry>(predicate: predicate)
+        fetchDescriptor.fetchLimit = 1
+        let bundleEntry: BundleEntry? = try? viewContext.fetch(fetchDescriptor).first
+        return bundleEntry
+    }
+    
+    func bundleEntry(for channelId: ChannelId?, channelBundleId: ChannelBundleId) -> BundleEntry? {
+        guard let channelId else { return nil }
         let predicate = #Predicate<BundleEntry> { $0.channel?.id == channelId && $0.channelBundle.id == channelBundleId }
         var fetchDescriptor = FetchDescriptor<BundleEntry>(predicate: predicate)
         fetchDescriptor.fetchLimit = 1
@@ -182,31 +208,6 @@ final class MockSwiftDataController: SwiftDataProvider {
         }
     }
     
-    //MARK: - Internal API Functions for Preview
-    
-    func previewOnly_fetchChannel(at index: Int) -> Channel {
-        let channelId = channelBundleMap.map[index].channelId
-        let predicate = #Predicate<Channel> { $0.id == channelId }
-        var descriptor = FetchDescriptor<Channel>(predicate: predicate)
-        descriptor.fetchLimit = 1
-        let channel = try! viewContext.fetch(descriptor).first!
-        return channel
-    }
-    
-    func previewOnly_categories() -> [ProgramCategory] {
-        let sortDescriptor = SortDescriptor<ProgramCategory>(\ProgramCategory.name, order: .forward)
-        let fetchDescriptor = FetchDescriptor<ProgramCategory>(sortBy: [sortDescriptor])
-        let _categories = try! viewContext.fetch(fetchDescriptor)
-        return _categories
-    }
-
-    func previewOnly_countries() -> [Country] {
-        let sortDescriptor = SortDescriptor<Country>(\Country.name, order: .forward)
-        let fetchDescriptor = FetchDescriptor<Country>(sortBy: [sortDescriptor])
-        let _countries = try! viewContext.fetch(fetchDescriptor)
-        return _countries
-    }
-    
     //MARK: - Internal API - SwiftDataProvider protocol Implementation
     
     @ObservationIgnored
@@ -256,10 +257,10 @@ final class MockSwiftDataController: SwiftDataProvider {
             logWarning("Unsaved changes prior to building channel map, saving...")
             try context.save()
         }
+        
         logDebug("Building Channel Map... 🇺🇸")
         
         let appState: AppStateProvider = InjectedValues[\.sharedAppState]
-        
         let channelBundleId = appState.selectedChannelBundle
         
         var conditions: [Predicate<BundleEntry>] = []
@@ -267,23 +268,20 @@ final class MockSwiftDataController: SwiftDataProvider {
         if showFavoritesOnly {
             conditions.append(#Predicate<BundleEntry> { $0.isFavorite == true })
         }
-        
         let compoundPredicate = conditions.reduce(#Predicate { _ in true }) { current, next in
             #Predicate { current.evaluate($0) && next.evaluate($0) }
         }
-        
         let sortDescriptor: [SortDescriptor] = [SortDescriptor(\BundleEntry.sortHint, order: .forward)]
         let channelsDescriptor = FetchDescriptor<BundleEntry>(predicate: compoundPredicate, sortBy: sortDescriptor)
-        
         let channels: [BundleEntry] = try context.fetch(channelsDescriptor)
-        let map: [ChannelBundleMap.ChannelMap] = channels.filter({ $0.channel != nil}).map {
-            ChannelBundleMap.ChannelMap(bundleEntryId: $0.id,
-                                        channelId: $0.channel!.id,
-                                        channelBundleId: channelBundleId)
+        
+        let map: ChannelMap =  channels.filter({ $0.channel != nil}).reduce(into: [:]) { result, item in
+            // Note: Can force unwrap channelId here because of the filtering above.
+            result[item.channel!.id] = item.id
         }
         
-        self.channelBundleMap = ChannelBundleMap(map: map)
+        channelBundleMap = ChannelBundleMap(channelBundleId: channelBundleId, map: map)
         
-        logDebug("Channel map built.  Total Channels: \(map.count) 🏁")
+        logDebug("Channel map built.  Total Channels: \(channelBundleMap.mapCount) 🏁")
     }
 }

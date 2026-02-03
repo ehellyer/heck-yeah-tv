@@ -107,7 +107,6 @@ struct SettingsView: View {
             }
             Spacer()
         }
-        .background(.red)
         .onAppear() {
             self.devices = (try? swiftDataController.homeRunDevices()) ?? []
         }
