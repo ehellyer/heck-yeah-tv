@@ -45,6 +45,20 @@ final class MockSwiftDataController: SwiftDataProvider {
     
     private(set) var channelBundleMap: ChannelBundleMap = ChannelBundleMap(map: [])
 
+    func countries() throws -> [Country] {
+        let sort = [SortDescriptor<Country>(\.name, order: .forward)]
+        let fetchDescriptor = FetchDescriptor<Country>(sortBy: sort)
+        let models = try viewContext.fetch(fetchDescriptor)
+        return models
+    }
+    
+    func programCategories() throws -> [ProgramCategory] {
+        let sort = [SortDescriptor<ProgramCategory>(\.name, order: .forward)]
+        let fetchDescriptor = FetchDescriptor<ProgramCategory>(sortBy: sort)
+        let models = try viewContext.fetch(fetchDescriptor)
+        return models
+    }
+    
     func homeRunDevices() throws -> [HomeRunDevice] {
         let sort = [SortDescriptor<HomeRunDevice>(\.deviceId, order: .forward)]
         let fetchDescriptor = FetchDescriptor<HomeRunDevice>(sortBy: sort)

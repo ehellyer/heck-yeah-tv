@@ -187,7 +187,6 @@ extension MainAppContentView {
 //    let selectedChannelId = swiftDataController.channelBundleMap.map[3]
     
     return MainAppContentView()
-        .modelContext(swiftDataController.viewContext)
         .onAppear {
             //appState.selectedBundleChannel = selectedChannelId
             appState.showAppMenu = false

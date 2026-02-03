@@ -76,11 +76,9 @@ struct Heck_Yeah_TVApp: App {
     }
     
     private func startBootstrap() {
+        
         // Always ensure app navigation starts off in the dismissed state when there is a selected channel. Else present the default tab in app navigation.  This prevents a black screen on first startup.
         var appState: AppStateProvider = InjectedValues[\.sharedAppState]
-        
-        appState.showAppMenu = (appState.selectedChannel == nil)
-        appState.showProgramDetailCarousel = nil
         
         startupTask?.cancel()
         startupTask = Task {
@@ -109,7 +107,19 @@ struct Heck_Yeah_TVApp: App {
             
             await MainActor.run {
 //                writeMockFiles()
+                
+                let swiftDataController = InjectedValues[\.swiftDataController]
+                let hasNoChannels = swiftDataController.channelBundleMap.map.isEmpty
 
+                // Always dismiss channel programs carousel
+                appState.showProgramDetailCarousel = nil
+
+                // Determine if should show menu / tabs.
+                appState.showAppMenu = (appState.selectedChannel == nil) || hasNoChannels
+                
+                // Determine default tab.
+                appState.selectedTab = (hasNoChannels) ? .settings : .guide
+                
                 // Update state variable that boot up processes are completed.
                 isBootComplete = true
             }

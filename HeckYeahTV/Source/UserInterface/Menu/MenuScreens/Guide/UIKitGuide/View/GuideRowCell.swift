@@ -29,10 +29,13 @@ class GuideRowCell: UITableViewCell {
     
     override func prepareForReuse() {
         super.prepareForReuse()
-        
+        logDebug("Preparing for reuse")
         channelId = nil
         programs = nil
         programsCollectionView.reloadData()
+        channelNameView.configure(with: nil, isPlaying: isPlaying)
+        favoriteButtonView.configure(with: nil, isPlaying: isPlaying)
+        updateProgramsDisplay(with: nil, isPlaying: isPlaying)
     }
     
     private func commonInit() {

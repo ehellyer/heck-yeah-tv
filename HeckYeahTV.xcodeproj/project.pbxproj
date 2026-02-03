@@ -409,7 +409,6 @@
 				Source/UserInterface/Menu/MenuScreens/Guide/SwiftUIGuide/Views/ChannelViewLoader.swift,
 				Source/UserInterface/Menu/MenuScreens/Guide/SwiftUIGuide/Views/ChannelViewSubTitle.swift,
 				Source/UserInterface/Menu/MenuScreens/Guide/SwiftUIGuide/Views/FavoriteView.swift,
-				Source/UserInterface/Menu/MenuScreens/Guide/SwiftUIGuide/Views/GuideView.swift,
 				Source/UserInterface/Menu/MenuScreens/Guide/SwiftUIGuide/Views/NoChannelProgramView.swift,
 				Source/UserInterface/Menu/MenuScreens/Guide/SwiftUIGuide/Views/NoChannelsFavorites.swift,
 				Source/UserInterface/Menu/MenuScreens/Guide/SwiftUIGuide/Views/NoChannelsInChannelBundle.swift,

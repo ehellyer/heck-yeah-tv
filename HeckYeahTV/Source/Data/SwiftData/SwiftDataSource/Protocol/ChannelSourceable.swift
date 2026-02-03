@@ -36,6 +36,10 @@ protocol ChannelSourceable {
     /// Probably both.
     var channelBundleMap: ChannelBundleMap { get }
     
+    func countries() throws -> [Country]
+    
+    func programCategories() throws -> [ProgramCategory]
+    
     func homeRunDevices() throws -> [HomeRunDevice]
     
     func totalChannelCountFor(deviceId: HDHomeRunDeviceId) throws -> Int

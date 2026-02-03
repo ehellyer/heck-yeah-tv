@@ -95,8 +95,7 @@ struct SettingsView: View {
                         }
                     }
                 }
-                .foregroundColor(.blue)
-                
+                .foregroundColor(.blue)                
             }
             
             if devices.isEmpty {

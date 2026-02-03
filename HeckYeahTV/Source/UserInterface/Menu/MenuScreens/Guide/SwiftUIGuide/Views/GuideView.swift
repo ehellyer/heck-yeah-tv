@@ -120,7 +120,6 @@ private extension GuideView {
 
 //MARK: - PREVIEWS
 
-#if !os(tvOS)
 #Preview("GuideView") {
     // Override the injected AppStateProvider
     @Previewable @State var appState: AppStateProvider = MockSharedAppState()
@@ -130,11 +129,13 @@ private extension GuideView {
     let swiftDataController = MockSwiftDataController()
     InjectedValues[\.swiftDataController] = swiftDataController
     
-    swiftDataController.showFavoritesOnly = false
+    //Test show only favorites
+//    swiftDataController.showFavoritesOnly = false
     
+    //Test the no channels view
+//    swiftDataController.channelBundleMap.update(map: [])
+
     return TVPreviewView() {
         GuideView()
-            .modelContext(swiftDataController.viewContext)
     }
 }
-#endif

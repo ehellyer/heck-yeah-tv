@@ -283,9 +283,10 @@ extension ChannelNameView: @MainActor FocusTargetView {
     let swiftDataController = MockSwiftDataController()
     InjectedValues[\.swiftDataController] = swiftDataController
 
-    let channel1 = swiftDataController.previewOnly_fetchChannel(at: 7)
+    let channel1: Channel? = swiftDataController.previewOnly_fetchChannel(at: 7)
     
     let view = ChannelNameView()
     view.configure(with: channel1, isPlaying: false)
+//    view.configure(with: nil, isPlaying: false)
     return view
 }

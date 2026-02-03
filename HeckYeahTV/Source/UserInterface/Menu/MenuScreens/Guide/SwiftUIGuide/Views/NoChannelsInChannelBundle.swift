@@ -9,10 +9,13 @@
 import SwiftUI
 
 struct NoChannelsInChannelBundle: View {
+    
+    @State private var appState: AppStateProvider = InjectedValues[\.sharedAppState]
+    
     var body: some View {
         VStack(spacing: 12) {
             Image(systemName: "tv.slash")
-                .font(.system(size: 48))
+                .font(.system(size: 56))
                 .foregroundStyle(.guideForegroundNoFocus)
             Text("There are no channels in this bundle")
                 .font(.headline)
@@ -20,12 +23,26 @@ struct NoChannelsInChannelBundle: View {
             Text("Goto settings to create your channel bundle")
                 .font(.subheadline)
                 .foregroundStyle(.guideForegroundNoFocus)
+            
+            // Wrap button in a focusable region that spans the width
+            HStack {
+                Spacer()
+                Button {
+                    appState.selectedTab = .settings
+                } label: {
+                    Text("Settings")
+                }
+                .buttonStyle(.borderedProminent)
+                Spacer()
+            }
+#if os(tvOS)
+            .focusSection()
+#endif
         }
         .frame(maxWidth: .infinity)
         .frame(maxHeight: .infinity)
         .padding(.vertical, 60)
-        .focusable(false)
-        .background(Color.guideBackgroundNoFocus)
+        .background(Color.clear)
     }
 }
 

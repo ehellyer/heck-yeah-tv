@@ -14,9 +14,8 @@ struct FilterView: View {
     @State private var appState: AppStateProvider = InjectedValues[\.sharedAppState]
     @State private var swiftDataController: SwiftDataProvider = InjectedValues[\.swiftDataController]
 
-    @Environment(\.modelContext) private var viewContext
-    @Query(sort: \Country.name, order: .forward) private var countries: [Country]
-    @Query(sort: \ProgramCategory.name, order: .forward) private var categories: [ProgramCategory]
+    @State private var countries: [Country] = []
+    @State private var categories: [ProgramCategory] = []
     
     private var selectedCountryName: String {
         let countryCode = swiftDataController.selectedCountry
@@ -180,6 +179,10 @@ struct FilterView: View {
             .padding()
             Spacer()
         }
+        .onAppear() {
+            self.countries = (try? swiftDataController.countries()) ?? []
+            self.categories = (try? swiftDataController.programCategories()) ?? []
+        }
     }
 }
 
@@ -197,6 +200,5 @@ struct FilterView: View {
     
     return TVPreviewView() {
         FilterView()
-            .modelContext(swiftDataController.viewContext)
     }
 }

@@ -9,6 +9,7 @@
 import UIKit
 import SwiftData
 import Observation
+import SwiftUI
 
 class GuideViewController: UIViewController {
 
@@ -34,8 +35,8 @@ class GuideViewController: UIViewController {
         super.viewDidLoad()
         
         setupTableView()
-        setupAppStateObservation()
-
+        setupSwiftDataObservation()
+        updateShowNoChannels()
         try? swiftDataController.deletePastChannelPrograms()
     }
     
@@ -77,6 +78,43 @@ class GuideViewController: UIViewController {
         return _tableView
     }()
     
+    private lazy var noChannelsHostingController: UIHostingController<NoChannelsInChannelBundle> = {
+        let noChannelsView = NoChannelsInChannelBundle()
+        let _hostingVC = UIHostingController(rootView: noChannelsView)
+        _hostingVC.view.translatesAutoresizingMaskIntoConstraints = false
+        return _hostingVC
+    }()
+
+    private func updateShowNoChannels() {
+        if self.swiftDataController.channelBundleMap.map.isEmpty {
+            self.showNoChannelsView()
+        } else {
+            self.hideNoChannelsView()
+        }
+    }
+    
+    private func showNoChannelsView() {
+        guard noChannelsHostingController.parent == nil else {
+            return
+        }
+        addChild(noChannelsHostingController)
+        view.addSubview(noChannelsHostingController.view)
+        noChannelsHostingController.didMove(toParent: self)
+        noChannelsHostingController.view.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+        noChannelsHostingController.view.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        noChannelsHostingController.view.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+        noChannelsHostingController.view.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+    }
+    
+    private func hideNoChannelsView() {
+        guard noChannelsHostingController.parent != nil else {
+            return
+        }
+        noChannelsHostingController.willMove(toParent: nil)
+        noChannelsHostingController.view.removeFromSuperview()
+        noChannelsHostingController.removeFromParent()
+    }
+    
     //MARK: - Private API
     
     @Injected(\.swiftDataController)
@@ -99,13 +137,13 @@ class GuideViewController: UIViewController {
         restoresFocusAfterTransition = false
     }
     
-    //MARK: - Observation of SharedAppState
+    //MARK: - Observation of SwiftDataProvider
     
-    private func setupAppStateObservation() {
+    private func setupSwiftDataObservation() {
         
         withObservationTracking({
             // Access the property we care about. This registers the dependency.
-            _ = swiftDataController.channelBundleMap.mapCount
+            _ = swiftDataController.channelBundleMap.map
         }, onChange: { [weak self] in
             // Called when any accessed observed property in the tracking block changes.
             Task { @MainActor [weak self] in
@@ -116,7 +154,8 @@ class GuideViewController: UIViewController {
                     guard !Task.isCancelled else { return }
                     self?.tableView.reloadData()
                     self?.scrollToSelectedChannel()
-                    self?.setupAppStateObservation()
+                    self?.updateShowNoChannels()
+                    self?.setupSwiftDataObservation()
                 }
             }
         })
@@ -281,6 +320,9 @@ extension GuideViewController: UITableViewDataSource {
     // Override the injected SwiftDataController
     let swiftDataController = MockSwiftDataController()
     InjectedValues[\.swiftDataController] = swiftDataController
+    
+    //Test the no channels view
+    //swiftDataController.channelBundleMap.update(map: [])
     
     return GuideViewController()
 }

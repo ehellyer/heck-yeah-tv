@@ -12,21 +12,20 @@ import SwiftData
 struct ChannelViewLoader: View {
     
     let channelId: ChannelId
-
+    
     @State private var appState: AppStateProvider = InjectedValues[\.sharedAppState]
-    @Environment(\.modelContext) private var viewContext
     @StateObject private var loader = ChannelRowLoader()
     
     var body: some View {
         let channel = loader.channel
         ChannelView(channel: channel)
-        .modifier(RedactedIfNeeded(type: channel))
-        .onAppear {
-            loader.load(channelId: channelId)
-        }
-        .onDisappear {
-            loader.cancel()
-        }
+            .modifier(RedactedIfNeeded(type: channel))
+            .onAppear {
+                loader.load(channelId: channelId)
+            }
+            .onDisappear {
+                loader.cancel()
+            }
     }
 }
 
@@ -43,6 +42,5 @@ struct ChannelViewLoader: View {
     
     return TVPreviewView() {
         ChannelViewLoader(channelId: channelId)
-        .modelContext(swiftDataController.viewContext)
     }
 }

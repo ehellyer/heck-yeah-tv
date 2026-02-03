@@ -75,10 +75,9 @@ struct ChannelProgramView: View {
         VStack {
             if let channelProgram = channelPrograms.first {
                 ChannelProgramView(channelProgram: channelProgram)
-                .modelContext(swiftDataController.viewContext)
-                .onAppear {
-                    appState.selectedChannel = channelId
-                }
+                    .onAppear {
+                        appState.selectedChannel = channelId
+                    }
             }
         }
     }
