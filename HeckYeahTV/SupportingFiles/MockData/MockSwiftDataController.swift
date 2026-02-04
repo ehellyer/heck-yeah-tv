@@ -21,7 +21,6 @@ final class MockSwiftDataController: SwiftDataProvider {
 
     init(selectedCountry: CountryCodeId = "US",
          selectedCategory: CategoryId? = nil,
-         showFavoritesOnly: Bool = false,
          searchTerm: String? = nil) {
 
         //Always use mock data stack for mock data so we don't accidentally persist the mock data to SQLite database.
@@ -30,21 +29,36 @@ final class MockSwiftDataController: SwiftDataProvider {
         self.container = stack.container 
         self.selectedCountry = selectedCountry
         self.selectedCategory = selectedCategory
-        self.showFavoritesOnly = showFavoritesOnly
+        self.showFavoritesOnly = false
         self.searchTerm = searchTerm
-        
-        let descriptor = FetchDescriptor<Channel>()
-        self.totalChannelCount = (try? viewContext.fetchCount(descriptor)) ?? 0
 
         try? self.bootStrap()
     }
     
     //MARK: - Internal API - SwiftDataProvider implementation
     
-    private(set) var totalChannelCount: Int
-    
     private(set) var channelBundleMap: ChannelBundleMap = ChannelBundleMap(channelBundleId: "", map: [:])
-
+    
+    func totalChannelCount() throws -> Int {
+        let descriptor = FetchDescriptor<Channel>()
+        let totalChannelCount = try viewContext.fetchCount(descriptor)
+        return totalChannelCount
+    }
+    
+    func totalChannelCountFor(deviceId: HDHomeRunDeviceId) throws -> Int {
+        let predicate = #Predicate<Channel> { $0.deviceId == deviceId }
+        let fetchDescriptor = FetchDescriptor<Channel>(predicate: predicate)
+        let count: Int = try viewContext.fetchCount(fetchDescriptor)
+        return count
+    }
+    
+    func homeRunDevices() throws -> [HomeRunDevice] {
+        let sort = [SortDescriptor<HomeRunDevice>(\.deviceId, order: .forward)]
+        let fetchDescriptor = FetchDescriptor<HomeRunDevice>(sortBy: sort)
+        let devices = try viewContext.fetch(fetchDescriptor)
+        return devices
+    }
+    
     func countries() throws -> [Country] {
         let sort = [SortDescriptor<Country>(\.name, order: .forward)]
         let fetchDescriptor = FetchDescriptor<Country>(sortBy: sort)
@@ -59,25 +73,6 @@ final class MockSwiftDataController: SwiftDataProvider {
         return models
     }
     
-    func homeRunDevices() throws -> [HomeRunDevice] {
-        let sort = [SortDescriptor<HomeRunDevice>(\.deviceId, order: .forward)]
-        let fetchDescriptor = FetchDescriptor<HomeRunDevice>(sortBy: sort)
-        let devices = try viewContext.fetch(fetchDescriptor)
-        return devices
-    }
-    
-    func totalChannelCountFor(deviceId: HDHomeRunDeviceId) throws -> Int {
-        do {
-            let predicate = #Predicate<Channel> { $0.deviceId == deviceId }
-            let fetchDescriptor = FetchDescriptor<Channel>(predicate: predicate)
-            let count: Int = try viewContext.fetchCount(fetchDescriptor)
-            return count
-        } catch {
-            logError("Failed to fetch channel count for deviceId: \(deviceId).  Error \(error.localizedDescription)")
-            return 0
-        }
-    }
-    
     func channel(for channelId: ChannelId) throws -> Channel {
         let predicate = #Predicate<Channel> { $0.id == channelId }
         var fetchDescriptor = FetchDescriptor<Channel>(predicate: predicate)
@@ -86,6 +81,16 @@ final class MockSwiftDataController: SwiftDataProvider {
             throw GuideStoreError.noChannelFoundForId(channelId)
         }
         return _program
+    }
+    
+    func channelsForCurrentFilter() throws -> [Channel] {
+        let predicate = Self.predicateBuilder(searchTerm: self.searchTerm,
+                                              countryCode: self.selectedCountry,
+                                              categoryId: self.selectedCategory)
+        let sortDescriptor = [SortDescriptor<Channel>(\.sortHint, order: .forward)]
+        let fetchDescriptor = FetchDescriptor<Channel>(predicate: predicate, sortBy: sortDescriptor)
+        let _channels = try viewContext.fetch(fetchDescriptor)
+        return _channels
     }
     
     func channelBundles() throws -> [ChannelBundle] {

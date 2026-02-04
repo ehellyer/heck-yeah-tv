@@ -25,10 +25,10 @@ struct SectionView: View {
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .background(Color.clear)
             
-            case .filter:
-                FilterView()
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .background(Color.clear)
+//            case .filter:
+//                FilterView()
+//                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+//                    .background(Color.clear)
 
             case .settings:
                 SettingsContainerView()

@@ -10,7 +10,6 @@ import SwiftUI
 
 struct ChannelViewSubTitle: View {
     
-    @Environment(\.redactionReasons) private var redactionReasons
     let channel: Channel?
     
     var number: String? {
@@ -59,20 +58,20 @@ struct ChannelViewSubTitle: View {
             if let _number = number {
                 Text(_number)
                     .font(AppStyle.Fonts.gridRowFont)
-                    .foregroundColor(.guideForegroundNoFocus)
+//                    .foregroundColor(.secondary)
                     .lineLimit(1)
                     .truncationMode(.tail)
             }
             
             if let _qualityImage = qualityImage {
                 _qualityImage
-                    .foregroundColor(.guideForegroundNoFocus)
+//                    .foregroundColor(.secondary)
             }
             
             if let _languageText = languageText {
                 Text(_languageText)
                     .font(AppStyle.Fonts.gridRowFont)
-                    .foregroundColor(.guideForegroundNoFocus)
+//                    .foregroundColor(.secondary)
                     .lineLimit(1)
                     .truncationMode(.tail)
             }
@@ -82,7 +81,7 @@ struct ChannelViewSubTitle: View {
             if noSubText {
                 Text(nbsp)
                     .font(AppStyle.Fonts.gridRowFont)
-                    .foregroundStyle(.guideForegroundNoFocus)
+                    //.foregroundStyle(.secondary)
                     .lineLimit(1)
             }
         }

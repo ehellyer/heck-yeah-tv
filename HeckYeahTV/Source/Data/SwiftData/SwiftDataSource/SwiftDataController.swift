@@ -23,17 +23,33 @@ final class SwiftDataController: SwiftDataProvider {
         let stack = SwiftDataStack.shared
         self.viewContext = stack.viewContext
         self.container = stack.container
-        let descriptor = FetchDescriptor<Channel>()
-        self.totalChannelCount = (try? viewContext.fetchCount(descriptor)) ?? 0
         
         try? self.bootStrap()
     }
     
     //MARK: - Internal API - ChannelSourceable protocol implementation
-    
-    private(set) var totalChannelCount: Int
 
     private(set) var channelBundleMap: ChannelBundleMap = ChannelBundleMap(channelBundleId: "", map: [:])
+
+    func totalChannelCount() throws -> Int {
+        let descriptor = FetchDescriptor<Channel>()
+        let totalChannelCount = try viewContext.fetchCount(descriptor)
+        return totalChannelCount
+    }
+
+    func totalChannelCountFor(deviceId: HDHomeRunDeviceId) throws -> Int {
+        let predicate = #Predicate<Channel> { $0.deviceId == deviceId }
+        let fetchDescriptor = FetchDescriptor<Channel>(predicate: predicate)
+        let count: Int = try viewContext.fetchCount(fetchDescriptor)
+        return count
+    }
+
+    func homeRunDevices() throws -> [HomeRunDevice] {
+        let sort = [SortDescriptor<HomeRunDevice>(\.deviceId, order: .forward)]
+        let fetchDescriptor = FetchDescriptor<HomeRunDevice>(sortBy: sort)
+        let devices = try viewContext.fetch(fetchDescriptor)
+        return devices
+    }
     
     func countries() throws -> [Country] {
         let sort = [SortDescriptor<Country>(\.name, order: .forward)]
@@ -48,20 +64,6 @@ final class SwiftDataController: SwiftDataProvider {
         let models = try viewContext.fetch(fetchDescriptor)
         return models
     }
-
-    func homeRunDevices() throws -> [HomeRunDevice] {
-        let sort = [SortDescriptor<HomeRunDevice>(\.deviceId, order: .forward)]
-        let fetchDescriptor = FetchDescriptor<HomeRunDevice>(sortBy: sort)
-        let devices = try viewContext.fetch(fetchDescriptor)
-        return devices
-    }
-    
-    func totalChannelCountFor(deviceId: HDHomeRunDeviceId) throws -> Int {
-        let predicate = #Predicate<Channel> { $0.deviceId == deviceId }
-        let fetchDescriptor = FetchDescriptor<Channel>(predicate: predicate)
-        let count: Int = try viewContext.fetchCount(fetchDescriptor)
-        return count
-    }
     
     func channel(for channelId: ChannelId) throws -> Channel {
         let predicate = #Predicate<Channel> { $0.id == channelId }
@@ -71,6 +73,16 @@ final class SwiftDataController: SwiftDataProvider {
             throw GuideStoreError.noChannelFoundForId(channelId)
         }
         return _program
+    }
+    
+    func channelsForCurrentFilter() throws -> [Channel] {
+        let predicate = Self.predicateBuilder(searchTerm: self.searchTerm,
+                                              countryCode: self.selectedCountry,
+                                              categoryId: self.selectedCategory)
+        let sortDescriptor = [SortDescriptor<Channel>(\.sortHint, order: .forward)]
+        let fetchDescriptor = FetchDescriptor<Channel>(predicate: predicate, sortBy: sortDescriptor)
+        let _channels = try viewContext.fetch(fetchDescriptor)
+        return _channels
     }
     
     func channelBundles() throws -> [ChannelBundle] {

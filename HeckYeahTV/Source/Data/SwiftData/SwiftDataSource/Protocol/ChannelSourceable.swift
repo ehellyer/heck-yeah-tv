@@ -24,7 +24,11 @@ protocol ChannelSourceable {
     /// This is the "before" number.  The raw, unfiltered count of every channel you've
     /// accumulated. Whether you actually watch them or they're just digital hoarding,
     /// is between you and your storage quota.
-    var totalChannelCount: Int { get }
+    func totalChannelCount() throws -> Int 
+
+    func totalChannelCountFor(deviceId: HDHomeRunDeviceId) throws -> Int
+
+    func homeRunDevices() throws -> [HomeRunDevice]
     
     /// Returns the channels that survived your filter gauntlet, organized to drive the UI lazy loading.
     ///
@@ -40,9 +44,7 @@ protocol ChannelSourceable {
     
     func programCategories() throws -> [ProgramCategory]
     
-    func homeRunDevices() throws -> [HomeRunDevice]
-    
-    func totalChannelCountFor(deviceId: HDHomeRunDeviceId) throws -> Int
+    func channelsForCurrentFilter() throws -> [Channel]
     
     func channelBundles() throws -> [ChannelBundle]
     

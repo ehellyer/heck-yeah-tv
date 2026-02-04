@@ -21,16 +21,17 @@ struct ChannelName: View {
                            defaultImage: Image(systemName: "tv.circle.fill"),
                            showProgressView: true)
             .frame(width: logoFrame, height: logoFrame)
-            .tint(Color.guideForegroundNoFocus)
+            .tint(.gray)
             
             VStack(alignment: .leading, spacing: 2) {
                 Text(channel?.title ?? "PlaceholderSizingText")
                     .font(AppStyle.Fonts.gridRowFont.bold())
-                    .foregroundStyle(Color.guideForegroundNoFocus)
+//                    .foregroundStyle(.secondary)
                     .lineLimit(1)
                     .truncationMode(.tail)
                 
                 ChannelViewSubTitle(channel: channel)
+                    
             }
         }
         .padding(.horizontal, AppStyle.ChannelView.internalHorizontalPadding)

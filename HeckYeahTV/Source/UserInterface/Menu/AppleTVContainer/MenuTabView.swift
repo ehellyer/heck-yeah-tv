@@ -41,12 +41,12 @@ struct MenuTabView: View {
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
 
-            Tab(AppSection.filter.title,
-                systemImage: AppSection.filter.systemImage,
-                value: AppSection.filter) {
-                FilterView()
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-            }
+//            Tab(AppSection.filter.title,
+//                systemImage: AppSection.filter.systemImage,
+//                value: AppSection.filter) {
+//                FilterView()
+//                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+//            }
             
             Tab(AppSection.settings.title,
                 systemImage: AppSection.settings.systemImage,

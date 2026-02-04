@@ -196,7 +196,7 @@ struct FilterView: View {
     InjectedValues[\.swiftDataController] = swiftDataController
     
     //Select recent list tab
-    appState.selectedTab = .filter
+//    appState.selectedTab = .filter
     
     return TVPreviewView() {
         FilterView()
