@@ -17,9 +17,6 @@ enum AppSection: String, CaseIterable, Identifiable, JSONSerializable {
     /// All channels (with on screen toggle to show favorites only)
     case guide
 
-    /// Screen to add favorites by using filters. (select category, use search term, select country, toggle channel as favorite)
-    //case filter
-    
     /// Settings and things
     case settings
 }
@@ -35,7 +32,6 @@ extension AppSection {
             case .recents: return "Recents"
             case .guide: return "Guide"
             case .settings: return "Settings"
-           // case .filter: return "Filter"
         }
     }
     
@@ -45,7 +41,6 @@ extension AppSection {
             case .recents: return "clock.fill"
             case .guide: return "list.bullet.rectangle.fill"
             case .settings: return "gearshape.fill"
-           // case .filter: return "magnifyingglass"
         }
     }
 }

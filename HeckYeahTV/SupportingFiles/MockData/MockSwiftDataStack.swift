@@ -67,7 +67,7 @@ final class MockSwiftDataStack: SwiftDataStackProvider {
     
     private func loadMockData() {
         do {
-            logDebug("MockDataPersistence Init starting...")
+            logDebug("MockDataPersistence Init starting...  (‼️ Memory Storage Only ‼️)")
             
             let mockCountries: [Country] = try loadMockDataFromFile(fileName: "MockCountries", ext: "json")
             mockCountries.forEach(viewContext.insert)

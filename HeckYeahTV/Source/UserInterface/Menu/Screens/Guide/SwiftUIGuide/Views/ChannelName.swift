@@ -30,7 +30,6 @@ struct ChannelName: View {
                     .truncationMode(.tail)
                 
                 ChannelViewSubTitle(channel: channel)
-                    
             }
         }
         .padding(.horizontal, AppStyle.ChannelView.internalHorizontalPadding)

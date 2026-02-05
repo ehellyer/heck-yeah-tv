@@ -32,7 +32,7 @@ protocol ChannelSourceable {
     
     /// Returns the channels that survived your filter gauntlet, organized to drive the UI lazy loading.
     ///
-    /// This is the "after" collection—what remains after applying your favorites filter,
+    /// This is the "after" collection. It is what remains after applying your favorites filter,
     /// country selection, category preference, and search term (typos included).
     /// The map structure makes it easy to lazily load channel data as needed.
     ///

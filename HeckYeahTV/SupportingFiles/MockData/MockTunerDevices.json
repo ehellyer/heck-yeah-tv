@@ -6,7 +6,7 @@
         "modelNumber": "HDFX-4K",
         "firmwareName": "hdhomerun_dvr_atsc3",
         "firmwareVersion": "20250815",
-        "deviceAuth": "oMciyGxXtGDerMe9QTfoJJ0w",
+        "deviceAuth": "oMciye9QTfoJJ0w",
         "baseURL": "http://192.168.1.100",
         "lineupURL": "http://192.168.1.100/lineup.json",
         "tunerCount": 4,
