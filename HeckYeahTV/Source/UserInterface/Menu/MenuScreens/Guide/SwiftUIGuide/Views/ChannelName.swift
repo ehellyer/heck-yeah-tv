@@ -26,7 +26,6 @@ struct ChannelName: View {
             VStack(alignment: .leading, spacing: 2) {
                 Text(channel?.title ?? "PlaceholderSizingText")
                     .font(AppStyle.Fonts.gridRowFont.bold())
-//                    .foregroundStyle(.secondary)
                     .lineLimit(1)
                     .truncationMode(.tail)
                 
@@ -47,7 +46,7 @@ struct ChannelName: View {
     let swiftDataController = MockSwiftDataController()
     InjectedValues[\.swiftDataController] = swiftDataController
 
-    let channelId = "7a9b1eebc340e54fd8e0383b3952863ba491fcb655c7bbdefa6ab2afd2e57dfd"
+    let channelId = swiftDataController.channelBundleMap.channelIds[1]
     let channel = try! swiftDataController.channel(for: channelId)
 
     return ChannelName(channel: channel)

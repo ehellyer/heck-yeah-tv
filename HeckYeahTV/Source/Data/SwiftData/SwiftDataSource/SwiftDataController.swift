@@ -29,7 +29,7 @@ final class SwiftDataController: SwiftDataProvider {
     
     //MARK: - Internal API - ChannelSourceable protocol implementation
 
-    private(set) var channelBundleMap: ChannelBundleMap = ChannelBundleMap(channelBundleId: "", map: [:])
+    private(set) var channelBundleMap: ChannelBundleMap = ChannelBundleMap(channelBundleId: "", map: [:], channelIds: [])
 
     func totalChannelCount() throws -> Int {
         let descriptor = FetchDescriptor<Channel>()
@@ -317,14 +317,15 @@ final class SwiftDataController: SwiftDataProvider {
         }
         let sortDescriptor: [SortDescriptor] = [SortDescriptor(\BundleEntry.sortHint, order: .forward)]
         let channelsDescriptor = FetchDescriptor<BundleEntry>(predicate: compoundPredicate, sortBy: sortDescriptor)
-        let channels: [BundleEntry] = try context.fetch(channelsDescriptor)
+        let bundleEntries: [BundleEntry] = (try context.fetch(channelsDescriptor)).filter({ $0.channel != nil})
         
-        let map: ChannelMap =  channels.filter({ $0.channel != nil}).reduce(into: [:]) { result, item in
+        let channelIds = bundleEntries.map { $0.channel!.id }
+        let map: ChannelMap =  bundleEntries.reduce(into: [:]) { result, item in
             // Note: Can force unwrap channelId here because of the filtering above.
             result[item.channel!.id] = item.id
         }
         
-        channelBundleMap = ChannelBundleMap(channelBundleId: channelBundleId, map: map)
+        channelBundleMap = ChannelBundleMap(channelBundleId: channelBundleId, map: map, channelIds: channelIds)
         
         logDebug("Channel map built.  Total Channels: \(channelBundleMap.mapCount) 🏁")
     }

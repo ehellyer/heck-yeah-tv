@@ -15,10 +15,11 @@ typealias ChannelMap = [ChannelId: BundleEntryId]
 @Observable final class ChannelBundleMap {
     
     init(channelBundleId: ChannelBundleId,
-         map: ChannelMap) {
+         map: ChannelMap,
+         channelIds: [ChannelId]) {
         self.channelBundleId = channelBundleId
         self.map = map
-        self.channelIds = Array(map.keys)
+        self.channelIds = channelIds
         self.mapCount = map.count
     }
     
@@ -27,9 +28,10 @@ typealias ChannelMap = [ChannelId: BundleEntryId]
     private(set) var mapCount: Int
     private(set) var channelIds: [ChannelId]
     
-    func update(map: ChannelMap) {
+    func update(map: ChannelMap,
+                channelIds: [ChannelId]) {
         self.map = map
-        self.channelIds = Array(map.keys)
+        self.channelIds = channelIds
         self.mapCount = map.count
     }
 }

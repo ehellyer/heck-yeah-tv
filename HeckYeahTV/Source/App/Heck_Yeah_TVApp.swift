@@ -39,10 +39,8 @@ func stringName<T>(_ object: T) -> String {
 /// the the task to be cancelled because it was replaced by a similar subsequent task.
 let debounceNS: UInt64 = 10_000_000 //0.01 seconds
 
-
 /// A TimeInterval of 0.2 seconds
 let settleTime: TimeInterval = TimeInterval(0.2)
-
 
 @main
 struct Heck_Yeah_TVApp: App {
@@ -77,15 +75,15 @@ struct Heck_Yeah_TVApp: App {
     
     private func startBootstrap() {
         
-        // Always ensure app navigation starts off in the dismissed state when there is a selected channel. Else present the default tab in app navigation.  This prevents a black screen on first startup.
         var appState: AppStateProvider = InjectedValues[\.sharedAppState]
         
         startupTask?.cancel()
         startupTask = Task {
-
+            let chCount = (try? InjectedValues[\.swiftDataController].totalChannelCount()) ?? 0
+            
             // Don't fetch unless its been at least six hours from the last fetch.
             let date = appState.dateLastIPTVChannelFetch
-            if date == nil || date! < Date().addingTimeInterval(-60 * 60 * 6) {
+            if chCount == 0 || date == nil || date! < Date().addingTimeInterval(-60 * 60 * 6) {
                 let container = InjectedValues[\.swiftDataController].container
                 
                 await withTaskGroup(of: Void.self) { group in
@@ -106,24 +104,31 @@ struct Heck_Yeah_TVApp: App {
             }
             
             await MainActor.run {
-//                writeMockFiles()
+//                writeMockFiles() //DEV TIME THING
                 
-                let swiftDataController = InjectedValues[\.swiftDataController]
-                let hasNoChannels = swiftDataController.channelBundleMap.map.isEmpty
-
-                // Always dismiss channel programs carousel
-                appState.showProgramDetailCarousel = nil
-
-                // Determine if should show menu / tabs.
-                appState.showAppMenu = (appState.selectedChannel == nil) || hasNoChannels
-                
-                // Determine default tab.
-                appState.selectedTab = (hasNoChannels) ? .settings : .guide
+                setInitialUI()
                 
                 // Update state variable that boot up processes are completed.
                 isBootComplete = true
             }
         }
+    }
+    
+    // Always ensure app navigation starts off in the dismissed state when there is a selected channel. Else present the default tab in app navigation.  This prevents a black screen on first startup.
+    private func setInitialUI() {
+        var appState: AppStateProvider = InjectedValues[\.sharedAppState]
+        
+        let swiftDataController = InjectedValues[\.swiftDataController]
+        let hasNoChannels = swiftDataController.channelBundleMap.map.isEmpty
+        
+        // Always dismiss channel programs carousel
+        appState.showProgramDetailCarousel = nil
+        
+        // Determine if should show menu.
+        appState.showAppMenu = (appState.selectedChannel == nil) || hasNoChannels
+        
+        // If shown, determine default tab.
+        appState.selectedTab = (hasNoChannels) ? .settings : .guide
     }
 }
 

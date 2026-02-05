@@ -48,6 +48,7 @@ struct SettingsView: View {
                             }
                             .contentShape(Rectangle())
                         }
+#if !os(tvOS)
                         .swipeActions(edge: .trailing, allowsFullSwipe: false) {
                             Button(role: .destructive) {
                                 bundleToDelete = bundle
@@ -64,6 +65,7 @@ struct SettingsView: View {
                             }
                             .tint(.blue)
                         }
+#endif
                     }
                     
                     Button {
@@ -243,7 +245,9 @@ struct AddBundleSheet: View {
                 }
             }
             .navigationTitle("Add Bundle")
+#if os(iOS)
             .navigationBarTitleDisplayMode(.inline)
+#endif
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") {
@@ -292,7 +296,9 @@ struct RenameBundleSheet: View {
                 }
             }
             .navigationTitle("Rename")
+#if os(iOS)
             .navigationBarTitleDisplayMode(.inline)
+#endif
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") {

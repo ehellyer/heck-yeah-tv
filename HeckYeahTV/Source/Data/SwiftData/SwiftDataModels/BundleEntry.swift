@@ -32,7 +32,10 @@ extension SchemaV1 {
         /// Unique identifier which is a stable hash of ChannelId and ChannelBundleId
         @Attribute(.unique)
         var id: BundleEntryId
+        
+        @Relationship(deleteRule: .nullify)
         var channel: Channel?
+        
         var channelBundle: ChannelBundle
         var sortHint: String
         var isFavorite: Bool

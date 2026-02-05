@@ -24,6 +24,7 @@ struct ChannelProgramsCarousel: View {
             HStack {
                 Spacer()
                 ChannelName(channel: channel)
+                    .foregroundStyle(.white)
                 Spacer()
 #if !os(tvOS)
                 Button {

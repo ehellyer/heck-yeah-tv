@@ -11,6 +11,10 @@ import SwiftData
 
 actor HomeRunImporter {
     
+    deinit {
+        logDebug("Deallocated")
+    }
+    
     init(container: ModelContainer, scanForTuners: Bool) {
         self.context = ModelContext(container)
         self.context.autosaveEnabled = false
@@ -18,6 +22,7 @@ actor HomeRunImporter {
     }
     
     @Injected(\.sharedAppState) private var appState: AppStateProvider
+    
     private var batchCount: Int = 0
     private let batchSize: Int = 3000
     private let context: ModelContext
@@ -249,7 +254,9 @@ actor HomeRunImporter {
                 try await self.importChannelGuides(homeRunController.channelGuides, channelGuideMap: channelGuideMap)
                 
                 // Only update the timestamp if guide import was successful
-                await self.updateHomeRunChannelProgramFetchDate()
+                if channelGuideMap.count > 0 {
+                    await self.updateHomeRunChannelProgramFetchDate()
+                }                
             } catch {
                 logError("Failed to import channel guides: \(error)")
                 throw error

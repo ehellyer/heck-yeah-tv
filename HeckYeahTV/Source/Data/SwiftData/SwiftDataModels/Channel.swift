@@ -69,6 +69,9 @@ extension SchemaV1 {
         var source: ChannelSourceId
         var deviceId: HDHomeRunDeviceId?
         
+        // Inverse relationship with nullify delete rule
+        @Relationship(deleteRule: .nullify, inverse: \BundleEntry.channel)
+        var bundleEntries: [BundleEntry] = []
         
         // MARK: - JSONSerializable Implementation (added for mock data)
         //

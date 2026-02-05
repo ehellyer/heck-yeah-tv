@@ -76,7 +76,7 @@ struct DeviceDetailView: View {
             }
         }
         .navigationTitle("Device Details")
-        #if !os(tvOS)
+        #if os(iOS)
         .navigationBarTitleDisplayMode(.inline)
         #endif
     }
@@ -108,7 +108,9 @@ struct DetailRow: View {
                 .foregroundStyle(.secondary)
             Text(value)
                 .font(.body)
+#if !os(tvOS)
                 .textSelection(.enabled)
+#endif
         }
         .padding(.vertical, 2)
     }

@@ -11,6 +11,10 @@ import SwiftData
 
 actor IPTVImporter {
     
+    deinit {
+        logDebug("Deallocated")
+    }
+    
     init(container: ModelContainer) {
         self.context = ModelContext(container)
         self.context.autosaveEnabled = false
