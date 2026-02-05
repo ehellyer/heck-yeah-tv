@@ -75,16 +75,17 @@ struct Heck_Yeah_TVApp: App {
     
     private func startBootstrap() {
         
-        var appState: AppStateProvider = InjectedValues[\.sharedAppState]
-        
         startupTask?.cancel()
-        startupTask = Task {
-            let chCount = (try? InjectedValues[\.swiftDataController].totalChannelCount()) ?? 0
+        startupTask = Task.detached(name: "Bootstrap tasks", priority: .userInitiated) {
+            let appState: AppStateProvider = InjectedValues[\.sharedAppState]
+            
+            let chCount = await (try? InjectedValues[\.swiftDataController].totalChannelCount()) ?? 0
+            logDebug("Current channel catalog count: \(chCount)")
             
             // Don't fetch unless its been at least six hours from the last fetch.
-            let date = appState.dateLastIPTVChannelFetch
+            let date = await appState.dateLastIPTVChannelFetch
             if chCount == 0 || date == nil || date! < Date().addingTimeInterval(-60 * 60 * 6) {
-                let container = InjectedValues[\.swiftDataController].container
+                let container = await InjectedValues[\.swiftDataController].container
                 
                 await withTaskGroup(of: Void.self) { group in
                     
@@ -100,7 +101,10 @@ struct Heck_Yeah_TVApp: App {
                     }
                 }
                 
-                appState.dateLastIPTVChannelFetch = Date()
+                await MainActor.run {
+                    var appState = appState
+                    appState.dateLastIPTVChannelFetch = Date()
+                }
             }
             
             await MainActor.run {
