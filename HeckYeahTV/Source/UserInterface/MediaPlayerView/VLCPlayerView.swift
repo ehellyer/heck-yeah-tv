@@ -17,6 +17,7 @@ import VLCKit
 import MobileVLCKit
 #endif
 
+@MainActor
 struct VLCPlayerView: CrossPlatformRepresentable {
 
     //MARK: - Binding and State
@@ -56,22 +57,45 @@ struct VLCPlayerView: CrossPlatformRepresentable {
     
     @MainActor
     final class Coordinator: NSObject {
-      
+
+        deinit {
+            NotificationCenter.default.removeObserver(self)
+        }
+
+        override init() {
+            super.init()
+            registerObservers()
+        }
+        
         //MARK: - Private API
         private var swiftDataController: SwiftDataProvider = InjectedValues[\.swiftDataController]
         private let initVolume: Int32 = 120
+        private var seekObservers: [NSObjectProtocol] = []
         
         private lazy var mediaPlayer: VLCMediaPlayer = {
             let _player = VLCMediaPlayer()
             _player.drawable = self.platformView
             _player.delegate = nil  //Not yet implemented
             _player.audio?.volume = initVolume
+            
             return _player
         }()
         
         private func resolveChannelURL(id: ChannelId) -> URL? {
             let channel = try? swiftDataController.channel(for: id)
             return channel?.url
+        }
+        
+        private func registerObservers() {
+            NotificationCenter.default.addObserver(self,
+                                                   selector: #selector(seekForward),
+                                                   name: .playerSeekForward,
+                                                   object: nil)
+            
+            NotificationCenter.default.addObserver(self,
+                                                   selector: #selector(seekBackward),
+                                                   name: .playerSeekBackward,
+                                                   object: nil)
         }
         
         //MARK: - Internal API
@@ -157,14 +181,14 @@ struct VLCPlayerView: CrossPlatformRepresentable {
             }
         }
         
-        func seekForward() {
+        @objc func seekForward() {
             guard mediaPlayer.isSeekable else { return }
-            mediaPlayer.jumpForward(2)
+            mediaPlayer.jumpForward(15)
         }
         
-        func seekBackward() {
+        @objc func seekBackward() {
             guard mediaPlayer.isSeekable else { return }
-            mediaPlayer.jumpBackward(2)
+            mediaPlayer.jumpBackward(15)
         }
         
         func pause() {

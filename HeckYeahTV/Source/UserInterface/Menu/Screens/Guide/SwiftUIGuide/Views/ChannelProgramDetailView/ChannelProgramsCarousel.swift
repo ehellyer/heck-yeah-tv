@@ -10,10 +10,11 @@ import SwiftUI
 
 struct ChannelProgramsCarousel: View {
     
-    let channelPrograms: [ChannelProgram]
-    @State var startOnProgram: ChannelProgramId?
-    @State var channel: Channel
-
+    let channelProgram: ChannelProgram
+    
+    @State private var channelPrograms: [ChannelProgram] = []
+    @State private var channel: Channel? = nil
+    @State private var swiftDataController: SwiftDataProvider = InjectedValues[\.swiftDataController]
     @State private var appState: AppStateProvider = InjectedValues[\.sharedAppState]
     @State private var scrollPositionId: Int?
 
@@ -84,8 +85,18 @@ struct ChannelProgramsCarousel: View {
         .background(.black.opacity(0.9))
         .focusable()
         .onAppear() {
+            
+            guard let _channel = try? swiftDataController.channel(for: channelProgram.channelId) else {
+                return
+            }
+            
+            let _programs = swiftDataController.channelPrograms(for: channelProgram.channelId)
+            
+            channelPrograms = _programs
+            channel = _channel
+            
             let initialIndex = channelPrograms.firstIndex(where: {
-                $0.id == startOnProgram
+                $0.id == channelProgram.id
             })
             self.scrollPositionId = initialIndex
         }
@@ -127,16 +138,14 @@ struct ChannelProgramsCarousel: View {
     InjectedValues[\.swiftDataController] = swiftDataController
     
     let channelId = "7a9b1eebc340e54fd8e0383b3952863ba491fcb655c7bbdefa6ab2afd2e57dfd"
-    let channel = try! swiftDataController.channel(for: channelId)
     let channelPrograms = swiftDataController.channelPrograms(for: channelId)
 
-    //appState.selectedBundleChannel = channelId
+    let channelProgram = channelPrograms.first!
+    
     return TVPreviewView() {
         
         VStack {
-            ChannelProgramsCarousel(channelPrograms: channelPrograms,
-                                    startOnProgram: channelPrograms[8].id,
-                                    channel: channel)
+            ChannelProgramsCarousel(channelProgram: channelProgram)
         }
     }
 }

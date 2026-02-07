@@ -50,7 +50,11 @@ struct MenuTabView: View {
         }
         .frame(maxWidth: .infinity)
         .background(Color.clear)
-        
+        .task {
+            if appState.selectedTab == .playerControls {
+                appState.selectedTab = .guide
+            }
+        }
         
         // Support for dismissing the tabview by tapping menu on Siri remote for tvOS.
         .onExitCommand {

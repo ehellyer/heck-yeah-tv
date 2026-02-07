@@ -11,6 +11,9 @@ import Hellfire
 
 enum AppSection: String, CaseIterable, Identifiable, JSONSerializable {
     
+    /// Allows screen for Play/Pause on iOS and macOS devices.
+    case playerControls
+    
     /// Last recently viewed channels (probably max of 10)
     case recents
     
@@ -29,6 +32,7 @@ extension AppSection {
     /// Tab name title string
     var title: String {
         switch self {
+            case .playerControls: return "Player"
             case .recents: return "Recents"
             case .guide: return "Guide"
             case .settings: return "Settings"
@@ -38,6 +42,7 @@ extension AppSection {
     /// Tab name icon.
     var systemImage: String {
         switch self {
+            case .playerControls: return "play.fill"
             case .recents: return "clock.fill"
             case .guide: return "list.bullet.rectangle.fill"
             case .settings: return "gearshape.fill"

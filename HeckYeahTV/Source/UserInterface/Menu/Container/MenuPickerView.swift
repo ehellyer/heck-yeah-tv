@@ -1,5 +1,5 @@
 //
-//  MainMenu.swift
+//  MenuPickerView.swift
 //  HeckYeahTV
 //
 //  Created by Ed Hellyer on 1/19/26.
@@ -8,7 +8,7 @@
 
 import SwiftUI
 
-struct MainMenu: View {
+struct MenuPickerView: View {
     
     @State private var appState: AppStateProvider = InjectedValues[\.sharedAppState]
     @State private var swiftDataController: SwiftDataProvider = InjectedValues[\.swiftDataController]
@@ -17,6 +17,7 @@ struct MainMenu: View {
         VStack(spacing: 0) {
             HStack {
                 Menu {
+                    //Menu items.
                     Picker("", selection: $appState.selectedTab) {
                         ForEach(AppSection.allCases) { tabSection in
                             Text(tabSection.title).tag(tabSection)
@@ -25,11 +26,13 @@ struct MainMenu: View {
                     .pickerStyle(.inline)
                     .labelsHidden()
                     
+                    // Add Show Favorites for Guide selection.
                     if appState.selectedTab == .guide {
-                        Toggle(isOn:Binding(
-                            get: { swiftDataController.showFavoritesOnly },
-                            set: { swiftDataController.showFavoritesOnly = $0 }
-                        )) {
+                        Toggle(isOn:
+                                Binding(
+                                    get: { swiftDataController.showFavoritesOnly },
+                                    set: { swiftDataController.showFavoritesOnly = $0 })
+                        ) {
                             Label("Favorites only", systemImage: "star.fill")
                                 .tint(Color.yellow)
                                 .labelStyle(.titleAndIcon)
@@ -62,8 +65,22 @@ struct MainMenu: View {
             .background(.ultraThinMaterial)
             .zIndex(1)
             
+            // Selected Menu Content
+            Group {
+                switch appState.selectedTab {
+                    case .playerControls:
+                        PlayerOverlay()
+                    case .guide:
+                        GuideView()
+                    case .recents:
+                        RecentsView()
+                    case .settings:
+                        SettingsContainerView()
+                }
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .background(Color.clear)
             
-            SectionView()
 #if os(macOS)
                 .padding()
 #endif
@@ -78,5 +95,15 @@ struct MainMenu: View {
 }
 
 #Preview {
-    MainMenu()
+    // Override the injected AppStateProvider
+    @Previewable @State var appState: AppStateProvider = MockSharedAppState()
+    InjectedValues[\.sharedAppState] = appState
+    
+    // Override the injected SwiftDataController
+    let swiftDataController = MockSwiftDataController()
+    InjectedValues[\.swiftDataController] = swiftDataController
+    
+    appState.selectedTab = .guide
+    
+    return MenuPickerView()
 }

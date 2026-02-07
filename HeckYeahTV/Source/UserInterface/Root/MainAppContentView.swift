@@ -59,18 +59,13 @@ struct MainAppContentView: View {
 #else
             // App Menu for iOS/macOS
             if appState.showAppMenu {
-                MainMenu()
+                MenuPickerView()
             }
 #endif
             
             // Channel Programs Carousel
-            if let channelProgram = appState.showProgramDetailCarousel,
-               let _channel = try? swiftDataController.channel(for: channelProgram.channelId) {
-                
-                let _programs = swiftDataController.channelPrograms(for: channelProgram.channelId)
-                ChannelProgramsCarousel(channelPrograms: _programs,
-                                        startOnProgram: channelProgram.id,
-                                        channel: _channel)
+            if let channelProgram = appState.showProgramDetailCarousel {
+                ChannelProgramsCarousel(channelProgram: channelProgram)
                 .zIndex(10)
 #if os(tvOS)
                 .focusScope(channelProgramsScope)
@@ -80,16 +75,18 @@ struct MainAppContentView: View {
                     focusedSection = .channelPrograms
                 }
                 .onDisappear {
+                    //We can only get to the carousel from the guide, so return focus to guide.
                     focusedSection = .guide
                 }
 #endif
             }
-            
+
+#if os(tvOS)
             if showPlayPauseButton {
                 PlayPauseBadge()
             }
+#endif
             
-            // An overlay view to capture user interaction on iOS, macOS and focus on tvOS.
             if not(appState.showAppMenu) {
                 MenuActivationView()
 #if os(tvOS)
@@ -184,7 +181,7 @@ extension MainAppContentView {
     let swiftDataController = MockSwiftDataController()
     InjectedValues[\.swiftDataController] = swiftDataController
     
-//    let selectedChannelId = swiftDataController.channelBundleMap.map[3]
+///    let selectedChannelId = swiftDataController.channelBundleMap.map[3]
     
     return MainAppContentView()
         .onAppear {
