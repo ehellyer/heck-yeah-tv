@@ -105,10 +105,10 @@ struct VLCPlayerView: CrossPlatformRepresentable {
             let view = PlatformView()
 #if os(macOS)
             view.wantsLayer = true
-            view.layer?.backgroundColor = PlatformColor.black.cgColor
+            view.layer?.backgroundColor = PlatformColor.clear.cgColor
 #else
             view.isUserInteractionEnabled = false
-            view.backgroundColor = PlatformColor.black
+            view.backgroundColor = PlatformColor.clear
 #endif
             return view
         }()
@@ -163,7 +163,9 @@ struct VLCPlayerView: CrossPlatformRepresentable {
                     // Do not start playback; remain paused with new media loaded.
                     // VLC does not have a "paused but not started" state; simply refrain from play().
                 } else {
-                    mediaPlayer.play()
+                    if not(PreviewDetector.isRunningInPreview) {
+                        mediaPlayer.play()
+                    }
                 }
                 return
             }
@@ -176,7 +178,9 @@ struct VLCPlayerView: CrossPlatformRepresentable {
             } else {
                 // Should be playing: if not already, start/resume.
                 if !isCurrentlyPlaying {
-                    mediaPlayer.play()
+                    if not(PreviewDetector.isRunningInPreview) {
+                        mediaPlayer.play()
+                    }
                 }
             }
         }

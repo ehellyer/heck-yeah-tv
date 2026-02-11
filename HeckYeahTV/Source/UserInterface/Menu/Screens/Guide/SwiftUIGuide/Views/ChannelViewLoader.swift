@@ -12,13 +12,14 @@ import SwiftData
 struct ChannelViewLoader: View {
     
     let channelId: ChannelId
+    @State var hideFavoritesView: Bool = false
     
-    @State private var appState: AppStateProvider = InjectedValues[\.sharedAppState]
     @StateObject private var loader = ChannelRowLoader()
     
     var body: some View {
         let channel = loader.channel
-        ChannelView(channel: channel)
+        ChannelView(channel: channel,
+                    hideFavoritesView: hideFavoritesView)
             .modifier(RedactedIfNeeded(type: channel))
             .onAppear {
                 loader.load(channelId: channelId)
@@ -38,7 +39,7 @@ struct ChannelViewLoader: View {
     let swiftDataController = MockSwiftDataController()
     InjectedValues[\.swiftDataController] = swiftDataController
     
-    let channelId = swiftDataController.channelBundleMap.channelIds[14]
+    let channelId = swiftDataController.channelBundleMap.channelIds[2]
     
     return TVPreviewView() {
         ChannelViewLoader(channelId: channelId)

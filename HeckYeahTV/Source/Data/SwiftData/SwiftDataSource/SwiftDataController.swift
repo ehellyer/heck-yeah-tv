@@ -163,7 +163,9 @@ final class SwiftDataController: SwiftDataProvider {
         
         var conditions: [Predicate<Channel>] = []
 
-        conditions.append( #Predicate<Channel> { $0.country == countryCode || $0.country == "ANY" }) // "ANY" support local LAN tuners which should be returned regardless of current country selection.
+        // Country predicate is always applied but we use "ANY" support local LAN tuners.  These should be returned regardless of current country selection.
+        // If you want to filter LAN channels out use .source and the ChannelSourceType enum.
+        conditions.append( #Predicate<Channel> { $0.country == countryCode || $0.country == "ANY" })
         
         if let searchTerm, searchTerm.count > 0 {
             conditions.append( #Predicate<Channel> { $0.title.localizedStandardContains(searchTerm) })

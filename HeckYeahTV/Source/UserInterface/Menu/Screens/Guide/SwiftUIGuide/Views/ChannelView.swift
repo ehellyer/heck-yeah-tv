@@ -12,7 +12,7 @@ import SwiftData
 struct ChannelView: View {
 
     @State var channel: Channel?
-
+    @State var hideFavoritesView: Bool = false
     @State private var appState: AppStateProvider = InjectedValues[\.sharedAppState]
     @FocusState private var focusedButton: FocusedButton?
     
@@ -24,7 +24,9 @@ struct ChannelView: View {
     var body: some View {
         HStack(alignment: .center, spacing: AppStyle.ChannelView.favButtonTrailing) {
             
-            FavoriteView(channelId: channel?.id)
+            if !hideFavoritesView {
+                FavoriteView(channelId: channel?.id)
+            }
             
             Button {
                 appState.selectedChannel = channel?.id

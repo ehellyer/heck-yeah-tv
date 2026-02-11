@@ -25,7 +25,7 @@ struct NoChannelsFavorites: View {
         .frame(maxHeight: .infinity)
         .padding(.vertical, 60)
         .focusable(false)
-        .background(Color.guideBackgroundNoFocus)
+        .background(Color.clear)
     }
 }
 

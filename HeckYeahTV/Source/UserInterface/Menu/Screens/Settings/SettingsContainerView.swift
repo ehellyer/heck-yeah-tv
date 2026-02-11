@@ -24,26 +24,25 @@ struct SettingsContainerView: View {
         }
 #else
         // iOS / tvOS
-        NavigationStack {
-            SettingsView()
+        SettingsView()
 #if os(tvOS)
-                .toolbar {
-                    ToolbarItem(placement: .principal) {
-                        Text("Settings")
-                            .font(.title2)
-                            .bold()
-                            .foregroundStyle(.white)
-                    }
+            .toolbar {
+                ToolbarItem(placement: .principal) {
+                    Text("Settings")
+                        .font(.title2)
+                        .bold()
+                        .foregroundStyle(.white)
                 }
+            }
 #endif
-        }
+        
 #endif
     }
 }
 
 // MARK: - Previews
 
-#Preview("SettingsContainerView") {
+#Preview("Light Mode") {
     // Override the injected AppStateProvider
     @Previewable @State var appState: AppStateProvider = MockSharedAppState()
     InjectedValues[\.sharedAppState] = appState
@@ -52,5 +51,24 @@ struct SettingsContainerView: View {
     let swiftDataController = MockSwiftDataController()
     InjectedValues[\.swiftDataController] = swiftDataController
     
-    return SettingsContainerView()
+    return TVPreviewView() {
+        SettingsContainerView()
+            .environment(\.colorScheme, .light)
+    }
 }
+
+#Preview("Dark Mode") {
+    // Override the injected AppStateProvider
+    @Previewable @State var appState: AppStateProvider = MockSharedAppState()
+    InjectedValues[\.sharedAppState] = appState
+    
+    // Override the injected SwiftDataController
+    let swiftDataController = MockSwiftDataController()
+    InjectedValues[\.swiftDataController] = swiftDataController
+    
+    return TVPreviewView() {
+        SettingsContainerView()
+            .environment(\.colorScheme, .dark)
+    }
+}
+

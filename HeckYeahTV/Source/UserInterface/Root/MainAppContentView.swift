@@ -42,50 +42,12 @@ struct MainAppContentView: View {
                 .allowsHitTesting(false)
                 .focusable(false)
             
-#if os(tvOS)
-            // App Menu for tvOS
-            if appState.showAppMenu {
-                MenuTabView()
-                    .transition(.opacity)
-                    .background(Color.guideTransparency)
-                    .focusScope(guideScope)
-                    .focused($focusedSection, equals: .guide)
-                    .defaultFocus($focusedSection, .guide)
-                    .disabled(appState.showProgramDetailCarousel != nil) // Prevents focus jumping from ChannelProgramsCarousel to Guide in the background.
-                    .onAppear {
-                        focusedSection = .guide
-                    }
-            }
-#else
-            // App Menu for iOS/macOS
-            if appState.showAppMenu {
-                MenuPickerView()
-            }
-#endif
-            
-            // Channel Programs Carousel
-            if let channelProgram = appState.showProgramDetailCarousel {
-                ChannelProgramsCarousel(channelProgram: channelProgram)
-                .zIndex(10)
-#if os(tvOS)
-                .focusScope(channelProgramsScope)
-                .focused($focusedSection, equals: .channelPrograms)
-                .defaultFocus($focusedSection, .channelPrograms)
-                .onAppear {
-                    focusedSection = .channelPrograms
-                }
-                .onDisappear {
-                    //We can only get to the carousel from the guide, so return focus to guide.
-                    focusedSection = .guide
-                }
-#endif
-            }
 
-#if os(tvOS)
-            if showPlayPauseButton {
-                PlayPauseBadge()
-            }
-#endif
+//#if os(tvOS)
+//            if showPlayPauseButton {
+//                PlayPauseBadge()
+//            }
+//#endif
             
             if not(appState.showAppMenu) {
                 MenuActivationView()
@@ -98,6 +60,45 @@ struct MainAppContentView: View {
                         focusedSection = .activationView
                     }
             }
+        }
+        
+        .fullScreenCover(isPresented: $appState.showAppMenu) {
+//            AppMenuView()
+            MenuPickerView()
+                .background(TransparentBackground())
+                .presentationBackground(.clear)
+                .zIndex(5)
+                .background(Color.guideTransparency)
+#if os(tvOS)
+                .focusScope(guideScope)
+                .focused($focusedSection, equals: .guide)
+                .defaultFocus($focusedSection, .guide)
+                .disabled(appState.showProgramDetailCarousel != nil) // Prevents focus jumping from ChannelProgramsCarousel to Guide in the background.
+                .onAppear {
+                    focusedSection = .guide
+                }
+
+#endif
+                .overlay {
+                    
+                    // Channel Programs Carousel
+                    if let channelProgram = appState.showProgramDetailCarousel {
+                        ChannelProgramsCarousel(channelProgram: channelProgram)
+                            .zIndex(10)
+#if os(tvOS)
+                            .focusScope(channelProgramsScope)
+                            .focused($focusedSection, equals: .channelPrograms)
+                            .defaultFocus($focusedSection, .channelPrograms)
+                            .onAppear {
+                                focusedSection = .channelPrograms
+                            }
+                            .onDisappear {
+                                //We can only get to the carousel from the guide, so return focus to guide.
+                                focusedSection = .guide
+                            }
+#endif
+                    }
+                }
         }
         
 #if os(tvOS)
@@ -124,6 +125,17 @@ struct MainAppContentView: View {
     }
 }
 
+
+struct TransparentBackground: UIViewRepresentable {
+    func makeUIView(context: Context) -> UIView {
+        let view = UIView()
+        Task { @MainActor in
+            view.superview?.superview?.backgroundColor = .clear
+        }
+        return view
+    }
+    func updateUIView(_ uiView: UIView, context: Context) {}
+}
 
 extension MainAppContentView {
     
@@ -172,7 +184,7 @@ extension MainAppContentView {
 
 // MARK: - Preview
 
-#Preview("Main View") {
+#Preview("Light Mode") {
     // Override the injected AppStateProvider
     @Previewable @State var appState: AppStateProvider = MockSharedAppState()
     InjectedValues[\.sharedAppState] = appState
@@ -180,12 +192,43 @@ extension MainAppContentView {
     // Override the injected SwiftDataController
     let swiftDataController = MockSwiftDataController()
     InjectedValues[\.swiftDataController] = swiftDataController
-    
+
 ///    let selectedChannelId = swiftDataController.channelBundleMap.map[3]
-    
-    return MainAppContentView()
-        .onAppear {
-            //appState.selectedBundleChannel = selectedChannelId
-            appState.showAppMenu = false
-        }
+
+    return ZStack {
+        //Color.yellow.ignoresSafeArea()
+        
+        MainAppContentView()
+            .background(Color.clear)
+            .onAppear {
+                //appState.selectedBundleChannel = selectedChannelId
+                appState.showAppMenu = false
+            }
+            .environment(\.colorScheme, .light)
+    }
 }
+
+#Preview("Dark Mode") {
+    // Override the injected AppStateProvider
+    @Previewable @State var appState: AppStateProvider = MockSharedAppState()
+    InjectedValues[\.sharedAppState] = appState
+    
+    // Override the injected SwiftDataController
+    let swiftDataController = MockSwiftDataController()
+    InjectedValues[\.swiftDataController] = swiftDataController
+
+///    let selectedChannelId = swiftDataController.channelBundleMap.map[3]
+
+    return ZStack {
+        //Color.yellow.ignoresSafeArea()
+        
+        MainAppContentView()
+            .background(Color.clear)
+            .onAppear {
+                //appState.selectedBundleChannel = selectedChannelId
+                appState.showAppMenu = false
+            }
+            .environment(\.colorScheme, .dark)
+    }
+}
+

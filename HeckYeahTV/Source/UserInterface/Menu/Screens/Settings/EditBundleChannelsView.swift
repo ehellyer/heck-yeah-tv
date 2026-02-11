@@ -86,7 +86,6 @@ struct EditBundleChannelsView: View {
         }
         .navigationTitle(bundle.name)
         .searchable(text: $searchTerm, prompt: "Search channels")
-        .searchable(text: $searchTerm, prompt: "Search channels")
         .onChange(of: searchTerm) { _, newValue in
             swiftDataController.searchTerm = newValue
         }

@@ -11,7 +11,6 @@ import SwiftUI
 struct RecentsView: View {
 
     @State private var appState: AppStateProvider = InjectedValues[\.sharedAppState]
-    @Environment(\.modelContext) private var viewContext
     @Namespace private var focusNamespace
     @FocusState private var focusedChannelId: String?
     
@@ -21,7 +20,8 @@ struct RecentsView: View {
                 ScrollView(.vertical) {
                     LazyVStack(alignment: .leading) {
                         ForEach(appState.recentChannelIds, id: \.self) { channelId in
-                            ChannelViewLoader(channelId: channelId)
+                            ChannelViewLoader(channelId: channelId,
+                                              hideFavoritesView: true)
                             .id(channelId)
                         }
                     }
@@ -50,9 +50,6 @@ struct RecentsView: View {
                     Text("No recently selected channels")
                         .font(.headline)
                         .foregroundStyle(.white)
-                    Text("Go to the guide to find and select channels")
-                        .font(.subheadline)
-                        .foregroundStyle(.white)
                 }
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 60)
@@ -73,7 +70,6 @@ struct RecentsView: View {
     
     return TVPreviewView() {
         RecentsView()
-            .environment(\.modelContext, swiftDataController.viewContext)
             .onAppear() {
                 // Load some recent channels
                 appState.selectedChannel = swiftDataController.channelBundleMap.channelIds[0]
@@ -87,7 +83,6 @@ struct RecentsView: View {
                 appState.selectedChannel = swiftDataController.channelBundleMap.channelIds[9]
                 appState.selectedChannel = swiftDataController.channelBundleMap.channelIds[10]
                 appState.selectedChannel = swiftDataController.channelBundleMap.channelIds[11]
-                appState.selectedChannel = swiftDataController.channelBundleMap.channelIds[8]
             }
     }
 }

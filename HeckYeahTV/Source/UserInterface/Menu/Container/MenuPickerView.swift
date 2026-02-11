@@ -14,83 +14,79 @@ struct MenuPickerView: View {
     @State private var swiftDataController: SwiftDataProvider = InjectedValues[\.swiftDataController]
     
     var body: some View {
-        VStack(spacing: 0) {
-            HStack {
-                Menu {
-                    //Menu items.
-                    Picker("", selection: $appState.selectedTab) {
-                        ForEach(AppSection.allCases) { tabSection in
-                            Text(tabSection.title).tag(tabSection)
-                        }
-                    }
-                    .pickerStyle(.inline)
-                    .labelsHidden()
-                    
-                    // Add Show Favorites for Guide selection.
-                    if appState.selectedTab == .guide {
-                        Toggle(isOn:
-                                Binding(
-                                    get: { swiftDataController.showFavoritesOnly },
-                                    set: { swiftDataController.showFavoritesOnly = $0 })
-                        ) {
-                            Label("Favorites only", systemImage: "star.fill")
-                                .tint(Color.yellow)
-                                .labelStyle(.titleAndIcon)
-                        }
-                    }
-                } label: {
-                    Label("Menu", systemImage: "slider.horizontal.3")
-                }
-                .labelStyle(.titleAndIcon)
-                .buttonStyle(.automatic)
-                .tint(.white)
-                
-                Spacer()
-                
-                Button("Done") {
-                    withAnimation {
-                        appState.showAppMenu = false
-                    }
-                }
-                .buttonStyle(.automatic)
-                .tint(.white)
-            }
-            .overlay {
-                Text(appState.selectedTab.title)
-                    .font(.headline)
-                    .foregroundStyle(.primary)
-            }
-            .padding(EdgeInsets(top: 20, leading: 20, bottom: 20, trailing: 20))
-            .foregroundStyle(.white)
-            .background(.ultraThinMaterial)
-            .zIndex(1)
+        NavigationStack {
             
-            // Selected Menu Content
-            Group {
-                switch appState.selectedTab {
-                    case .playerControls:
-                        PlayerOverlay()
-                    case .guide:
-                        GuideView()
-                    case .recents:
-                        RecentsView()
-                    case .settings:
-                        SettingsContainerView()
+            VStack(spacing: 0) {
+                
+                // Present the selected Menu content
+                Group {
+                    switch appState.selectedTab {
+                        case .playerControls:
+                            PlayerOverlay()
+                        case .guide:
+                            GuideView()
+                        case .recents:
+                            RecentsView()
+                        case .settings:
+                            SettingsContainerView()
+                    }
                 }
-            }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .background(Color.clear)
-            
+                .background(Color.clear)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
 #if os(macOS)
                 .padding()
 #endif
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .background(Color.guideTransparency)
+            }
+            .navigationTitle(appState.selectedTab.title)
+#if os(iOS)
+            .navigationBarTitleDisplayMode(.inline)
+#endif
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Menu {
+                        //Menu items.
+                        Picker("", selection: $appState.selectedTab) {
+                            ForEach(AppSection.allCases) { tabSection in
+                                Text(tabSection.title).tag(tabSection)
+                            }
+                        }
+                        .pickerStyle(.inline)
+                        .labelsHidden()
+                        
+                        // Add Show Favorites for Guide selection.
+                        if appState.selectedTab == .guide {
+                            Toggle(isOn:
+                                    Binding(
+                                        get: { swiftDataController.showFavoritesOnly },
+                                        set: { swiftDataController.showFavoritesOnly = $0 })
+                            ) {
+                                Label("Favorites only", systemImage: "star.fill")
+                                    .tint(Color.yellow)
+                                    .labelStyle(.titleAndIcon)
+                            }
+                        }
+                    } label: {
+                        Label("Menu", systemImage: "slider.horizontal.3")
+                    }
+                    .labelStyle(.titleAndIcon)
+                    .buttonStyle(.automatic)
+                    .tint(.white)
+                }
+                
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("Done") {
+                        withAnimation {
+                            appState.showAppMenu = false
+                        }
+                    }
+                    .buttonStyle(.automatic)
+                    .tint(.white)
+                }
+            }
         }
-        .transition(
-            .move(edge: .bottom)
-            .combined(with: .opacity)
-        )
+        .toolbarBackground(.hidden, for: .navigationBar)
+        .background(.clear)
+        .scrollContentBackground(.hidden)
     }
 }
 
@@ -104,6 +100,7 @@ struct MenuPickerView: View {
     InjectedValues[\.swiftDataController] = swiftDataController
     
     appState.selectedTab = .guide
-    
-    return MenuPickerView()
+    return TVPreviewView() {
+        MenuPickerView()
+    }
 }

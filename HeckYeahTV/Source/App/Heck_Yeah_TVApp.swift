@@ -63,6 +63,7 @@ struct Heck_Yeah_TVApp: App {
     
     private func content() -> some View {
         RootView(isBootComplete: $isBootComplete)
+            .preferredColorScheme(.dark)
             .task {
                 startBootstrap()
             }
@@ -108,7 +109,11 @@ struct Heck_Yeah_TVApp: App {
             }
             
             await MainActor.run {
-//                writeMockFiles() //DEV TIME THING
+                //DEV TIME THING
+#if DEBUG
+                // Writes files based on data in SwiftData, to be used in MockData for previews.
+//                writeMockFiles()
+#endif
                 
                 setInitialUI()
                 
