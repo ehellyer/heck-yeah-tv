@@ -391,6 +391,7 @@
 				Source/UserInterface/Menu/Screens/Settings/SectionTextStyle.swift,
 				Source/UserInterface/Menu/Screens/Settings/SettingsContainerView.swift,
 				Source/UserInterface/Menu/Screens/Settings/SettingsView.swift,
+				Source/UserInterface/Menu/Screens/Settings/TransparentBackground.swift,
 				Source/UserInterface/Menu/Screens/Settings/TVNavigationLink.swift,
 				Source/UserInterface/PlayerOverlay/PlayerOverlay.swift,
 				Source/UserInterface/Root/AppMenuView.swift,

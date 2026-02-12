@@ -84,7 +84,9 @@ struct MenuPickerView: View {
                 }
             }
         }
+#if !os(macOS)
         .toolbarBackground(.hidden, for: .navigationBar)
+#endif
         .background(.clear)
         .scrollContentBackground(.hidden)
     }

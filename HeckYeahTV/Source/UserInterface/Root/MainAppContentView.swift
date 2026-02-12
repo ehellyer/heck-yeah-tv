@@ -41,13 +41,38 @@ struct MainAppContentView: View {
                 .accessibilityHidden(true)
                 .allowsHitTesting(false)
                 .focusable(false)
-            
 
-//#if os(tvOS)
-//            if showPlayPauseButton {
-//                PlayPauseBadge()
-//            }
-//#endif
+            
+#if os(macOS)
+                if appState.showAppMenu {
+                    AppMenuView()
+                        .presentationBackground(.clear)
+                        .zIndex(5)
+                        .background(Color.guideTransparency)
+                }
+#elseif os(tvOS)
+                .fullScreenCover(isPresented: $appState.showAppMenu) {
+                    AppMenuView()
+                        .background(TransparentBackground())
+                        .presentationBackground(.clear)
+                        .zIndex(5)
+                        .background(Color.guideTransparency)
+                    
+                        .focusScope(guideScope)
+                        .focused($focusedSection, equals: .guide)
+                        .defaultFocus($focusedSection, .guide)
+                        .disabled(appState.showProgramDetailCarousel != nil) // Prevents focus jumping from ChannelProgramsCarousel to Guide in the background.
+                        .onAppear {
+                            focusedSection = .guide
+                        }
+                }
+#endif
+
+#if os(tvOS)
+            if showPlayPauseButton {
+                PlayPauseBadge()
+            }
+#endif
             
             if not(appState.showAppMenu) {
                 MenuActivationView()
@@ -61,45 +86,37 @@ struct MainAppContentView: View {
                     }
             }
         }
-        
+#if os(iOS)
         .fullScreenCover(isPresented: $appState.showAppMenu) {
-//            AppMenuView()
-            MenuPickerView()
+            AppMenuView()
                 .background(TransparentBackground())
                 .presentationBackground(.clear)
                 .zIndex(5)
                 .background(Color.guideTransparency)
-#if os(tvOS)
-                .focusScope(guideScope)
-                .focused($focusedSection, equals: .guide)
-                .defaultFocus($focusedSection, .guide)
-                .disabled(appState.showProgramDetailCarousel != nil) // Prevents focus jumping from ChannelProgramsCarousel to Guide in the background.
-                .onAppear {
-                    focusedSection = .guide
-                }
+        }
 
 #endif
-                .overlay {
-                    
-                    // Channel Programs Carousel
-                    if let channelProgram = appState.showProgramDetailCarousel {
-                        ChannelProgramsCarousel(channelProgram: channelProgram)
-                            .zIndex(10)
+        .overlay {
+            
+            // Channel Programs Carousel
+            if let channelProgram = appState.showProgramDetailCarousel {
+                ChannelProgramsCarousel(channelProgram: channelProgram)
+                    .zIndex(10)
 #if os(tvOS)
-                            .focusScope(channelProgramsScope)
-                            .focused($focusedSection, equals: .channelPrograms)
-                            .defaultFocus($focusedSection, .channelPrograms)
-                            .onAppear {
-                                focusedSection = .channelPrograms
-                            }
-                            .onDisappear {
-                                //We can only get to the carousel from the guide, so return focus to guide.
-                                focusedSection = .guide
-                            }
-#endif
+                    .focusScope(channelProgramsScope)
+                    .focused($focusedSection, equals: .channelPrograms)
+                    .defaultFocus($focusedSection, .channelPrograms)
+                    .onAppear {
+                        focusedSection = .channelPrograms
                     }
-                }
+                    .onDisappear {
+                        //We can only get to the carousel from the guide, so return focus to guide.
+                        focusedSection = .guide
+                    }
+#endif
+            }
         }
+        
         
 #if os(tvOS)
         .onPlayPauseCommand {
@@ -123,18 +140,6 @@ struct MainAppContentView: View {
             showPlayPauseButton = appState.isPlayerPaused
         }
     }
-}
-
-
-struct TransparentBackground: UIViewRepresentable {
-    func makeUIView(context: Context) -> UIView {
-        let view = UIView()
-        Task { @MainActor in
-            view.superview?.superview?.backgroundColor = .clear
-        }
-        return view
-    }
-    func updateUIView(_ uiView: UIView, context: Context) {}
 }
 
 extension MainAppContentView {

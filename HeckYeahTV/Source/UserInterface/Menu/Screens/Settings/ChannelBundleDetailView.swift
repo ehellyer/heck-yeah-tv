@@ -14,14 +14,20 @@ struct ChannelBundleDetailView: View {
     
     @State private var swiftDataController: SwiftDataProvider = InjectedValues[\.swiftDataController]
     @State private var showingDeleteConfirmation = false
-    @State private var showingRenameSheet = false
     @State private var canDelete: Bool = false
     @Environment(\.dismiss) private var dismiss
     
+    @State private var bundleNameBuffer: String = ""
+    @State private var showingEmptyNameAlert = false
+    @FocusState private var nameFieldFocused: Bool
     @State private var searchTerm: String = ""
     @State private var availableChannelCount: Int = 0
     @State private var categories: [ProgramCategory] = []
     @State private var countries: [Country] = []
+    
+    private var nameIsInvalid: Bool {
+        bundleNameBuffer.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+    }
     
     private var filteredChannels: [Channel] {
         let channels = try! swiftDataController.channelsForCurrentFilter()
@@ -36,26 +42,12 @@ struct ChannelBundleDetailView: View {
         List {
             // MARK: - Bundle Info Section
             Section {
-                HStack {
-                    Text("Bundle Name")
-                    Spacer()
-                    Text(bundle.name)
-                        .foregroundStyle(.secondary)
-                }
-                
-                Button {
-                    showingRenameSheet = true
-                } label: {
-                    HStack(spacing: 20) {
-                        Image(systemName: "pencil")
-                            .foregroundStyle(.blue)
-                        
-                        Text("Rename Bundle")
-                            .font(.body)
-                            
+                TextField("Bundle Name", text: $bundleNameBuffer)
+                    .focused($nameFieldFocused)
+                    .onSubmit { commitBundleName() }
+                    .onChange(of: nameFieldFocused) { _, isFocused in
+                        if !isFocused { commitBundleName() }
                     }
-                }
-                
                 
                 Button(role: .destructive) {
                     showingDeleteConfirmation = true
@@ -121,6 +113,7 @@ struct ChannelBundleDetailView: View {
             .foregroundStyle(.white)
             .listRowBackground(Color(white: 0.1).opacity(0.8))
             .listRowSeparatorTint(Color(white: 0.6).opacity(0.3))
+            .disabled(nameIsInvalid)
             
             
             // MARK: - Channels Section
@@ -164,6 +157,7 @@ struct ChannelBundleDetailView: View {
             .foregroundStyle(.white)
             .listRowBackground(Color(white: 0.1).opacity(0.8))
             .listRowSeparatorTint(Color(white: 0.6).opacity(0.3))
+            .disabled(nameIsInvalid)
             
             
         }
@@ -178,8 +172,13 @@ struct ChannelBundleDetailView: View {
         .onChange(of: searchTerm) { _, newValue in
             swiftDataController.searchTerm = newValue
         }
-        .sheet(isPresented: $showingRenameSheet) {
-            RenameBundleSheet(bundle: bundle)
+        #if os(iOS)
+        .navigationBarBackButtonHidden(nameFieldFocused)
+        #endif
+        .alert("Bundle Name Required", isPresented: $showingEmptyNameAlert) {
+            Button("OK", role: .cancel) { }
+        } message: {
+            Text("The bundle name cannot be empty.")
         }
         .alert("Delete Channel Bundle", isPresented: $showingDeleteConfirmation) {
             Button("Cancel", role: .cancel) { }
@@ -190,6 +189,7 @@ struct ChannelBundleDetailView: View {
             Text("Are you sure you want to delete '\(bundle.name)'? This action cannot be undone.")
         }
         .task {
+            bundleNameBuffer = bundle.name
             loadData()
         }
     }
@@ -213,6 +213,18 @@ struct ChannelBundleDetailView: View {
     }
     
     // MARK: - Actions
+    
+    private func commitBundleName() {
+        let trimmed = bundleNameBuffer.trimmingCharacters(in: .whitespacesAndNewlines)
+        if trimmed.isEmpty {
+            nameFieldFocused = true
+            showingEmptyNameAlert = true
+        } else {
+            bundle.name = trimmed
+            bundleNameBuffer = trimmed
+            nameFieldFocused = false
+        }
+    }
     
     private func toggleChannel(_ channel: Channel) {
         if let existingEntry = bundle.channels.first(where: { $0.channel?.id == channel.id }) {

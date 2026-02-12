@@ -30,6 +30,28 @@ struct LoadImageAsync: View {
         self.showProgressView = showProgressView
     }
     
+    private func loadImage(from url: URL?) {
+        isLoading = true
+        let hashId = url.hashValue
+        imageLoadTask?.cancel()
+        imageLoadTask = Task.detached {
+            if PreviewDetector.isRunningInPreview {
+                try? await Task.sleep(nanoseconds: 2_000_000_000)
+            }
+            let image = try? await attachmentController.fetchImage(url)
+            guard !Task.isCancelled, url.hashValue == hashId else {
+                await MainActor.run {
+                    isLoading = false
+                }
+                return
+            }
+            await MainActor.run {
+                isLoading = false
+                loadedImage = image
+            }
+        }
+    }
+
     var body: some View {
         ZStack {
             if isLoading {
@@ -52,25 +74,10 @@ struct LoadImageAsync: View {
             }
         }
         .onAppear() {
-            isLoading = true
-            let hashId = url.hashValue
-            imageLoadTask?.cancel()
-            imageLoadTask = Task.detached {
-                if PreviewDetector.isRunningInPreview {
-                    try? await Task.sleep(nanoseconds: 2_000_000_000)
-                }
-                let image = try? await attachmentController.fetchImage(url)
-                guard !Task.isCancelled, url.hashValue == hashId, let image else {
-                    await MainActor.run {
-                        isLoading = false
-                    }
-                    return
-                }
-                await MainActor.run {
-                    isLoading = false
-                    loadedImage = image
-                }
-            }
+            loadImage(from: url)
+        }
+        .onChange(of: url) { _, newURL in
+            loadImage(from: newURL)
         }
         .onDisappear {
             imageLoadTask?.cancel()
@@ -88,7 +95,7 @@ struct LoadImageAsync: View {
     let swiftDataController = MockSwiftDataController()
     InjectedValues[\.swiftDataController] = swiftDataController
     
-    let channelId = swiftDataController.channelBundleMap.channelIds[1]
+    let channelId = swiftDataController.channelBundleMap.channelIds[11]
     let channel = try! swiftDataController.channel(for: channelId)
     
     return ZStack {
@@ -99,5 +106,6 @@ struct LoadImageAsync: View {
                        defaultImage: Image(systemName: "tv.circle.fill"),
                        showProgressView: true)
         .padding(100)
+        .environment(\.colorScheme, .dark)
     }
 }
