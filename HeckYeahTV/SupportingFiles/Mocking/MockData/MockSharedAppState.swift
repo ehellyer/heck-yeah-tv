@@ -42,4 +42,8 @@ final class MockSharedAppState: AppStateProvider {
     var dateLastHomeRunChannelProgramFetch: Date?
     var dateLastIPTVChannelFetch: Date?
 
+    
+    func resetRecentChannelIds() {
+        recentChannelIds = []
+    }
 }

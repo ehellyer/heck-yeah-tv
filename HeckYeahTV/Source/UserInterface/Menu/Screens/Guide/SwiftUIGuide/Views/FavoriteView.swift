@@ -30,6 +30,11 @@ struct FavoriteView: View {
     var body: some View {
         Button {
             bundleEntry?.isFavorite.toggle()
+            do {
+                try swiftDataController.viewContext.saveChangesIfNeeded()
+            } catch {
+                logError("Failed to save favorite state: \(error)")
+            }
         } label: {
             let isFavorite: Bool = bundleEntry?.isFavorite ?? false
             

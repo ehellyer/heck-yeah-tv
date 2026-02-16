@@ -9,21 +9,34 @@
 import SwiftUI
 
 struct NoChannelsFavorites: View {
+    
+    @State private var swiftDataController: SwiftDataProvider = InjectedValues[\.swiftDataController]
+    
     var body: some View {
-        VStack(spacing: 12) {
-            Image(systemName: "tv.slash")
+        VStack(spacing: 15) {
+            Image(systemName: "star.slash.fill")
                 .font(.system(size: 48))
-                .foregroundStyle(.guideForegroundNoFocus)
-            Text("No favorite channels set")
+                .foregroundStyle(.yellow)
+            Text("You have no favorite channels")
                 .font(.headline)
                 .foregroundStyle(.guideForegroundNoFocus)
-            Text("Add some channels to your favorites")
+            Text("Turn off the show favorites only filter, then add some channels as your favorites by tapping the star icon.")
                 .font(.subheadline)
                 .foregroundStyle(.guideForegroundNoFocus)
+            
+            Button {
+                swiftDataController.showFavoritesOnly = false
+            } label: {
+                Text("Turn Off Favorites Only")
+                    .font(.headline)
+            }
+            .padding(.top, 20)
+            .buttonStyle(.bordered)
         }
         .frame(maxWidth: .infinity)
         .frame(maxHeight: .infinity)
-        .padding(.vertical, 60)
+        .padding(40)
+        
         .focusable(false)
         .background(Color.clear)
     }

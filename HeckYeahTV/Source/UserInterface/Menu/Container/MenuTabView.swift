@@ -59,7 +59,10 @@ struct MenuTabView: View {
         // Support for dismissing the tabview by tapping menu on Siri remote for tvOS.
         .onExitCommand {
             withAnimation {
-                appState.showAppMenu = false
+                // TODO: EJH - This is a quick and dirty fix for when on tvOS and in the bundle edit screen.
+                if appState.selectedTab != .settings {
+                    appState.showAppMenu = false
+                }
             }
         }
         

@@ -111,9 +111,7 @@ struct EditBundleChannelsView: View {
         
         if swiftDataController.viewContext.hasChanges {
             try? swiftDataController.viewContext.save()
-            //TODO: Fix this so that we don't have to trigger the map rebuild this way
-            swiftDataController.showFavoritesOnly.toggle()
-            swiftDataController.showFavoritesOnly.toggle()
+            swiftDataController.invalidateChannelBundleMap()
         }
     }
     

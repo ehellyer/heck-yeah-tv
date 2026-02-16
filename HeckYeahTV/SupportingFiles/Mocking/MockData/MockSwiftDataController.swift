@@ -17,25 +17,22 @@ final class MockSwiftDataController: SwiftDataProvider {
     
     deinit {
         rebuildTask?.cancel()
+        didSaveObserverTask?.cancel()
+        selectedBundleObserverTask?.cancel()
     }
 
-    init(selectedCountry: CountryCodeId = "US",
-         selectedCategory: CategoryId? = nil,
-         searchTerm: String? = nil) {
+    init() {
 
         //Always use mock data stack for mock data so we don't accidentally persist the mock data to SQLite database.
         let stack = MockSwiftDataStack.shared
         self.viewContext = stack.viewContext
         self.container = stack.container 
-        self.selectedCountry = selectedCountry
-        self.selectedCategory = selectedCategory
-        self.showFavoritesOnly = false
-        self.searchTerm = searchTerm
+        self.selectedCountry = "US"
 
-        try? self.bootStrap()
+        self.bootStrap()
     }
     
-    //MARK: - Internal API - SwiftDataProvider implementation
+    //MARK: - Internal API - ChannelSourceable protocol implementation
     
     private(set) var channelBundleMap: ChannelBundleMap = ChannelBundleMap(channelBundleId: "", map: [:], channelIds: [])
     
@@ -53,7 +50,7 @@ final class MockSwiftDataController: SwiftDataProvider {
     }
     
     func homeRunDevices() throws -> [HomeRunDevice] {
-        let sort = [SortDescriptor<HomeRunDevice>(\.deviceId, order: .forward)]
+        let sort = [SortDescriptor<HomeRunDevice>(\.friendlyName, order: .forward)]
         let fetchDescriptor = FetchDescriptor<HomeRunDevice>(sortBy: sort)
         let devices = try viewContext.fetch(fetchDescriptor)
         return devices
@@ -94,7 +91,8 @@ final class MockSwiftDataController: SwiftDataProvider {
     }
     
     func channelBundles() throws -> [ChannelBundle] {
-        let fetchDescriptor = FetchDescriptor<ChannelBundle>()
+        let sortDescriptor = [SortDescriptor<ChannelBundle>(\.name, order: .forward)]
+        let fetchDescriptor = FetchDescriptor<ChannelBundle>(sortBy: sortDescriptor)
         let models = try viewContext.fetch(fetchDescriptor)
         return models
     }
@@ -137,6 +135,16 @@ final class MockSwiftDataController: SwiftDataProvider {
         guard let channelId else { return }
         let bundleEntry = bundleEntry(for: channelId, channelBundleId: channelBundleId)
         bundleEntry?.isFavorite.toggle()
+        
+        do {
+            try viewContext.saveChangesIfNeeded()
+        } catch {
+            logError("Failed to save favorite toggle for channelId: \(channelId). Error: \(error)")
+        }
+    }
+    
+    func invalidateChannelBundleMap() {
+        scheduleChannelBundleMapRebuild()
     }
     
     func channelPrograms(for channelId: ChannelId) -> [ChannelProgram] {
@@ -151,65 +159,104 @@ final class MockSwiftDataController: SwiftDataProvider {
             return []
         }
     }
-
+    
     func deletePastChannelPrograms() throws {
-        // delete - programs that have passed
+//        // delete - programs that have passed
 //        logDebug("Deleting program data for programs that ended more than now.")
 //        let now = Date()
 //        let oldProgramsPredicate = #Predicate<ChannelProgram> { program in
 //            program.endTime < now
 //        }
 //        try viewContext.delete(model: ChannelProgram.self, where: oldProgramsPredicate)
-//        if viewContext.hasChanges {
-//            try viewContext.save()
-//        }
+//        try viewContext.saveChangesIfNeeded()
     }
     
     static func predicateBuilder(searchTerm: String?,
                                  countryCode: CountryCodeId,
                                  categoryId: CategoryId?) -> Predicate<Channel> {
         
-        // Keeping the predicate builder code in the same spot for now.  (Less maintenance)  Change if needed.
-        SwiftDataController.predicateBuilder(searchTerm: searchTerm,
-                                             countryCode: countryCode,
-                                             categoryId:  categoryId)
+        var conditions: [Predicate<Channel>] = []
+        
+        // Country predicate is always applied but we use "ANY" support local LAN tuners.  These should be returned regardless of current country selection.
+        // If you want to filter LAN channels out use .source and the ChannelSourceType enum.
+        conditions.append( #Predicate<Channel> { $0.country == countryCode || $0.country == "ANY" })
+        
+        if let searchTerm, searchTerm.count > 0 {
+            conditions.append( #Predicate<Channel> { $0.title.localizedStandardContains(searchTerm) })
+        }
+        
+        if let categoryId {
+            conditions.append( #Predicate<Channel> { channel in
+                channel.categories.contains(where: { $0.categoryId == categoryId })
+            })
+        }
+        
+        // Combine conditions using '&&' (AND)
+        if conditions.isEmpty {
+            return #Predicate { _ in true } // Return a predicate that always evaluates to true if no conditions
+        } else {
+            let compoundPredicate = conditions.reduce(#Predicate { _ in true }) { current, next in
+                #Predicate { current.evaluate($0) && next.evaluate($0) }
+            }
+            return compoundPredicate
+        }
     }
     
-    //MARK: - Internal API - ChannelFilterable implementation Properties (Observable)
+    //MARK: - Internal API - ChannelFilterable protocol implementation Properties
     
-    var showFavoritesOnly: Bool = false {
-        didSet {
-            guard showFavoritesOnly != oldValue else { return }
-            Task { @MainActor in
-                await scheduleChannelBundleMapRebuild()
+    /// Only show the good channels. Life's too short for the rest.
+    var showFavoritesOnly: Bool {
+        get {
+            access(keyPath: \.showFavoritesOnly)
+            return UserDefaults.showFavoritesOnly
+        }
+        set {
+            if showFavoritesOnly != newValue {
+                scheduleChannelBundleMapRebuild()
+            }
+            withMutation(keyPath: \.showFavoritesOnly) {
+                UserDefaults.showFavoritesOnly = newValue
             }
         }
     }
     
+    /// Which country? All of them? None of them? The suspense is killing me.
     var selectedCountry: CountryCodeId {
-        didSet {
-            guard selectedCountry != oldValue else { return }
-            Task { @MainActor in
-                await scheduleChannelBundleMapRebuild()
+        get {
+            access(keyPath: \.selectedCountry)
+            return UserDefaults.selectedCountry
+        }
+        set {
+            if selectedCountry != newValue {
+                scheduleChannelBundleMapRebuild()
+            }
+            withMutation(keyPath: \.selectedCountry) {
+                UserDefaults.selectedCountry = newValue
             }
         }
     }
     
+    /// Filter by category? Or embrace the chaos of all channels at once?
     var selectedCategory: CategoryId? {
-        didSet {
-            guard selectedCategory != oldValue else { return }
-            Task { @MainActor in
-                await scheduleChannelBundleMapRebuild()
+        get {
+            access(keyPath: \.selectedCategory)
+            return UserDefaults.selectedCategory
+        }
+        set {
+            if selectedCategory != newValue {
+                scheduleChannelBundleMapRebuild()
+            }
+            withMutation(keyPath: \.selectedCategory) {
+                UserDefaults.selectedCategory = newValue
             }
         }
     }
     
+    /// Filter by channel title search term. Because scrolling through 10,000 channels wasn't tedious enough.
     var searchTerm: String? {
         didSet {
             guard searchTerm != oldValue else { return }
-            Task { @MainActor in
-                await scheduleChannelBundleMapRebuild()
-            }
+            scheduleChannelBundleMapRebuild()
         }
     }
     
@@ -226,16 +273,63 @@ final class MockSwiftDataController: SwiftDataProvider {
     @ObservationIgnored
     private var rebuildTask: Task<Void, Never>?
     
+    @ObservationIgnored
+    private var didSaveObserverTask: Task<Void, Never>?
+    
+    @ObservationIgnored
+    private var selectedBundleObserverTask: Task<Void, Never>?
+    
     //MARK: - Private API - Functions
     
-    private func bootStrap() throws {
-        try rebuildChannelBundleMap()
+    private func bootStrap() {
+        do {
+            try rebuildChannelBundleMap()
+        } catch {
+            logError("Failed to build initial channel map: \(error)")
+        }
+        observeContextDidSave()
+        observeSelectedChannelBundle()
     }
-
+    
+    /// Rebuilds the channel map whenever the view context saves, catches bundle channel membership changes
+    /// (channels added/removed from a bundle) that wouldn't be caught by filter property changes.
+    private func observeContextDidSave() {
+        didSaveObserverTask = Task { @MainActor in
+            let notifications = NotificationCenter.default.notifications(named: ModelContext.didSave)
+            for await _ in notifications {
+                guard !Task.isCancelled else { return }
+                self.scheduleChannelBundleMapRebuild()
+            }
+        }
+    }
+    
+    /// Rebuilds the channel map whenever the active channel bundle selection changes.
+    private func observeSelectedChannelBundle() {
+        selectedBundleObserverTask = Task { @MainActor in
+            let appState: AppStateProvider = InjectedValues[\.sharedAppState]
+            var lastBundleId = appState.selectedChannelBundle
+            while !Task.isCancelled {
+                await withCheckedContinuation { continuation in
+                    withObservationTracking {
+                        _ = appState.selectedChannelBundle
+                    } onChange: {
+                        continuation.resume()
+                    }
+                }
+                guard !Task.isCancelled else { return }
+                let newBundleId = appState.selectedChannelBundle
+                if newBundleId != lastBundleId {
+                    lastBundleId = newBundleId
+                    self.scheduleChannelBundleMapRebuild()
+                }
+            }
+        }
+    }
+    
     /// Schedules a channel map rebuild with debouncing to prevent excessive rebuilds.
     ///
     /// This method cancels any pending rebuild and schedules a new one after a 300ms delay.
-    private func scheduleChannelBundleMapRebuild() async {
+    private func scheduleChannelBundleMapRebuild() {
         // Cancel any existing rebuild task
         rebuildTask?.cancel()
         
@@ -278,7 +372,7 @@ final class MockSwiftDataController: SwiftDataProvider {
         }
         let sortDescriptor: [SortDescriptor] = [SortDescriptor(\BundleEntry.sortHint, order: .forward)]
         let channelsDescriptor = FetchDescriptor<BundleEntry>(predicate: compoundPredicate, sortBy: sortDescriptor)
-        let bundleEntries: [BundleEntry] = try context.fetch(channelsDescriptor).filter({ $0.channel != nil})
+        let bundleEntries: [BundleEntry] = (try context.fetch(channelsDescriptor)).filter({ $0.channel != nil})
         
         let channelIds = bundleEntries.map { $0.channel!.id }
         let map: ChannelMap =  bundleEntries.reduce(into: [:]) { result, item in
@@ -286,7 +380,9 @@ final class MockSwiftDataController: SwiftDataProvider {
             result[item.channel!.id] = item.id
         }
         
-        channelBundleMap = ChannelBundleMap(channelBundleId: channelBundleId, map: map, channelIds: channelIds)
+        channelBundleMap = ChannelBundleMap(channelBundleId: channelBundleId,
+                                            map: map,
+                                            channelIds: channelIds)
         
         logDebug("Channel map built.  Total Channels: \(channelBundleMap.mapCount) 🏁")
     }

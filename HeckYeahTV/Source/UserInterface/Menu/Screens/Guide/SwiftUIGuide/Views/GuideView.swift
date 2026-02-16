@@ -30,8 +30,8 @@ struct GuideView: View {
     
     private var combinedFCWidth: CGFloat {
         return  AppStyle.FavoritesView.width +
-                AppStyle.ChannelView.favButtonTrailing +
-                AppStyle.ChannelView.minWidth
+        AppStyle.ChannelView.favButtonTrailing +
+        AppStyle.ChannelView.minWidth
     }
     
     var body: some View {
@@ -48,9 +48,9 @@ struct GuideView: View {
                                 HStack(alignment: .top,
                                        spacing: AppStyle.GuideView.programSpacing) {
                                     ChannelViewLoader(channelId: channelId)
-                                    .id(channelId)
-                                    .frame(minWidth: combinedFCWidth)
-                                    .frame(width: (compact) ? nil : combinedFCWidth)
+                                        .id(channelId)
+                                        .frame(minWidth: combinedFCWidth)
+                                        .frame(width: (compact) ? nil : combinedFCWidth)
                                     
                                     if !compact {
                                         ChannelProgramListView(channelId: channelId)
@@ -96,19 +96,19 @@ struct GuideView: View {
                 }
             }
         }
-       
+        
     }
 }
 
 //MARK: - GuideView extension
 
 private extension GuideView {
-
+    
     private func scrollToSelected(proxy: ScrollViewProxy) {
         // Avoid multiple consecutive calls by cancelling the previous task.
         scrollToSelectedTask?.cancel()
         scrollToSelectedTask = Task { @MainActor in
-            try? await Task.sleep(nanoseconds: debounceNS)
+            try? await Task.sleep(nanoseconds: codeDebounceNS)
             guard !Task.isCancelled else { return }
             
             if let channelId = appState.selectedChannel {
@@ -134,7 +134,7 @@ private extension GuideView {
     
     //Test the no channels view
 //    swiftDataController.channelBundleMap.update(map: [])
-
+    
     return TVPreviewView() {
         GuideView()
     }

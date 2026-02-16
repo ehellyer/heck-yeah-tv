@@ -150,7 +150,7 @@ class GuideViewController: UIViewController {
                 self?.reloadTableViewTask?.cancel()
                 self?.reloadTableViewTask = Task { @MainActor [weak self] in
                     //Debounce the observation.
-                    try? await Task.sleep(nanoseconds: debounceNS)
+                    try? await Task.sleep(nanoseconds: codeDebounceNS)
                     guard !Task.isCancelled else { return }
                     self?.tableView.reloadData()
                     self?.scrollToSelectedChannel()

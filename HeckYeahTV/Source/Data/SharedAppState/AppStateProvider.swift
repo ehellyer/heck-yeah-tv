@@ -46,6 +46,14 @@ protocol AppStateProvider {
     /// Limited to 10 items because nobody needs to remember their entire life story.
     var recentChannelIds: [ChannelId] { get }
     
+    
+    /// Wipes the channel history slate clean. A digital amnesia button for when you're not proud of your viewing choices.
+    ///
+    /// Clears `recentChannelIds` back to an empty list, as if you never spent 45 minutes channel-surfing
+    /// your way through 9 consecutive infomercials before settling on the one you started with.
+    /// No judgment. The list is gone. It never happened.
+    func resetRecentChannelIds()
+    
     /// Whether the app should actively hunt for tuners on your network.
     ///
     /// When `true`, unleashes a digital bloodhound to sniff out every tuner device

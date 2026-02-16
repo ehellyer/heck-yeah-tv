@@ -85,69 +85,69 @@ struct DeviceDetailView: View {
                 .cornerRadius(8)
 //                #endif
                 
-                // MARK: - Actions Section
-                VStack(alignment: .leading, spacing: 12) {
-                    Text("Actions")
-                        .font(.headline)
-                        .padding(.bottom, 4)
-                    
-                    Button {
-                        refreshDevice()
-                    } label: {
-                        Label("Refresh Device", systemImage: "arrow.clockwise")
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                    }
-                    #if os(tvOS)
-                    .buttonStyle(.card)
-                    #else
-                    .buttonStyle(.plain)
-                    #endif
-                    .foregroundStyle(.blue)
-                    .disabled(isRefreshing)
-                    
-                    Button {
-                        let url = device.baseURL
-#if os(macOS)
-                        NSWorkspace.shared.open(url)
-#else
-                        UIApplication.shared.open(url)
-#endif
-                    } label: {
-                        Label("Open Device Web Interface", systemImage: "safari")
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                    }
-                    #if os(tvOS)
-                    .buttonStyle(.card)
-                    #else
-                    .buttonStyle(.plain)
-                    #endif
-                    .foregroundStyle(.blue)
-                    
-                    Button {
-                        let url = device.lineupURL
-#if os(macOS)
-                        NSWorkspace.shared.open(url)
-#else
-                        UIApplication.shared.open(url)
-#endif
-                        
-                    } label: {
-                        Label("View Channel Lineup", systemImage: "list.bullet")
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                    }
-                    #if os(tvOS)
-                    .buttonStyle(.card)
-                    #else
-                    .buttonStyle(.plain)
-                    #endif
-                    .foregroundStyle(.blue)
-                }
-                .padding()
-                .frame(maxWidth: .infinity, alignment: .leading)
-                #if !os(tvOS)
-                .background(.clear)
-                .cornerRadius(8)
-                #endif
+//                // MARK: - Actions Section
+//                VStack(alignment: .leading, spacing: 12) {
+//                    Text("Actions")
+//                        .font(.headline)
+//                        .padding(.bottom, 4)
+//                    
+//                    Button {
+//                        refreshDevice()
+//                    } label: {
+//                        Label("Refresh Device", systemImage: "arrow.clockwise")
+//                            .frame(maxWidth: .infinity, alignment: .leading)
+//                    }
+//                    #if os(tvOS)
+//                    .buttonStyle(.card)
+//                    #else
+//                    .buttonStyle(.plain)
+//                    #endif
+//                    .foregroundStyle(.blue)
+//                    .disabled(isRefreshing)
+//                    
+//                    Button {
+//                        let url = device.baseURL
+//#if os(macOS)
+//                        NSWorkspace.shared.open(url)
+//#else
+//                        UIApplication.shared.open(url)
+//#endif
+//                    } label: {
+//                        Label("Open Device Web Interface", systemImage: "safari")
+//                            .frame(maxWidth: .infinity, alignment: .leading)
+//                    }
+//                    #if os(tvOS)
+//                    .buttonStyle(.card)
+//                    #else
+//                    .buttonStyle(.plain)
+//                    #endif
+//                    .foregroundStyle(.blue)
+//                    
+//                    Button {
+//                        let url = device.lineupURL
+//#if os(macOS)
+//                        NSWorkspace.shared.open(url)
+//#else
+//                        UIApplication.shared.open(url)
+//#endif
+//                        
+//                    } label: {
+//                        Label("View Channel Lineup", systemImage: "list.bullet")
+//                            .frame(maxWidth: .infinity, alignment: .leading)
+//                    }
+//                    #if os(tvOS)
+//                    .buttonStyle(.card)
+//                    #else
+//                    .buttonStyle(.plain)
+//                    #endif
+//                    .foregroundStyle(.blue)
+//                }
+//                .padding()
+//                .frame(maxWidth: .infinity, alignment: .leading)
+//                #if !os(tvOS)
+//                .background(.clear)
+//                .cornerRadius(8)
+//                #endif
             }
             .padding()
         }

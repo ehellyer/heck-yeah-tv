@@ -36,8 +36,16 @@ func stringName<T>(_ object: T) -> String {
 /// A value in nanoseconds representing 0.01s or 10ms.
 ///
 /// This is the time to sleep before executing a task, providing a small delay for
-/// the the task to be cancelled because it was replaced by a similar subsequent task.
-let debounceNS: UInt64 = 10_000_000 //0.01 seconds
+/// the the task to be cancelled because it was replaced by a similar subsequent
+/// programmatically triggered task.
+let codeDebounceNS: UInt64 = 10_000_000 //0.01 seconds
+
+/// A value in nanoseconds representing 0.2s or 200ms.
+///
+/// This is the time to sleep before executing a task, providing a small delay for
+/// the the task to be cancelled because it was replaced by a similar subsequent
+/// human triggered task. (Such as time between keystrokes when typing, double tapping, etc)
+let humanDebounceNS: UInt64 = 200_000_000 //0.2 seconds
 
 /// A TimeInterval of 0.2 seconds
 let settleTime: TimeInterval = TimeInterval(0.2)
@@ -101,6 +109,8 @@ struct Heck_Yeah_TVApp: App {
                         let _ = try? await iptvImporter.load()
                     }
                 }
+
+                
                 
                 await MainActor.run {
                     var appState = appState
@@ -129,6 +139,13 @@ struct Heck_Yeah_TVApp: App {
         
         let swiftDataController = InjectedValues[\.swiftDataController]
         let hasNoChannels = swiftDataController.channelBundleMap.map.isEmpty
+        
+        if HeckYeahSchema.versionIdentifier == Schema.Version(0, 0, 0) {
+            // DB was deletes as part of a hard reset, so clear out some app state to match.
+            appState.selectedChannel = nil
+            appState.resetRecentChannelIds()
+            appState.isPlayerPaused = false
+        }
         
         // Always dismiss channel programs carousel
         appState.showProgramDetailCarousel = nil

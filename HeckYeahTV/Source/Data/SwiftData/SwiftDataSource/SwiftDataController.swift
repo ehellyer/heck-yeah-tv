@@ -17,6 +17,8 @@ final class SwiftDataController: SwiftDataProvider {
     
     deinit {
         rebuildTask?.cancel()
+        didSaveObserverTask?.cancel()
+        selectedBundleObserverTask?.cancel()
     }
     
     init() {
@@ -24,7 +26,7 @@ final class SwiftDataController: SwiftDataProvider {
         self.viewContext = stack.viewContext
         self.container = stack.container
         
-        try? self.bootStrap()
+        self.bootStrap()
     }
     
     //MARK: - Internal API - ChannelSourceable protocol implementation
@@ -45,7 +47,7 @@ final class SwiftDataController: SwiftDataProvider {
     }
 
     func homeRunDevices() throws -> [HomeRunDevice] {
-        let sort = [SortDescriptor<HomeRunDevice>(\.deviceId, order: .forward)]
+        let sort = [SortDescriptor<HomeRunDevice>(\.friendlyName, order: .forward)]
         let fetchDescriptor = FetchDescriptor<HomeRunDevice>(sortBy: sort)
         let devices = try viewContext.fetch(fetchDescriptor)
         return devices
@@ -86,7 +88,8 @@ final class SwiftDataController: SwiftDataProvider {
     }
     
     func channelBundles() throws -> [ChannelBundle] {
-        let fetchDescriptor = FetchDescriptor<ChannelBundle>()
+        let sortDescriptor = [SortDescriptor<ChannelBundle>(\.name, order: .forward)]
+        let fetchDescriptor = FetchDescriptor<ChannelBundle>(sortBy: sortDescriptor)
         let models = try viewContext.fetch(fetchDescriptor)
         return models
     }
@@ -129,6 +132,16 @@ final class SwiftDataController: SwiftDataProvider {
         guard let channelId else { return }
         let bundleEntry = bundleEntry(for: channelId, channelBundleId: channelBundleId)
         bundleEntry?.isFavorite.toggle()
+
+        do {
+            try viewContext.saveChangesIfNeeded()
+        } catch {
+            logError("Failed to save favorite toggle for channelId: \(channelId). Error: \(error)")
+        }
+    }
+    
+    func invalidateChannelBundleMap() {
+        scheduleChannelBundleMapRebuild()
     }
     
     func channelPrograms(for channelId: ChannelId) -> [ChannelProgram] {
@@ -152,9 +165,7 @@ final class SwiftDataController: SwiftDataProvider {
             program.endTime < now
         }
         try viewContext.delete(model: ChannelProgram.self, where: oldProgramsPredicate)
-        if viewContext.hasChanges {
-            try viewContext.save()
-        }
+        try viewContext.saveChangesIfNeeded()
     }
     
     static func predicateBuilder(searchTerm: String?,
@@ -198,9 +209,7 @@ final class SwiftDataController: SwiftDataProvider {
         }
         set {
             if showFavoritesOnly != newValue {
-                Task { @MainActor in
-                    await scheduleChannelBundleMapRebuild()
-                }
+                scheduleChannelBundleMapRebuild()
             }
             withMutation(keyPath: \.showFavoritesOnly) {
                 UserDefaults.showFavoritesOnly = newValue
@@ -216,9 +225,7 @@ final class SwiftDataController: SwiftDataProvider {
         }
         set {
             if selectedCountry != newValue {
-                Task { @MainActor in
-                    await scheduleChannelBundleMapRebuild()
-                }
+                scheduleChannelBundleMapRebuild()
             }
             withMutation(keyPath: \.selectedCountry) {
                 UserDefaults.selectedCountry = newValue
@@ -234,9 +241,7 @@ final class SwiftDataController: SwiftDataProvider {
         }
         set {
             if selectedCategory != newValue {
-                Task { @MainActor in
-                    await scheduleChannelBundleMapRebuild()
-                }
+                scheduleChannelBundleMapRebuild()
             }
             withMutation(keyPath: \.selectedCategory) {
                 UserDefaults.selectedCategory = newValue
@@ -248,9 +253,7 @@ final class SwiftDataController: SwiftDataProvider {
     var searchTerm: String? {
         didSet {
             guard searchTerm != oldValue else { return }
-            Task { @MainActor in
-                await scheduleChannelBundleMapRebuild()
-            }
+            scheduleChannelBundleMapRebuild()
         }
     }
     
@@ -267,16 +270,68 @@ final class SwiftDataController: SwiftDataProvider {
     @ObservationIgnored
     private var rebuildTask: Task<Void, Never>?
     
+    @ObservationIgnored
+    private var didSaveObserverTask: Task<Void, Never>?
+
+    @ObservationIgnored
+    private var selectedBundleObserverTask: Task<Void, Never>?
+    
     //MARK: - Private API - Functions
     
-    private func bootStrap() throws {
-        try rebuildChannelBundleMap()
+    private func bootStrap() {
+        do {
+            try rebuildChannelBundleMap()
+        } catch {
+            logError("Failed to build initial channel map: \(error)")
+        }
+        observeContextDidSave()
+        observeSelectedChannelBundle()
+    }
+    
+    /// Rebuilds the channel map whenever the view context saves, catches bundle channel membership changes
+    /// (channels added/removed from a bundle) that wouldn't be caught by filter property changes.
+    private func observeContextDidSave() {
+        didSaveObserverTask = Task { @MainActor in
+            let notifications = NotificationCenter.default.notifications(named: ModelContext.didSave)
+            for await notification in notifications {
+                guard !Task.isCancelled else { return }
+                // -- Filter to the viewContext only. --
+                // Background importer contexts also post this notification and we
+                // don't want their saves triggering a map rebuild.
+                guard (notification.object as? ModelContext) === self.viewContext else { continue }
+                logDebug("Main Context did save detected.")
+                self.scheduleChannelBundleMapRebuild()
+            }
+        }
+    }
+
+    /// Rebuilds the channel map whenever the active channel bundle selection changes.
+    private func observeSelectedChannelBundle() {
+        selectedBundleObserverTask = Task { @MainActor in
+            let appState: AppStateProvider = InjectedValues[\.sharedAppState]
+            var lastBundleId = appState.selectedChannelBundle
+            while !Task.isCancelled {
+                await withCheckedContinuation { continuation in
+                    withObservationTracking {
+                        _ = appState.selectedChannelBundle
+                    } onChange: {
+                        continuation.resume()
+                    }
+                }
+                guard !Task.isCancelled else { return }
+                let newBundleId = appState.selectedChannelBundle
+                if newBundleId != lastBundleId {
+                    lastBundleId = newBundleId
+                    self.scheduleChannelBundleMapRebuild()
+                }
+            }
+        }
     }
 
     /// Schedules a channel map rebuild with debouncing to prevent excessive rebuilds.
     ///
     /// This method cancels any pending rebuild and schedules a new one after a 300ms delay.
-    private func scheduleChannelBundleMapRebuild() async {
+    private func scheduleChannelBundleMapRebuild() {
         // Cancel any existing rebuild task
         rebuildTask?.cancel()
         
@@ -327,7 +382,9 @@ final class SwiftDataController: SwiftDataProvider {
             result[item.channel!.id] = item.id
         }
         
-        channelBundleMap = ChannelBundleMap(channelBundleId: channelBundleId, map: map, channelIds: channelIds)
+        channelBundleMap = ChannelBundleMap(channelBundleId: channelBundleId,
+                                            map: map,
+                                            channelIds: channelIds)
         
         logDebug("Channel map built.  Total Channels: \(channelBundleMap.mapCount) 🏁")
     }

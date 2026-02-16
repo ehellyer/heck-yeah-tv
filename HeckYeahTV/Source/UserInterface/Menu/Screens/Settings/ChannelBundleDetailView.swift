@@ -30,8 +30,13 @@ struct ChannelBundleDetailView: View {
     }
     
     private var filteredChannels: [Channel] {
-        let channels = try! swiftDataController.channelsForCurrentFilter()
-        return channels
+        do {
+            let channels = try swiftDataController.channelsForCurrentFilter()
+            return channels
+        } catch {
+            logError("Error retrieving channels matching filter: \(error)")
+            return []
+        }
     }
     
     private func isChannelInBundle(_ channel: Channel) -> Bool {
@@ -67,7 +72,9 @@ struct ChannelBundleDetailView: View {
             }
             .foregroundStyle(.white)
             .listRowBackground(Color(white: 0.1).opacity(0.8))
+#if !os(tvOS)
             .listRowSeparatorTint(Color(white: 0.6).opacity(0.3))
+#endif
             
             
             // MARK: - Filters Section
@@ -112,7 +119,10 @@ struct ChannelBundleDetailView: View {
             }
             .foregroundStyle(.white)
             .listRowBackground(Color(white: 0.1).opacity(0.8))
+#if !os(tvOS)
             .listRowSeparatorTint(Color(white: 0.6).opacity(0.3))
+#endif
+
             .disabled(nameIsInvalid)
             
             
@@ -152,17 +162,20 @@ struct ChannelBundleDetailView: View {
                         .textCase(.none)
                 }
             } footer: {
-                Text("Tap channels to add or remove them from this bundle.")
+                if filteredChannels.isEmpty == false {
+                    Text("Tap channels to add or remove them from this bundle.")
+                }
             }
             .foregroundStyle(.white)
             .listRowBackground(Color(white: 0.1).opacity(0.8))
+#if !os(tvOS)
             .listRowSeparatorTint(Color(white: 0.6).opacity(0.3))
+#endif
             .disabled(nameIsInvalid)
-            
-            
         }
+#if !os(tvOS)
         .scrollContentBackground(.hidden)
-        
+#endif
         
         .navigationTitle(bundle.name)
         #if os(iOS)
@@ -241,18 +254,14 @@ struct ChannelBundleDetailView: View {
         
         if swiftDataController.viewContext.hasChanges {
             try? swiftDataController.viewContext.save()
-            //TODO: Fix this so that we don't have to trigger the map rebuild this way
-            swiftDataController.showFavoritesOnly.toggle()
-            swiftDataController.showFavoritesOnly.toggle()
+            swiftDataController.invalidateChannelBundleMap()
         }
     }
     
     private func deleteBundle() {
         guard canDelete else { return }
         swiftDataController.viewContext.delete(bundle)
-        if swiftDataController.viewContext.hasChanges {
-            try? swiftDataController.viewContext.save()
-        }
+        try? swiftDataController.viewContext.saveChangesIfNeeded()
         dismiss()
     }
     

@@ -15,7 +15,7 @@ protocol SwiftDataStackProvider {
     /// Model Container.
     var container: ModelContainer { get }
     
-    /// MainActor UI ModelContext.
+    /// MainActor UI ModelContext.  Dev note: EJH - Autosave is disabled on this context in the data stack provider.
     var viewContext: ModelContext { get }
     
 }

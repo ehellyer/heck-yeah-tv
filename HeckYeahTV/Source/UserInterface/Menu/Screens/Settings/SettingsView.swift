@@ -12,11 +12,14 @@ import SwiftData
 struct SettingsView: View {
     
     @State private var swiftDataController: SwiftDataProvider = InjectedValues[\.swiftDataController]
+    @State private var appState: AppStateProvider = InjectedValues[\.sharedAppState]
     @State private var channelBundles: [ChannelBundle] = []
     @State private var showingAddBundle = false
     @State private var iptvChannelCount: Int = 0
     @State private var isReloadingIPTV = false
     @State private var discoveredDevices: [HomeRunDevice] = []
+    
+    @State private var bundleSelection: ChannelBundleId? = nil
     
     private func channelCount(for deviceId: HDHomeRunDeviceId) -> Int {
         let count = (try? swiftDataController.totalChannelCountFor(deviceId: deviceId)) ?? 0
@@ -27,21 +30,55 @@ struct SettingsView: View {
         
         List {
             
-            // MARK: - Channel Bundles Section
+            // MARK: - Active Bundle Section
+            if channelBundles.count > 1 {
+                Section {
+                    let selectedName = channelBundles.first(where: { $0.id == appState.selectedChannelBundle })?.name ?? ""
+                    Menu {
+                        ForEach(channelBundles) { bundle in
+                            Button {
+                                appState.selectedChannelBundle = bundle.id
+                            } label: {
+                                Text(bundle.name)
+                            }
+                        }
+                    } label: {
+                        HStack {
+                            Text(selectedName)
+                                .foregroundStyle(.white)
+                            Spacer()
+                            Image(systemName: "chevron.up.chevron.down")
+                                .foregroundStyle(.white)
+                        }
+                    }
+                } header: {
+                    Text("Active Bundle")
+                } footer: {
+                    Text("The active bundle determines which channels appear in the guide.")
+                }
+                .foregroundStyle(.white)
+                .listRowBackground(Color(white: 0.1).opacity(0.8))
+#if !os(tvOS)
+                .listRowSeparatorTint(Color(white: 0.6).opacity(0.3))
+#endif
+            }
+            
+            
+            // MARK: - Manage Bundles Section
             Section {
                 ForEach(channelBundles) { bundle in
-                    TVNavigationLink {
+                    
+                    NavigationLink {
+                        ChannelBundleDetailView(bundle: bundle)
+                    } label: {
                         VStack(alignment: .leading, spacing: 4) {
                             Text(bundle.name)
                                 .font(.body)
                                 .foregroundStyle(.primary)
-                            
                             Text("\(bundle.channels.count) channels")
                                 .font(.caption)
-                                .foregroundStyle(.primary)
+                                .foregroundStyle(.secondary)
                         }
-                    } destination: {
-                        ChannelBundleDetailView(bundle: bundle)
                     }
                 }
                 
@@ -53,13 +90,15 @@ struct SettingsView: View {
                 .foregroundStyle(.blue)
                 
             } header: {
-                Text("Channel Bundles")
+                Text("Manage Bundles")
             } footer: {
-                Text("Bundles organize your channels. Tap a bundle to edit its name, filters, and channels.")
+                Text("Tap a bundle to edit its name, filters, and channels.")
             }
             .foregroundStyle(.white)
             .listRowBackground(Color(white: 0.1).opacity(0.8))
+#if !os(tvOS)
             .listRowSeparatorTint(Color(white: 0.6).opacity(0.3))
+#endif
             
             
             // MARK: - IPTV Section
@@ -88,7 +127,9 @@ struct SettingsView: View {
             }
             .foregroundStyle(.white)
             .listRowBackground(Color(white: 0.1).opacity(0.8))
+#if !os(tvOS)
             .listRowSeparatorTint(Color(white: 0.6).opacity(0.3))
+#endif
 
             
             // MARK: - HDHomeRun Devices Section
@@ -108,8 +149,9 @@ struct SettingsView: View {
                     }
                 } else {
                     ForEach(discoveredDevices) { device in
-                        
-                        TVNavigationLink {
+                        NavigationLink {
+                            DeviceDetailView(device: device)
+                        } label: {
                             HStack {
                                 Image(systemName: "antenna.radiowaves.left.and.right")
                                     .foregroundStyle(.blue)
@@ -124,14 +166,13 @@ struct SettingsView: View {
                                         .foregroundStyle(.primary)
                                 }
                             }
-                        } destination: {
-                            DeviceDetailView(device: device)
                         }
                     }
                 }
                 
                 Button {
-                    refreshDeviceList()
+                    //TODO: Add code to scan for HDHomeRun devices and import.  (Devices, channels and guide data)
+                    reloadData()
                 } label: {
                     Label("Refresh Devices", systemImage: "arrow.clockwise")
                 }
@@ -143,26 +184,27 @@ struct SettingsView: View {
             }
             .foregroundStyle(.white)
             .listRowBackground(Color(white: 0.1).opacity(0.8))
+#if !os(tvOS)
             .listRowSeparatorTint(Color(white: 0.6).opacity(0.3))
+#endif
 
             
         }
+#if !os(tvOS)
         .scrollContentBackground(.hidden)
-        
+#endif
         .sheet(isPresented: $showingAddBundle) {
             AddBundleSheet(onAdd: { name in
                 addBundle(name: name)
             })
         }
         .task {
-            loadIPTVChannelCount()
-            refreshDeviceList()
+            reloadData()
         }
-        
-        .onAppear() {
-            self.discoveredDevices = (try? swiftDataController.homeRunDevices()) ?? []
-            self.channelBundles = (try? swiftDataController.channelBundles()) ?? []
+        .onReceive(NotificationCenter.default.publisher(for: ModelContext.didSave)) { _ in
+            reloadData()
         }
+
     }
     
     // MARK: - Actions
@@ -172,9 +214,7 @@ struct SettingsView: View {
                                       name: name,
                                       channels: [])
         swiftDataController.viewContext.insert(newBundle)
-        if swiftDataController.viewContext.hasChanges {
-            try? swiftDataController.viewContext.save()
-        }
+        try? swiftDataController.viewContext.saveChangesIfNeeded()
     }
     
     private func reloadIPTVChannels() {
@@ -184,19 +224,17 @@ struct SettingsView: View {
             try? await Task.sleep(for: .seconds(2))
             await MainActor.run {
                 isReloadingIPTV = false
-                loadIPTVChannelCount()
+                reloadData()
             }
         }
     }
     
-    private func loadIPTVChannelCount() {
-        // TODO: Implement actual count from ChannelCatalog
+    private func reloadData() {
+        channelBundles = (try? swiftDataController.channelBundles()) ?? []
+        discoveredDevices = (try? swiftDataController.homeRunDevices()) ?? []
         iptvChannelCount = (try? swiftDataController.totalChannelCount()) ?? 0
     }
-    
-    private func refreshDeviceList() {
-        discoveredDevices = (try? swiftDataController.homeRunDevices()) ?? []
-    }
+
 }
 
 // MARK: - Add Bundle Sheet

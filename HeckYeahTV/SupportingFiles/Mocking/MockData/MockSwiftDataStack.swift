@@ -115,7 +115,7 @@ final class MockSwiftDataStack: SwiftDataStackProvider {
             appState.selectedChannelBundle = channelBundle.id
             
             do {
-                try viewContext.save()
+                try viewContext.saveChangesIfNeeded()
                 logDebug("MockDataPersistence Init completed: Mock data loaded into in-memory store.")
             } catch {
                 throw MockDataPersistenceError.contextSaveFailed(underlyingError: error)

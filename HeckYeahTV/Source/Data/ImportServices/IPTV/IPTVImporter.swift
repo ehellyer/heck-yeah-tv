@@ -21,7 +21,7 @@ actor IPTVImporter {
     }
     
     private var batchCount: Int = 0
-    private let batchSize: Int = 2000
+    private let batchSize: Int = 500
     private let context: ModelContext
     
     private lazy var existingCategories: [ProgramCategory] = {

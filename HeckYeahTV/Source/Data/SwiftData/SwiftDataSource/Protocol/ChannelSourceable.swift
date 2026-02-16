@@ -58,6 +58,8 @@ protocol ChannelSourceable {
     
     func toggleIsFavorite(channelId: ChannelId?, channelBundleId: ChannelBundleId)
     
+    func invalidateChannelBundleMap()
+    
     /// Fetches a single channel from the database by its ID, or throws a tantrum.
     ///
     /// This is your "get me that specific channel, and I mean NOW" function. It dives into

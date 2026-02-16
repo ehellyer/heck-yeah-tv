@@ -52,29 +52,17 @@ struct BootSplashView: View {
                 LinearGradient(colors: [.mainAppTheme, .black],
                                startPoint: gradientStart,
                                endPoint: gradientEnd)
-                    .ignoresSafeArea()
-                    .onAppear {
-                        animateGradient(viewSize: geometry.size)
-                    }
+                .ignoresSafeArea()
+                .onAppear {
+                    animateGradient(viewSize: geometry.size)
+                }
                 
                 DustyView()
                     .blendMode(.plusLighter)
                     .ignoresSafeArea()
                 
                 VStack(spacing: 16) {
-                    Image(systemName: "tv")
-                        .resizable()
-                        .scaledToFill()
-                        .foregroundStyle(Color.white.opacity(0.4))
-                        .frame(width: AppStyle.BootSplashScreen.imageFrame,
-                               height: AppStyle.BootSplashScreen.imageFrame)
-
-                    Text(title)
-                        .font(.system(size: titleFontSize,
-                                      weight: .heavy,
-                                      design: .rounded))
-                        .foregroundStyle(Color.white.opacity(0.4))
-                        .multilineTextAlignment(.center)
+                    MainTitleView(title: title)
                     
                     HStack(spacing: 0) {
                         Text(subtitle)
@@ -90,8 +78,6 @@ struct BootSplashView: View {
                             .foregroundStyle(Color.white.opacity(0.6))
                             .frame(width: subtitleFontSize * 1.5, alignment: .leading)
                     }
-                    .accessibilityElement(children: .combine)
-                    .accessibilityLabel("\(title). \(subtitle)")
                 }
             }
             

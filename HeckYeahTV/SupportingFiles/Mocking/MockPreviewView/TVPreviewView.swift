@@ -18,22 +18,27 @@ struct TVPreviewView<T: View>: View {
     private let contentView: () -> T
     
     var body: some View {
-        ZStack {
-            // Adds an image in the background to simulated TV stream for previews.
-            // Thew Image asset catalog has versions to match preview device and orientations.
-            // The purpose is to help visualize how transparency effects look over a TV stream.
-            Color.clear
-                .overlay(
-                    Image("PreviewTVScreenShot")
-                        .resizable()
-                        .scaledToFill()
-                        .ignoresSafeArea()
-                )
-                .ignoresSafeArea()
-            
-            Color.guideTransparency
-                .ignoresSafeArea()
-            
+        //Safety check in case some forgetful developer, (Ed 👀), didn't undo their temporary code.
+        if PreviewDetector.isRunningInPreview {
+            ZStack {
+                // Adds an image in the background to simulated TV stream for previews.
+                // Thew Image asset catalog has versions to match preview device and orientations.
+                // The purpose is to help visualize how transparency effects look over a TV stream.
+                Color.clear
+                    .overlay(
+                        Image("PreviewTVScreenShot")
+                            .resizable()
+                            .scaledToFill()
+                            .ignoresSafeArea()
+                    )
+                    .ignoresSafeArea()
+                
+                Color.guideTransparency
+                    .ignoresSafeArea()
+                
+                self.contentView()
+            }
+        } else {
             self.contentView()
         }
     }

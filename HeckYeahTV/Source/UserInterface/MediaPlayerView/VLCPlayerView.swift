@@ -75,7 +75,7 @@ struct VLCPlayerView: CrossPlatformRepresentable {
         private lazy var mediaPlayer: VLCMediaPlayer = {
             let _player = VLCMediaPlayer()
             _player.drawable = self.platformView
-            _player.delegate = nil  //Not yet implemented
+            _player.delegate = self
             _player.audio?.volume = initVolume
             
             return _player
@@ -146,15 +146,15 @@ struct VLCPlayerView: CrossPlatformRepresentable {
                 let media = VLCMedia(url: channelURL)
                 // https://wiki.videolan.org/VLC_command-line_help/
                 media.addOptions([
-                    "network-caching": 1000,            // Network resource caching in milliseconds.
-                    "no-lua": true,                     // Disable all lua plugins.
-                    "no-video-title-show": true,        // Do not show media title on video.
-                    "avcodec-hw": "any",                // Prefer hardware decode when possible. (reduce CPU)
-                    "drop-late-frames": true,           // This drops frames that are late. (reduce CPU)
-                    "skip-frames": true,                // allow frame skipping under pressure (reduce CPU)
-                    "deinterlace": true,                // If needed set to false to turn deinterlace off to reduce CPU.
-                    "deinterlace-mode": "auto",         // Deinterlace method to use for video processing.
-                    "video-filter": "deinterlace"       // This adds post-processing filters to enhance the picture quality, for instance deinterlacing, or distort the video.
+                    "network-caching": 5000,            // Network resource caching in milliseconds. Range: 0–60000. Keep low for live streams to reduce signed-URL expiry risk. (5000 is not low)
+                    "http-reconnect": "",               // Auto-reconnect on sudden stream drop. Default disabled; critical for live IPTV streams with unstable connections.
+                    "no-lua": "",                       // Disable all lua plugins. Boolean flags use empty string, not true/false.
+                    "avcodec-hw": "any",                // Prefer hardware decode when possible (VideoToolbox on Apple). Reduces CPU load.
+                    "deinterlace": -1,                  // -1 = Automatic: only deinterlaces when the stream signals it is interlaced. Most IPTV/HLS streams are progressive.
+                    "deinterlace-mode": "auto",         // Auto-select the deinterlace algorithm when deinterlacing is active.
+                    // Note: drop-late-frames and skip-frames are both enabled by default; no need to set them explicitly.
+                    // Note: video-title-show is disabled by default; no need to set it explicitly.
+                    // Note: video-filter "deinterlace" removed — redundant with deinterlace: -1 and causes double processing.
                 ])
                 mediaPlayer.media = media
                 mediaPlayer.audio?.volume = initVolume
@@ -222,21 +222,40 @@ extension VLCPlayerView.Coordinator: VLCMediaPlayerDelegate {
     
     nonisolated func mediaPlayerStateChanged(_ aNotification: Notification) {
         //Not yet implemented
+        //logDebug("VLCPlayerView.Coordinator:mediaPlayerStateChanged ☀️")
+
+        guard let player = aNotification.object as? VLCMediaPlayer else { return }
+        let state = player.state
+        switch state {
+            case .error:
+                
+                logDebug("VLCPlayerView.Coordinator:mediaPlayerStateChanged error ☀️")
+//                // Stream errored — attempt reconnect by replaying the same media
+//                DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak player] in
+//                    player?.play()
+//                }
+            default:
+                break
+        }
     }
     
     nonisolated func mediaPlayerTimeChanged(_ aNotification: Notification) {
         //Not yet implemented
+//        logDebug("VLCPlayerView.Coordinator:mediaPlayerTimeChanged ☀️")
     }
     
     nonisolated func mediaPlayerTitleChanged(_ aNotification: Notification) {
         //Not yet implemented
+        logDebug("VLCPlayerView.Coordinator:mediaPlayerTitleChanged ☀️")
     }
     
     nonisolated func mediaPlayerChapterChanged(_ aNotification: Notification) {
         //Not yet implemented
+        logDebug("VLCPlayerView.Coordinator:mediaPlayerChapterChanged ☀️")
     }
     
     nonisolated func mediaPlayerSnapshot(_ aNotification: Notification) {
         //Not yet implemented
+        logDebug("VLCPlayerView.Coordinator:mediaPlayerSnapshot ☀️")
     }
 }

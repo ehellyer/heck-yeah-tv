@@ -52,7 +52,7 @@ final class SwiftDataStack: SwiftDataStackProvider {
                                            configurations: [modelConfig])
             
             viewContext = ModelContext(container)
-            viewContext.autosaveEnabled = true
+            viewContext.autosaveEnabled = false
             
             try Self.updateSchemaVersionTable(context: viewContext)
             try Self.checkDefaultChannelBundle(context: viewContext)
@@ -65,9 +65,7 @@ final class SwiftDataStack: SwiftDataStackProvider {
     private static func updateSchemaVersionTable(context: ModelContext) throws {
         // Causes an insert or update because the SchemaVersion model has an ID property that is pre-determined in the models initializer.
         context.insert(SchemaVersion())
-        if context.hasChanges {
-            try context.save()
-        }
+        try context.saveChangesIfNeeded()
     }
     
     // There must be at least one channel bundle, if one does not yet exist, we add the default.
@@ -79,9 +77,7 @@ final class SwiftDataStack: SwiftDataStackProvider {
             context.insert(ChannelBundle(id: appState.selectedChannelBundle,
                                          name: "Default Channel Bundle",
                                          channels: []))
-            if context.hasChanges {
-                try context.save()
-            }
+            try context.saveChangesIfNeeded()
         }
     }
     
@@ -91,7 +87,7 @@ final class SwiftDataStack: SwiftDataStackProvider {
     /// Model Container.
     let container: ModelContainer
     
-    /// MainActor UI ModelContext.  (Autosave enabled)
+    /// MainActor UI ModelContext.  (Autosave disabled)
     let viewContext: ModelContext
 }
 
@@ -107,15 +103,17 @@ extension SwiftDataStack {
             return false
         }
         
-        let verificationUUID = UUID(uuidString: "fe7046c4-c15d-4e78-ba5b-50378a50c0b1")! // Our secret handshake with the database.
-        let devBuildVersion = "0.0.0" // The magic version that says "I'm still in development, feel free to delete me."
-        
         var db: OpaquePointer? // OpaquePointer: Because nothing says "modern Swift" like a C pointer from the 90s.
         guard sqlite3_open_v2(url.path, &db, SQLITE_OPEN_READONLY, nil) == SQLITE_OK else {
             logWarning("Could not open store to check version.")
             return true // Can't check the version if we can't even open the door.
         }
-        defer { sqlite3_close(db) } // Always close what you open. It's not just good manners, it's the law.
+        
+        defer {
+            // Always close what you open. It's not just good manners, it's the law.
+            sqlite3_close(db)
+            db = nil
+        }
         
         var statement: OpaquePointer?
         let query = "SELECT ZID, ZVERSION FROM ZSCHEMAVERSION LIMIT 1" // LIMIT 1 because there's only one schema version. If there's more than one, we've got bigger problems.
@@ -137,9 +135,11 @@ extension SwiftDataStack {
         
         let blobPointer = sqlite3_column_blob(statement, 0)
         let byteCount = Int(sqlite3_column_bytes(statement, 0))
-        
         let id = uuidFromBlob(pointer: blobPointer, byteCount: byteCount)
         let version = String(cString: sqlite3_column_text(statement, 1))
+
+        let verificationUUID = UUID(uuidString: "fe7046c4-c15d-4e78-ba5b-50378a50c0b1")! // Our secret handshake with the database.
+        let devBuildVersion = "0.0.0" // The magic version that says "I'm still in development, feel free to delete me."
         
         let isDevBuildVersion = devBuildVersion == version || HeckYeahSchema.versionIdentifier.description == devBuildVersion
 
@@ -162,32 +162,6 @@ extension SwiftDataStack {
         }
         
         return UUID(uuid: uuidBytes)
-    }
-    
-    /// Forces SQLite to do its chores and merge all those WAL changes back into the main .sqlite file.
-    /// Think of it as hitting "Save All" after a long session of reckless editing.
-    /// If this fails, it's probably because SQLite needed more coffee.
-    private static func forceWALCheckpointingForStore(at storeURL: URL) throws {
-        var db: OpaquePointer?
-        // Open the database in read/write mode—because WAL checkpointing needs to make changes, not just peek.
-        let openResult = sqlite3_open_v2(storeURL.path, &db, SQLITE_OPEN_READWRITE, nil)
-        guard openResult == SQLITE_OK, let database = db else {
-            let errorMessage = String(cString: sqlite3_errmsg(db))
-            throw NSError(domain: "SwiftDataStack", code: Int(openResult), userInfo: [
-                NSLocalizedDescriptionKey: "Failed to open SQLite database for WAL checkpointing: \(errorMessage)"
-            ])
-        }
-        defer { sqlite3_close(database) } // Always clean up, or the database gods will frown upon you.
-        
-        // Time to call in the cleanup crew and merge those WAL edits!
-        let checkpointResult = sqlite3_wal_checkpoint_v2(database, nil, SQLITE_CHECKPOINT_FULL, nil, nil)
-        if checkpointResult != SQLITE_OK {
-            let errorMessage = String(cString: sqlite3_errmsg(database))
-            throw NSError(domain: "SwiftDataStack", code: Int(checkpointResult), userInfo: [
-                NSLocalizedDescriptionKey: "WAL checkpoint failed: \(errorMessage)"
-            ])
-        }
-        logDebug("WAL checkpoint completed successfully for store at \(storeURL.path) (Operation: Herded all those WAL bytes back home.)")
     }
     
     /// Nukes the persistent store from orbit. It's the only way to be sure.

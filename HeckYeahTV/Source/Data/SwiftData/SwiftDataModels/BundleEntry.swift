@@ -24,6 +24,7 @@ extension SchemaV1 {
             
             self.id = bundleEntryId
             self.channel = channel
+            self.channelId = channel.id
             self.channelBundle = channelBundle
             self.sortHint = sortHint
             self.isFavorite = isFavorite
@@ -36,6 +37,7 @@ extension SchemaV1 {
         @Relationship(deleteRule: .nullify)
         var channel: Channel?
         
+        var channelId: ChannelId
         var channelBundle: ChannelBundle
         var sortHint: String
         var isFavorite: Bool
@@ -51,6 +53,7 @@ extension SchemaV1 {
         enum CodingKeys: String, CodingKey {
             case id
             case channel
+            case channelId
             case channelBundle
             case sortHint
             case isFavorite
@@ -59,7 +62,8 @@ extension SchemaV1 {
         func encode(to encoder: Encoder) throws {
             var container = encoder.container(keyedBy: CodingKeys.self)
             try container.encode(id, forKey: .id)
-            try container.encode(channel, forKey: .channel)
+            try container.encodeIfPresent(channel, forKey: .channel)
+            try container.encode(channelId, forKey: .channelId)
             try container.encode(channelBundle, forKey: .channelBundle)
             try container.encode(sortHint, forKey: .sortHint)
             try container.encode(isFavorite, forKey: .isFavorite)
@@ -68,7 +72,8 @@ extension SchemaV1 {
         init(from decoder: Decoder) throws {
             let container = try decoder.container(keyedBy: CodingKeys.self)
             self.id = try container.decode(BundleEntryId.self, forKey: .id)
-            self.channel = try container.decode(Channel.self, forKey: .channel)
+            self.channel = try container.decodeIfPresent(Channel.self, forKey: .channel)
+            self.channelId = try container.decode(ChannelId.self, forKey: .channelId)
             self.channelBundle = try container.decode(ChannelBundle.self, forKey: .channelBundle)
             self.sortHint = try container.decode(String.self, forKey: .sortHint)
             self.isFavorite = try container.decode(Bool.self, forKey: .isFavorite)

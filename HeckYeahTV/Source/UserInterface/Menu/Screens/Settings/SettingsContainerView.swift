@@ -14,7 +14,6 @@ struct SettingsContainerView: View {
     
     var body: some View {
 #if os(macOS)
-        // On macOS, skip NavigationView entirely and use Form directly
         NavigationStack {
             SettingsView()
                 .formStyle(.grouped)
@@ -22,21 +21,22 @@ struct SettingsContainerView: View {
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .background(.clear)
         }
-#else
-        // iOS / tvOS
-        SettingsView()
-#if os(tvOS)
-            .toolbar {
-                ToolbarItem(placement: .principal) {
-                    Text("Settings")
-                        .font(.title2)
-                        .bold()
-                        .foregroundStyle(.white)
+#elseif os(tvOS)
+        NavigationStack {
+            SettingsView()
+                .toolbar {
+                    ToolbarItem(placement: .principal) {
+                        Text("Settings")
+                            .font(.title2)
+                            .bold()
+                            .foregroundStyle(.white)
+                    }
                 }
-            }
+        }
+#elseif os(iOS)
+        SettingsView()
 #endif
         
-#endif
     }
 }
 

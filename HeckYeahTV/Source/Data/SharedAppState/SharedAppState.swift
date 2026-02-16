@@ -128,4 +128,8 @@ final class SharedAppState: AppStateProvider {
             }
         }
     }
+    
+    func resetRecentChannelIds() {
+        recentChannelIds = []
+    }
 }

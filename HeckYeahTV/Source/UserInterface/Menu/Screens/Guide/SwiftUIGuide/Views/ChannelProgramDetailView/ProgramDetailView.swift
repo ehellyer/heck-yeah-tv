@@ -35,7 +35,7 @@ struct ProgramDetailView: View {
 }
 
 
-#Preview {
+#Preview("Landscape Left", traits: .landscapeLeft) {
     // Override the injected AppStateProvider
     @Previewable @State var appState: AppStateProvider = MockSharedAppState()
     InjectedValues[\.sharedAppState] = appState

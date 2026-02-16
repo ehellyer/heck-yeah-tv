@@ -35,44 +35,45 @@ struct MainAppContentView: View {
         // Alignment required to layout the play/pause button in the bottom left corner.
         ZStack(alignment: .bottomLeading)  {
             
+            
+//            TVPreviewView() {
             // Stream Player
             VLCPlayerView()
                 .ignoresSafeArea()
                 .accessibilityHidden(true)
                 .allowsHitTesting(false)
                 .focusable(false)
-
+//            }
+            
             
 #if os(macOS)
-                if appState.showAppMenu {
-                    AppMenuView()
-                        .presentationBackground(.clear)
-                        .zIndex(5)
-                        .background(Color.guideTransparency)
-                }
+            if appState.showAppMenu {
+                AppMenuView()
+                    .presentationBackground(.clear)
+                    .zIndex(5)
+                    .background(Color.guideTransparency)
+            }
 #elseif os(tvOS)
-                .fullScreenCover(isPresented: $appState.showAppMenu) {
-                    AppMenuView()
-                        .background(TransparentBackground())
-                        .presentationBackground(.clear)
-                        .zIndex(5)
-                        .background(Color.guideTransparency)
-                    
-                        .focusScope(guideScope)
-                        .focused($focusedSection, equals: .guide)
-                        .defaultFocus($focusedSection, .guide)
-                        .disabled(appState.showProgramDetailCarousel != nil) // Prevents focus jumping from ChannelProgramsCarousel to Guide in the background.
-                        .onAppear {
-                            focusedSection = .guide
-                        }
-                }
+            if appState.showAppMenu {
+                AppMenuView()
+                    .background(TransparentBackground())
+                    .presentationBackground(.clear)
+                    .zIndex(5)
+                    .background(Color.guideTransparency)
+                
+                    .focusScope(guideScope)
+                    .focused($focusedSection, equals: .guide)
+                    .defaultFocus($focusedSection, .guide)
+                    .disabled(appState.showProgramDetailCarousel != nil) // Prevents focus jumping from ChannelProgramsCarousel to Guide in the background.
+                    .onAppear {
+                        focusedSection = .guide
+                    }
+            }
 #endif
-
-#if os(tvOS)
+            
             if showPlayPauseButton {
                 PlayPauseBadge()
             }
-#endif
             
             if not(appState.showAppMenu) {
                 MenuActivationView()
@@ -94,7 +95,7 @@ struct MainAppContentView: View {
                 .zIndex(5)
                 .background(Color.guideTransparency)
         }
-
+        
 #endif
         .overlay {
             
@@ -197,9 +198,9 @@ extension MainAppContentView {
     // Override the injected SwiftDataController
     let swiftDataController = MockSwiftDataController()
     InjectedValues[\.swiftDataController] = swiftDataController
-
-///    let selectedChannelId = swiftDataController.channelBundleMap.map[3]
-
+    
+    ///    let selectedChannelId = swiftDataController.channelBundleMap.map[3]
+    
     return ZStack {
         //Color.yellow.ignoresSafeArea()
         
@@ -221,9 +222,9 @@ extension MainAppContentView {
     // Override the injected SwiftDataController
     let swiftDataController = MockSwiftDataController()
     InjectedValues[\.swiftDataController] = swiftDataController
-
-///    let selectedChannelId = swiftDataController.channelBundleMap.map[3]
-
+    
+    ///    let selectedChannelId = swiftDataController.channelBundleMap.map[3]
+    
     return ZStack {
         //Color.yellow.ignoresSafeArea()
         

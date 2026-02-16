@@ -24,7 +24,7 @@ actor HomeRunImporter {
     @Injected(\.sharedAppState) private var appState: AppStateProvider
     
     private var batchCount: Int = 0
-    private let batchSize: Int = 3000
+    private let batchSize: Int = 500
     private let context: ModelContext
     private let scanForTuners: Bool
 
@@ -187,6 +187,13 @@ actor HomeRunImporter {
                                        recordingRule: program.recordingRule,
                                        filter: program.filter ?? [])
                     )
+                    
+                    batchCount += 1
+                    
+                    if batchCount % batchSize == 0 {
+                        try context.save()
+                        await Task.yield()
+                    }
                 }
             }
         }
