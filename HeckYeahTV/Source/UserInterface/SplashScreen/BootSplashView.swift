@@ -25,7 +25,7 @@ struct BootSplashView: View {
     @State private var gradientEnd = UnitPoint(x: 2, y: 2)
     @State private var dotCount = 0
     
-    init(title: String = "Heck\u{00A0}Yeah\u{00A0}TV",
+    init(title: String = "Heck\(nbsp)Yeah\(nbsp)TV",
          subtitle: String = "Discovering channels",
          autoPlaySound: Bool = true,
          soundName: String = "soft-startup-sound",

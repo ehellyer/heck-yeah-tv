@@ -210,12 +210,12 @@ extension UserDefaults {
     
     
     /// The unique identifier of the currently selected channel bundle identifier.
-    static var selectedChannelBundle: ChannelBundleId {
+    static var selectedChannelBundleId: ChannelBundleId {
         get {
-            standard.string(forKey: AppKeys.SharedAppState.selectedChannelBundleKey) ?? AppKeys.Application.defaultChannelBundleId
+            standard.string(forKey: AppKeys.SharedAppState.selectedChannelBundleIdKey) ?? AppKeys.Application.defaultChannelBundleId
         }
         set {
-            standard.set(newValue, forKey: AppKeys.SharedAppState.selectedChannelBundleKey)
+            standard.set(newValue, forKey: AppKeys.SharedAppState.selectedChannelBundleIdKey)
         }
     }
 
@@ -238,6 +238,18 @@ extension UserDefaults {
         }
         set {
             standard.set(newValue, forKey: AppKeys.SharedAppState.dateLastIPTVChannelFetchKey)
+        }
+    }
+    
+    /// Returns the last lan authorization status.
+    static var lastLANAuthorizationStatus: LocalNetworkAuthorizationStatus {
+        get {
+            let rawValue = standard.integer(forKey: AppKeys.SharedAppState.lanAuthorizationStatusKey)
+            return LocalNetworkAuthorizationStatus(rawValue: rawValue) ?? .notDetermined
+        }
+        set {
+            let rawValue = newValue.rawValue
+            standard.set(rawValue, forKey: AppKeys.SharedAppState.lanAuthorizationStatusKey)
         }
     }
 }

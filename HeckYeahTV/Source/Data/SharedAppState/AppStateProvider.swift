@@ -74,7 +74,7 @@ protocol AppStateProvider {
     ///
     /// Change this value to switch between different flavors of perpetual content.
     /// "Just one episode", famous last words.
-    var selectedChannelBundle: ChannelBundleId { get set }
+    var selectedChannelBundleId: ChannelBundleId { get set }
     
     /// The last known expedition to the land of guide data.
     ///

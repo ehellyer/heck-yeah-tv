@@ -93,14 +93,14 @@ final class SharedAppState: AppStateProvider {
         }
     }
     
-    var selectedChannelBundle: ChannelBundleId {
+    var selectedChannelBundleId: ChannelBundleId {
         get {
-            access(keyPath: \.selectedChannelBundle)
-            return UserDefaults.selectedChannelBundle
+            access(keyPath: \.selectedChannelBundleId)
+            return UserDefaults.selectedChannelBundleId
         }
         set {
-            withMutation(keyPath: \.selectedChannelBundle) {
-                UserDefaults.selectedChannelBundle = newValue
+            withMutation(keyPath: \.selectedChannelBundleId) {
+                UserDefaults.selectedChannelBundleId = newValue
             }
         }
     }

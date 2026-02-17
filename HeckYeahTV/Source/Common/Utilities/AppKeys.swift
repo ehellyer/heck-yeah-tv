@@ -80,9 +80,10 @@ struct AppKeys {
         static let selectedChannelKey = "SharedAppState.selectedChannelKey"
         static let recentChannelIdsKey = "SharedAppState.recentChannelIdsKey"
         static let scanForTunersKey = "SharedAppState.scanForTunersKey"
-        static let selectedChannelBundleKey = "selectedChannelBundleKey"
-        static let dateLastHomeRunChannelProgramFetchKey = "dateLastHomeRunChannelProgramFetchKey"
-        static let dateLastIPTVChannelFetchKey = "dateLastIPTVChannelFetchKey"
+        static let selectedChannelBundleIdKey = "SharedAppState.selectedChannelBundleIdKey"
+        static let dateLastHomeRunChannelProgramFetchKey = "SharedAppState.dateLastHomeRunChannelProgramFetchKey"
+        static let dateLastIPTVChannelFetchKey = "SharedAppState.dateLastIPTVChannelFetchKey"
+        static let lanAuthorizationStatusKey = "SharedAppState.lanAuthorizationStatusKey"
 
         // Search parameter keys
         static let selectedCountryKey = "SharedAppState.selectedCountryKey"

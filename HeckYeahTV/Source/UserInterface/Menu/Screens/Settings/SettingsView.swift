@@ -33,11 +33,11 @@ struct SettingsView: View {
             // MARK: - Active Bundle Section
             if channelBundles.count > 1 {
                 Section {
-                    let selectedName = channelBundles.first(where: { $0.id == appState.selectedChannelBundle })?.name ?? ""
+                    let selectedName = channelBundles.first(where: { $0.id == appState.selectedChannelBundleId })?.name ?? ""
                     Menu {
                         ForEach(channelBundles) { bundle in
                             Button {
-                                appState.selectedChannelBundle = bundle.id
+                                appState.selectedChannelBundleId = bundle.id
                             } label: {
                                 Text(bundle.name)
                             }
@@ -75,7 +75,7 @@ struct SettingsView: View {
                             Text(bundle.name)
                                 .font(.body)
                                 .foregroundStyle(.primary)
-                            Text("\(bundle.channels.count) channels")
+                            Text("\(swiftDataController.channelBundleMap.mapCount) channels")
                                 .font(.caption)
                                 .foregroundStyle(.secondary)
                         }

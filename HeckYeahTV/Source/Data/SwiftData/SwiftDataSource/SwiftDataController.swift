@@ -309,17 +309,17 @@ final class SwiftDataController: SwiftDataProvider {
     private func observeSelectedChannelBundle() {
         selectedBundleObserverTask = Task { @MainActor in
             let appState: AppStateProvider = InjectedValues[\.sharedAppState]
-            var lastBundleId = appState.selectedChannelBundle
+            var lastBundleId = appState.selectedChannelBundleId
             while !Task.isCancelled {
                 await withCheckedContinuation { continuation in
                     withObservationTracking {
-                        _ = appState.selectedChannelBundle
+                        _ = appState.selectedChannelBundleId
                     } onChange: {
                         continuation.resume()
                     }
                 }
                 guard !Task.isCancelled else { return }
-                let newBundleId = appState.selectedChannelBundle
+                let newBundleId = appState.selectedChannelBundleId
                 if newBundleId != lastBundleId {
                     lastBundleId = newBundleId
                     self.scheduleChannelBundleMapRebuild()
@@ -362,10 +362,13 @@ final class SwiftDataController: SwiftDataProvider {
         logDebug("Building Channel Map... 🇺🇸")
         
         let appState: AppStateProvider = InjectedValues[\.sharedAppState]
-        let channelBundleId = appState.selectedChannelBundle
+        let channelBundleId = appState.selectedChannelBundleId
         
         var conditions: [Predicate<BundleEntry>] = []
-        conditions.append( #Predicate<BundleEntry> { bundleEntry in bundleEntry.channelBundle.id == channelBundleId } )
+        conditions.append( #Predicate<BundleEntry> { bundleEntry in
+            bundleEntry.channelBundle.id == channelBundleId &&
+            bundleEntry.channel != nil
+        } )
         if showFavoritesOnly {
             conditions.append(#Predicate<BundleEntry> { $0.isFavorite == true })
         }

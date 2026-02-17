@@ -74,8 +74,8 @@ final class SwiftDataStack: SwiftDataStackProvider {
         let descriptor = FetchDescriptor<ChannelBundle>()
         let count = try context.fetchCount(descriptor)
         if count == 0 {
-            context.insert(ChannelBundle(id: appState.selectedChannelBundle,
-                                         name: "Default Channel Bundle",
+            context.insert(ChannelBundle(id: appState.selectedChannelBundleId,
+                                         name: "My Channel Bundle",
                                          channels: []))
             try context.saveChangesIfNeeded()
         }

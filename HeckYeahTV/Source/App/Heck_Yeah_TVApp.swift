@@ -22,7 +22,7 @@ import SwiftData
 //
 //------------------------------------------------------------------------------------------------------------------------
 
-/// Creates a function for not (!).
+/// Creates a function for not (!) for code readability..
 let not = (!)
 
 /// Non-breakable space
@@ -73,7 +73,7 @@ struct Heck_Yeah_TVApp: App {
         RootView(isBootComplete: $isBootComplete)
             .preferredColorScheme(.dark)
             .task {
-                startBootstrap()
+                await startBootstrap()
             }
             .onChange(of: scenePhase) { _, phase in
                 if phase != .active {
@@ -82,26 +82,36 @@ struct Heck_Yeah_TVApp: App {
             }
     }
     
-    private func startBootstrap() {
+    private func startBootstrap() async {
+        // Await call for authorization.
+        let lanAuth = LocalNetworkAuthorization()
+        let result = await lanAuth.requestAuthorization()
+        UserDefaults.lastLANAuthorizationStatus = result
         
+        await startBootTasks()
+    }
+    
+    private func startBootTasks() async {
         startupTask?.cancel()
         startupTask = Task.detached(name: "Bootstrap tasks", priority: .userInitiated) {
             let appState: AppStateProvider = InjectedValues[\.sharedAppState]
-            
+            let container = await InjectedValues[\.swiftDataController].container
             let chCount = await (try? InjectedValues[\.swiftDataController].totalChannelCount()) ?? 0
             logDebug("Current channel catalog count: \(chCount)")
             
             // Don't fetch unless its been at least six hours from the last fetch.
             let date = await appState.dateLastIPTVChannelFetch
             if chCount == 0 || date == nil || date! < Date().addingTimeInterval(-60 * 60 * 6) {
-                let container = await InjectedValues[\.swiftDataController].container
                 
                 await withTaskGroup(of: Void.self) { group in
-                    
-                    group.addTask {
-                        let scanForTuners = await appState.scanForTuners
-                        let hdTunerImporter = HomeRunImporter(container: container, scanForTuners: scanForTuners)
-                        let _ = try? await hdTunerImporter.load()
+                    if UserDefaults.lastLANAuthorizationStatus == .granted {
+                        group.addTask {
+                            let scanForTuners = await appState.scanForTuners
+                            let hdTunerImporter = HomeRunImporter(container: container, scanForTuners: scanForTuners)
+                            let _ = try? await hdTunerImporter.load()
+                        }
+                    } else {
+                        logDebug("Local Area Network authorization was not granted. Skipping HomeRun tuner scan/import.")
                     }
                     
                     group.addTask {
@@ -109,23 +119,28 @@ struct Heck_Yeah_TVApp: App {
                         let _ = try? await iptvImporter.load()
                     }
                 }
-
-                
                 
                 await MainActor.run {
                     var appState = appState
                     appState.dateLastIPTVChannelFetch = Date()
                 }
             }
+         
+            logDebug("Performing final boot tasks")
+            let otherBootTasks = SwiftDataBootTasks(container: container)
+            try? await otherBootTasks.alignSelectedChannelBundleId()
+            try? await otherBootTasks.mapOrphanedBundleEntryWithChannel()
             
             await MainActor.run {
-                //DEV TIME THING
+                var appState = appState
+                appState.dateLastIPTVChannelFetch = Date()
+                
+                setInitialUI()
 #if DEBUG
                 // Writes files based on data in SwiftData, to be used in MockData for previews.
 //                writeMockFiles()
 #endif
-                
-                setInitialUI()
+                InjectedValues[\.swiftDataController].invalidateChannelBundleMap()
                 
                 // Update state variable that boot up processes are completed.
                 isBootComplete = true

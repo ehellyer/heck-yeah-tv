@@ -307,17 +307,17 @@ final class MockSwiftDataController: SwiftDataProvider {
     private func observeSelectedChannelBundle() {
         selectedBundleObserverTask = Task { @MainActor in
             let appState: AppStateProvider = InjectedValues[\.sharedAppState]
-            var lastBundleId = appState.selectedChannelBundle
+            var lastBundleId = appState.selectedChannelBundleId
             while !Task.isCancelled {
                 await withCheckedContinuation { continuation in
                     withObservationTracking {
-                        _ = appState.selectedChannelBundle
+                        _ = appState.selectedChannelBundleId
                     } onChange: {
                         continuation.resume()
                     }
                 }
                 guard !Task.isCancelled else { return }
-                let newBundleId = appState.selectedChannelBundle
+                let newBundleId = appState.selectedChannelBundleId
                 if newBundleId != lastBundleId {
                     lastBundleId = newBundleId
                     self.scheduleChannelBundleMapRebuild()
@@ -360,7 +360,7 @@ final class MockSwiftDataController: SwiftDataProvider {
         logDebug("Building Channel Map... 🇺🇸")
         
         let appState: AppStateProvider = InjectedValues[\.sharedAppState]
-        let channelBundleId = appState.selectedChannelBundle
+        let channelBundleId = appState.selectedChannelBundleId
         
         var conditions: [Predicate<BundleEntry>] = []
         conditions.append( #Predicate<BundleEntry> { bundleEntry in bundleEntry.channelBundle.id == channelBundleId } )

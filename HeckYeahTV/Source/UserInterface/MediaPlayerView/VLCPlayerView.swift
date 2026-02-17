@@ -146,7 +146,7 @@ struct VLCPlayerView: CrossPlatformRepresentable {
                 let media = VLCMedia(url: channelURL)
                 // https://wiki.videolan.org/VLC_command-line_help/
                 media.addOptions([
-                    "network-caching": 5000,            // Network resource caching in milliseconds. Range: 0–60000. Keep low for live streams to reduce signed-URL expiry risk. (5000 is not low)
+                    "network-caching": 2000,            // Network resource caching in milliseconds. Range: 0–60000. Keep low for live streams to reduce signed-URL expiry risk.
                     "http-reconnect": "",               // Auto-reconnect on sudden stream drop. Default disabled; critical for live IPTV streams with unstable connections.
                     "no-lua": "",                       // Disable all lua plugins. Boolean flags use empty string, not true/false.
                     "avcodec-hw": "any",                // Prefer hardware decode when possible (VideoToolbox on Apple). Reduces CPU load.

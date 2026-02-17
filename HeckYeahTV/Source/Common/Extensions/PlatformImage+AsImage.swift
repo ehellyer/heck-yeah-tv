@@ -31,8 +31,3 @@ extension PlatformImage {
 }
 
 #endif
-
-
-
-
-

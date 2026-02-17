@@ -112,7 +112,7 @@ final class MockSwiftDataStack: SwiftDataStackProvider {
             }
             
             var appState: AppStateProvider = InjectedValues[\.sharedAppState]
-            appState.selectedChannelBundle = channelBundle.id
+            appState.selectedChannelBundleId = channelBundle.id
             
             do {
                 try viewContext.saveChangesIfNeeded()

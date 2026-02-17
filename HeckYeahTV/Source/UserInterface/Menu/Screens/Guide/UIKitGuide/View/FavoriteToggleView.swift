@@ -74,7 +74,7 @@ class FavoriteToggleView: UIView {
         return gesture
     }()
     
-    private lazy var channelBundleId: ChannelBundleId = InjectedValues[\.sharedAppState].selectedChannelBundle
+    private lazy var channelBundleId: ChannelBundleId = InjectedValues[\.sharedAppState].selectedChannelBundleId
     
     //MARK: - Private API - Actions and action view modifiers
     
