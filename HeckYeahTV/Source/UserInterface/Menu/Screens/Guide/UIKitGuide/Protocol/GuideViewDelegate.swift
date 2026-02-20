@@ -1,0 +1,21 @@
+//
+//  GuideViewDelegate.swift
+//  Heck Yeah TV
+//
+//  Created by Ed Hellyer on 9/24/25.
+//  Copyright © 2025 Hellyer Multimedia. All rights reserved.
+//
+
+import UIKit
+
+@MainActor
+protocol GuideViewDelegate: AnyObject {
+    
+    func selectChannel(_ channelId: ChannelId)
+    
+    func toggleFavoriteChannel(_ channelId: ChannelId)
+    
+    func showChannelProgram(_ channelProgram: ChannelProgram)
+    
+    func updateTargetFocusView(_ programView: ProgramCollectionViewCell?)
+}

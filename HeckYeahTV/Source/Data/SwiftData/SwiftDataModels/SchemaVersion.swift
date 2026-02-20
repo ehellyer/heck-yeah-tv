@@ -9,10 +9,7 @@
 import SwiftUI
 import SwiftData
 
-// Note: In the current design, only existence of this model with the property version is detected to determine if it is a legacy store (pre-schema versioning).
-// Nothing is currently being written to this model in the persistent store.
-
-// Added as extension to HeckYeahSchema so the model is always in current active Schema.
+// Added as extension to HeckYeahSchema so the model is always in current active Schema, allowing the schema version to be read offline from the SQLite DB directly.
 extension HeckYeahSchema {
     
     @Model final class SchemaVersion {
@@ -23,10 +20,11 @@ extension HeckYeahSchema {
             self.version = HeckYeahSchema.versionIdentifier.description
         }
         
+        /// Unique identifier for the only instance
         @Attribute(.unique)
-        var id: UUID
+        private(set) var id: UUID
         
         /// Version of the current schema
-        var version: String
+        private(set) var version: String
     }
 }

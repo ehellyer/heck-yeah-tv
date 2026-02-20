@@ -10,6 +10,19 @@
       "width-class" : "compact"
     },
     {
+      "filename" : "iPadAir11-inch-Landscape.png",
+      "idiom" : "ipad"
+    },
+    {
+      "filename" : "iPadAir11-inch-Portrait.png",
+      "idiom" : "ipad",
+      "width-class" : "compact"
+    },
+    {
+      "filename" : "MacAnyWidth.png",
+      "idiom" : "mac"
+    },
+    {
       "filename" : "AppleTVScreenShot.png",
       "idiom" : "tv"
     }

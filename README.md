@@ -40,7 +40,7 @@ Planned / Roadmap
 
 Boot flow (implemented)
 - Heck_Yeah_TVApp starts a bootstrap Task on launch
-- HDHomeRunDiscoveryController bootstraps tuner discovery and channel list
+- HDHomeRunController bootstraps tuner discovery and channel list
 - IPTVController fetches internet stream metadata
 - FetchSummary aggregates success/failure details for diagnostics
 - ChannelImporter merges/imports both sources into the SwiftData store
@@ -56,7 +56,7 @@ Data & utilities
 
 Referenced types (present in the app but not shown here)
 - RootView
-- HDHomeRunDiscoveryController
+- HDHomeRunController
 - IPTVController
 - FetchSummary
 - DataPersistence

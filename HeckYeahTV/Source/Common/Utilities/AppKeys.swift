@@ -31,39 +31,59 @@ struct AppKeys {
         static var appBuildNumber: String {
             return Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as? String ?? ""
         }
+
+        static let appFileStoreRootURL: URL = {
+#if os(tvOS)
+            //tvOS has restrictions on where we can write store files to.  Thanks Apple.
+            var searchPathDirectory: FileManager.SearchPathDirectory = .cachesDirectory
+#else
+            var searchPathDirectory: FileManager.SearchPathDirectory = .applicationSupportDirectory
+#endif
+            guard var _rootURL = FileManager.default.urls(for: searchPathDirectory,
+                                                          in: FileManager.SearchPathDomainMask.userDomainMask).first else {
+                fatalError("Failed to initialize persistence store: Could not build application support directory root URL.")
+            }
+            
+            _rootURL.append(component: "HeckYeahTV")
+            return _rootURL
+        }()
+
         
-        static var osName: String {
 #if os(iOS)
 #if targetEnvironment(macCatalyst)
-            return "macOS(Catalyst)"
+        static let osName: String = "macOS(Catalyst)"
 #else
-            return "iOS"
+        static let osName: String = "iOS"
 #endif
-#elseif os(watchOS)
-            return "watchOS"
 #elseif os(tvOS)
-            return "tvOS"
+        static let osName: String = "tvOS"
 #elseif os(macOS)
-            return "macOS"
+        static let osName: String = "macOS"
 #elseif os(Linux)
-            return "Linux"
+        static let osName: String = "Linux"
+#elseif os(watchOS)
+        static let osName: String = "watchOS"
 #elseif os(Windows)
-            return "Windows"
+        static let osName: String = "Windows"
 #else
-            return "Unknown"
+        static let osName: String = "Unknown"
 #endif
-        }
+        
+        static let defaultChannelBundleId: String = "default.channel.bundle.id"
     }
     
     struct SharedAppState {
-
-        static let showAppNavigationKey = "SharedAppState.showAppNavigationKey"
+        static let showAppMenuKey = "SharedAppState.showAppMenuKey"
         static let isPlayerPausedKey = "SharedAppState.isPlayerPausedKey"
         static let recentlyPlayedKey = "SharedAppState.recentlyPlayedKey"
         static let selectedTabKey = "SharedAppState.selectedTabKey"
         static let selectedChannelKey = "SharedAppState.selectedChannelKey"
         static let recentChannelIdsKey = "SharedAppState.recentChannelIdsKey"
         static let scanForTunersKey = "SharedAppState.scanForTunersKey"
+        static let selectedChannelBundleIdKey = "SharedAppState.selectedChannelBundleIdKey"
+        static let dateLastHomeRunChannelProgramFetchKey = "SharedAppState.dateLastHomeRunChannelProgramFetchKey"
+        static let dateLastIPTVChannelFetchKey = "SharedAppState.dateLastIPTVChannelFetchKey"
+        static let lanAuthorizationStatusKey = "SharedAppState.lanAuthorizationStatusKey"
 
         // Search parameter keys
         static let selectedCountryKey = "SharedAppState.selectedCountryKey"

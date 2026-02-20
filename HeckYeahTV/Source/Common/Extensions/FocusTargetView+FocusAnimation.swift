@@ -23,11 +23,41 @@ protocol FocusTargetView {
 
 extension FocusTargetView where Self: UIView {
     
-    private var scaleUp: CGFloat { return 1.05 }
-    private var scaleDown: CGFloat { return 0.95 }
+    //MARK: - Private API
+    
+    /// The number of pixels to grow on each side when focused
+    private var focusGrowthInPixels: CGFloat { return 6.0 }
+    
+    /// The number of pixels to shrink on each side when pressed
+    private var pressedShrinkInPixels: CGFloat { return 4.0 }
+    
+    /// Calculate scale factor based on adding fixed pixels to the view's dimensions
+    private func scaleForPixelGrowth(_ pixels: CGFloat) -> CGFloat {
+        let referenceSize = max(bounds.width, bounds.height)
+        guard referenceSize > 0 else { return 1.0 }
+        
+        // Calculate the scale factor.
+        return (referenceSize + pixels) / referenceSize
+    }
+    
+    /// Scale factor for focused state (grows by focusGrowthInPixels)
+    private var scaleUp: CGFloat { 
+        return scaleForPixelGrowth(focusGrowthInPixels)
+    }
+    
+    /// Scale factor for pressed state (shrinks by pressedShrinkInPixels)
+    private var scaleDown: CGFloat { 
+        return scaleForPixelGrowth(-pressedShrinkInPixels)
+    }
+    
     private var selectedLayerName: String { return "selectedEffectLayer" }
     
-    private func addParallaxMotionEffects(tiltValue: CGFloat = 0.25, panValue: CGFloat = 5.0) {
+    private func addParallaxMotionEffects(panValue: CGFloat = 5.0) {
+        // Calculate tilt based on view size - larger views need less tilt
+        // Using 60 as the reference: a 600px view gets 0.1 tilt, a 300px view gets 0.2 tilt
+        let longestSide = max(bounds.width, bounds.height)
+        let tiltValue = longestSide > 0 ? min(60.0 / longestSide, 0.25) : 0.15
+        
         let yRotation = UIInterpolatingMotionEffect(keyPath: "layer.transform.rotation.y", type: .tiltAlongHorizontalAxis)
         yRotation.minimumRelativeValue = tiltValue
         yRotation.maximumRelativeValue = -tiltValue
@@ -50,6 +80,8 @@ extension FocusTargetView where Self: UIView {
     private func removeParallaxMotionEffects() {
         self.motionEffects = []
     }
+    
+    //MARK: - Internal API for FocusTargetView protocol
     
     func becomeFocusedUsingAnimationCoordinator(in context: UIFocusUpdateContext, with coordinator: UIFocusAnimationCoordinator, viewBlock: ViewBlock? = nil) {
         viewBlock?(UIColor.guideForegroundFocused, UIColor.guideBackgroundFocused)
@@ -89,7 +121,7 @@ extension FocusTargetView where Self: UIView {
     
     func onTapDownFocusEffect() {
         UIView.animate(withDuration: 0.1) {
-            let scale: CGFloat = 1
+            let scale: CGFloat = self.scaleDown
             let matrix = CATransform3DScale(CATransform3DIdentity, scale, scale, 1)
             self.layer.transform = matrix
         }

@@ -22,4 +22,8 @@ enum UpgradeSchemaMigrationPlan: SchemaMigrationPlan {
     }
     
     //MARK: - Migration stages between versions below.
+    
+    /*
+     Add migration functions to migrate from version n to version n+1 here.  Reference them in the stages array above.
+     */
 }

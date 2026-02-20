@@ -10,21 +10,13 @@ import Foundation
 
 extension IPStream: Channelable {
     var idHint: String { id }
+    var guideIdHint: String? { channelId }
     var sortHint: String { String.concat(title, channelId, separator: "::") }
     var titleHint: String { title }
     var numberHint: String? { channelId }
     var urlHint: URL { url }
-    var qualityHint: StreamQuality { qualityHint(quality) }
+    var qualityHint: StreamQuality { StreamQuality.convertToStreamQuality(quality) }
     var hasDRMHint: Bool { false }
-    var sourceHint: ChannelSource { ChannelSourceType.ipStream.rawValue }
-    var deviceIdHint: HDHomeRunDeviceId? { nil }
-    
-    private func qualityHint(_ quality: String?) -> StreamQuality {
-        guard let quality else {
-            return .unknown
-        }
-        
-        let q = StreamQuality.convertToStreamQuality(quality)
-        return q
-    }
+    var deviceIdHint: HDHomeRunDeviceId { IPTVImporter.iptvDeviceId }
+    var logoURLHint: URL? { logoURL }
 }

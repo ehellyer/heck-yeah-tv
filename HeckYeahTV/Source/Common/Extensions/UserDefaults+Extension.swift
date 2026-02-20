@@ -39,19 +39,19 @@ extension UserDefaults {
         }
     }
 
-    /// A boolean indicating whether the app navigation UI should be visible.
+    /// A boolean indicating whether the app menu UI should be visible.
     ///
-    /// This property controls the visibility of the main navigation interface, such as tab bars
-    /// or guide views. When disabled, the navigation UI is hidden, typically for full-screen
+    /// This property controls the visibility of the main manu interface, such as tab bars
+    /// or guide views. When disabled, the manu UI is hidden, typically for full-screen
     /// playback experiences. The value is persisted in `UserDefaults.standard`.
     ///
-    /// - Returns: `true` if navigation should be shown, `false` to hide it.
-    static var showAppNavigation: Bool {
+    /// - Returns: `true` if menu should be shown, `false` to hide it.
+    static var showAppMenu: Bool {
         get {
-            standard.bool(forKey: AppKeys.SharedAppState.showAppNavigationKey)
+            standard.bool(forKey: AppKeys.SharedAppState.showAppMenuKey)
         }
         set {
-            standard.set(newValue, forKey: AppKeys.SharedAppState.showAppNavigationKey)
+            standard.set(newValue, forKey: AppKeys.SharedAppState.showAppMenuKey)
         }
     }
     
@@ -125,16 +125,21 @@ extension UserDefaults {
         }
     }
     
-    /// A boolean indicating whether the app should automatically scan for HDHomeRun tuners at launch.
+    /// Whether the app should actively hunt for HDHomeRun tuners on your network — if we've even
+    /// had the nerve to ask yet.
     ///
-    /// When enabled, the app will perform network discovery to find available HDHomeRun devices
-    /// on the local network during app startup. This setting allows users to control whether
-    /// automatic tuner discovery is performed. The value is persisted in `UserDefaults.standard`.
-    ///
-    /// - Returns: `true` if automatic tuner scanning is enabled, `false` otherwise.
-    static var scanForTuners: Bool {
+    /// - `nil` means the question was never posed. The user is blissfully unaware that tuner
+    ///   scanning is even a thing. Show them the prompt before assuming anything.
+    /// - `true` unleashes a digital bloodhound to sniff out every tuner device hiding on your LAN.
+    /// - `false` means the user said no thanks, and your app minds its own business like a polite
+    ///   houseguest who doesn't poke around in your network closet.
+    static var scanForTuners: Bool? {
         get {
-            standard.bool(forKey: AppKeys.SharedAppState.scanForTunersKey)
+            let valueExists = standard.object(forKey: AppKeys.SharedAppState.scanForTunersKey)
+            if valueExists != nil {
+                return standard.bool(forKey: AppKeys.SharedAppState.scanForTunersKey)
+            }
+            return nil
         }
         set {
             standard.set(newValue, forKey: AppKeys.SharedAppState.scanForTunersKey)
@@ -165,11 +170,11 @@ extension UserDefaults {
     /// by region. The value is persisted in `UserDefaults.standard`.
     ///
     /// - Returns: The two-letter country code (e.g., "US", "GB", "CA"), or `nil` if no country is selected.
-    static var selectedCountry: CountryCode {
+    static var selectedCountry: CountryCodeId {
         get {
-            guard let _countryCode: CountryCode = standard.string(forKey: AppKeys.SharedAppState.selectedCountryKey) else {
+            guard let _countryCode: CountryCodeId = standard.string(forKey: AppKeys.SharedAppState.selectedCountryKey) else {
 
-                var defaultCode: CountryCode
+                var defaultCode: CountryCodeId
                 
                 if Locale.current.region?.isISORegion == true && (Locale.current.region?.subRegions.count ?? 0) == 0
                     , let identifier = Locale.current.region?.identifier {
@@ -207,4 +212,51 @@ extension UserDefaults {
             standard.set(newValue, forKey: AppKeys.SharedAppState.selectedCategoryKey)
         }
     }
+    
+    
+    /// The unique identifier of the currently selected channel bundle identifier.
+    static var selectedChannelBundleId: ChannelBundleId {
+        get {
+            standard.string(forKey: AppKeys.SharedAppState.selectedChannelBundleIdKey) ?? AppKeys.Application.defaultChannelBundleId
+        }
+        set {
+            standard.set(newValue, forKey: AppKeys.SharedAppState.selectedChannelBundleIdKey)
+        }
+    }
+
+    
+    /// The time the last successful guide fetch occurred
+    static var dateLastHomeRunChannelProgramFetch: Date? {
+        get {
+            standard.object(forKey: AppKeys.SharedAppState.dateLastHomeRunChannelProgramFetchKey) as? Date
+        }
+        set {
+            standard.set(newValue, forKey: AppKeys.SharedAppState.dateLastHomeRunChannelProgramFetchKey)
+        }
+    }
+    
+    
+    /// The time the last successful fetch of IPTV channels
+    static var dateLastIPTVChannelFetch: Date? {
+        get {
+            standard.object(forKey: AppKeys.SharedAppState.dateLastIPTVChannelFetchKey) as? Date
+        }
+        set {
+            standard.set(newValue, forKey: AppKeys.SharedAppState.dateLastIPTVChannelFetchKey)
+        }
+    }
+    
+    /// Returns the last retrieved LAN authorization status.
+    static var lastLANAuthorizationStatus: LocalNetworkAuthorizationStatus {
+        get {
+            let rawValue = standard.integer(forKey: AppKeys.SharedAppState.lanAuthorizationStatusKey)
+            return LocalNetworkAuthorizationStatus(rawValue: rawValue) ?? .notDetermined
+        }
+        set {
+            let rawValue = newValue.rawValue
+            standard.set(rawValue, forKey: AppKeys.SharedAppState.lanAuthorizationStatusKey)
+        }
+    }
+    
+    
 }

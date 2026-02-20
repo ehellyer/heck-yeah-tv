@@ -70,8 +70,8 @@ class DebugLogger {
             switch self {
                 case .debug: return "🔧"
                 case .information: return "📊"
-                case .warning: return "‼️"
-                case .error: return "🐛"
+                case .warning: return "⚠️"
+                case .error: return "🐞"
                 case .fatal: return "🧨"
             }
         }

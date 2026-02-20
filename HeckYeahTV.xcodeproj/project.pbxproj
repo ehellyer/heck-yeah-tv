@@ -9,12 +9,19 @@
 /* Begin PBXBuildFile section */
 		089D175416ADEF60C0354B23 /* Pods_iOS_HeckYeahTV.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76A34A69F5505812676277A2 /* Pods_iOS_HeckYeahTV.framework */; };
 		E2A5EE63B6F0360CFDEA112A /* Pods_tvOS_HeckYeahTV.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4850C4BF6A440A7BD11EC2DD /* Pods_tvOS_HeckYeahTV.framework */; };
-		EB33342E2EC8273700CFAC43 /* Pods_macOS_HeckYeahTV.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB33342D2EC8273700CFAC43 /* Pods_macOS_HeckYeahTV.framework */; };
+		EB35E3122F00781200D31894 /* MobileVLCKit.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB35E3112F00781200D31894 /* MobileVLCKit.xcframework */; };
+		EB3785982F2141770086BB1F /* Pods_macOS_HeckYeahTV.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB3785972F2141770086BB1F /* Pods_macOS_HeckYeahTV.framework */; };
+		EB37859B2F21417F0086BB1F /* Pods_macOS_HeckYeahTV.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB33342D2EC8273700CFAC43 /* Pods_macOS_HeckYeahTV.framework */; };
+		EB37859F2F2142480086BB1F /* Pods_tvOS_HeckYeahTV.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB37859E2F2142480086BB1F /* Pods_tvOS_HeckYeahTV.framework */; };
 		EBB5B3292ED8B9D6004251CB /* Hellfire in Frameworks */ = {isa = PBXBuildFile; productRef = EBB5B3282ED8B9D6004251CB /* Hellfire */; };
 		EBB5B51F2EDD46C4004251CB /* Hellfire in Frameworks */ = {isa = PBXBuildFile; productRef = EBB5B51E2EDD46C4004251CB /* Hellfire */; };
 		EBB5B5212EDD46DC004251CB /* Hellfire in Frameworks */ = {isa = PBXBuildFile; productRef = EBB5B5202EDD46DC004251CB /* Hellfire */; };
 		EBDD3AF72ECE9C160050D08D /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = EBDD3AF62ECE9C160050D08D /* FirebaseAnalytics */; };
 		EBDD3AF92ECE9C160050D08D /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = EBDD3AF82ECE9C160050D08D /* FirebaseCrashlytics */; };
+		EBFFBD122F21A79E0022F6A5 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = EBFFBD112F21A79E0022F6A5 /* FirebaseAnalytics */; };
+		EBFFBD142F21A79E0022F6A5 /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = EBFFBD132F21A79E0022F6A5 /* FirebaseCrashlytics */; };
+		EBFFBD162F21A7AB0022F6A5 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = EBFFBD152F21A7AB0022F6A5 /* FirebaseAnalytics */; };
+		EBFFBD182F21A7AB0022F6A5 /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = EBFFBD172F21A7AB0022F6A5 /* FirebaseCrashlytics */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -77,6 +84,10 @@
 		EB2C2DCE2E5E203C005CE685 /* macOS_HeckYeahTVUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = macOS_HeckYeahTVUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		EB3334292EC826E500CFAC43 /* VLCKit.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = VLCKit.xcframework; path = Pods/VLCKit/VLCKit.xcframework; sourceTree = "<group>"; };
 		EB33342D2EC8273700CFAC43 /* Pods_macOS_HeckYeahTV.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Pods_macOS_HeckYeahTV.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		EB35E30D2F0077B500D31894 /* Pods_iOS_HeckYeahTV.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Pods_iOS_HeckYeahTV.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		EB35E3112F00781200D31894 /* MobileVLCKit.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = MobileVLCKit.xcframework; path = Pods/MobileVLCKit/MobileVLCKit.xcframework; sourceTree = "<group>"; };
+		EB3785972F2141770086BB1F /* Pods_macOS_HeckYeahTV.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Pods_macOS_HeckYeahTV.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		EB37859E2F2142480086BB1F /* Pods_tvOS_HeckYeahTV.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Pods_tvOS_HeckYeahTV.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		EBC92B4A2E9D5FFA00FF62BC /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		EBE03BB72E53D421006B7747 /* HeckYeahTV.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HeckYeahTV.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EBE03BC42E53D423006B7747 /* iOS_HeckYeahTVTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = iOS_HeckYeahTVTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -97,7 +108,10 @@
 				Source/Common/DependencyInjection/DependancyInjectionCore/InjectedValues.swift,
 				Source/Common/DependencyInjection/DependancyInjectionCore/InjectionKey.swift,
 				Source/Common/DependencyInjection/InjectedAttachmentController/AttachmentControllerInjectionKey.swift,
+				Source/Common/DependencyInjection/InjectedSharedAppState/SharedAppStateInjectionKey.swift,
 				Source/Common/DependencyInjection/InjectedSwiftDataController/SwiftDataControllerInjectionKey.swift,
+				"Source/Common/Extensions/Color+Extension.swift",
+				"Source/Common/Extensions/Notification+Extension.swift",
 				"Source/Common/Extensions/NSView+AsImage.swift",
 				"Source/Common/Extensions/PlatformImage+AsImage.swift",
 				"Source/Common/Extensions/String+Extension.swift",
@@ -108,94 +122,124 @@
 				Source/Common/PlatformRepresentable/PlatformRepresentableAlias.swift,
 				Source/Common/Utilities/AppKeys.swift,
 				Source/Common/Utilities/AppStyle.swift,
+				Source/Common/Utilities/PreviewDetector.swift,
 				Source/Data/Adapters/Channelable.swift,
 				Source/Data/Adapters/FetchSummary.swift,
 				"Source/Data/Adapters/HDHomeRunChannel+Channelable.swift",
 				"Source/Data/Adapters/IPStream+Channelable.swift",
 				"Source/Data/Adapters/StreamQuality+Extension.swift",
 				Source/Data/DataControllers/AttachmentController.swift,
-				Source/Data/Models/AppStateProvider.swift,
-				Source/Data/Models/ChannelMap.swift,
-				Source/Data/Models/Country.swift,
-				Source/Data/Models/HDHomeRunChannel.swift,
-				Source/Data/Models/HDHomeRunDevice.swift,
-				Source/Data/Models/HDHomeRunDiscovery.swift,
-				Source/Data/Models/IPBlocklist.swift,
-				Source/Data/Models/IPCategory.swift,
-				Source/Data/Models/IPChannel.swift,
-				Source/Data/Models/IPFeed.swift,
-				Source/Data/Models/IPGuide.swift,
-				Source/Data/Models/IPLogo.swift,
-				Source/Data/Models/IPStream.swift,
-				Source/Data/Models/Language.swift,
-				Source/Data/Models/Program.swift,
-				Source/Data/Models/Region.swift,
-				Source/Data/Models/SharedAppState.swift,
-				Source/Data/Models/Subdivision.swift,
-				Source/Data/Models/Timezone.swift,
-				Source/Data/Services/HDHomeRun/HDHomeRunDiscoveryController.swift,
-				Source/Data/Services/IPTV/IPTVController.swift,
-				Source/Data/Services/IPTV/IPTVDataSources.swift,
-				Source/Data/SwiftData/AppDataSource/ChannelFilterable.swift,
-				Source/Data/SwiftData/AppDataSource/SwiftDataControllable.swift,
-				Source/Data/SwiftData/AppDataSource/SwiftDataController.swift,
+				Source/Data/DataTransferModels/HDHomeRunChannel.swift,
+				Source/Data/DataTransferModels/HDHomeRunChannelGuide.swift,
+				Source/Data/DataTransferModels/HDHomeRunDevice.swift,
+				Source/Data/DataTransferModels/HDHomeRunDiscovery.swift,
+				Source/Data/DataTransferModels/HDHomeRunProgram.swift,
+				Source/Data/DataTransferModels/IPBlocklist.swift,
+				Source/Data/DataTransferModels/IPCategory.swift,
+				Source/Data/DataTransferModels/IPChannel.swift,
+				Source/Data/DataTransferModels/IPCountry.swift,
+				Source/Data/DataTransferModels/IPFeed.swift,
+				Source/Data/DataTransferModels/IPGuide.swift,
+				Source/Data/DataTransferModels/IPLogo.swift,
+				Source/Data/DataTransferModels/IPRegion.swift,
+				Source/Data/DataTransferModels/IPStream.swift,
+				Source/Data/DataTransferModels/IPSubdivision.swift,
+				Source/Data/ImportServices/HDHomeRun/HomeRunController.swift,
+				Source/Data/ImportServices/HDHomeRun/HomeRunDataSources.swift,
+				Source/Data/ImportServices/HDHomeRun/HomeRunImporter.swift,
+				Source/Data/ImportServices/IPTV/IPTVController.swift,
+				Source/Data/ImportServices/IPTV/IPTVDataSources.swift,
+				Source/Data/ImportServices/IPTV/IPTVImporter.swift,
+				Source/Data/LocalNetworkAuthorization/LocalNetworkAuthorization.swift,
+				Source/Data/SharedAppState/AppStateProvider.swift,
+				Source/Data/SharedAppState/SharedAppState.swift,
 				Source/Data/SwiftData/Migration/UpgradeSchemaMigrationPlan.swift,
 				Source/Data/SwiftData/Schema/SchemaCurrent.swift,
 				Source/Data/SwiftData/Schema/SchemaV1.swift,
-				Source/Data/SwiftData/SwiftDataModels/ChannelSourceType.swift,
-				Source/Data/SwiftData/SwiftDataModels/HDHomeRunServer.swift,
-				Source/Data/SwiftData/SwiftDataModels/IPTVCategory.swift,
-				Source/Data/SwiftData/SwiftDataModels/IPTVChannel.swift,
-				Source/Data/SwiftData/SwiftDataModels/IPTVCountry.swift,
-				Source/Data/SwiftData/SwiftDataModels/IPTVFavorite.swift,
+				Source/Data/SwiftData/SwiftDataModels/BundleEntry.swift,
+				Source/Data/SwiftData/SwiftDataModels/Channel.swift,
+				Source/Data/SwiftData/SwiftDataModels/ChannelBundle.swift,
+				Source/Data/SwiftData/SwiftDataModels/ChannelProgram.swift,
+				Source/Data/SwiftData/SwiftDataModels/Country.swift,
+				Source/Data/SwiftData/SwiftDataModels/HomeRunDevice.swift,
+				Source/Data/SwiftData/SwiftDataModels/ProgramCategory.swift,
 				Source/Data/SwiftData/SwiftDataModels/SchemaVersion.swift,
 				Source/Data/SwiftData/SwiftDataModels/StreamQuality.swift,
-				Source/Data/SwiftData/SwiftDataStack.swift,
-				Source/Data/SwiftData/Utilities/DataChangeTracking.swift,
-				Source/Data/SwiftData/Utilities/Importer.swift,
-				Source/UserInterface/MacAndPhone/SectionView.swift,
-				Source/UserInterface/Main/BootGateView.swift,
-				Source/UserInterface/Main/BootSplashView.swift,
-				Source/UserInterface/Main/DustyView.swift,
-				Source/UserInterface/Main/MainAppContentView.swift,
-				Source/UserInterface/Main/NavigationActivationView.swift,
-				Source/UserInterface/Main/PlayPauseBadge.swift,
-				Source/UserInterface/Main/RootView.swift,
+				Source/Data/SwiftData/SwiftDataSource/ChannelBundleMap.swift,
+				"Source/Data/SwiftData/SwiftDataSource/Extension/ModelContext+Extension.swift",
+				Source/Data/SwiftData/SwiftDataSource/GuideStoreError.swift,
+				Source/Data/SwiftData/SwiftDataSource/Protocol/ChannelFilterable.swift,
+				Source/Data/SwiftData/SwiftDataSource/Protocol/ChannelManageable.swift,
+				Source/Data/SwiftData/SwiftDataSource/Protocol/SwiftDataProvider.swift,
+				Source/Data/SwiftData/SwiftDataSource/Protocol/SwiftDataStackProvider.swift,
+				Source/Data/SwiftData/SwiftDataSource/SwiftDataBootTasks.swift,
+				Source/Data/SwiftData/SwiftDataSource/SwiftDataController.swift,
+				Source/Data/SwiftData/SwiftDataSource/SwiftDataStack.swift,
 				Source/UserInterface/MediaPlayerView/VLCPlayerView.swift,
-				Source/UserInterface/Tabs/Channels/Guide/SwiftUIGuide/ButtonBorderStyleModifier.swift,
-				Source/UserInterface/Tabs/Channels/Guide/SwiftUIGuide/FocusableButtonStyle.swift,
-				Source/UserInterface/Tabs/Channels/Guide/SwiftUIGuide/GuideRow.swift,
-				Source/UserInterface/Tabs/Channels/Guide/SwiftUIGuide/GuideRowLazy.swift,
-				Source/UserInterface/Tabs/Channels/Guide/SwiftUIGuide/GuideSubTitleView.swift,
-				Source/UserInterface/Tabs/Channels/Guide/SwiftUIGuide/GuideView.swift,
-				Source/UserInterface/Tabs/Channels/Guide/UIKitGuide/View/StreamQualityRepresentableView.swift,
-				Source/UserInterface/Tabs/Channels/Guide/UIKitGuide/View/StreamQualityView.swift,
-				Source/UserInterface/Tabs/Channels/ShowFavorites.swift,
-				Source/UserInterface/Tabs/Filter/CategoryPickerView.swift,
-				Source/UserInterface/Tabs/Filter/CountryPickerView.swift,
-				Source/UserInterface/Tabs/Filter/FilterButtonStyle.swift,
-				Source/UserInterface/Tabs/Filter/FilterView.swift,
-				Source/UserInterface/Tabs/Filter/ListButtonStyle.swift,
-				Source/UserInterface/Tabs/Recents/RecentsView.swift,
-				Source/UserInterface/Tabs/Settings/FocusedToggleStyle.swift,
-				Source/UserInterface/Tabs/Settings/SectionButtonStyle.swift,
-				Source/UserInterface/Tabs/Settings/SectionTextStyle.swift,
-				Source/UserInterface/Tabs/Settings/SettingsContainerView.swift,
-				Source/UserInterface/Tabs/Settings/SettingsView.swift,
-				Source/UserInterface/Tabs/Shared/GuideRowLoader.swift,
-				Source/UserInterface/TabView/Enum/AppSection.swift,
+				Source/UserInterface/Menu/Container/Enum/AppSection.swift,
+				Source/UserInterface/Menu/Container/MenuPickerView.swift,
+				Source/UserInterface/Menu/MenuActivationView.swift,
+				Source/UserInterface/Menu/Screens/Guide/Shared/ChannelRowLoader.swift,
+				Source/UserInterface/Menu/Screens/Guide/Shared/ProgramsRowLoader.swift,
+				Source/UserInterface/Menu/Screens/Guide/Shared/ShowFavorites.swift,
+				Source/UserInterface/Menu/Screens/Guide/SwiftUIGuide/ButtonStyle/FocusableButtonStyle.swift,
+				Source/UserInterface/Menu/Screens/Guide/SwiftUIGuide/Enum/ChannelProgramDateFormatter.swift,
+				Source/UserInterface/Menu/Screens/Guide/SwiftUIGuide/Enum/FocusedButton.swift,
+				Source/UserInterface/Menu/Screens/Guide/SwiftUIGuide/ViewModifier/RedactedIfNeeded.swift,
+				Source/UserInterface/Menu/Screens/Guide/SwiftUIGuide/Views/ChannelName.swift,
+				Source/UserInterface/Menu/Screens/Guide/SwiftUIGuide/Views/ChannelProgramDetailView/AKPageControl.swift,
+				Source/UserInterface/Menu/Screens/Guide/SwiftUIGuide/Views/ChannelProgramDetailView/ChannelProgramsCarousel.swift,
+				Source/UserInterface/Menu/Screens/Guide/SwiftUIGuide/Views/ChannelProgramDetailView/LoadImageAsync.swift,
+				Source/UserInterface/Menu/Screens/Guide/SwiftUIGuide/Views/ChannelProgramDetailView/PageControlView.swift,
+				Source/UserInterface/Menu/Screens/Guide/SwiftUIGuide/Views/ChannelProgramDetailView/ProgramDetailText.swift,
+				Source/UserInterface/Menu/Screens/Guide/SwiftUIGuide/Views/ChannelProgramDetailView/ProgramDetailView.swift,
+				Source/UserInterface/Menu/Screens/Guide/SwiftUIGuide/Views/ChannelProgramListView.swift,
+				Source/UserInterface/Menu/Screens/Guide/SwiftUIGuide/Views/ChannelProgramView.swift,
+				Source/UserInterface/Menu/Screens/Guide/SwiftUIGuide/Views/ChannelView.swift,
+				Source/UserInterface/Menu/Screens/Guide/SwiftUIGuide/Views/ChannelViewLoader.swift,
+				Source/UserInterface/Menu/Screens/Guide/SwiftUIGuide/Views/ChannelViewSubTitle.swift,
+				Source/UserInterface/Menu/Screens/Guide/SwiftUIGuide/Views/FavoriteView.swift,
+				Source/UserInterface/Menu/Screens/Guide/SwiftUIGuide/Views/GuideView.swift,
+				Source/UserInterface/Menu/Screens/Guide/SwiftUIGuide/Views/NoChannelProgramView.swift,
+				Source/UserInterface/Menu/Screens/Guide/SwiftUIGuide/Views/NoChannelsFavorites.swift,
+				Source/UserInterface/Menu/Screens/Guide/SwiftUIGuide/Views/NoChannelsInChannelBundle.swift,
+				Source/UserInterface/Menu/Screens/Guide/UIKitGuide/View/StreamQualityView.swift,
+				Source/UserInterface/Menu/Screens/Recents/RecentsView.swift,
+				Source/UserInterface/Menu/Screens/Settings/CategoryPickerView.swift,
+				Source/UserInterface/Menu/Screens/Settings/ChannelBundleDetailView.swift,
+				Source/UserInterface/Menu/Screens/Settings/ChannelRow.swift,
+				Source/UserInterface/Menu/Screens/Settings/CountryPickerView.swift,
+				Source/UserInterface/Menu/Screens/Settings/DeviceDetailView.swift,
+				Source/UserInterface/Menu/Screens/Settings/EditBundleChannelsView.swift,
+				Source/UserInterface/Menu/Screens/Settings/FocusedToggleStyle.swift,
+				Source/UserInterface/Menu/Screens/Settings/SectionButtonStyle.swift,
+				Source/UserInterface/Menu/Screens/Settings/SectionTextStyle.swift,
+				Source/UserInterface/Menu/Screens/Settings/SettingsContainerView.swift,
+				Source/UserInterface/Menu/Screens/Settings/SettingsView.swift,
+				Source/UserInterface/Menu/Screens/Settings/TVNavigationLink.swift,
+				Source/UserInterface/PlayerOverlay/PlayerOverlay.swift,
+				Source/UserInterface/Root/AppMenuView.swift,
+				Source/UserInterface/Root/MainAppContentView.swift,
+				Source/UserInterface/Root/PlayPauseBadge.swift,
+				Source/UserInterface/Root/RootView.swift,
+				Source/UserInterface/SplashScreen/BootGateView.swift,
+				Source/UserInterface/SplashScreen/BootSplashView.swift,
+				Source/UserInterface/SplashScreen/DustyView.swift,
+				Source/UserInterface/SplashScreen/MainTitleView.swift,
 				SupportingFiles/AppIconAssets.xcassets,
 				SupportingFiles/AppMediaAssets.xcassets,
 				SupportingFiles/ColorAssets.xcassets,
-				SupportingFiles/MockData/MockCategories.json,
-				SupportingFiles/MockData/MockCountries.json,
-				SupportingFiles/MockData/MockDataPersistence.swift,
-				SupportingFiles/MockData/MockFavorites.json,
-				SupportingFiles/MockData/MockIPTVChannels.json,
-				SupportingFiles/MockData/MockSharedAppState.swift,
-				SupportingFiles/MockData/MockSwiftDataController.swift,
-				SupportingFiles/MockData/MockTunerDevices.json,
-				SupportingFiles/MockPreviewView/TVPreviewView.swift,
+				SupportingFiles/Mocking/JSONDataSource/MockCategories.json,
+				SupportingFiles/Mocking/JSONDataSource/MockChannelBundles.json,
+				SupportingFiles/Mocking/JSONDataSource/MockChannelPrograms.json,
+				SupportingFiles/Mocking/JSONDataSource/MockChannels.json,
+				SupportingFiles/Mocking/JSONDataSource/MockCountries.json,
+				SupportingFiles/Mocking/JSONDataSource/MockFavorites.json,
+				SupportingFiles/Mocking/JSONDataSource/MockTunerDevices.json,
+				SupportingFiles/Mocking/MockData/MockSharedAppState.swift,
+				SupportingFiles/Mocking/MockData/MockSwiftDataController.swift,
+				SupportingFiles/Mocking/MockData/MockSwiftDataStack.swift,
+				SupportingFiles/Mocking/MockPreviewView/TVPreviewView.swift,
 			);
 			target = EB2C2DB62E5E203A005CE685 /* macOS_HeckYeahTV */;
 		};
@@ -203,17 +247,20 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				"Source/Common/Extensions/NSView+AsImage.swift",
-				Source/UserInterface/Tabs/Channels/ChannelsContainer.swift,
-				Source/UserInterface/Tabs/Channels/Guide/UIKitGuide/View/ChannelNameView.swift,
-				Source/UserInterface/Tabs/Channels/Guide/UIKitGuide/View/EmptyProgramView.swift,
-				Source/UserInterface/Tabs/Channels/Guide/UIKitGuide/View/FavoriteToggleView.swift,
-				Source/UserInterface/Tabs/Channels/Guide/UIKitGuide/View/GuideRowCell.swift,
-				Source/UserInterface/Tabs/Channels/Guide/UIKitGuide/View/HorizontalClipContainer.swift,
-				Source/UserInterface/Tabs/Channels/Guide/UIKitGuide/View/ProgramView.swift,
-				Source/UserInterface/Tabs/Channels/Guide/UIKitGuide/ViewController/GuideViewController.swift,
-				Source/UserInterface/Tabs/Channels/Guide/UIKitGuide/ViewController/GuideViewDelegate.swift,
-				Source/UserInterface/Tabs/Channels/Guide/UIKitGuide/ViewController/GuideViewRepresentable.swift,
-				Source/UserInterface/TabView/TabContainerView.swift,
+				Source/UserInterface/Menu/Container/MenuTabView.swift,
+				Source/UserInterface/Menu/Screens/Guide/SwiftUIGuide/Views/ChannelProgramDetailView/AKPageControl.swift,
+				Source/UserInterface/Menu/Screens/Guide/UIKitGuide/Protocol/GuideViewDelegate.swift,
+				Source/UserInterface/Menu/Screens/Guide/UIKitGuide/View/ChannelNameView.swift,
+				Source/UserInterface/Menu/Screens/Guide/UIKitGuide/View/EmptyProgramView.swift,
+				Source/UserInterface/Menu/Screens/Guide/UIKitGuide/View/FavoriteToggleView.swift,
+				Source/UserInterface/Menu/Screens/Guide/UIKitGuide/View/GuideRowCell.swift,
+				Source/UserInterface/Menu/Screens/Guide/UIKitGuide/View/HorizontalClipContainer.swift,
+				Source/UserInterface/Menu/Screens/Guide/UIKitGuide/View/ProgramCollectionViewCell.swift,
+				Source/UserInterface/Menu/Screens/Guide/UIKitGuide/View/ProgramView.swift,
+				Source/UserInterface/Menu/Screens/Guide/UIKitGuide/View/StreamQualityRepresentableView.swift,
+				Source/UserInterface/Menu/Screens/Guide/UIKitGuide/ViewController/ChannelsContainer.swift,
+				Source/UserInterface/Menu/Screens/Guide/UIKitGuide/ViewController/GuideViewController.swift,
+				Source/UserInterface/Menu/Screens/Guide/UIKitGuide/ViewController/GuideViewRepresentable.swift,
 				"SupportingFiles/plist/iOS-HeckYeahTV-Info.plist",
 				"SupportingFiles/plist/macOS-HeckYeahTV-Info.plist",
 				"SupportingFiles/plist/tvOS-HeckYeahTV-Info.plist",
@@ -228,11 +275,15 @@
 				Source/Common/DependencyInjection/DependancyInjectionCore/InjectedValues.swift,
 				Source/Common/DependencyInjection/DependancyInjectionCore/InjectionKey.swift,
 				Source/Common/DependencyInjection/InjectedAttachmentController/AttachmentControllerInjectionKey.swift,
+				Source/Common/DependencyInjection/InjectedSharedAppState/SharedAppStateInjectionKey.swift,
 				Source/Common/DependencyInjection/InjectedSwiftDataController/SwiftDataControllerInjectionKey.swift,
+				"Source/Common/Extensions/Color+Extension.swift",
 				"Source/Common/Extensions/FocusTargetView+FocusAnimation.swift",
+				"Source/Common/Extensions/Notification+Extension.swift",
 				"Source/Common/Extensions/PlatformImage+AsImage.swift",
 				"Source/Common/Extensions/String+Extension.swift",
 				"Source/Common/Extensions/UIView+AsImage.swift",
+				"Source/Common/Extensions/UIView+ConfigureChildView.swift",
 				"Source/Common/Extensions/UserDefaults+Extension.swift",
 				Source/Common/Logging/DebugLogger.swift,
 				Source/Common/PlatformRepresentable/CrossPlatformControllerRepresentable.swift,
@@ -240,103 +291,136 @@
 				Source/Common/PlatformRepresentable/PlatformRepresentableAlias.swift,
 				Source/Common/Utilities/AppKeys.swift,
 				Source/Common/Utilities/AppStyle.swift,
+				Source/Common/Utilities/PreviewDetector.swift,
 				Source/Data/Adapters/Channelable.swift,
 				Source/Data/Adapters/FetchSummary.swift,
 				"Source/Data/Adapters/HDHomeRunChannel+Channelable.swift",
 				"Source/Data/Adapters/IPStream+Channelable.swift",
 				"Source/Data/Adapters/StreamQuality+Extension.swift",
 				Source/Data/DataControllers/AttachmentController.swift,
-				Source/Data/Models/AppStateProvider.swift,
-				Source/Data/Models/ChannelMap.swift,
-				Source/Data/Models/Country.swift,
-				Source/Data/Models/HDHomeRunChannel.swift,
-				Source/Data/Models/HDHomeRunDevice.swift,
-				Source/Data/Models/HDHomeRunDiscovery.swift,
-				Source/Data/Models/IPBlocklist.swift,
-				Source/Data/Models/IPCategory.swift,
-				Source/Data/Models/IPChannel.swift,
-				Source/Data/Models/IPFeed.swift,
-				Source/Data/Models/IPGuide.swift,
-				Source/Data/Models/IPLogo.swift,
-				Source/Data/Models/IPStream.swift,
-				Source/Data/Models/Language.swift,
-				Source/Data/Models/Program.swift,
-				Source/Data/Models/Region.swift,
-				Source/Data/Models/SharedAppState.swift,
-				Source/Data/Models/Subdivision.swift,
-				Source/Data/Models/Timezone.swift,
-				Source/Data/Services/HDHomeRun/HDHomeRunDiscoveryController.swift,
-				Source/Data/Services/IPTV/IPTVController.swift,
-				Source/Data/Services/IPTV/IPTVDataSources.swift,
-				Source/Data/SwiftData/AppDataSource/ChannelFilterable.swift,
-				Source/Data/SwiftData/AppDataSource/SwiftDataControllable.swift,
-				Source/Data/SwiftData/AppDataSource/SwiftDataController.swift,
+				Source/Data/DataTransferModels/HDHomeRunChannel.swift,
+				Source/Data/DataTransferModels/HDHomeRunChannelGuide.swift,
+				Source/Data/DataTransferModels/HDHomeRunDevice.swift,
+				Source/Data/DataTransferModels/HDHomeRunDiscovery.swift,
+				Source/Data/DataTransferModels/HDHomeRunProgram.swift,
+				Source/Data/DataTransferModels/IPBlocklist.swift,
+				Source/Data/DataTransferModels/IPCategory.swift,
+				Source/Data/DataTransferModels/IPChannel.swift,
+				Source/Data/DataTransferModels/IPCountry.swift,
+				Source/Data/DataTransferModels/IPFeed.swift,
+				Source/Data/DataTransferModels/IPGuide.swift,
+				Source/Data/DataTransferModels/IPLogo.swift,
+				Source/Data/DataTransferModels/IPRegion.swift,
+				Source/Data/DataTransferModels/IPStream.swift,
+				Source/Data/DataTransferModels/IPSubdivision.swift,
+				Source/Data/ImportServices/HDHomeRun/HomeRunController.swift,
+				Source/Data/ImportServices/HDHomeRun/HomeRunDataSources.swift,
+				Source/Data/ImportServices/HDHomeRun/HomeRunImporter.swift,
+				Source/Data/ImportServices/IPTV/IPTVController.swift,
+				Source/Data/ImportServices/IPTV/IPTVDataSources.swift,
+				Source/Data/ImportServices/IPTV/IPTVImporter.swift,
+				Source/Data/LocalNetworkAuthorization/LocalNetworkAuthorization.swift,
+				Source/Data/SharedAppState/AppStateProvider.swift,
+				Source/Data/SharedAppState/SharedAppState.swift,
 				Source/Data/SwiftData/Migration/UpgradeSchemaMigrationPlan.swift,
 				Source/Data/SwiftData/Schema/SchemaCurrent.swift,
 				Source/Data/SwiftData/Schema/SchemaV1.swift,
-				Source/Data/SwiftData/SwiftDataModels/ChannelSourceType.swift,
-				Source/Data/SwiftData/SwiftDataModels/HDHomeRunServer.swift,
-				Source/Data/SwiftData/SwiftDataModels/IPTVCategory.swift,
-				Source/Data/SwiftData/SwiftDataModels/IPTVChannel.swift,
-				Source/Data/SwiftData/SwiftDataModels/IPTVCountry.swift,
-				Source/Data/SwiftData/SwiftDataModels/IPTVFavorite.swift,
+				Source/Data/SwiftData/SwiftDataModels/BundleEntry.swift,
+				Source/Data/SwiftData/SwiftDataModels/Channel.swift,
+				Source/Data/SwiftData/SwiftDataModels/ChannelBundle.swift,
+				Source/Data/SwiftData/SwiftDataModels/ChannelProgram.swift,
+				Source/Data/SwiftData/SwiftDataModels/Country.swift,
+				Source/Data/SwiftData/SwiftDataModels/HomeRunDevice.swift,
+				Source/Data/SwiftData/SwiftDataModels/ProgramCategory.swift,
 				Source/Data/SwiftData/SwiftDataModels/SchemaVersion.swift,
 				Source/Data/SwiftData/SwiftDataModels/StreamQuality.swift,
-				Source/Data/SwiftData/SwiftDataStack.swift,
-				Source/Data/SwiftData/Utilities/DataChangeTracking.swift,
-				Source/Data/SwiftData/Utilities/Importer.swift,
-				Source/UserInterface/Main/BootGateView.swift,
-				Source/UserInterface/Main/BootSplashView.swift,
-				Source/UserInterface/Main/DustyView.swift,
-				Source/UserInterface/Main/MainAppContentView.swift,
-				Source/UserInterface/Main/NavigationActivationView.swift,
-				Source/UserInterface/Main/PlayPauseBadge.swift,
-				Source/UserInterface/Main/RootView.swift,
+				Source/Data/SwiftData/SwiftDataSource/ChannelBundleMap.swift,
+				"Source/Data/SwiftData/SwiftDataSource/Extension/ModelContext+Extension.swift",
+				Source/Data/SwiftData/SwiftDataSource/GuideStoreError.swift,
+				Source/Data/SwiftData/SwiftDataSource/Protocol/ChannelFilterable.swift,
+				Source/Data/SwiftData/SwiftDataSource/Protocol/ChannelManageable.swift,
+				Source/Data/SwiftData/SwiftDataSource/Protocol/SwiftDataProvider.swift,
+				Source/Data/SwiftData/SwiftDataSource/Protocol/SwiftDataStackProvider.swift,
+				Source/Data/SwiftData/SwiftDataSource/SwiftDataBootTasks.swift,
+				Source/Data/SwiftData/SwiftDataSource/SwiftDataController.swift,
+				Source/Data/SwiftData/SwiftDataSource/SwiftDataStack.swift,
 				Source/UserInterface/MediaPlayerView/VLCPlayerView.swift,
-				Source/UserInterface/Tabs/Channels/ChannelsContainer.swift,
-				Source/UserInterface/Tabs/Channels/Guide/SwiftUIGuide/ButtonBorderStyleModifier.swift,
-				Source/UserInterface/Tabs/Channels/Guide/SwiftUIGuide/FocusableButtonStyle.swift,
-				Source/UserInterface/Tabs/Channels/Guide/SwiftUIGuide/GuideRow.swift,
-				Source/UserInterface/Tabs/Channels/Guide/SwiftUIGuide/GuideRowLazy.swift,
-				Source/UserInterface/Tabs/Channels/Guide/SwiftUIGuide/GuideSubTitleView.swift,
-				Source/UserInterface/Tabs/Channels/Guide/UIKitGuide/View/ChannelNameView.swift,
-				Source/UserInterface/Tabs/Channels/Guide/UIKitGuide/View/EmptyProgramView.swift,
-				Source/UserInterface/Tabs/Channels/Guide/UIKitGuide/View/FavoriteToggleView.swift,
-				Source/UserInterface/Tabs/Channels/Guide/UIKitGuide/View/GuideRowCell.swift,
-				Source/UserInterface/Tabs/Channels/Guide/UIKitGuide/View/HorizontalClipContainer.swift,
-				Source/UserInterface/Tabs/Channels/Guide/UIKitGuide/View/ProgramView.swift,
-				Source/UserInterface/Tabs/Channels/Guide/UIKitGuide/View/StreamQualityRepresentableView.swift,
-				Source/UserInterface/Tabs/Channels/Guide/UIKitGuide/View/StreamQualityView.swift,
-				Source/UserInterface/Tabs/Channels/Guide/UIKitGuide/ViewController/GuideViewController.swift,
-				Source/UserInterface/Tabs/Channels/Guide/UIKitGuide/ViewController/GuideViewDelegate.swift,
-				Source/UserInterface/Tabs/Channels/Guide/UIKitGuide/ViewController/GuideViewRepresentable.swift,
-				Source/UserInterface/Tabs/Channels/ShowFavorites.swift,
-				Source/UserInterface/Tabs/Filter/CategoryPickerView.swift,
-				Source/UserInterface/Tabs/Filter/CountryPickerView.swift,
-				Source/UserInterface/Tabs/Filter/FilterButtonStyle.swift,
-				Source/UserInterface/Tabs/Filter/FilterView.swift,
-				Source/UserInterface/Tabs/Filter/ListButtonStyle.swift,
-				Source/UserInterface/Tabs/Recents/RecentsView.swift,
-				Source/UserInterface/Tabs/Settings/FocusedToggleStyle.swift,
-				Source/UserInterface/Tabs/Settings/SectionButtonStyle.swift,
-				Source/UserInterface/Tabs/Settings/SectionTextStyle.swift,
-				Source/UserInterface/Tabs/Settings/SettingsContainerView.swift,
-				Source/UserInterface/Tabs/Settings/SettingsView.swift,
-				Source/UserInterface/Tabs/Shared/GuideRowLoader.swift,
-				Source/UserInterface/TabView/Enum/AppSection.swift,
-				Source/UserInterface/TabView/TabContainerView.swift,
+				Source/UserInterface/Menu/Container/Enum/AppSection.swift,
+				Source/UserInterface/Menu/Container/MenuTabView.swift,
+				Source/UserInterface/Menu/MenuActivationView.swift,
+				Source/UserInterface/Menu/Screens/Guide/Shared/ChannelRowLoader.swift,
+				Source/UserInterface/Menu/Screens/Guide/Shared/ProgramsRowLoader.swift,
+				Source/UserInterface/Menu/Screens/Guide/Shared/ShowFavorites.swift,
+				Source/UserInterface/Menu/Screens/Guide/SwiftUIGuide/ButtonStyle/FocusableButtonStyle.swift,
+				Source/UserInterface/Menu/Screens/Guide/SwiftUIGuide/Enum/ChannelProgramDateFormatter.swift,
+				Source/UserInterface/Menu/Screens/Guide/SwiftUIGuide/Enum/FocusedButton.swift,
+				Source/UserInterface/Menu/Screens/Guide/SwiftUIGuide/ViewModifier/RedactedIfNeeded.swift,
+				Source/UserInterface/Menu/Screens/Guide/SwiftUIGuide/Views/ChannelName.swift,
+				Source/UserInterface/Menu/Screens/Guide/SwiftUIGuide/Views/ChannelProgramDetailView/ChannelProgramsCarousel.swift,
+				Source/UserInterface/Menu/Screens/Guide/SwiftUIGuide/Views/ChannelProgramDetailView/LoadImageAsync.swift,
+				Source/UserInterface/Menu/Screens/Guide/SwiftUIGuide/Views/ChannelProgramDetailView/PageControlView.swift,
+				Source/UserInterface/Menu/Screens/Guide/SwiftUIGuide/Views/ChannelProgramDetailView/ProgramDetailText.swift,
+				Source/UserInterface/Menu/Screens/Guide/SwiftUIGuide/Views/ChannelProgramDetailView/ProgramDetailView.swift,
+				Source/UserInterface/Menu/Screens/Guide/SwiftUIGuide/Views/ChannelProgramListView.swift,
+				Source/UserInterface/Menu/Screens/Guide/SwiftUIGuide/Views/ChannelProgramView.swift,
+				Source/UserInterface/Menu/Screens/Guide/SwiftUIGuide/Views/ChannelView.swift,
+				Source/UserInterface/Menu/Screens/Guide/SwiftUIGuide/Views/ChannelViewLoader.swift,
+				Source/UserInterface/Menu/Screens/Guide/SwiftUIGuide/Views/ChannelViewSubTitle.swift,
+				Source/UserInterface/Menu/Screens/Guide/SwiftUIGuide/Views/FavoriteView.swift,
+				Source/UserInterface/Menu/Screens/Guide/SwiftUIGuide/Views/GuideView.swift,
+				Source/UserInterface/Menu/Screens/Guide/SwiftUIGuide/Views/NoChannelProgramView.swift,
+				Source/UserInterface/Menu/Screens/Guide/SwiftUIGuide/Views/NoChannelsFavorites.swift,
+				Source/UserInterface/Menu/Screens/Guide/SwiftUIGuide/Views/NoChannelsInChannelBundle.swift,
+				Source/UserInterface/Menu/Screens/Guide/UIKitGuide/Protocol/GuideViewDelegate.swift,
+				Source/UserInterface/Menu/Screens/Guide/UIKitGuide/View/ChannelNameView.swift,
+				Source/UserInterface/Menu/Screens/Guide/UIKitGuide/View/EmptyProgramView.swift,
+				Source/UserInterface/Menu/Screens/Guide/UIKitGuide/View/FavoriteToggleView.swift,
+				Source/UserInterface/Menu/Screens/Guide/UIKitGuide/View/GuideRowCell.swift,
+				Source/UserInterface/Menu/Screens/Guide/UIKitGuide/View/HorizontalClipContainer.swift,
+				Source/UserInterface/Menu/Screens/Guide/UIKitGuide/View/ProgramCollectionViewCell.swift,
+				Source/UserInterface/Menu/Screens/Guide/UIKitGuide/View/ProgramView.swift,
+				Source/UserInterface/Menu/Screens/Guide/UIKitGuide/View/StreamQualityRepresentableView.swift,
+				Source/UserInterface/Menu/Screens/Guide/UIKitGuide/View/StreamQualityView.swift,
+				Source/UserInterface/Menu/Screens/Guide/UIKitGuide/ViewController/ChannelsContainer.swift,
+				Source/UserInterface/Menu/Screens/Guide/UIKitGuide/ViewController/GuideViewController.swift,
+				Source/UserInterface/Menu/Screens/Guide/UIKitGuide/ViewController/GuideViewRepresentable.swift,
+				Source/UserInterface/Menu/Screens/Recents/RecentsView.swift,
+				Source/UserInterface/Menu/Screens/Settings/CategoryPickerView.swift,
+				Source/UserInterface/Menu/Screens/Settings/ChannelBundleDetailView.swift,
+				Source/UserInterface/Menu/Screens/Settings/ChannelRow.swift,
+				Source/UserInterface/Menu/Screens/Settings/CountryPickerView.swift,
+				Source/UserInterface/Menu/Screens/Settings/DeviceDetailView.swift,
+				Source/UserInterface/Menu/Screens/Settings/EditBundleChannelsView.swift,
+				Source/UserInterface/Menu/Screens/Settings/FocusedToggleStyle.swift,
+				Source/UserInterface/Menu/Screens/Settings/SectionButtonStyle.swift,
+				Source/UserInterface/Menu/Screens/Settings/SectionTextStyle.swift,
+				Source/UserInterface/Menu/Screens/Settings/SettingsContainerView.swift,
+				Source/UserInterface/Menu/Screens/Settings/SettingsView.swift,
+				Source/UserInterface/Menu/Screens/Settings/TransparentBackground.swift,
+				Source/UserInterface/Menu/Screens/Settings/TVNavigationLink.swift,
+				Source/UserInterface/PlayerOverlay/PlayerOverlay.swift,
+				Source/UserInterface/Root/AppMenuView.swift,
+				Source/UserInterface/Root/MainAppContentView.swift,
+				Source/UserInterface/Root/PlayPauseBadge.swift,
+				Source/UserInterface/Root/RootView.swift,
+				Source/UserInterface/SplashScreen/BootGateView.swift,
+				Source/UserInterface/SplashScreen/BootSplashView.swift,
+				Source/UserInterface/SplashScreen/DustyView.swift,
+				Source/UserInterface/SplashScreen/MainTitleView.swift,
 				SupportingFiles/AppIconAssets.xcassets,
 				SupportingFiles/AppMediaAssets.xcassets,
 				SupportingFiles/ColorAssets.xcassets,
-				SupportingFiles/MockData/MockCategories.json,
-				SupportingFiles/MockData/MockCountries.json,
-				SupportingFiles/MockData/MockDataPersistence.swift,
-				SupportingFiles/MockData/MockFavorites.json,
-				SupportingFiles/MockData/MockIPTVChannels.json,
-				SupportingFiles/MockData/MockSharedAppState.swift,
-				SupportingFiles/MockData/MockSwiftDataController.swift,
-				SupportingFiles/MockData/MockTunerDevices.json,
-				SupportingFiles/MockPreviewView/TVPreviewView.swift,
+				SupportingFiles/Mocking/JSONDataSource/MockCategories.json,
+				SupportingFiles/Mocking/JSONDataSource/MockChannelBundles.json,
+				SupportingFiles/Mocking/JSONDataSource/MockChannelPrograms.json,
+				SupportingFiles/Mocking/JSONDataSource/MockChannels.json,
+				SupportingFiles/Mocking/JSONDataSource/MockCountries.json,
+				SupportingFiles/Mocking/JSONDataSource/MockFavorites.json,
+				SupportingFiles/Mocking/JSONDataSource/MockTunerDevices.json,
+				SupportingFiles/Mocking/MockData/MockSharedAppState.swift,
+				SupportingFiles/Mocking/MockData/MockSwiftDataController.swift,
+				SupportingFiles/Mocking/MockData/MockSwiftDataStack.swift,
+				SupportingFiles/Mocking/MockPreviewView/TVPreviewView.swift,
 			);
 			target = EBE03C162E53D8DE006B7747 /* tvOS_HeckYeahTV */;
 		};
@@ -370,8 +454,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				EB33342E2EC8273700CFAC43 /* Pods_macOS_HeckYeahTV.framework in Frameworks */,
 				EBB5B5212EDD46DC004251CB /* Hellfire in Frameworks */,
+				EB3785982F2141770086BB1F /* Pods_macOS_HeckYeahTV.framework in Frameworks */,
+				EBFFBD182F21A7AB0022F6A5 /* FirebaseCrashlytics in Frameworks */,
+				EBFFBD162F21A7AB0022F6A5 /* FirebaseAnalytics in Frameworks */,
+				EB37859B2F21417F0086BB1F /* Pods_macOS_HeckYeahTV.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -404,6 +491,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EB35E3122F00781200D31894 /* MobileVLCKit.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -420,6 +508,9 @@
 			files = (
 				E2A5EE63B6F0360CFDEA112A /* Pods_tvOS_HeckYeahTV.framework in Frameworks */,
 				EBB5B51F2EDD46C4004251CB /* Hellfire in Frameworks */,
+				EBFFBD142F21A79E0022F6A5 /* FirebaseCrashlytics in Frameworks */,
+				EBFFBD122F21A79E0022F6A5 /* FirebaseAnalytics in Frameworks */,
+				EB37859F2F2142480086BB1F /* Pods_tvOS_HeckYeahTV.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -472,6 +563,10 @@
 		EBE03C812E53E5DC006B7747 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				EB37859E2F2142480086BB1F /* Pods_tvOS_HeckYeahTV.framework */,
+				EB3785972F2141770086BB1F /* Pods_macOS_HeckYeahTV.framework */,
+				EB35E3112F00781200D31894 /* MobileVLCKit.xcframework */,
+				EB35E30D2F0077B500D31894 /* Pods_iOS_HeckYeahTV.framework */,
 				EB33342D2EC8273700CFAC43 /* Pods_macOS_HeckYeahTV.framework */,
 				EB3334292EC826E500CFAC43 /* VLCKit.xcframework */,
 				76A34A69F5505812676277A2 /* Pods_iOS_HeckYeahTV.framework */,
@@ -516,6 +611,8 @@
 			name = macOS_HeckYeahTV;
 			packageProductDependencies = (
 				EBB5B5202EDD46DC004251CB /* Hellfire */,
+				EBFFBD152F21A7AB0022F6A5 /* FirebaseAnalytics */,
+				EBFFBD172F21A7AB0022F6A5 /* FirebaseCrashlytics */,
 			);
 			productName = macOSHeckYeahTV;
 			productReference = EB2C2DB72E5E203A005CE685 /* HeckYeahTV.app */;
@@ -643,6 +740,8 @@
 			name = tvOS_HeckYeahTV;
 			packageProductDependencies = (
 				EBB5B51E2EDD46C4004251CB /* Hellfire */,
+				EBFFBD112F21A79E0022F6A5 /* FirebaseAnalytics */,
+				EBFFBD132F21A79E0022F6A5 /* FirebaseCrashlytics */,
 			);
 			productName = "Heck Yeah TV";
 			productReference = EBE03C172E53D8DE006B7747 /* HeckYeahTV.app */;
@@ -692,7 +791,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 2610;
-				LastUpgradeCheck = 2610;
+				LastUpgradeCheck = 2620;
 				ORGANIZATIONNAME = "Hellyer Multimedia";
 				TargetAttributes = {
 					EB2C2DB62E5E203A005CE685 = {
@@ -711,7 +810,6 @@
 					};
 					EBE03BC32E53D423006B7747 = {
 						CreatedOnToolsVersion = 16.4;
-						TestTargetID = EBE03BB62E53D421006B7747;
 					};
 					EBE03BCD2E53D423006B7747 = {
 						CreatedOnToolsVersion = 16.4;
@@ -955,7 +1053,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-macOS_HeckYeahTV/Pods-macOS_HeckYeahTV-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -1086,7 +1183,8 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
-					"@executable_path/Frameworks",
+					"$(PROJECT_DIR)/Frameworks",
+					"@loader_path/../",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 15.6;
 				MARKETING_VERSION = 1.0;
@@ -1126,7 +1224,11 @@
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.entertainment";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2025 Hellyer Multimedia. All rights reserved.";
 				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited)";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Frameworks",
+					"@loader_path/../",
+				);
 				MACOSX_DEPLOYMENT_TARGET = 15.6;
 				MARKETING_VERSION = 1.0;
 				OTHER_LDFLAGS = "$(inherited)";
@@ -1382,13 +1484,9 @@
 				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2025 Hellyer Multimedia. All rights reserved.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited)";
 				MACOSX_DEPLOYMENT_TARGET = 15.6;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.hellyermultimedia.heckyeahtv.go;
@@ -1426,13 +1524,9 @@
 				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2025 Hellyer Multimedia. All rights reserved.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited)";
 				MACOSX_DEPLOYMENT_TARGET = 15.6;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.hellyermultimedia.heckyeahtv.go;
@@ -1452,7 +1546,6 @@
 		EBE03BDC2E53D423006B7747 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 84CS8BE5EQ;
@@ -1465,7 +1558,6 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Heck_Yeah_TV.app/Heck_Yeah_TV";
 				TVOS_DEPLOYMENT_TARGET = 18.6;
 			};
 			name = Debug;
@@ -1473,7 +1565,6 @@
 		EBE03BDD2E53D423006B7747 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 84CS8BE5EQ;
@@ -1486,7 +1577,6 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Heck_Yeah_TV.app/Heck_Yeah_TV";
 				TVOS_DEPLOYMENT_TARGET = 18.6;
 			};
 			name = Release;
@@ -1550,14 +1640,10 @@
 				INFOPLIST_KEY_CFBundleDisplayName = "Heck Yeah TV";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.entertainment";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2025 Hellyer Multimedia. All rights reserved.";
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UIRequiredDeviceCapabilities = arm64;
 				INFOPLIST_KEY_UIUserInterfaceStyle = Automatic;
 				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited)";
 				MACOSX_DEPLOYMENT_TARGET = 15.6;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.hellyermultimedia.heckyeahtv.go;
@@ -1590,14 +1676,10 @@
 				INFOPLIST_KEY_CFBundleDisplayName = "Heck Yeah TV";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.entertainment";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2025 Hellyer Multimedia. All rights reserved.";
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UIRequiredDeviceCapabilities = arm64;
 				INFOPLIST_KEY_UIUserInterfaceStyle = Automatic;
 				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited)";
 				MACOSX_DEPLOYMENT_TARGET = 15.6;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.hellyermultimedia.heckyeahtv.go;
@@ -1832,6 +1914,26 @@
 			productName = FirebaseAnalytics;
 		};
 		EBDD3AF82ECE9C160050D08D /* FirebaseCrashlytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = EBDD3AF52ECE9C160050D08D /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseCrashlytics;
+		};
+		EBFFBD112F21A79E0022F6A5 /* FirebaseAnalytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = EBDD3AF52ECE9C160050D08D /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalytics;
+		};
+		EBFFBD132F21A79E0022F6A5 /* FirebaseCrashlytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = EBDD3AF52ECE9C160050D08D /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseCrashlytics;
+		};
+		EBFFBD152F21A7AB0022F6A5 /* FirebaseAnalytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = EBDD3AF52ECE9C160050D08D /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalytics;
+		};
+		EBFFBD172F21A7AB0022F6A5 /* FirebaseCrashlytics */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = EBDD3AF52ECE9C160050D08D /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseCrashlytics;
