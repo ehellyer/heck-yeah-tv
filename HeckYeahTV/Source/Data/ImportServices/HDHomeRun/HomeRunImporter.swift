@@ -215,7 +215,7 @@ actor HomeRunImporter {
         }
     }
     
-    //MARK: - Public API
+    //MARK: - Internal API
     
     func load() async throws -> FetchSummary {
 

@@ -18,7 +18,7 @@ extension UIView {
         UIView.configureChildView(view, inParentView: self, withInset: UIEdgeInsets.zero)
     }
     
-    //MARK: - Public API
+    //MARK: - Internal API
     
     func configureWithNib(_ name: String) {
         let bundle = Bundle(for: type(of: self))
@@ -45,7 +45,7 @@ extension UIView {
                                   verticalVisualFormat: verticalVisualFormat)
     }
     
-    //MARK: - Public Class API
+    //MARK: - Internal Class API
 
     class func configureHCenteredChildView(_ childView: UIView,
                                   inParentView parentView: UIView,

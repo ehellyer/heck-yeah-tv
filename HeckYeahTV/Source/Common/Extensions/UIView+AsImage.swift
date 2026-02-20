@@ -14,6 +14,7 @@ import UIKit
 /// into a flat image. It's like taking a photo of your LEGO creation
 /// before your cat knocks it over.
 extension UIView {
+    
     /// Captures a snapshot of this view and its subviews as a `UIImage`, because screenshots are for quitters.
     ///
     /// This method uses the modern `UIGraphicsImageRenderer` API (available since iOS 10, which was ages ago)

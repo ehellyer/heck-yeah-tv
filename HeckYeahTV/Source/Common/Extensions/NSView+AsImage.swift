@@ -14,6 +14,7 @@ import AppKit
 /// into a flat image. It's like taking a photo of your LEGO creation
 /// before your cat knocks it over.
 extension NSView {
+    
     /// Captures a snapshot of this view and its subviews as an `NSImage`, because screenshots are for quitters.
     ///
     /// This method uses `NSBitmapImageRep` (the macOS equivalent of iOS's renderer) to capture
@@ -72,63 +73,5 @@ extension NSView {
         }
         
         return image
-        
-//        let imageScale: CGFloat = scale > 0 ? scale : (window?.backingScaleFactor ?? 2.0)
-//
-//        // Calculate pixel dimensions based on scale
-//        let pixelSize = NSSize(
-//            width: bounds.width * imageScale,
-//            height: bounds.height * imageScale
-//        )
-//        
-//        // Create a bitmap representation with appropriate settings
-//        guard let bitmapRep = NSBitmapImageRep(
-//            bitmapDataPlanes: nil,
-//            pixelsWide: Int(pixelSize.width),
-//            pixelsHigh: Int(pixelSize.height),
-//            bitsPerSample: 8,
-//            samplesPerPixel: opaque ? 3 : 4, // RGB or RGBA
-//            hasAlpha: !opaque,
-//            isPlanar: false,
-//            colorSpaceName: .deviceRGB,
-//            bytesPerRow: 0,
-//            bitsPerPixel: 0
-//        ) else {
-//            // Fallback to a blank image if bitmap creation fails (shouldn't happen)
-//            return NSImage(size: bounds.size)
-//        }
-//        
-//        // Push graphics context
-//        NSGraphicsContext.saveGraphicsState()
-//        
-//        let context = NSGraphicsContext(bitmapImageRep: bitmapRep)
-//        NSGraphicsContext.current = context
-//        
-//        // Configure high-quality rendering settings
-//        context?.imageInterpolation = .high
-//        context?.shouldAntialias = true
-//        
-//        // Scale the context to match our desired resolution
-//        if let cgContext = context?.cgContext {
-//            cgContext.scaleBy(x: imageScale, y: imageScale)
-//            cgContext.setAllowsAntialiasing(true)
-//            cgContext.setShouldAntialias(true)
-//
-//            // Flip the coordinate system since NSView's draw uses flipped coordinates
-//            cgContext.translateBy(x: 0, y: bounds.height)
-//            cgContext.scaleBy(x: 1, y: -1)
-//            
-//            // Draw the entire view hierarchy
-//            self.displayIgnoringOpacity(bounds, in: context!)
-//        }
-//        
-//        // Pop graphics context
-//        NSGraphicsContext.restoreGraphicsState()
-//        
-//        // Create the final NSImage with the bitmap representation
-//        let image = NSImage(size: bounds.size)
-//        image.addRepresentation(bitmapRep)
-//        
-//        return image
     }
 }
