@@ -125,16 +125,21 @@ extension UserDefaults {
         }
     }
     
-    /// A boolean indicating whether the app should automatically scan for HDHomeRun tuners at launch.
+    /// Whether the app should actively hunt for HDHomeRun tuners on your network — if we've even
+    /// had the nerve to ask yet.
     ///
-    /// When enabled, the app will perform network discovery to find available HDHomeRun devices
-    /// on the local network during app startup. This setting allows users to control whether
-    /// automatic tuner discovery is performed. The value is persisted in `UserDefaults.standard`.
-    ///
-    /// - Returns: `true` if automatic tuner scanning is enabled, `false` otherwise.
-    static var scanForTuners: Bool {
+    /// - `nil` means the question was never posed. The user is blissfully unaware that tuner
+    ///   scanning is even a thing. Show them the prompt before assuming anything.
+    /// - `true` unleashes a digital bloodhound to sniff out every tuner device hiding on your LAN.
+    /// - `false` means the user said no thanks, and your app minds its own business like a polite
+    ///   houseguest who doesn't poke around in your network closet.
+    static var scanForTuners: Bool? {
         get {
-            standard.bool(forKey: AppKeys.SharedAppState.scanForTunersKey)
+            let valueExists = standard.object(forKey: AppKeys.SharedAppState.scanForTunersKey)
+            if valueExists != nil {
+                return standard.bool(forKey: AppKeys.SharedAppState.scanForTunersKey)
+            }
+            return nil
         }
         set {
             standard.set(newValue, forKey: AppKeys.SharedAppState.scanForTunersKey)
@@ -241,7 +246,7 @@ extension UserDefaults {
         }
     }
     
-    /// Returns the last lan authorization status.
+    /// Returns the last retrieved LAN authorization status.
     static var lastLANAuthorizationStatus: LocalNetworkAuthorizationStatus {
         get {
             let rawValue = standard.integer(forKey: AppKeys.SharedAppState.lanAuthorizationStatusKey)
@@ -252,4 +257,6 @@ extension UserDefaults {
             standard.set(rawValue, forKey: AppKeys.SharedAppState.lanAuthorizationStatusKey)
         }
     }
+    
+    
 }

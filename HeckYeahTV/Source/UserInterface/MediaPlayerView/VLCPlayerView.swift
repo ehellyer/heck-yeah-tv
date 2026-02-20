@@ -82,7 +82,7 @@ struct VLCPlayerView: CrossPlatformRepresentable {
         }()
         
         private func resolveChannelURL(id: ChannelId) -> URL? {
-            let channel = try? swiftDataController.channel(for: id)
+            let channel = swiftDataController.channel(for: id)
             return channel?.url
         }
         

@@ -160,7 +160,6 @@
 				Source/Data/SwiftData/SwiftDataModels/Channel.swift,
 				Source/Data/SwiftData/SwiftDataModels/ChannelBundle.swift,
 				Source/Data/SwiftData/SwiftDataModels/ChannelProgram.swift,
-				Source/Data/SwiftData/SwiftDataModels/ChannelSourceType.swift,
 				Source/Data/SwiftData/SwiftDataModels/Country.swift,
 				Source/Data/SwiftData/SwiftDataModels/HomeRunDevice.swift,
 				Source/Data/SwiftData/SwiftDataModels/ProgramCategory.swift,
@@ -170,7 +169,7 @@
 				"Source/Data/SwiftData/SwiftDataSource/Extension/ModelContext+Extension.swift",
 				Source/Data/SwiftData/SwiftDataSource/GuideStoreError.swift,
 				Source/Data/SwiftData/SwiftDataSource/Protocol/ChannelFilterable.swift,
-				Source/Data/SwiftData/SwiftDataSource/Protocol/ChannelSourceable.swift,
+				Source/Data/SwiftData/SwiftDataSource/Protocol/ChannelManageable.swift,
 				Source/Data/SwiftData/SwiftDataSource/Protocol/SwiftDataProvider.swift,
 				Source/Data/SwiftData/SwiftDataSource/Protocol/SwiftDataStackProvider.swift,
 				Source/Data/SwiftData/SwiftDataSource/SwiftDataBootTasks.swift,
@@ -330,7 +329,6 @@
 				Source/Data/SwiftData/SwiftDataModels/Channel.swift,
 				Source/Data/SwiftData/SwiftDataModels/ChannelBundle.swift,
 				Source/Data/SwiftData/SwiftDataModels/ChannelProgram.swift,
-				Source/Data/SwiftData/SwiftDataModels/ChannelSourceType.swift,
 				Source/Data/SwiftData/SwiftDataModels/Country.swift,
 				Source/Data/SwiftData/SwiftDataModels/HomeRunDevice.swift,
 				Source/Data/SwiftData/SwiftDataModels/ProgramCategory.swift,
@@ -340,7 +338,7 @@
 				"Source/Data/SwiftData/SwiftDataSource/Extension/ModelContext+Extension.swift",
 				Source/Data/SwiftData/SwiftDataSource/GuideStoreError.swift,
 				Source/Data/SwiftData/SwiftDataSource/Protocol/ChannelFilterable.swift,
-				Source/Data/SwiftData/SwiftDataSource/Protocol/ChannelSourceable.swift,
+				Source/Data/SwiftData/SwiftDataSource/Protocol/ChannelManageable.swift,
 				Source/Data/SwiftData/SwiftDataSource/Protocol/SwiftDataProvider.swift,
 				Source/Data/SwiftData/SwiftDataSource/Protocol/SwiftDataStackProvider.swift,
 				Source/Data/SwiftData/SwiftDataSource/SwiftDataBootTasks.swift,
@@ -1182,7 +1180,6 @@
 				INFOPLIST_KEY_CFBundleDisplayName = "Heck Yeah TV";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.entertainment";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2025 Hellyer Multimedia. All rights reserved.";
-				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "$(PRODUCT_NAME) would like to access your local network to discover HDHomeRun network TV tuners.";
 				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1226,7 +1223,6 @@
 				INFOPLIST_KEY_CFBundleDisplayName = "Heck Yeah TV";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.entertainment";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2025 Hellyer Multimedia. All rights reserved.";
-				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "$(PRODUCT_NAME) would like to access your local network to discover HDHomeRun network TV tuners.";
 				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1486,10 +1482,8 @@
 				INFOPLIST_KEY_CFBundleDisplayName = "Heck Yeah TV";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.entertainment";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2025 Hellyer Multimedia. All rights reserved.";
-				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "$(PRODUCT_NAME) would like to access your local network to discover HDHomeRun network TV tuners.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited)";
@@ -1528,10 +1522,8 @@
 				INFOPLIST_KEY_CFBundleDisplayName = "Heck Yeah TV";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.entertainment";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2025 Hellyer Multimedia. All rights reserved.";
-				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "$(PRODUCT_NAME) would like to access your local network to discover HDHomeRun network TV tuners.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited)";
@@ -1648,8 +1640,6 @@
 				INFOPLIST_KEY_CFBundleDisplayName = "Heck Yeah TV";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.entertainment";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2025 Hellyer Multimedia. All rights reserved.";
-				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "$(PRODUCT_NAME) would like to access your local network to discover HDHomeRun network TV tuners.";
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UIRequiredDeviceCapabilities = arm64;
 				INFOPLIST_KEY_UIUserInterfaceStyle = Automatic;
 				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
@@ -1686,8 +1676,6 @@
 				INFOPLIST_KEY_CFBundleDisplayName = "Heck Yeah TV";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.entertainment";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2025 Hellyer Multimedia. All rights reserved.";
-				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "$(PRODUCT_NAME) would like to access your local network to discover HDHomeRun network TV tuners.";
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UIRequiredDeviceCapabilities = arm64;
 				INFOPLIST_KEY_UIUserInterfaceStyle = Automatic;
 				IPHONEOS_DEPLOYMENT_TARGET = 18.6;

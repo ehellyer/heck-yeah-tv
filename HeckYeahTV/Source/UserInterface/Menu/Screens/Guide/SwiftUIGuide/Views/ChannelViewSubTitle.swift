@@ -16,7 +16,7 @@ struct ChannelViewSubTitle: View {
         if channel == nil {
             // "Placeholder" is used for .redacted(reason: .placeholder) modifier.
             return "Placeholder"
-        } else if channel?.source == ChannelSourceType.homeRunTuner.rawValue, let _number = channel?.number {
+        } else if channel?.deviceId != IPTVImporter.iptvDeviceId, let _number = channel?.number {
             return _number
         } else {
             return nil
@@ -97,7 +97,7 @@ struct ChannelViewSubTitle: View {
     let swiftDataController = MockSwiftDataController()
     InjectedValues[\.swiftDataController] = swiftDataController
 
-    let channel = try! swiftDataController.channel(for: swiftDataController.channelBundleMap.channelIds[7])
+    let channel = swiftDataController.channel(for: swiftDataController.channelBundleMap.channelIds[7])
 
     return TVPreviewView() {
         VStack {

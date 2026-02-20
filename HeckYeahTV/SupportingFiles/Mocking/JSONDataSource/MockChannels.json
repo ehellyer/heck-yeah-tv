@@ -3,8 +3,9 @@
         "id": "chan.local.001",
         "sortHint": "0000",
         "title": "Local ABC",
-        "number": "Channel 2.1",
+        "number": null,
         "country": "US",
+        "deviceId" : "IPTV",
         "categories": [
             {
                 "categoryId": "general",
@@ -39,7 +40,6 @@
       "fhd" : {}
     },
     "sortHint" : "6.1::WTVR-HD",
-    "source" : "homeRunTuner",
     "title" : "WTVR-HD",
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v6.1"
   },
@@ -57,7 +57,6 @@
       "sd" : {}
     },
     "sortHint" : "6.2::CBS6ANT",
-    "source" : "homeRunTuner",
     "title" : "CBS6ANT",
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v6.2"
   },
@@ -74,7 +73,6 @@
       "sd" : {}
     },
     "sortHint" : "6.3::CBS6XTR",
-    "source" : "homeRunTuner",
     "title" : "CBS6XTR",
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v6.3"
   },
@@ -92,7 +90,6 @@
       "sd" : {}
     },
     "sortHint" : "6.4::CourtTV",
-    "source" : "homeRunTuner",
     "title" : "CourtTV",
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v6.4"
   },
@@ -110,7 +107,6 @@
       "sd" : {}
     },
     "sortHint" : "6.5::ION",
-    "source" : "homeRunTuner",
     "title" : "ION",
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v6.5"
   },
@@ -128,7 +124,6 @@
       "sd" : {}
     },
     "sortHint" : "6.6::BUSTED",
-    "source" : "homeRunTuner",
     "title" : "BUSTED",
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v6.6"
   },
@@ -146,7 +141,6 @@
       "sd" : {}
     },
     "sortHint" : "6.7::HSN",
-    "source" : "homeRunTuner",
     "title" : "HSN",
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v6.7"
   },
@@ -164,7 +158,6 @@
       "fhd" : {}
     },
     "sortHint" : "8.1::WRIC-TV",
-    "source" : "homeRunTuner",
     "title" : "WRIC-TV",
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v8.1"
   },
@@ -182,7 +175,6 @@
       "sd" : {}
     },
     "sortHint" : "8.2::Rewind",
-    "source" : "homeRunTuner",
     "title" : "Rewind",
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v8.2"
   },
@@ -200,7 +192,6 @@
       "sd" : {}
     },
     "sortHint" : "8.3::Cozi",
-    "source" : "homeRunTuner",
     "title" : "Cozi",
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v8.3"
   },
@@ -218,7 +209,6 @@
       "sd" : {}
     },
     "sortHint" : "8.4::Laff",
-    "source" : "homeRunTuner",
     "title" : "Laff",
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v8.4"
   },
@@ -236,7 +226,6 @@
       "fhd" : {}
     },
     "sortHint" : "12.1::WWBT-DT",
-    "source" : "homeRunTuner",
     "title" : "WWBT-DT",
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v12.1"
   },
@@ -254,7 +243,6 @@
       "sd" : {}
     },
     "sortHint" : "12.2::12 MeTV",
-    "source" : "homeRunTuner",
     "title" : "12 MeTV",
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v12.2"
   },
@@ -272,7 +260,6 @@
       "sd" : {}
     },
     "sortHint" : "12.3::H&I",
-    "source" : "homeRunTuner",
     "title" : "H&I",
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v12.3"
   },
@@ -290,7 +277,6 @@
       "sd" : {}
     },
     "sortHint" : "12.4::Mystery",
-    "source" : "homeRunTuner",
     "title" : "Mystery",
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v12.4"
   },
@@ -308,7 +294,6 @@
       "sd" : {}
     },
     "sortHint" : "12.5::Crime",
-    "source" : "homeRunTuner",
     "title" : "Crime",
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v12.5"
   },
@@ -325,7 +310,6 @@
       "fhd" : {}
     },
     "sortHint" : "12.6::NBC",
-    "source" : "homeRunTuner",
     "title" : "NBC",
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v12.6"
   },
@@ -343,7 +327,6 @@
       "fhd" : {}
     },
     "sortHint" : "23.1::VPM",
-    "source" : "homeRunTuner",
     "title" : "VPM",
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v23.1"
   },
@@ -361,7 +344,6 @@
       "sd" : {}
     },
     "sortHint" : "23.2::Create",
-    "source" : "homeRunTuner",
     "title" : "Create",
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v23.2"
   },
@@ -379,7 +361,6 @@
       "sd" : {}
     },
     "sortHint" : "23.3::World",
-    "source" : "homeRunTuner",
     "title" : "World",
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v23.3"
   },
@@ -397,7 +378,6 @@
       "sd" : {}
     },
     "sortHint" : "23.4::Kids",
-    "source" : "homeRunTuner",
     "title" : "Kids",
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v23.4"
   },
@@ -415,7 +395,6 @@
       "fhd" : {}
     },
     "sortHint" : "23.5::VPMPlus",
-    "source" : "homeRunTuner",
     "title" : "VPMPlus",
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v23.5"
   },
@@ -433,7 +412,6 @@
       "sd" : {}
     },
     "sortHint" : "28.1::WWBK-LD",
-    "source" : "homeRunTuner",
     "title" : "WWBK-LD",
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v28.1"
   },
@@ -450,7 +428,6 @@
       "sd" : {}
     },
     "sortHint" : "28.2::WWBK-LD",
-    "source" : "homeRunTuner",
     "title" : "WWBK-LD",
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v28.2"
   },
@@ -467,7 +444,6 @@
       "sd" : {}
     },
     "sortHint" : "28.3::WWBK-LD",
-    "source" : "homeRunTuner",
     "title" : "WWBK-LD",
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v28.3"
   },
@@ -484,7 +460,6 @@
       "sd" : {}
     },
     "sortHint" : "28.4::WWBK-LD",
-    "source" : "homeRunTuner",
     "title" : "WWBK-LD",
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v28.4"
   },
@@ -501,7 +476,6 @@
       "sd" : {}
     },
     "sortHint" : "28.5::WWBK-LD",
-    "source" : "homeRunTuner",
     "title" : "WWBK-LD",
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v28.5"
   },
@@ -518,7 +492,6 @@
       "sd" : {}
     },
     "sortHint" : "28.6::WWBK-LD",
-    "source" : "homeRunTuner",
     "title" : "WWBK-LD",
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v28.6"
   },
@@ -535,7 +508,6 @@
       "sd" : {}
     },
     "sortHint" : "28.7::WWBK-LD",
-    "source" : "homeRunTuner",
     "title" : "WWBK-LD",
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v28.7"
   },
@@ -553,7 +525,6 @@
       "sd" : {}
     },
     "sortHint" : "30.1::WFWG-LD",
-    "source" : "homeRunTuner",
     "title" : "WFWG-LD",
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v30.1"
   },
@@ -571,7 +542,6 @@
       "sd" : {}
     },
     "sortHint" : "30.2::WFWG-LD",
-    "source" : "homeRunTuner",
     "title" : "WFWG-LD",
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v30.2"
   },
@@ -589,7 +559,6 @@
       "sd" : {}
     },
     "sortHint" : "30.3::WFWG-LD",
-    "source" : "homeRunTuner",
     "title" : "WFWG-LD",
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v30.3"
   },
@@ -607,7 +576,6 @@
       "sd" : {}
     },
     "sortHint" : "30.4::WFWG-LD",
-    "source" : "homeRunTuner",
     "title" : "WFWG-LD",
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v30.4"
   },
@@ -625,7 +593,6 @@
       "sd" : {}
     },
     "sortHint" : "30.5::WFWG-LD",
-    "source" : "homeRunTuner",
     "title" : "WFWG-LD",
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v30.5"
   },
@@ -642,7 +609,6 @@
       "sd" : {}
     },
     "sortHint" : "30.6::WFWG-LD",
-    "source" : "homeRunTuner",
     "title" : "WFWG-LD",
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v30.6"
   },
@@ -659,7 +625,6 @@
       "sd" : {}
     },
     "sortHint" : "30.7::WFWG-LD",
-    "source" : "homeRunTuner",
     "title" : "WFWG-LD",
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v30.7"
   },
@@ -677,7 +642,6 @@
       "fhd" : {}
     },
     "sortHint" : "35.1::FOX",
-    "source" : "homeRunTuner",
     "title" : "FOX",
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v35.1"
   },
@@ -695,7 +659,6 @@
       "sd" : {}
     },
     "sortHint" : "35.2::ROAR",
-    "source" : "homeRunTuner",
     "title" : "ROAR",
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v35.2"
   },
@@ -713,7 +676,6 @@
       "sd" : {}
     },
     "sortHint" : "35.3::Comet",
-    "source" : "homeRunTuner",
     "title" : "Comet",
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v35.3"
   },
@@ -731,7 +693,6 @@
       "sd" : {}
     },
     "sortHint" : "35.4::Charge!",
-    "source" : "homeRunTuner",
     "title" : "Charge!",
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v35.4"
   },
@@ -749,7 +710,6 @@
       "sd" : {}
     },
     "sortHint" : "35.5::TheNest",
-    "source" : "homeRunTuner",
     "title" : "TheNest",
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v35.5"
   },
@@ -767,7 +727,6 @@
       "fhd" : {}
     },
     "sortHint" : "45.1::WZTD-LD",
-    "source" : "homeRunTuner",
     "title" : "WZTD-LD",
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v45.1"
   },
@@ -784,7 +743,6 @@
       "sd" : {}
     },
     "sortHint" : "45.2::CRIMES",
-    "source" : "homeRunTuner",
     "title" : "CRIMES",
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v45.2"
   },
@@ -801,7 +759,6 @@
       "sd" : {}
     },
     "sortHint" : "45.3::OXYGEN",
-    "source" : "homeRunTuner",
     "title" : "OXYGEN",
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v45.3"
   },
@@ -819,7 +776,6 @@
       "sd" : {}
     },
     "sortHint" : "48.1::Daystar",
-    "source" : "homeRunTuner",
     "title" : "Daystar",
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v48.1"
   },
@@ -836,7 +792,6 @@
       "sd" : {}
     },
     "sortHint" : "48.2::Outlaw",
-    "source" : "homeRunTuner",
     "title" : "Outlaw",
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v48.2"
   },
@@ -854,7 +809,6 @@
       "sd" : {}
     },
     "sortHint" : "53.1::WUDW-LD",
-    "source" : "homeRunTuner",
     "title" : "WUDW-LD",
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v53.1"
   },
@@ -872,7 +826,6 @@
       "sd" : {}
     },
     "sortHint" : "53.2::WUDW-LD",
-    "source" : "homeRunTuner",
     "title" : "WUDW-LD",
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v53.2"
   },
@@ -890,7 +843,6 @@
       "sd" : {}
     },
     "sortHint" : "53.3::WUDW-LD",
-    "source" : "homeRunTuner",
     "title" : "WUDW-LD",
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v53.3"
   },
@@ -908,7 +860,6 @@
       "sd" : {}
     },
     "sortHint" : "53.4::WUDW-LD",
-    "source" : "homeRunTuner",
     "title" : "WUDW-LD",
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v53.4"
   },
@@ -926,7 +877,6 @@
       "sd" : {}
     },
     "sortHint" : "53.5::WUDW-LD",
-    "source" : "homeRunTuner",
     "title" : "WUDW-LD",
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v53.5"
   },
@@ -943,7 +893,6 @@
       "sd" : {}
     },
     "sortHint" : "53.6::WUDW-LD",
-    "source" : "homeRunTuner",
     "title" : "WUDW-LD",
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v53.6"
   },
@@ -960,7 +909,6 @@
       "sd" : {}
     },
     "sortHint" : "53.7::WUDW-LD",
-    "source" : "homeRunTuner",
     "title" : "WUDW-LD",
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v53.7"
   },
@@ -978,7 +926,6 @@
       "fhd" : {}
     },
     "sortHint" : "65.1::WUPV-DT",
-    "source" : "homeRunTuner",
     "title" : "WUPV-DT",
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v65.1"
   },
@@ -996,7 +943,6 @@
       "sd" : {}
     },
     "sortHint" : "65.2::Bounce",
-    "source" : "homeRunTuner",
     "title" : "Bounce",
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v65.2"
   },
@@ -1014,7 +960,6 @@
       "sd" : {}
     },
     "sortHint" : "65.3::Grit",
-    "source" : "homeRunTuner",
     "title" : "Grit",
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v65.3"
   },
@@ -1032,7 +977,6 @@
       "sd" : {}
     },
     "sortHint" : "65.4::The365",
-    "source" : "homeRunTuner",
     "title" : "The365",
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v65.4"
   },
@@ -1050,7 +994,6 @@
       "sd" : {}
     },
     "sortHint" : "65.5::StartTV",
-    "source" : "homeRunTuner",
     "title" : "StartTV",
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v65.5"
   },
@@ -1067,7 +1010,6 @@
       "fhd" : {}
     },
     "sortHint" : "65.6::CW",
-    "source" : "homeRunTuner",
     "title" : "CW",
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v65.6"
   },
@@ -1085,7 +1027,6 @@
       "sd" : {}
     },
     "sortHint" : "106.1::WTVR",
-    "source" : "homeRunTuner",
     "title" : "WTVR",
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v106.1"
   },
@@ -1103,7 +1044,6 @@
       "sd" : {}
     },
     "sortHint" : "108.1::WRIC-TV",
-    "source" : "homeRunTuner",
     "title" : "WRIC-TV",
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v108.1"
   },
@@ -1121,7 +1061,6 @@
       "sd" : {}
     },
     "sortHint" : "112.1::WWBT-HD",
-    "source" : "homeRunTuner",
     "title" : "WWBT-HD",
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v112.1"
   },
@@ -1139,7 +1078,6 @@
       "sd" : {}
     },
     "sortHint" : "135.1::WRLH",
-    "source" : "homeRunTuner",
     "title" : "WRLH",
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v135.1"
   },
@@ -1157,7 +1095,6 @@
       "fhd" : {}
     },
     "sortHint" : "157.1::WCVW-HD",
-    "source" : "homeRunTuner",
     "title" : "WCVW-HD",
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v157.1"
   },
@@ -1175,7 +1112,6 @@
       "sd" : {}
     },
     "sortHint" : "165.1::WUPV-HD",
-    "source" : "homeRunTuner",
     "title" : "WUPV-HD",
     "url" : "http:\/\/192.168.78.220:5004\/auto\/v165.1"
   },
@@ -1184,6 +1120,7 @@
       "sortHint": "99999999999999",
       "title": "Playboy TV",
       "number": "Channel 7.1",
+      "deviceId": "IPTV",
       "country": "US",
       "categories": [
           {
@@ -1196,7 +1133,6 @@
       "url": "http://192.168.1.100:5004/auto/v7.1",
       "logoURL": "https://i.imgur.com/5di4Nis.png",
       "quality": {"fhd":{}},
-      "hasDRM": false,
-      "source": "ipTV"
+      "hasDRM": false
   }
 ]

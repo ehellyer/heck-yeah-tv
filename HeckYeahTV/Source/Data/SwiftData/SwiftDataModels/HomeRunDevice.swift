@@ -13,7 +13,7 @@ import Hellfire
 extension SchemaV1 {
     
     @Model final class HomeRunDevice: JSONSerializable {
-        #Index<HomeRunDevice>([\.deviceId])
+        #Index<HomeRunDevice>([\.deviceId], [\.includeChannelLineUp, \.deviceId])
         
         init(deviceId: HDHomeRunDeviceId,
              friendlyName: String,
@@ -48,6 +48,8 @@ extension SchemaV1 {
         var lineupURL: URL
         var tunerCount: Int
         var includeChannelLineUp: Bool
+        
+
         
         // MARK: - JSONSerializable Implementation (added for mock data)
         //
@@ -95,6 +97,19 @@ extension SchemaV1 {
             self.lineupURL = try container.decode(URL.self, forKey: .lineupURL)
             self.tunerCount = try container.decode(Int.self, forKey: .tunerCount)
             self.includeChannelLineUp = try container.decode(Bool.self, forKey: .includeChannelLineUp)
+        }
+    }
+}
+
+extension HomeRunDevice {
+    
+    var includeChannelLineUp_Save: Bool {
+        get {
+            return includeChannelLineUp
+        }
+        set {
+            includeChannelLineUp = newValue
+            try? self.modelContext?.saveChangesIfNeeded()
         }
     }
 }

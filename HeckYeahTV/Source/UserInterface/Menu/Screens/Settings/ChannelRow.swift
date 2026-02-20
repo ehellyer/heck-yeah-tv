@@ -43,7 +43,7 @@ struct ChannelRow: View {
     InjectedValues[\.swiftDataController] = swiftDataController
     
     let channelId = swiftDataController.channelBundleMap.channelIds[0]
-    let channel = try! swiftDataController.channel(for: channelId)
+    let channel = swiftDataController.channel(for: channelId)!
     
     return TVPreviewView() {
         ChannelRow(channel: channel,

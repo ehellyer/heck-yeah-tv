@@ -13,7 +13,7 @@ struct EditBundleChannelsView: View {
     @State private var countries: [Country] = []
     
     private var filteredChannels: [Channel] {
-        let channels = try! swiftDataController.channelsForCurrentFilter()
+        let channels = swiftDataController.channelsForCurrentFilter()
         return channels
     }
     
@@ -116,9 +116,9 @@ struct EditBundleChannelsView: View {
     }
     
     private func loadLookupData() {
-        availableChannelCount = (try? swiftDataController.totalChannelCount()) ?? 0
-        categories = (try? swiftDataController.programCategories()) ?? []
-        countries = (try? swiftDataController.countries()) ?? []
+        availableChannelCount = swiftDataController.totalChannelCount()
+        categories = swiftDataController.programCategories()
+        countries = swiftDataController.countries()
     }
 }
 
@@ -133,7 +133,7 @@ struct EditBundleChannelsView: View {
     let swiftDataController = MockSwiftDataController()
     InjectedValues[\.swiftDataController] = swiftDataController
     
-    let channelBundle = try! swiftDataController.channelBundles().first!
+    let channelBundle = swiftDataController.channelBundles().first!
     
     return TVPreviewView() {
         NavigationStack {

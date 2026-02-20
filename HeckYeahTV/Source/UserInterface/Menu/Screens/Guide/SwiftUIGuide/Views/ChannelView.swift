@@ -57,9 +57,9 @@ struct ChannelView: View {
     let swiftDataController = MockSwiftDataController()
     InjectedValues[\.swiftDataController] = swiftDataController
     
-    let channel1 = try! swiftDataController.channel(for: swiftDataController.channelBundleMap.channelIds[1])
-    let channel2 = try! swiftDataController.channel(for: swiftDataController.channelBundleMap.channelIds[14])
-    let channel3 = try! swiftDataController.channel(for: swiftDataController.channelBundleMap.channelIds[9])
+    let channel1 = swiftDataController.channel(for: swiftDataController.channelBundleMap.channelIds[1])
+    let channel2 = swiftDataController.channel(for: swiftDataController.channelBundleMap.channelIds[14])
+    let channel3 = swiftDataController.channel(for: swiftDataController.channelBundleMap.channelIds[9])
     
     return TVPreviewView() {
         VStack {

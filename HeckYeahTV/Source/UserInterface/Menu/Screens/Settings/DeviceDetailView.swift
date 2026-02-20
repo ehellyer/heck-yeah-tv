@@ -3,158 +3,61 @@ import SwiftUI
 struct DeviceDetailView: View {
     let device: HomeRunDevice
     @State private var isRefreshing = false
-    @State private var swiftDataController: SwiftDataProvider = InjectedValues[\.swiftDataController]    
+    @State private var swiftDataController: SwiftDataProvider = InjectedValues[\.swiftDataController]
     
     var body: some View {
         ScrollView {
-            LazyVStack(alignment: .leading, spacing: 20) {
+            VStack(alignment: .leading, spacing: 8) {
+
+                // MARK: - Settings Section
+                SectionHeader("Settings")
+                Toggle("Include Channel Line-up", isOn: Binding(
+                    get: { device.includeChannelLineUp_Save },
+                    set: { newValue in
+                        device.includeChannelLineUp_Save = newValue
+                    }
+                ))
+                .tint(.mainAppTheme)
+                Text("When enabled, channels from this device will appear in the guide regardless of the selected channel bundle.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                
                 // MARK: - Device Info Section
-                VStack(alignment: .leading, spacing: 12) {
-                    Text("Device Information")
-                        .font(.headline)
-                        .padding(.bottom, 4)
-                    
-                    DetailRow(label: "Name", value: device.friendlyName)
-                    DetailRow(label: "Model", value: device.modelNumber)
-                    DetailRow(label: "Device ID", value: device.deviceId)
-                }
-                .padding()
-                .frame(maxWidth: .infinity, alignment: .leading)
-                #if !os(tvOS)
-                .background(.clear)
-                .cornerRadius(8)
-                #endif
-                
+                SectionHeader("Device Information")
+                DetailRow(label: "Name", value: device.friendlyName)
+                DetailRow(label: "Model", value: device.modelNumber)
+                DetailRow(label: "Device ID", value: device.deviceId)
+
                 // MARK: - Firmware Section
-                VStack(alignment: .leading, spacing: 12) {
-                    Text("Firmware")
-                        .font(.headline)
-                        .padding(.bottom, 4)
-                    
-                    DetailRow(label: "Firmware Name", value: device.firmwareName)
-                    DetailRow(label: "Version", value: device.firmwareVersion)
-                }
-                .padding()
-                .frame(maxWidth: .infinity, alignment: .leading)
-                #if !os(tvOS)
-                .background(.clear)
-                .cornerRadius(8)
-                #endif
-                
+                SectionHeader("Firmware")
+                DetailRow(label: "Firmware Name", value: device.firmwareName)
+                DetailRow(label: "Version", value: device.firmwareVersion)
+
                 // MARK: - Network Section
-                VStack(alignment: .leading, spacing: 12) {
-                    Text("Network")
-                        .font(.headline)
-                        .padding(.bottom, 4)
-                    
-                    DetailRow(label: "Base URL", value: device.baseURL.absoluteString)
-                    DetailRow(label: "Lineup URL", value: device.lineupURL.absoluteString)
-                }
-                .padding()
-                .frame(maxWidth: .infinity, alignment: .leading)
-                #if !os(tvOS)
-                .background(Color.clear)
-                .cornerRadius(8)
-                #endif
-                
+                SectionHeader("Network")
+                DetailRow(label: "Base URL", value: device.baseURL.absoluteString)
+                DetailRow(label: "Lineup URL", value: device.lineupURL.absoluteString)
+
                 // MARK: - Tuners Section
-                VStack(alignment: .leading, spacing: 12) {
-                    Text("Tuners")
-                        .font(.headline)
-                        .padding(.bottom, 4)
-                    
-                    HStack {
-                        Text("Tuner Count")
-                        Spacer()
-                        Text("\(device.tunerCount)")
-                            .foregroundStyle(.secondary)
-                    }
-                    
-                    HStack {
-                        Text("Channel Count")
-                        Spacer()
-                        let channelCount = (try? swiftDataController.totalChannelCountFor(deviceId: device.deviceId)) ?? 0
-                        Text("\(channelCount)")
-                            .foregroundStyle(.secondary)
-                    }
-                }
-                .padding()
-                .frame(maxWidth: .infinity, alignment: .leading)
-                //#if !os(tvOS)
-                .background(Color.clear)
-                .cornerRadius(8)
-//                #endif
-                
-//                // MARK: - Actions Section
-//                VStack(alignment: .leading, spacing: 12) {
-//                    Text("Actions")
-//                        .font(.headline)
-//                        .padding(.bottom, 4)
-//                    
-//                    Button {
-//                        refreshDevice()
-//                    } label: {
-//                        Label("Refresh Device", systemImage: "arrow.clockwise")
-//                            .frame(maxWidth: .infinity, alignment: .leading)
-//                    }
-//                    #if os(tvOS)
-//                    .buttonStyle(.card)
-//                    #else
-//                    .buttonStyle(.plain)
-//                    #endif
-//                    .foregroundStyle(.blue)
-//                    .disabled(isRefreshing)
-//                    
-//                    Button {
-//                        let url = device.baseURL
-//#if os(macOS)
-//                        NSWorkspace.shared.open(url)
-//#else
-//                        UIApplication.shared.open(url)
-//#endif
-//                    } label: {
-//                        Label("Open Device Web Interface", systemImage: "safari")
-//                            .frame(maxWidth: .infinity, alignment: .leading)
-//                    }
-//                    #if os(tvOS)
-//                    .buttonStyle(.card)
-//                    #else
-//                    .buttonStyle(.plain)
-//                    #endif
-//                    .foregroundStyle(.blue)
-//                    
-//                    Button {
-//                        let url = device.lineupURL
-//#if os(macOS)
-//                        NSWorkspace.shared.open(url)
-//#else
-//                        UIApplication.shared.open(url)
-//#endif
-//                        
-//                    } label: {
-//                        Label("View Channel Lineup", systemImage: "list.bullet")
-//                            .frame(maxWidth: .infinity, alignment: .leading)
-//                    }
-//                    #if os(tvOS)
-//                    .buttonStyle(.card)
-//                    #else
-//                    .buttonStyle(.plain)
-//                    #endif
-//                    .foregroundStyle(.blue)
-//                }
-//                .padding()
-//                .frame(maxWidth: .infinity, alignment: .leading)
-//                #if !os(tvOS)
-//                .background(.clear)
-//                .cornerRadius(8)
-//                #endif
+                SectionHeader("Tuners")
+                DetailRow(label: "Tuner Count", value: "\(device.tunerCount)")
+                let channelCount = swiftDataController.totalChannelCountFor(deviceId: device.deviceId)
+                DetailRow(label: "Channel Count", value: "\(channelCount)")
             }
-            .padding()
+            .padding(.horizontal)
+            .padding(.top, 8)
         }
+        .background(.clear)
+#if !os(tvOS)
+        .scrollContentBackground(.hidden)
+#endif
         .navigationTitle("Device Details")
-        #if os(iOS)
+#if os(iOS)
         .navigationBarTitleDisplayMode(.inline)
-        #endif
+#endif
+        .onChange(of: device.includeChannelLineUp_Save) {
+            swiftDataController.invalidateTunerLineUp()
+        }
     }
     
     // MARK: - Actions
@@ -171,6 +74,22 @@ struct DeviceDetailView: View {
     }
 }
 
+// MARK: - Section Header Component
+
+struct SectionHeader: View {
+    let title: String
+
+    init(_ title: String) {
+        self.title = title
+    }
+
+    var body: some View {
+        Text(title)
+            .font(.headline)
+            .padding(.top, 8)
+    }
+}
+
 // MARK: - Detail Row Component
 
 struct DetailRow: View {
@@ -178,7 +97,7 @@ struct DetailRow: View {
     let value: String
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 4) {
+        VStack(alignment: .leading, spacing: 2) {
             Text(label)
                 .font(.caption)
                 .foregroundStyle(.secondary)
@@ -203,11 +122,16 @@ struct DetailRow: View {
     let swiftDataController = MockSwiftDataController()
     InjectedValues[\.swiftDataController] = swiftDataController
     
-    let device = try! swiftDataController.homeRunDevices().first!
+    let device = swiftDataController.homeRunDevices()[1]
     
     return TVPreviewView() {
         NavigationStack {
             DeviceDetailView(device: device)
         }
+        .background(.clear)
+#if os(iOS)
+        .toolbarBackground(.hidden, for: .navigationBar)
+        .containerBackground(.clear, for: .navigation)
+#endif
     }
 }

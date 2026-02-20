@@ -70,7 +70,7 @@ struct CategoryPickerView: View {
     let swiftDataController = MockSwiftDataController()
     InjectedValues[\.swiftDataController] = swiftDataController
     
-    let categories = (try? swiftDataController.programCategories()) ?? []
+    let categories = swiftDataController.programCategories()
     
     return TVPreviewView() {
         NavigationStack {

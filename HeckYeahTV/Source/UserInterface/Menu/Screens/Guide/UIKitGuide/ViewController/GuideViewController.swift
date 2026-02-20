@@ -37,7 +37,7 @@ class GuideViewController: UIViewController {
         setupTableView()
         setupSwiftDataObservation()
         updateShowNoChannels()
-        try? swiftDataController.deletePastChannelPrograms()
+        swiftDataController.deletePastChannelPrograms()
     }
     
     override func viewDidAppear(_ animated: Bool) {

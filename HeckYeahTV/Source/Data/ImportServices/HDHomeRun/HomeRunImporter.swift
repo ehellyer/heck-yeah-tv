@@ -15,10 +15,9 @@ actor HomeRunImporter {
         logDebug("Deallocated")
     }
     
-    init(container: ModelContainer, scanForTuners: Bool) {
+    init(container: ModelContainer) {
         self.context = ModelContext(container)
         self.context.autosaveEnabled = false
-        self.scanForTuners = scanForTuners
     }
     
     @Injected(\.sharedAppState) private var appState: AppStateProvider
@@ -26,7 +25,6 @@ actor HomeRunImporter {
     private var batchCount: Int = 0
     private let batchSize: Int = 500
     private let context: ModelContext
-    private let scanForTuners: Bool
 
     private func fetchChannel(id: ChannelId) async throws -> Channel? {
         let chPredicate = #Predicate<Channel> { $0.id == id }
@@ -43,10 +41,11 @@ actor HomeRunImporter {
             return
         }
         
+        let deviceIds = Array(Set(tunerChannels.map { $0.deviceIdHint }))
+        
         let existingChannels: [Channel] = {
             do {
-                let source = ChannelSourceType.homeRunTuner.rawValue
-                let predicate = #Predicate<Channel> { $0.source == source }
+                let predicate = #Predicate<Channel> { deviceIds.contains($0.deviceId) }
                 var descriptor = FetchDescriptor<Channel>(predicate: predicate)
                 descriptor.propertiesToFetch = [\.id]
                 return try context.fetch(descriptor)
@@ -82,7 +81,6 @@ actor HomeRunImporter {
                 logoURL: src.logoURLHint,
                 quality: src.qualityHint,
                 hasDRM: src.hasDRMHint,
-                source: src.sourceHint,
                 deviceId: src.deviceIdHint
             )
             context.insert(newChannel)

@@ -76,7 +76,7 @@ struct GuideView: View {
                     .focusSection()
 #endif
                     .onAppear {
-                        try? swiftDataController.deletePastChannelPrograms()
+                        swiftDataController.deletePastChannelPrograms()
                         
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
                             scrollToSelected(proxy: proxy)

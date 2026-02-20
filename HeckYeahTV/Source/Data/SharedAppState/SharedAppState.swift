@@ -81,7 +81,7 @@ final class SharedAppState: AppStateProvider {
         }
     }
     
-    var scanForTuners: Bool {
+    var scanForTuners: Bool? {
         get {
             access(keyPath: \.scanForTuners)
             return UserDefaults.scanForTuners

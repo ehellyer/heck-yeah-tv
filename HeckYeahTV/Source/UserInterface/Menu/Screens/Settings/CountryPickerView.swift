@@ -51,7 +51,7 @@ struct CountryPickerView: View {
     let swiftDataController = MockSwiftDataController()
     InjectedValues[\.swiftDataController] = swiftDataController
     
-    let countries = (try? swiftDataController.countries()) ?? []
+    let countries = swiftDataController.countries()
     
     return TVPreviewView() {
         NavigationStack {

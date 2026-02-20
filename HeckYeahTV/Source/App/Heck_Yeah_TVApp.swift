@@ -50,12 +50,21 @@ let humanDebounceNS: UInt64 = 200_000_000 //0.2 seconds
 /// A TimeInterval of 0.2 seconds
 let settleTime: TimeInterval = TimeInterval(0.2)
 
+/// The number of seconds in one hour.
+let secondsPerHour: TimeInterval = 3600
+
 @main
 struct Heck_Yeah_TVApp: App {
     
     @Environment(\.scenePhase) private var scenePhase
     @State private var isBootComplete = false
     @State private var startupTask: Task<Void, Never>? = nil
+    @State private var showTunerPrompt = false
+    // Holds the continuation while the tuner-scan alert is displayed.
+    // Wrapped in a class so it can be mutated from within the SwiftUI struct.
+    @State private var tunerPromptContinuationBox = TunerPromptContinuationBox()
+    
+    @State private var appState: AppStateProvider = InjectedValues[\.sharedAppState]
     
     var body: some Scene {
 #if os(macOS)
@@ -80,38 +89,57 @@ struct Heck_Yeah_TVApp: App {
                     startupTask?.cancel()
                 }
             }
+            .alert("Scan for HDHomeRun Tuners?", isPresented: $showTunerPrompt) {
+                Button("Yes, Scan for Tuners") {
+                    tunerPromptContinuationBox.continuation?.resume(returning: true)
+                    tunerPromptContinuationBox.continuation = nil
+                }
+                Button("No Thanks", role: .cancel) {
+                    tunerPromptContinuationBox.continuation?.resume(returning: false)
+                    tunerPromptContinuationBox.continuation = nil
+                }
+            } message: {
+                Text("Heck Yeah TV can scan your local network for HDHomeRun tuner devices and include their live TV channels in your guide.\n\nIf you don't know what an HDHomeRun is, or you're sure you don't have one, tap No Thanks — you can always enable this later in Settings.")
+            }
     }
     
     private func startBootstrap() async {
-        // Await call for authorization.
-        let lanAuth = LocalNetworkAuthorization()
-        let result = await lanAuth.requestAuthorization()
-        UserDefaults.lastLANAuthorizationStatus = result
+        if appState.scanForTuners == nil {
+            let wantsToScan = await withCheckedContinuation { continuation in
+                tunerPromptContinuationBox.continuation = continuation
+                showTunerPrompt = true
+            }
+            appState.scanForTuners = wantsToScan
+        }
+        
+        if appState.scanForTuners == true {
+            let lanAuth = LocalNetworkAuthorization()
+            let result = await lanAuth.requestAuthorization()
+            UserDefaults.lastLANAuthorizationStatus = result
+        }
         
         await startBootTasks()
     }
     
     private func startBootTasks() async {
         startupTask?.cancel()
-        startupTask = Task.detached(name: "Bootstrap tasks", priority: .userInitiated) {
+        startupTask = Task.detached(name: "HYTV-background-bootstrap-tasks", priority: .high) {
             let appState: AppStateProvider = InjectedValues[\.sharedAppState]
             let container = await InjectedValues[\.swiftDataController].container
-            let chCount = await (try? InjectedValues[\.swiftDataController].totalChannelCount()) ?? 0
+            let chCount = await InjectedValues[\.swiftDataController].totalChannelCount()
             logDebug("Current channel catalog count: \(chCount)")
             
-            // Don't fetch unless its been at least six hours from the last fetch.
+            // Don't fetch unless its been at least six hours from the last fetch. (Or date was nil)
             let date = await appState.dateLastIPTVChannelFetch
-            if chCount == 0 || date == nil || date! < Date().addingTimeInterval(-60 * 60 * 6) {
-                
+            if date.map({ $0 < Date().addingTimeInterval(-secondsPerHour * 6) }) ?? true {
+                // Concurrent background thread tasks.
                 await withTaskGroup(of: Void.self) { group in
-                    if UserDefaults.lastLANAuthorizationStatus == .granted {
+                    let scanForTuners = await appState.scanForTuners ?? false
+                    if scanForTuners && UserDefaults.lastLANAuthorizationStatus == .granted {
                         group.addTask {
-                            let scanForTuners = await appState.scanForTuners
-                            let hdTunerImporter = HomeRunImporter(container: container, scanForTuners: scanForTuners)
+                            let hdTunerImporter = HomeRunImporter(container: container)
                             let _ = try? await hdTunerImporter.load()
                         }
-                    } else {
-                        logDebug("Local Area Network authorization was not granted. Skipping HomeRun tuner scan/import.")
                     }
                     
                     group.addTask {
@@ -135,25 +163,23 @@ struct Heck_Yeah_TVApp: App {
                 var appState = appState
                 appState.dateLastIPTVChannelFetch = Date()
                 
-                setInitialUI()
-#if DEBUG
-                // Writes files based on data in SwiftData, to be used in MockData for previews.
-//                writeMockFiles()
-#endif
-                InjectedValues[\.swiftDataController].invalidateChannelBundleMap()
-                
+                initializeUIState()
+
                 // Update state variable that boot up processes are completed.
                 isBootComplete = true
             }
         }
     }
     
-    // Always ensure app navigation starts off in the dismissed state when there is a selected channel. Else present the default tab in app navigation.  This prevents a black screen on first startup.
-    private func setInitialUI() {
-        var appState: AppStateProvider = InjectedValues[\.sharedAppState]
-        
+    private func initializeUIState() {
+
+        InjectedValues[\.swiftDataController].invalidateChannelBundleMap()
+
         let swiftDataController = InjectedValues[\.swiftDataController]
         let hasNoChannels = swiftDataController.channelBundleMap.map.isEmpty
+        
+        /// Triggers a synchronization event for tuner device(s) channel lineup.
+        swiftDataController.invalidateTunerLineUp()
         
         if HeckYeahSchema.versionIdentifier == Schema.Version(0, 0, 0) {
             // DB was deletes as part of a hard reset, so clear out some app state to match.
@@ -173,6 +199,13 @@ struct Heck_Yeah_TVApp: App {
     }
 }
 
+/// Reference-type box for a `CheckedContinuation`, allowing it to be held in a SwiftUI `@State`
+/// property and mutated from within an immutable struct. Only ever accessed on the main actor.
+@MainActor
+final class TunerPromptContinuationBox {
+    var continuation: CheckedContinuation<Bool, Never>?
+}
+
 extension Heck_Yeah_TVApp {
     
 #if DEBUG
@@ -186,9 +219,10 @@ extension Heck_Yeah_TVApp {
             ]
         )
         
+        let deviceId = IPTVImporter.iptvDeviceId
         let cDescriptor: FetchDescriptor<Channel> = FetchDescriptor<Channel>(
             predicate: #Predicate {
-                $0.country == "ANY" && $0.source == "homeRunTuner"
+                $0.deviceId == deviceId
             },
             sortBy: [
                 SortDescriptor(\.sortHint)

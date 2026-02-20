@@ -17,7 +17,6 @@ extension IPStream: Channelable {
     var urlHint: URL { url }
     var qualityHint: StreamQuality { StreamQuality.convertToStreamQuality(quality) }
     var hasDRMHint: Bool { false }
-    var sourceHint: ChannelSourceId { ChannelSourceType.ipStream.rawValue }
-    var deviceIdHint: HDHomeRunDeviceId? { nil }
+    var deviceIdHint: HDHomeRunDeviceId { IPTVImporter.iptvDeviceId }
     var logoURLHint: URL? { logoURL }
 }

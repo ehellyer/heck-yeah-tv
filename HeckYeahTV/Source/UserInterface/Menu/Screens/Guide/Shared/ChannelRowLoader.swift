@@ -30,7 +30,7 @@ final class ChannelRowLoader: ObservableObject {
                 if PreviewDetector.isRunningInPreview {
                     try await Task.sleep(nanoseconds: 1_000_000_000)
                 }
-                let channel = try swiftDataController.channel(for: channelId)
+                let channel = swiftDataController.channel(for: channelId)
                 try Task.checkCancellation()
                 await MainActor.run {
                     self.channel = channel

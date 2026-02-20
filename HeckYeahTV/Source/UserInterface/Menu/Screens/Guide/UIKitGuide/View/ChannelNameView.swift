@@ -224,7 +224,7 @@ class ChannelNameView: UIView {
         titleLabel.text = channel?.title ?? nbsp  // the nbsp is to maintain label height for layout when title is nil.
         
         // 2nd line - Channel Number
-        if channel?.source == ChannelSourceType.homeRunTuner.rawValue {
+        if channel?.deviceId != IPTVImporter.iptvDeviceId {
             numberLabel.text = channel?.number
         } else {
             numberLabel.text = nil
@@ -283,7 +283,7 @@ extension ChannelNameView: @MainActor FocusTargetView {
     let swiftDataController = MockSwiftDataController()
     InjectedValues[\.swiftDataController] = swiftDataController
 
-    let channel1: Channel? = try! swiftDataController.channel(for: swiftDataController.channelBundleMap.channelIds[7])
+    let channel1: Channel? = swiftDataController.channel(for: swiftDataController.channelBundleMap.channelIds[7])
     
     let view = ChannelNameView()
     view.configure(with: channel1, isPlaying: false)

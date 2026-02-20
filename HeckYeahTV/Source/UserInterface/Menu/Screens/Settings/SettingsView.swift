@@ -22,7 +22,7 @@ struct SettingsView: View {
     @State private var bundleSelection: ChannelBundleId? = nil
     
     private func channelCount(for deviceId: HDHomeRunDeviceId) -> Int {
-        let count = (try? swiftDataController.totalChannelCountFor(deviceId: deviceId)) ?? 0
+        let count = swiftDataController.totalChannelCountFor(deviceId: deviceId)
         return count
     }
     
@@ -30,7 +30,7 @@ struct SettingsView: View {
         
         List {
             
-            // MARK: - Active Bundle Section
+            // MARK: - Active Bundle
             if channelBundles.count > 1 {
                 Section {
                     let selectedName = channelBundles.first(where: { $0.id == appState.selectedChannelBundleId })?.name ?? ""
@@ -64,7 +64,7 @@ struct SettingsView: View {
             }
             
             
-            // MARK: - Manage Bundles Section
+            // MARK: - Manage Bundles
             Section {
                 ForEach(channelBundles) { bundle in
                     
@@ -74,10 +74,8 @@ struct SettingsView: View {
                         VStack(alignment: .leading, spacing: 4) {
                             Text(bundle.name)
                                 .font(.body)
-                                .foregroundStyle(.primary)
                             Text("\(swiftDataController.channelBundleMap.mapCount) channels")
                                 .font(.caption)
-                                .foregroundStyle(.secondary)
                         }
                     }
                 }
@@ -136,15 +134,10 @@ struct SettingsView: View {
             Section {
                 if discoveredDevices.isEmpty {
                     HStack {
-                        Spacer()
-                        VStack(spacing: 8) {
-                            Image(systemName: "antenna.radiowaves.left.and.right.slash")
-                                .font(.largeTitle)
-                                .foregroundStyle(.secondary)
-                            Text("No devices discovered")
-                                .foregroundStyle(.secondary)
-                        }
-                        .padding()
+                        Image(systemName: "antenna.radiowaves.left.and.right.slash")
+                            .foregroundStyle(.secondary)
+                        Text("No devices discovered")
+                            .foregroundStyle(.secondary)
                         Spacer()
                     }
                 } else {
@@ -230,9 +223,9 @@ struct SettingsView: View {
     }
     
     private func reloadData() {
-        channelBundles = (try? swiftDataController.channelBundles()) ?? []
-        discoveredDevices = (try? swiftDataController.homeRunDevices()) ?? []
-        iptvChannelCount = (try? swiftDataController.totalChannelCount()) ?? 0
+        channelBundles = swiftDataController.channelBundles()
+        discoveredDevices = swiftDataController.homeRunDevices()
+        iptvChannelCount = swiftDataController.totalChannelCount()
     }
 
 }

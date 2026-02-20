@@ -46,7 +46,7 @@ struct ChannelName: View {
     InjectedValues[\.swiftDataController] = swiftDataController
 
     let channelId = swiftDataController.channelBundleMap.channelIds[11]
-    let channel = try! swiftDataController.channel(for: channelId)
+    let channel = swiftDataController.channel(for: channelId)
 
     return ChannelName(channel: channel)
 }

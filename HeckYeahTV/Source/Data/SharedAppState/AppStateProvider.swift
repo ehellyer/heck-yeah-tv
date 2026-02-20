@@ -46,7 +46,6 @@ protocol AppStateProvider {
     /// Limited to 10 items because nobody needs to remember their entire life story.
     var recentChannelIds: [ChannelId] { get }
     
-    
     /// Wipes the channel history slate clean. A digital amnesia button for when you're not proud of your viewing choices.
     ///
     /// Clears `recentChannelIds` back to an empty list, as if you never spent 45 minutes channel-surfing
@@ -54,11 +53,15 @@ protocol AppStateProvider {
     /// No judgment. The list is gone. It never happened.
     func resetRecentChannelIds()
     
-    /// Whether the app should actively hunt for tuners on your network.
+    /// Whether the app should actively hunt for HDHomeRun tuners on your network — if we've even
+    /// had the nerve to ask yet.
     ///
-    /// When `true`, unleashes a digital bloodhound to sniff out every tuner device
-    /// hiding on your LAN. When `false`, your app minds its own business like a polite houseguest.
-    var scanForTuners: Bool { get set }
+    /// - `nil` means the question was never posed. The user is blissfully unaware that tuner
+    ///   scanning is even a thing. Show them the prompt before assuming anything.
+    /// - `true` unleashes a digital bloodhound to sniff out every tuner device hiding on your LAN.
+    /// - `false` means the user said no thanks, and your app minds its own business like a polite
+    ///   houseguest who doesn't poke around in your network closet.
+    var scanForTuners: Bool? { get set }
 
     /// The currently selected tab in your app's navigation.
     ///

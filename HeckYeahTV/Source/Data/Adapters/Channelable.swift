@@ -35,11 +35,8 @@ protocol Channelable {
     /// A Bool to indicate if the channel has a Digital Rights Management restriction.
     var hasDRMHint: Bool { get }
     
-    /// Which system sourced this channel.  (e.g. "ipStream", "homeRunTuner")
-    var sourceHint: ChannelSourceId { get }
-    
-    /// The device Id of the channel source.  (e.g. "20425D9B")
-    var deviceIdHint: HDHomeRunDeviceId? { get }
+    /// The device Id of the channel source.  (e.g. "20425D9B").  If the channel was sourced from a IP source, the device is set to "IPTV"
+    var deviceIdHint: HDHomeRunDeviceId { get }
     
     /// The URL to the channel logo image.
     var logoURLHint: URL? { get }

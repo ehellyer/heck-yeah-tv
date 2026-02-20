@@ -14,7 +14,7 @@ extension SchemaV1 {
     
     /// Represents an instance from the master list of all possible channels.
     @Model final class Channel: JSONSerializable {
-        #Index<Channel>([\.sortHint, \.id], [\.id])
+        #Index<Channel>([\.sortHint, \.id], [\.id], [\.deviceId])
         
         init(id: ChannelId,
              guideId: String?,
@@ -28,8 +28,7 @@ extension SchemaV1 {
              logoURL: URL?,
              quality: StreamQuality,
              hasDRM: Bool,
-             source: ChannelSourceId,
-             deviceId: HDHomeRunDeviceId?) {
+             deviceId: HDHomeRunDeviceId) {
             self.id = id
             self.guideId = guideId
             self.sortHint = sortHint
@@ -42,7 +41,6 @@ extension SchemaV1 {
             self.logoURL = logoURL
             self.quality = quality
             self.hasDRM = hasDRM
-            self.source = source
             self.deviceId = deviceId
         }
         
@@ -66,8 +64,7 @@ extension SchemaV1 {
         var logoURL: URL?
         var quality: StreamQuality
         var hasDRM: Bool
-        var source: ChannelSourceId
-        var deviceId: HDHomeRunDeviceId?
+        var deviceId: HDHomeRunDeviceId
         
         // Inverse relationship with nullify delete rule
         @Relationship(deleteRule: .nullify, inverse: \BundleEntry.channel)
@@ -93,7 +90,6 @@ extension SchemaV1 {
             case logoURL
             case quality
             case hasDRM
-            case source
             case deviceId
         }
         
@@ -111,8 +107,7 @@ extension SchemaV1 {
             try container.encodeIfPresent(logoURL, forKey: .logoURL)
             try container.encode(quality, forKey: .quality)
             try container.encode(hasDRM, forKey: .hasDRM)
-            try container.encode(source, forKey: .source)
-            try container.encodeIfPresent(deviceId, forKey: .deviceId)
+            try container.encode(deviceId, forKey: .deviceId)
         }
         
         init(from decoder: Decoder) throws {
@@ -129,8 +124,7 @@ extension SchemaV1 {
             self.logoURL = try container.decodeIfPresent(URL.self, forKey: .logoURL)
             self.quality = try container.decode(StreamQuality.self, forKey: .quality)
             self.hasDRM = try container.decode(Bool.self, forKey: .hasDRM)
-            self.source = try container.decode(ChannelSourceId.self, forKey: .source)
-            self.deviceId = try container.decodeIfPresent(HDHomeRunDeviceId.self, forKey: .deviceId)
+            self.deviceId = try container.decode(HDHomeRunDeviceId.self, forKey: .deviceId)
         }
     }
 }

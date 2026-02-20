@@ -22,9 +22,9 @@ enum MockDataPersistenceError: LocalizedError {
         case .fileNotFound(let fileName, let ext):
             return "File not found: \(fileName).\(ext)"
         case .dataLoadingFailed(let fileName, let error):
-            return "Failed to load data from \(fileName): \(error.localizedDescription)"
+            return "Failed to load data from \(fileName): \(error)"
         case .contextSaveFailed(let error):
-            return "Failed to save mock data context: \(error.localizedDescription)"
+            return "Failed to save mock data context: \(error)"
         case .invalidData(let fileName, let reason):
             return "Invalid data in \(fileName): \(reason)"
         }
@@ -121,7 +121,7 @@ final class MockSwiftDataStack: SwiftDataStackProvider {
                 throw MockDataPersistenceError.contextSaveFailed(underlyingError: error)
             }
         } catch {
-            logDebug("Failed to load Mock json into SwiftData in-memory context.  Error: \(error.localizedDescription)")
+            logDebug("Failed to load Mock json into SwiftData in-memory context.  Error: \(error)")
         }
     }
 

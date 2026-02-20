@@ -86,7 +86,7 @@ struct ChannelProgramsCarousel: View {
         .focusable()
         .onAppear() {
             
-            guard let _channel = try? swiftDataController.channel(for: channelProgram.channelId) else {
+            guard let _channel = swiftDataController.channel(for: channelProgram.channelId) else {
                 return
             }
             

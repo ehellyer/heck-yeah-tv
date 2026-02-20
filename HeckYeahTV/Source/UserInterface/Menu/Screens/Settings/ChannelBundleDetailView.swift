@@ -30,13 +30,8 @@ struct ChannelBundleDetailView: View {
     }
     
     private var filteredChannels: [Channel] {
-        do {
-            let channels = try swiftDataController.channelsForCurrentFilter()
-            return channels
-        } catch {
-            logError("Error retrieving channels matching filter: \(error)")
-            return []
-        }
+        let channels = swiftDataController.channelsForCurrentFilter()
+        return channels
     }
     
     private func isChannelInBundle(_ channel: Channel) -> Bool {
@@ -266,12 +261,12 @@ struct ChannelBundleDetailView: View {
     }
     
     private func loadData() {
-        availableChannelCount = (try? swiftDataController.totalChannelCount()) ?? 0
-        categories = (try? swiftDataController.programCategories()) ?? []
-        countries = (try? swiftDataController.countries()) ?? []
+        availableChannelCount = swiftDataController.totalChannelCount()
+        categories = swiftDataController.programCategories()
+        countries = swiftDataController.countries()
         
         // Check if this bundle can be deleted
-        let totalBundles = (try? swiftDataController.channelBundles().count) ?? 0
+        let totalBundles = swiftDataController.channelBundles().count
         canDelete = totalBundles > 1
     }
 }
@@ -287,7 +282,7 @@ struct ChannelBundleDetailView: View {
     let swiftDataController = MockSwiftDataController()
     InjectedValues[\.swiftDataController] = swiftDataController
     
-    let channelBundle = try! swiftDataController.channelBundles().first!
+    let channelBundle = swiftDataController.channelBundles().first!
     
     return TVPreviewView() {
         NavigationStack {

@@ -352,7 +352,7 @@ extension GuideRowCell: UICollectionViewDelegateFlowLayout {
     let swiftDataController = MockSwiftDataController()
     InjectedValues[\.swiftDataController] = swiftDataController
     
-    let channel1 = try! swiftDataController.channel(for: swiftDataController.channelBundleMap.channelIds[11])
+    let channel1 = swiftDataController.channel(for: swiftDataController.channelBundleMap.channelIds[11])!
     
     let view = GuideRowCell()
     view.configure(with: channel1.id,

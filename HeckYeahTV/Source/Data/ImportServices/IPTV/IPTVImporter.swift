@@ -20,6 +20,8 @@ actor IPTVImporter {
         self.context.autosaveEnabled = false
     }
     
+    static let iptvDeviceId = "IPTV"
+    
     private var batchCount: Int = 0
     private let batchSize: Int = 500
     private let context: ModelContext
@@ -62,9 +64,9 @@ actor IPTVImporter {
         let remove = Array(Dictionary(grouping: streams, by: \.id).filter({ $1.count > 1 }).keys)
         streams.removeAll(where: { remove.contains($0.id) })
         
-        //Delete all existing channels, faster than upsert.  (We preserve favorites).
-        let channelSource: String = ChannelSourceType.ipStream.rawValue
-        try context.delete(model: Channel.self, where: #Predicate { channel in channel.source == channelSource })
+        //Delete all existing IPTV channels, faster than upsert.  (We preserve favorites).
+        let deviceId = IPTVImporter.iptvDeviceId
+        try context.delete(model: Channel.self, where: #Predicate { channel in channel.deviceId == deviceId })
         if context.hasChanges {
             try context.save()
         }
@@ -88,8 +90,8 @@ actor IPTVImporter {
         
         let existingChannels: [Channel] = {
             do {
-                let source = ChannelSourceType.ipStream.rawValue
-                let predicate = #Predicate<Channel> { $0.source == source }
+                let deviceId = IPTVImporter.iptvDeviceId
+                let predicate = #Predicate<Channel> { $0.deviceId == deviceId }
                 var descriptor = FetchDescriptor<Channel>(predicate: predicate)
                 descriptor.propertiesToFetch = [\.id]
                 return try context.fetch(descriptor)
@@ -140,7 +142,6 @@ actor IPTVImporter {
                 logoURL: src.logoURLHint,
                 quality: format,
                 hasDRM: src.hasDRMHint,
-                source: src.sourceHint,
                 deviceId: src.deviceIdHint
             )
             context.insert(newChannel)

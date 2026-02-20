@@ -29,97 +29,161 @@ final class SwiftDataController: SwiftDataProvider {
         self.bootStrap()
     }
     
-    //MARK: - Internal API - ChannelSourceable protocol implementation
+    //MARK: - Internal API - ChannelManageable protocol implementation
 
     private(set) var channelBundleMap: ChannelBundleMap = ChannelBundleMap(channelBundleId: "", map: [:], channelIds: [])
 
-    func totalChannelCount() throws -> Int {
-        let descriptor = FetchDescriptor<Channel>()
-        let totalChannelCount = try viewContext.fetchCount(descriptor)
-        return totalChannelCount
+    func totalChannelCount() -> Int {
+        do {
+            let descriptor = FetchDescriptor<Channel>()
+            let totalChannelCount = try viewContext.fetchCount(descriptor)
+            return totalChannelCount
+        } catch {
+            logError("Unable to determine total channel count (IPTV channels + HDHomeRun channels. Error: \(error)")
+            return 0
+        }
     }
 
-    func totalChannelCountFor(deviceId: HDHomeRunDeviceId) throws -> Int {
-        let predicate = #Predicate<Channel> { $0.deviceId == deviceId }
-        let fetchDescriptor = FetchDescriptor<Channel>(predicate: predicate)
-        let count: Int = try viewContext.fetchCount(fetchDescriptor)
-        return count
+    func totalChannelCountFor(deviceId: HDHomeRunDeviceId) -> Int {
+        do {
+            let predicate = #Predicate<Channel> { $0.deviceId == deviceId }
+            let fetchDescriptor = FetchDescriptor<Channel>(predicate: predicate)
+            let count: Int = try viewContext.fetchCount(fetchDescriptor)
+            return count
+        } catch {
+            logError("Unable to determine total channel count for HDHomeRun device. Error: \(error)")
+            return 0
+        }
     }
 
-    func homeRunDevices() throws -> [HomeRunDevice] {
-        let sort = [SortDescriptor<HomeRunDevice>(\.friendlyName, order: .forward)]
-        let fetchDescriptor = FetchDescriptor<HomeRunDevice>(sortBy: sort)
-        let devices = try viewContext.fetch(fetchDescriptor)
-        return devices
-    }
-    
-    func countries() throws -> [Country] {
-        let sort = [SortDescriptor<Country>(\.name, order: .forward)]
-        let fetchDescriptor = FetchDescriptor<Country>(sortBy: sort)
-        let models = try viewContext.fetch(fetchDescriptor)
-        return models
-    }
-    
-    func programCategories() throws -> [ProgramCategory] {
-        let sort = [SortDescriptor<ProgramCategory>(\.name, order: .forward)]
-        let fetchDescriptor = FetchDescriptor<ProgramCategory>(sortBy: sort)
-        let models = try viewContext.fetch(fetchDescriptor)
-        return models
-    }
-    
-    func channel(for channelId: ChannelId) throws -> Channel {
-        let predicate = #Predicate<Channel> { $0.id == channelId }
-        var fetchDescriptor = FetchDescriptor<Channel>(predicate: predicate)
-        fetchDescriptor.fetchLimit = 1
-        guard let _program = try viewContext.fetch(fetchDescriptor).first else {
-            throw GuideStoreError.noChannelFoundForId(channelId)
+    func homeRunDevices() -> [HomeRunDevice] {
+        do {
+            let sort = [SortDescriptor<HomeRunDevice>(\.friendlyName, order: .forward)]
+            let fetchDescriptor = FetchDescriptor<HomeRunDevice>(sortBy: sort)
+            let devices = try viewContext.fetch(fetchDescriptor)
+            return devices
+        } catch {
+            logError("Unable to fetch HDHomeRunDevice(s). Error: \(error)")
+            return []
         }
-        return _program
     }
     
-    func channelsForCurrentFilter() throws -> [Channel] {
-        let predicate = Self.predicateBuilder(searchTerm: self.searchTerm,
-                                              countryCode: self.selectedCountry,
-                                              categoryId: self.selectedCategory)
-        let sortDescriptor = [SortDescriptor<Channel>(\.sortHint, order: .forward)]
-        let fetchDescriptor = FetchDescriptor<Channel>(predicate: predicate, sortBy: sortDescriptor)
-        let _channels = try viewContext.fetch(fetchDescriptor)
-        return _channels
-    }
-    
-    func channelBundles() throws -> [ChannelBundle] {
-        let sortDescriptor = [SortDescriptor<ChannelBundle>(\.name, order: .forward)]
-        let fetchDescriptor = FetchDescriptor<ChannelBundle>(sortBy: sortDescriptor)
-        let models = try viewContext.fetch(fetchDescriptor)
-        return models
-    }
-    
-    func channelBundle(for bundleId: ChannelBundleId) throws -> ChannelBundle {
-        let predicate = #Predicate<ChannelBundle> { $0.id == bundleId }
-        var fetchDescriptor = FetchDescriptor<ChannelBundle>(predicate: predicate)
-        fetchDescriptor.fetchLimit = 1
-        guard let model = try viewContext.fetch(fetchDescriptor).first else {
-            throw GuideStoreError.noChannelBundleFoundForId(bundleId)
+    func toggleDeviceChannelLineupInclusion(device: HomeRunDevice) {
+        do {
+            device.includeChannelLineUp.toggle()
+            try viewContext.saveChangesIfNeeded()
+        } catch {
+            logError("Unable to toggle HDHomeRunDevice includeChannelLineUp property. Error: \(error)")
         }
-        return model
+    }
+    
+    func countries() -> [Country] {
+        do {
+            let sort = [SortDescriptor<Country>(\.name, order: .forward)]
+            let fetchDescriptor = FetchDescriptor<Country>(sortBy: sort)
+            let models = try viewContext.fetch(fetchDescriptor)
+            return models
+        } catch {
+            logError("Unable to fetch countries. Error: \(error)")
+            return []
+        }
+    }
+    
+    func programCategories() -> [ProgramCategory] {
+        do {
+            let sort = [SortDescriptor<ProgramCategory>(\.name, order: .forward)]
+            let fetchDescriptor = FetchDescriptor<ProgramCategory>(sortBy: sort)
+            let models = try viewContext.fetch(fetchDescriptor)
+            return models
+        } catch {
+            logError("Unable to fetch program categories. Error: \(error)")
+            return []
+        }
+    }
+    
+    func channel(for channelId: ChannelId) -> Channel? {
+        do {
+            let predicate = #Predicate<Channel> { $0.id == channelId }
+            var fetchDescriptor = FetchDescriptor<Channel>(predicate: predicate)
+            fetchDescriptor.fetchLimit = 1
+            guard let _program = try viewContext.fetch(fetchDescriptor).first else {
+                throw GuideStoreError.noChannelFoundForId(channelId)
+            }
+            return _program
+        } catch {
+            logError("Unable to fetch channel for channelId: \(channelId). Error: \(error)")
+            return nil
+        }
+    }
+    
+    func channelsForCurrentFilter() -> [Channel] {
+        do {
+            let predicate = Self.predicateBuilder(searchTerm: self.searchTerm,
+                                                  countryCode: self.selectedCountry,
+                                                  categoryId: self.selectedCategory)
+            let sortDescriptor = [SortDescriptor<Channel>(\.sortHint, order: .forward)]
+            let fetchDescriptor = FetchDescriptor<Channel>(predicate: predicate, sortBy: sortDescriptor)
+            let _channels = try viewContext.fetch(fetchDescriptor)
+            return _channels
+        } catch {
+            logError("Unable to fetch channels for current filter. searchTerm: \"\(searchTerm ?? "nil")\" countryCode: \"\(selectedCountry)\" categoryId: \"\(selectedCategory ?? "nil")\"  . Error: \(error)")
+            return []
+        }
+    }
+    
+    func channelBundles() -> [ChannelBundle] {
+        do {
+            let sortDescriptor = [SortDescriptor<ChannelBundle>(\.name, order: .forward)]
+            let fetchDescriptor = FetchDescriptor<ChannelBundle>(sortBy: sortDescriptor)
+            let models = try viewContext.fetch(fetchDescriptor)
+            return models
+        } catch {
+            logError("Unable to fetch channel bundles. Error: \(error)")
+            return []
+        }
+    }
+    
+    func channelBundle(for bundleId: ChannelBundleId) -> ChannelBundle? {
+        do {
+            let predicate = #Predicate<ChannelBundle> { $0.id == bundleId }
+            var fetchDescriptor = FetchDescriptor<ChannelBundle>(predicate: predicate)
+            fetchDescriptor.fetchLimit = 1
+            guard let model = try viewContext.fetch(fetchDescriptor).first else {
+                throw GuideStoreError.noChannelBundleFoundForId(bundleId)
+            }
+            return model
+        } catch {
+            logError("Unable to fetch channel bundle for channelBundleId: \(bundleId). Error: \(error)")
+            return nil
+        }
     }
     
     func bundleEntry(for bundleEntryId: BundleEntryId?) -> BundleEntry? {
         guard let bundleEntryId else { return nil }
-        let predicate = #Predicate<BundleEntry> { $0.id == bundleEntryId }
-        var fetchDescriptor = FetchDescriptor<BundleEntry>(predicate: predicate)
-        fetchDescriptor.fetchLimit = 1
-        let bundleEntry: BundleEntry? = try? viewContext.fetch(fetchDescriptor).first
-        return bundleEntry
+        do {
+            let predicate = #Predicate<BundleEntry> { $0.id == bundleEntryId }
+            var fetchDescriptor = FetchDescriptor<BundleEntry>(predicate: predicate)
+            fetchDescriptor.fetchLimit = 1
+            let bundleEntry: BundleEntry? = try viewContext.fetch(fetchDescriptor).first
+            return bundleEntry
+        } catch {
+            logError("Unable to fetch BundleEntry for bundleEntryId: \(bundleEntryId). Error: \(error)")
+            return nil
+        }
     }
     
     func bundleEntry(for channelId: ChannelId?, channelBundleId: ChannelBundleId) -> BundleEntry? {
         guard let channelId else { return nil }
-        let predicate = #Predicate<BundleEntry> { $0.channel?.id == channelId && $0.channelBundle.id == channelBundleId }
-        var fetchDescriptor = FetchDescriptor<BundleEntry>(predicate: predicate)
-        fetchDescriptor.fetchLimit = 1
-        let bundleEntry: BundleEntry? = try? viewContext.fetch(fetchDescriptor).first
-        return bundleEntry
+        do {
+            let predicate = #Predicate<BundleEntry> { $0.channel?.id == channelId && $0.channelBundle.id == channelBundleId }
+            var fetchDescriptor = FetchDescriptor<BundleEntry>(predicate: predicate)
+            fetchDescriptor.fetchLimit = 1
+            let bundleEntry: BundleEntry? = try viewContext.fetch(fetchDescriptor).first
+            return bundleEntry
+        } catch {
+            logError("Unable to fetch BundleEntry for channelId: \(channelId), channelBundleId: \(channelBundleId). Error: \(error)")
+            return nil
+        }
     }
     
     func isFavorite(channelId: ChannelId?, channelBundleId: ChannelBundleId) -> Bool {
@@ -130,18 +194,26 @@ final class SwiftDataController: SwiftDataProvider {
     
     func toggleIsFavorite(channelId: ChannelId?, channelBundleId: ChannelBundleId) {
         guard let channelId else { return }
-        let bundleEntry = bundleEntry(for: channelId, channelBundleId: channelBundleId)
-        bundleEntry?.isFavorite.toggle()
-
         do {
+            let bundleEntry = bundleEntry(for: channelId, channelBundleId: channelBundleId)
+            bundleEntry?.isFavorite.toggle()
             try viewContext.saveChangesIfNeeded()
         } catch {
-            logError("Failed to save favorite toggle for channelId: \(channelId). Error: \(error)")
+            logError("Failed to save favorite toggle for channelId: \(channelId), channelBundleId: \(channelBundleId). Error: \(error)")
         }
     }
     
     func invalidateChannelBundleMap() {
         scheduleChannelBundleMapRebuild()
+    }
+    
+    func invalidateTunerLineUp() {
+        do {
+            try updateChannelBundleWithIncludedChannels()
+        } catch {
+            logError("Failed to synchronize tuner device channel lineup with all channel bundles.")
+        }
+        
     }
     
     func channelPrograms(for channelId: ChannelId) -> [ChannelProgram] {
@@ -152,31 +224,33 @@ final class SwiftDataController: SwiftDataProvider {
             let _programs = try viewContext.fetch(fetchDescriptor)
             return _programs
         } catch {
-            logError("Failed to fetch channel programs for channelId: \(channelId).  Error \(error.localizedDescription)")
+            logError("Failed to fetch channel programs for channelId: \(channelId).  Error \(error)")
             return []
         }
     }
     
-    func deletePastChannelPrograms() throws {
-        // delete - programs that have passed
-        logDebug("Deleting program data for programs that ended more than now.")
-        let now = Date()
-        let oldProgramsPredicate = #Predicate<ChannelProgram> { program in
-            program.endTime < now
+    func deletePastChannelPrograms() {
+        guard not(PreviewDetector.isRunningInPreview) else { return }
+        do {
+            logDebug("Deleting program data for programs that ended more than now.")
+            let now = Date()
+            let oldProgramsPredicate = #Predicate<ChannelProgram> { program in
+                program.endTime < now
+            }
+            try viewContext.delete(model: ChannelProgram.self, where: oldProgramsPredicate)
+            try viewContext.saveChangesIfNeeded()
+        } catch {
+            logError("Failed to delete past channel programs.  Error \(error)")
         }
-        try viewContext.delete(model: ChannelProgram.self, where: oldProgramsPredicate)
-        try viewContext.saveChangesIfNeeded()
     }
     
     static func predicateBuilder(searchTerm: String?,
                                  countryCode: CountryCodeId,
                                  categoryId: CategoryId?) -> Predicate<Channel> {
         
+        let deviceId = IPTVImporter.iptvDeviceId
         var conditions: [Predicate<Channel>] = []
-
-        // Country predicate is always applied but we use "ANY" support local LAN tuners.  These should be returned regardless of current country selection.
-        // If you want to filter LAN channels out use .source and the ChannelSourceType enum.
-        conditions.append( #Predicate<Channel> { $0.country == countryCode || $0.country == "ANY" })
+        conditions.append( #Predicate<Channel> { $0.country == countryCode && $0.deviceId == deviceId })
         
         if let searchTerm, searchTerm.count > 0 {
             conditions.append( #Predicate<Channel> { $0.title.localizedStandardContains(searchTerm) })
@@ -322,6 +396,7 @@ final class SwiftDataController: SwiftDataProvider {
                 let newBundleId = appState.selectedChannelBundleId
                 if newBundleId != lastBundleId {
                     lastBundleId = newBundleId
+                    try? self.updateChannelBundleWithIncludedChannels()
                     self.scheduleChannelBundleMapRebuild()
                 }
             }
@@ -347,6 +422,119 @@ final class SwiftDataController: SwiftDataProvider {
             } catch {
                 logError("Failed to rebuild channel map: \(error)")
             }
+        }
+    }
+    
+    private func devices(enabledState: Bool) throws -> [HDHomeRunDeviceId] {
+        let predicate = #Predicate<HomeRunDevice> { $0.includeChannelLineUp == enabledState }
+        var descriptor = FetchDescriptor<HomeRunDevice>(predicate: predicate)
+        descriptor.propertiesToFetch = [\.deviceId]
+        let devices = try viewContext.fetch(descriptor)
+        let deviceIds = devices.map { $0.deviceId }
+        return deviceIds
+    }
+    
+    private func channelsFor(deviceIds: [HDHomeRunDeviceId]) throws -> [Channel] {
+        guard not(deviceIds.isEmpty) else { return [] }
+        let channelPredicate = #Predicate<Channel> { channel in
+            deviceIds.contains(channel.deviceId)
+        }
+        let channelDescriptor = FetchDescriptor<Channel>(predicate: channelPredicate)
+        do {
+            let channels = try viewContext.fetch(channelDescriptor)
+            return channels
+        } catch {
+            logError("Error fetching channels for deviceId(s) \(deviceIds).  Error: \(error)")
+            throw error
+        }
+    }
+    
+    private func updateChannelBundleWithIncludedChannels() throws {
+        logDebug("Starting sync task for device(s) channel lineup... 🇺🇸")
+        
+        // Fetch all channel bundles
+        let bundleDescriptor = FetchDescriptor<ChannelBundle>()
+        let allChannelBundles = try viewContext.fetch(bundleDescriptor)
+        
+        guard !allChannelBundles.isEmpty else {
+            return
+        }
+        
+        // Get enabled and disabled device IDs
+        let enabledDeviceIds = try devices(enabledState: true)
+        let disabledDeviceIds = try devices(enabledState: false)
+        
+        // Fetch channels for enabled devices (to add)
+        let channelsToAdd = try channelsFor(deviceIds: enabledDeviceIds)
+        
+        // Fetch channels for disabled devices (to remove)
+        let channelsToRemove = try channelsFor(deviceIds: disabledDeviceIds)
+        
+        // Add and remove entries
+        try addBundleEntries(for: channelsToAdd, across: allChannelBundles)
+        try removeBundleEntries(for: channelsToRemove, across: allChannelBundles)
+        
+        try viewContext.saveChangesIfNeeded()
+        
+        logDebug("Completed sync task for device(s) channel lineup... 🏁")
+    }
+    
+    private func addBundleEntries(for channels: [Channel], across bundles: [ChannelBundle]) throws {
+        guard !channels.isEmpty else { return }
+        
+        // Compute all expected IDs for enabled channels across all bundles
+        var expectedAddIds: [BundleEntryId] = []
+        for bundle in bundles {
+            for channel in channels {
+                expectedAddIds.append(BundleEntry.newBundleEntryId(channelBundleId: bundle.id, channelId: channel.id))
+            }
+        }
+        
+        // Fetch existing entries for these IDs
+        let addEntryPredicate = #Predicate<BundleEntry> { entry in
+            expectedAddIds.contains(entry.id)
+        }
+        let addEntryDescriptor = FetchDescriptor<BundleEntry>(predicate: addEntryPredicate)
+        let existingAddEntries = try viewContext.fetch(addEntryDescriptor)
+        let existingAddIds = Set(existingAddEntries.map { $0.id })
+        
+        // Insert missing entries
+        for bundle in bundles {
+            for channel in channels {
+                let bundleEntryId = BundleEntry.newBundleEntryId(channelBundleId: bundle.id, channelId: channel.id)
+                
+                if !existingAddIds.contains(bundleEntryId) {
+                    let newEntry = BundleEntry(channel: channel,
+                                               channelBundle: bundle,
+                                               sortHint: channel.sortHint,
+                                               isFavorite: false)
+                    viewContext.insert(newEntry)
+                }
+            }
+        }
+    }
+    
+    private func removeBundleEntries(for channels: [Channel], across bundles: [ChannelBundle]) throws {
+        guard !channels.isEmpty else { return }
+        
+        // Compute all IDs to remove across all bundles
+        var expectedRemoveIds: [BundleEntryId] = []
+        for bundle in bundles {
+            for channel in channels {
+                expectedRemoveIds.append(BundleEntry.newBundleEntryId(channelBundleId: bundle.id, channelId: channel.id))
+            }
+        }
+        
+        // Fetch existing entries to delete
+        let removeEntryPredicate = #Predicate<BundleEntry> { entry in
+            expectedRemoveIds.contains(entry.id)
+        }
+        let removeEntryDescriptor = FetchDescriptor<BundleEntry>(predicate: removeEntryPredicate)
+        let entriesToRemove = try viewContext.fetch(removeEntryDescriptor)
+        
+        // Delete them
+        for entry in entriesToRemove {
+            viewContext.delete(entry)
         }
     }
     
