@@ -222,14 +222,14 @@ extension VLCPlayerView.Coordinator: VLCMediaPlayerDelegate {
     
     nonisolated func mediaPlayerStateChanged(_ aNotification: Notification) {
         //Not yet implemented
-        //logDebug("VLCPlayerView.Coordinator:mediaPlayerStateChanged ☀️")
+//        logDebug("VLCPlayerView.Coordinator:mediaPlayerStateChanged ☀️")
 
         guard let player = aNotification.object as? VLCMediaPlayer else { return }
         let state = player.state
         switch state {
             case .error:
                 
-                logDebug("VLCPlayerView.Coordinator:mediaPlayerStateChanged error ☀️")
+                logError("VLCPlayerView.Coordinator:mediaPlayerStateChanged error ☀️")
 //                // Stream errored — attempt reconnect by replaying the same media
 //                DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak player] in
 //                    player?.play()

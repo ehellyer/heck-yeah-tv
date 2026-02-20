@@ -64,7 +64,7 @@ extension SchemaV1 {
                 self.name = try container.decode(String.self, forKey: .name)
                 self.categoryDescription = try container.decode(String.self, forKey: .categoryDescription)
             } catch {
-                logDebug(error.localizedDescription)
+                logError("Unable to decode ProgramCategory from JSON data error: \(error)")
                 throw error
             }
         }

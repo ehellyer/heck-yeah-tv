@@ -115,7 +115,7 @@ actor HomeRunImporter {
                 descriptor.propertiesToFetch = [\.deviceId]
                 return try context.fetch(descriptor)
             } catch {
-                logError("Unable to fetch existing `HomeRunDevice`. \(error.localizedDescription)")
+                logError("Unable to fetch existing `HomeRunDevice`. \(error)")
                 return []
             }
         }()

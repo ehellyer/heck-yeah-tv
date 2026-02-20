@@ -30,7 +30,7 @@ actor IPTVImporter {
         do {
             return try context.fetch(FetchDescriptor<ProgramCategory>())
         } catch {
-            logDebug("Unable to fetch categories.")
+            logError("Unable to fetch categories.  Error: \(error)")
             return []
         }
     }()

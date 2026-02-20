@@ -104,6 +104,7 @@ struct Heck_Yeah_TVApp: App {
     }
     
     private func startBootstrap() async {
+#if !os(tvOS)
         if appState.scanForTuners == nil {
             let wantsToScan = await withCheckedContinuation { continuation in
                 tunerPromptContinuationBox.continuation = continuation
@@ -111,6 +112,10 @@ struct Heck_Yeah_TVApp: App {
             }
             appState.scanForTuners = wantsToScan
         }
+#else
+        // tvOS does not support local network privacy.
+        appState.scanForTuners = true
+#endif
         
         if appState.scanForTuners == true {
             let lanAuth = LocalNetworkAuthorization()

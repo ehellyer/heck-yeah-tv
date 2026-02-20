@@ -121,7 +121,7 @@ final class MockSwiftDataStack: SwiftDataStackProvider {
                 throw MockDataPersistenceError.contextSaveFailed(underlyingError: error)
             }
         } catch {
-            logDebug("Failed to load Mock json into SwiftData in-memory context.  Error: \(error)")
+            logError("Failed to load Mock json into SwiftData in-memory context.  Error: \(error)")
         }
     }
 

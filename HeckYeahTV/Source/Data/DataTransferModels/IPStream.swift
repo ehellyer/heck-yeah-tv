@@ -73,7 +73,7 @@ extension IPStream {
             self.quality = try container.decodeIfPresent(String.self, forKey: .quality)
             self.logoURL = try container.decodeIfPresent(URL.self, forKey: .logoURL)
         } catch {
-            logDebug(error)
+            logError("Unable to decode IPStream from JSON data error: \(error)")
             throw error
         }
     }

@@ -211,7 +211,7 @@ class GuideViewController: UIViewController {
         let visibleCells: [GuideRowCell] = self.tableView.visibleCells as? [GuideRowCell] ?? []
         guard let channelId = targetChannelId,
               let cell = visibleCells.first(where: { $0.channelId == channelId }) else {
-            logDebug("📍 Cell for targetChannelId not found in visible cells")
+            logError("Cell for targetChannelId not found in visible cells")
             return nil
         }
         return cell.channelNameView
@@ -226,17 +226,17 @@ class GuideViewController: UIViewController {
 
     private func requestFocus(on view: UIView) {
         guard view.canBecomeFocused else {
-            logDebug("📍 View is not focusable: \(type(of: view))")
+            logError("View is not focusable: \(type(of: view))")
             return
         }
         
         // Verify the view is still in the view hierarchy
         guard view.window != nil else {
-            logDebug("📍 View is not in window hierarchy: \(type(of: view))")
+            logError("View is not in window hierarchy: \(type(of: view))")
             return
         }
         
-        logDebug("📍 Requesting focus on: \(type(of: view))")
+        logDebug("Requesting focus on: \(type(of: view))")
         // Set the target view FIRST so preferredFocusEnvironments returns it
         self.targetFocusView = view
         self.updateFocusIfNeeded()
