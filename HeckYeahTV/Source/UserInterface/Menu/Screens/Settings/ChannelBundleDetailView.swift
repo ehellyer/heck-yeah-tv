@@ -10,6 +10,7 @@ import SwiftUI
 import SwiftData
 
 struct ChannelBundleDetailView: View {
+    @Binding var navigationPath: [SettingsDestination]
     @Bindable var bundle: ChannelBundle
     
     @State private var swiftDataController: SwiftDataProvider = InjectedValues[\.swiftDataController]
@@ -181,7 +182,17 @@ struct ChannelBundleDetailView: View {
             swiftDataController.searchTerm = newValue
         }
         #if os(iOS)
-        .navigationBarBackButtonHidden(nameFieldFocused)
+        .navigationBarBackButtonHidden(true)
+        .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                Button(action: {
+                    navigationPath.removeAll()
+                }) {
+                    Image(systemName: "chevron.left")
+                }
+                .disabled(nameFieldFocused)
+            }
+        }
         #endif
         .alert("Bundle Name Required", isPresented: $showingEmptyNameAlert) {
             Button("OK", role: .cancel) { }
@@ -257,7 +268,7 @@ struct ChannelBundleDetailView: View {
         guard canDelete else { return }
         swiftDataController.viewContext.delete(bundle)
         try? swiftDataController.viewContext.saveChangesIfNeeded()
-        dismiss()
+        navigationPath.removeAll()
     }
     
     private func loadData() {
@@ -274,6 +285,8 @@ struct ChannelBundleDetailView: View {
 // MARK: - Preview
 
 #Preview {
+    @Previewable @State var navigationPath: [SettingsDestination] = []
+    
     // Override the injected AppStateProvider
     @Previewable @State var appState: AppStateProvider = MockSharedAppState()
     InjectedValues[\.sharedAppState] = appState
@@ -285,8 +298,8 @@ struct ChannelBundleDetailView: View {
     let channelBundle = swiftDataController.channelBundles().first!
     
     return TVPreviewView() {
-        NavigationStack {
-            ChannelBundleDetailView(bundle: channelBundle)
+        NavigationStack(path: $navigationPath) {
+            ChannelBundleDetailView(navigationPath: $navigationPath, bundle: channelBundle)
         }
     }
 }

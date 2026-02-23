@@ -8,22 +8,28 @@
 
 import SwiftUI
 
+enum SettingsDestination: Hashable {
+    case addBundle
+    case bundleDetail(bundleId: String)
+}
+
 struct SettingsContainerView: View {
     
     @State private var appState: AppStateProvider = InjectedValues[\.sharedAppState]
+    @State private var navigationPath: [SettingsDestination] = []
     
     var body: some View {
 #if os(macOS)
-        NavigationStack {
-            SettingsView()
+        NavigationStack(path: $navigationPath) {
+            SettingsView(navigationPath: $navigationPath)
                 .formStyle(.grouped)
                 .scrollContentBackground(.hidden)
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .background(.clear)
         }
 #elseif os(tvOS)
-        NavigationStack {
-            SettingsView()
+        NavigationStack(path: $navigationPath) {
+            SettingsView(navigationPath: $navigationPath)
                 .toolbar {
                     ToolbarItem(placement: .principal) {
                         Text("Settings")
@@ -34,7 +40,9 @@ struct SettingsContainerView: View {
                 }
         }
 #elseif os(iOS)
-        SettingsView()
+        NavigationStack(path: $navigationPath) {
+            SettingsView(navigationPath: $navigationPath)
+        }
 #endif
         
     }

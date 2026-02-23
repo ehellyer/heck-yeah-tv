@@ -573,9 +573,9 @@ final class SwiftDataController: SwiftDataProvider {
             result[item.channel!.id] = item.id
         }
         
-        channelBundleMap = ChannelBundleMap(channelBundleId: channelBundleId,
-                                            map: map,
-                                            channelIds: channelIds)
+        channelBundleMap.update(channelBundleId: channelBundleId,
+                                map: map,
+                                channelIds: channelIds)
         
         logDebug("Channel map built.  Total Channels: \(channelBundleMap.mapCount) 🏁")
     }

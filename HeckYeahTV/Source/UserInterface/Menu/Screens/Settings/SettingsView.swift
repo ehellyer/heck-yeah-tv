@@ -14,12 +14,11 @@ struct SettingsView: View {
     @State private var swiftDataController: SwiftDataProvider = InjectedValues[\.swiftDataController]
     @State private var appState: AppStateProvider = InjectedValues[\.sharedAppState]
     @State private var channelBundles: [ChannelBundle] = []
-    @State private var showingAddBundle = false
+    @Binding var navigationPath: [SettingsDestination]
     @State private var iptvChannelCount: Int = 0
     @State private var isReloadingIPTV = false
+    @State private var isReloadingHomeRun = false
     @State private var discoveredDevices: [HomeRunDevice] = []
-    
-    @State private var bundleSelection: ChannelBundleId? = nil
     
     private func channelCount(for deviceId: HDHomeRunDeviceId) -> Int {
         let count = swiftDataController.totalChannelCountFor(deviceId: deviceId)
@@ -39,7 +38,13 @@ struct SettingsView: View {
                             Button {
                                 appState.selectedChannelBundleId = bundle.id
                             } label: {
-                                Text(bundle.name)
+                                HStack {
+                                    Text(bundle.name)
+                                    if bundle.id == appState.selectedChannelBundleId {
+                                        Spacer()
+                                        Image(systemName: "checkmark")
+                                    }
+                                }
                             }
                         }
                     } label: {
@@ -68,9 +73,7 @@ struct SettingsView: View {
             Section {
                 ForEach(channelBundles) { bundle in
                     
-                    NavigationLink {
-                        ChannelBundleDetailView(bundle: bundle)
-                    } label: {
+                    NavigationLink(value: SettingsDestination.bundleDetail(bundleId: bundle.id)) {
                         VStack(alignment: .leading, spacing: 4) {
                             Text(bundle.name)
                                 .font(.body)
@@ -81,7 +84,7 @@ struct SettingsView: View {
                 }
                 
                 Button {
-                    showingAddBundle = true
+                    navigationPath.append(.addBundle)
                 } label: {
                     Label("Add Channel Bundle", systemImage: "plus.circle.fill")
                 }
@@ -119,7 +122,7 @@ struct SettingsView: View {
                     .foregroundStyle(.white)
             } footer: {
                 if isReloadingIPTV {
-                    Text("Reloading channels...")
+                    Text("Reloading channels, this may take up to a minute...")
                         .foregroundStyle(.white)
                 }
             }
@@ -164,13 +167,12 @@ struct SettingsView: View {
                 }
                 
                 Button {
-                    //TODO: Add code to scan for HDHomeRun devices and import.  (Devices, channels and guide data)
-                    reloadData()
+                    reloadTunerDevices()
                 } label: {
                     Label("Refresh Devices", systemImage: "arrow.clockwise")
                 }
                 .foregroundStyle(.blue)
-                
+                .disabled(isReloadingHomeRun)
             } header: {
                 Text("HDHomeRun Devices")
                     .foregroundStyle(.white)
@@ -180,21 +182,24 @@ struct SettingsView: View {
 #if !os(tvOS)
             .listRowSeparatorTint(Color(white: 0.6).opacity(0.3))
 #endif
-
-            
         }
 #if !os(tvOS)
         .scrollContentBackground(.hidden)
 #endif
-        .sheet(isPresented: $showingAddBundle) {
-            AddBundleSheet(onAdd: { name in
-                addBundle(name: name)
-            })
+        .navigationDestination(for: SettingsDestination.self) { destination in
+            switch destination {
+                case .addBundle:
+                    AddBundleView(navigationPath: $navigationPath, onAdd: { bundle in
+                        navigationPath.append(.bundleDetail(bundleId: bundle.id))
+                    })
+                case .bundleDetail(let bundleId):
+                    if let bundle = swiftDataController.channelBundles().first(where: { $0.id == bundleId }) {
+                        ChannelBundleDetailView(navigationPath: $navigationPath,
+                                                bundle: bundle)
+                    }
+            }
         }
-        .task {
-            reloadData()
-        }
-        .onReceive(NotificationCenter.default.publisher(for: ModelContext.didSave)) { _ in
+        .onAppear() {
             reloadData()
         }
 
@@ -202,22 +207,34 @@ struct SettingsView: View {
     
     // MARK: - Actions
     
-    private func addBundle(name: String) {
-        let newBundle = ChannelBundle(id: UUID().uuidString,
-                                      name: name,
-                                      channels: [])
-        swiftDataController.viewContext.insert(newBundle)
-        try? swiftDataController.viewContext.saveChangesIfNeeded()
-    }
-    
     private func reloadIPTVChannels() {
         isReloadingIPTV = true
-        // TODO: Implement IPTV reload logic
-        Task {
-            try? await Task.sleep(for: .seconds(2))
+        Task.detached(name: "HeckYeahTV.IPTVImporter") {
+            let container = await swiftDataController.container
+            let importer = IPTVImporter(container: container)
+            do {
+                _ = try await importer.load()
+            } catch {
+                logError("Reload tuner devices failed.  Error: \(error)")
+            }
             await MainActor.run {
                 isReloadingIPTV = false
-                reloadData()
+            }
+        }
+    }
+    
+    private func reloadTunerDevices() {
+        isReloadingHomeRun = true
+        Task.detached(name: "HeckYeahTV.HomeRunImporter") {
+            let container = await swiftDataController.container
+            let importer = HomeRunImporter(container: container)
+            do {
+                _ = try await importer.load(shouldFetchGuideData: true)
+            } catch {
+                logError("Reload tuner devices failed.  Error: \(error)")
+            }
+            await MainActor.run {
+                isReloadingHomeRun = false
             }
         }
     }
@@ -227,115 +244,18 @@ struct SettingsView: View {
         discoveredDevices = swiftDataController.homeRunDevices()
         iptvChannelCount = swiftDataController.totalChannelCount()
     }
-
 }
 
-// MARK: - Add Bundle Sheet
+// MARK: - Add Bundle View
 
-struct AddBundleSheet: View {
-    @Environment(\.dismiss) private var dismiss
-    @State private var bundleName = ""
-    let onAdd: (String) -> Void
-    
-#if os(tvOS)
-    @FocusState private var isNameFieldFocused: Bool
-#endif
-    
-    var body: some View {
-        NavigationStack {
-            Form {
-                Section {
-                    TextField("Bundle Name", text: $bundleName)
-#if os(tvOS)
-                        .focused($isNameFieldFocused)
-#endif
-                } header: {
-                    Text("New Channel Bundle")
-                }
-            }
-            .navigationTitle("Add Bundle")
-#if os(iOS)
-            .navigationBarTitleDisplayMode(.inline)
-#endif
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancel") {
-                        dismiss()
-                    }
-                }
-                
-                ToolbarItem(placement: .confirmationAction) {
-                    Button("Add") {
-                        onAdd(bundleName)
-                        dismiss()
-                    }
-                    .disabled(bundleName.trimmingCharacters(in: .whitespaces).isEmpty)
-                }
-            }
-#if os(tvOS)
-            .onAppear {
-                isNameFieldFocused = true
-            }
-#endif
-        }
-    }
-}
 
-// MARK: - Rename Bundle Sheet
 
-struct RenameBundleSheet: View {
-    @Environment(\.dismiss) private var dismiss
-    @Bindable var bundle: ChannelBundle
-    @State private var newName: String = ""
-    
-#if os(tvOS)
-    @FocusState private var isNameFieldFocused: Bool
-#endif
-    
-    var body: some View {
-        NavigationStack {
-            Form {
-                Section {
-                    TextField("Bundle Name", text: $newName)
-#if os(tvOS)
-                        .focused($isNameFieldFocused)
-#endif
-                } header: {
-                    Text("Rename Bundle")
-                }
-            }
-            .navigationTitle("Rename")
-#if os(iOS)
-            .navigationBarTitleDisplayMode(.inline)
-#endif
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancel") {
-                        dismiss()
-                    }
-                }
-                
-                ToolbarItem(placement: .confirmationAction) {
-                    Button("Save") {
-                        bundle.name = newName
-                        dismiss()
-                    }
-                    .disabled(newName.trimmingCharacters(in: .whitespaces).isEmpty)
-                }
-            }
-            .onAppear {
-                newName = bundle.name
-#if os(tvOS)
-                isNameFieldFocused = true
-#endif
-            }
-        }
-    }
-}
 
 #Preview("Light Mode") {
-    // Override the injected AppStateProvider
     @Previewable @State var appState: AppStateProvider = MockSharedAppState()
+    @Previewable @State var navigationPath: [SettingsDestination] = []
+    
+    // Override the injected AppStateProvider
     InjectedValues[\.sharedAppState] = appState
     
     // Override the injected SwiftDataController
@@ -343,16 +263,18 @@ struct RenameBundleSheet: View {
     InjectedValues[\.swiftDataController] = swiftDataController
     
     return TVPreviewView() {
-        HStack(spacing: 0) {
-            SettingsView()
-                .environment(\.colorScheme, .light)                
+        NavigationStack(path: $navigationPath) {
+            SettingsView(navigationPath: $navigationPath)
+                .environment(\.colorScheme, .light)
         }
     }
 }
 
 #Preview("Dark Mode") {
-    // Override the injected AppStateProvider
     @Previewable @State var appState: AppStateProvider = MockSharedAppState()
+    @Previewable @State var navigationPath: [SettingsDestination] = []
+    
+    // Override the injected AppStateProvider
     InjectedValues[\.sharedAppState] = appState
     
     // Override the injected SwiftDataController
@@ -360,10 +282,9 @@ struct RenameBundleSheet: View {
     InjectedValues[\.swiftDataController] = swiftDataController
     
     return TVPreviewView() {
-        HStack(spacing: 0) {
-            SettingsView()
+        NavigationStack(path: $navigationPath) {
+            SettingsView(navigationPath: $navigationPath)
                 .environment(\.colorScheme, .dark)
-            
         }
     }
 }

@@ -142,8 +142,25 @@ struct Heck_Yeah_TVApp: App {
                     let scanForTuners = await appState.scanForTuners ?? false
                     if scanForTuners && UserDefaults.lastLANAuthorizationStatus == .granted {
                         group.addTask {
+                            
+                            let lastGuideFetchDate: Date? = await appState.dateLastHomeRunChannelProgramFetch
+                            
+                            let shouldFetchGuideData: Bool = {
+                                guard let lastFetchDate = lastGuideFetchDate else {
+                                    // Never fetched before, should fetch now
+                                    return true
+                                }
+                                
+                                // Random interval between 3 and 6 hours
+                                let randomHours = Double.random(in: 3...6)
+                                let intervalSinceLastFetch = Date().timeIntervalSince(lastFetchDate)
+                                let hoursElapsed = intervalSinceLastFetch / 3600 // Convert seconds to hours
+                                
+                                return hoursElapsed >= randomHours
+                            }()
+                            
                             let hdTunerImporter = HomeRunImporter(container: container)
-                            let _ = try? await hdTunerImporter.load()
+                            let _ = try? await hdTunerImporter.load(shouldFetchGuideData: shouldFetchGuideData)
                         }
                     }
                     

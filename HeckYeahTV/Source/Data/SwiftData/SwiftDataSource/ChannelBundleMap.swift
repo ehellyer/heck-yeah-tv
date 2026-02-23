@@ -28,8 +28,10 @@ typealias ChannelMap = [ChannelId: BundleEntryId]
     private(set) var mapCount: Int
     private(set) var channelIds: [ChannelId]
     
-    func update(map: ChannelMap,
+    func update(channelBundleId: ChannelBundleId,
+                map: ChannelMap,
                 channelIds: [ChannelId]) {
+        self.channelBundleId = channelBundleId
         self.map = map
         self.channelIds = channelIds
         self.mapCount = map.count
