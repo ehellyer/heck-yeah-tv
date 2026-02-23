@@ -29,7 +29,7 @@ extension UIView {
     func configureChildView(_ childView: UIView, withInset edgeInsets: UIEdgeInsets = .zero) {
         UIView.configureChildView(childView, inParentView: self, withInset: edgeInsets)
     }
-
+    
     func configureHCenteredChildView(_ childView: UIView, withInset edgeInsets: UIEdgeInsets) {
         UIView.configureHCenteredChildView(childView, inParentView: self, withInset: edgeInsets)
     }
@@ -45,11 +45,11 @@ extension UIView {
                                   verticalVisualFormat: verticalVisualFormat)
     }
     
-    //MARK: - Internal Class API
-
-    class func configureHCenteredChildView(_ childView: UIView,
-                                  inParentView parentView: UIView,
-                                  withInset edgeInsets: UIEdgeInsets) {
+    //MARK: - Internal static API
+    
+    static func configureHCenteredChildView(_ childView: UIView,
+                                            inParentView parentView: UIView,
+                                            withInset edgeInsets: UIEdgeInsets) {
         UIView.configureChildView(childView,
                                   inParentView: parentView,
                                   withInset: edgeInsets,
@@ -65,9 +65,9 @@ extension UIView {
                                                     constant: 0.0))
     }
     
-    class func configureChildView(_ childView: UIView,
-                                  inParentView parentView: UIView,
-                                  withInset edgeInsets: UIEdgeInsets) {
+    static func configureChildView(_ childView: UIView,
+                                   inParentView parentView: UIView,
+                                   withInset edgeInsets: UIEdgeInsets) {
         UIView.configureChildView(childView,
                                   inParentView: parentView,
                                   withInset: edgeInsets,
@@ -75,11 +75,11 @@ extension UIView {
                                   verticalVisualFormat: "V:|-top-[view]-bottom-|")
     }
     
-    class func configureChildView(_ childView: UIView,
-                                  inParentView parentView: UIView,
-                                  withInset edgeInsets: UIEdgeInsets,
-                                  horizontalVisualFormat: String,
-                                  verticalVisualFormat: String) {
+    static func configureChildView(_ childView: UIView,
+                                   inParentView parentView: UIView,
+                                   withInset edgeInsets: UIEdgeInsets,
+                                   horizontalVisualFormat: String,
+                                   verticalVisualFormat: String) {
         childView.frame = parentView.bounds
         parentView.addChildView(childView)
         

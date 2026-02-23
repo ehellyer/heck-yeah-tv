@@ -11,7 +11,6 @@ import SwiftUI
 struct TVPreviewView<T: View>: View {
 
     init(contentView: @escaping () -> T) {
-        logDebug("Init Starting")
         self.contentView = contentView
     }
     

@@ -16,10 +16,8 @@ struct ChannelViewSubTitle: View {
         if channel == nil {
             // "Placeholder" is used for .redacted(reason: .placeholder) modifier.
             return "Placeholder"
-        } else if channel?.deviceId != IPTVImporter.iptvDeviceId, let _number = channel?.number {
-            return _number
         } else {
-            return nil
+            return channel?.displayChannelNumber
         }
     }
     
@@ -28,10 +26,7 @@ struct ChannelViewSubTitle: View {
             // "PH" is used for .redacted(reason: .placeholder) modifier.
             return .init(systemName: "questionmark.square")
         } else {
-            guard let image = channel?.quality.image else {
-                return nil
-            }
-            return image.asImage
+            return channel?.qualityImage
         }
     }
     
@@ -40,48 +35,45 @@ struct ChannelViewSubTitle: View {
             // "PLH" is used for .redacted(reason: .placeholder) modifier.
             return "PLH"
         }
-        guard let languages = channel?.languages, !languages.isEmpty else {
-            return nil
-        }
-        return languages.first?.uppercased() //.map { $0.uppercased() }.joined(separator: ", ")
+        return channel?.languageText
     }
     
     var noSubText: Bool {
-        return channel?.number == nil
-        && (channel?.quality ?? .unknown) == .unknown
-        && (channel?.hasDRM ?? false) == false
-        && languageText == nil
+        return channel?.noSubText ?? true
     }
     
     var body: some View {
         HStack(spacing: 8) {
+            
             if let _number = number {
                 Text(_number)
                     .font(AppStyle.Fonts.gridRowFont)
-//                    .foregroundColor(.secondary)
                     .lineLimit(1)
                     .truncationMode(.tail)
             }
             
             if let _qualityImage = qualityImage {
                 _qualityImage
-//                    .foregroundColor(.secondary)
+            }
+            
+            if let countryFlag = channel?.countryFlag {
+                countryFlag
+                    .resizable()
+                    .frame(width: 20, height: 13) // ~2:3 aspect ratio
             }
             
             if let _languageText = languageText {
                 Text(_languageText)
                     .font(AppStyle.Fonts.gridRowFont)
-//                    .foregroundColor(.secondary)
                     .lineLimit(1)
                     .truncationMode(.tail)
             }
-
+            
             // If there is no subtext, we want a nbsp to size the label vertically so it does not collapse to zero,
             // but is also still responsive to dynamic text size.
             if noSubText {
                 Text(nbsp)
                     .font(AppStyle.Fonts.gridRowFont)
-                    //.foregroundStyle(.secondary)
                     .lineLimit(1)
             }
         }
@@ -96,15 +88,15 @@ struct ChannelViewSubTitle: View {
     // Override the injected SwiftDataController
     let swiftDataController = MockSwiftDataController()
     InjectedValues[\.swiftDataController] = swiftDataController
-
+    
     let channel = swiftDataController.channel(for: swiftDataController.channelBundleMap.channelIds[7])
-
+    
     return TVPreviewView() {
         VStack {
             
             // Represents a loaded channel
             ChannelViewSubTitle(channel: channel)
-
+            
             // Represents a loading channel
             ChannelViewSubTitle(channel: nil)
                 .redacted(reason: .placeholder)

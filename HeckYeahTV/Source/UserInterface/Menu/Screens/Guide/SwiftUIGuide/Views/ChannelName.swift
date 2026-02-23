@@ -12,17 +12,19 @@ struct ChannelName: View {
     
     let channel: Channel?
     
+
+    
     var body: some View {
         
         HStack(alignment: .center, spacing: 20) {
-            
+
             let logoFrame = AppStyle.ChannelView.logoFrame
             LoadImageAsync(url: channel?.logoURL,
                            defaultImage: Image(systemName: "tv.circle.fill"),
                            showProgressView: true)
             .frame(width: logoFrame, height: logoFrame)
             .tint(.gray)
-            
+
             VStack(alignment: .leading, spacing: 2) {
                 Text(channel?.title ?? "PlaceholderSizingText")
                     .font(AppStyle.Fonts.gridRowFont.bold())
@@ -47,6 +49,6 @@ struct ChannelName: View {
 
     let channelId = swiftDataController.channelBundleMap.channelIds[11]
     let channel = swiftDataController.channel(for: channelId)
-
+    appState.selectedChannel = channelId
     return ChannelName(channel: channel)
 }
