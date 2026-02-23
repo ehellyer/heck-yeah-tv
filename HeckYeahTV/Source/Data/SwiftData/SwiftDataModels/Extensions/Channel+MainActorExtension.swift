@@ -42,7 +42,10 @@ extension Channel {
     var countryFlag: Image? {
         let localeCountryCode = Locale.current.region?.identifier.lowercased() ?? "us"
         
-        guard let countryCode = (country?.lowercased() == "any" ? localeCountryCode : country?.lowercased()) else {
+        var countryCode = country?.lowercased()
+        if countryCode == "uk" { countryCode = "gb" } //Temp fix.
+        countryCode = (countryCode == "any" ? localeCountryCode : countryCode)
+        guard let countryCode else {
             return nil
         }
         
