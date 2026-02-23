@@ -46,7 +46,7 @@ extension Channel {
             return nil
         }
         
-        let image = UIImage(named: countryCode)?.asImage
+        let image = PlatformImage(named: countryCode)?.asImage
         return image
     }
 }

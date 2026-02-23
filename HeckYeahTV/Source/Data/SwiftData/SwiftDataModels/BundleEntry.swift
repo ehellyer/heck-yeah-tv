@@ -80,9 +80,3 @@ extension SchemaV1 {
         }
     }
 }
-
-extension BundleEntry {
-    static func newBundleEntryId(channelBundleId: ChannelBundleId, channelId: ChannelId) -> BundleEntryId {
-        return String.stableHashHex(channelBundleId, channelId)
-    }
-}
