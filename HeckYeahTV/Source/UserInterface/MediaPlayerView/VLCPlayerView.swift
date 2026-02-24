@@ -155,7 +155,7 @@ struct VLCPlayerView: CrossPlatformRepresentable {
                     "network-caching": 2000,            // Network resource caching in milliseconds. Range: 0–60000. Keep low for live streams to reduce signed-URL expiry risk.
                     "http-reconnect": "",               // Auto-reconnect on sudden stream drop. Default disabled; critical for live IPTV streams with unstable connections.
                     "no-lua": "",                       // Disable all lua plugins. Boolean flags use empty string, not true/false.
-                    "avcodec-hw": "any",                // Prefer hardware decode when possible (VideoToolbox on Apple). Reduces CPU load.
+                    "avcodec-hw": "none",               // Disable hardware decoding, use software decoding only.
                     "deinterlace": -1,                  // -1 = Automatic: only deinterlaces when the stream signals it is interlaced. Most IPTV/HLS streams are progressive.
                     "deinterlace-mode": "auto",         // Auto-select the deinterlace algorithm when deinterlacing is active.
                     "no-ts-trust-pcr": "",              // Disable Trust in-stream PCR (default is enabled)

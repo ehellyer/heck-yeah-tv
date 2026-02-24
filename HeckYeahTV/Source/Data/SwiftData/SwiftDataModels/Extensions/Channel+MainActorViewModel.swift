@@ -1,5 +1,5 @@
 //
-//  Channel+Extension.swift
+//  Channel+Channel+MainActorViewModel.swift
 //  HeckYeahTV
 //
 //  Created by Ed Hellyer on 2/23/26.

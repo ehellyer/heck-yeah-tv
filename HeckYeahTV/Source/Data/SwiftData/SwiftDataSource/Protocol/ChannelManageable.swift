@@ -19,15 +19,18 @@ import SwiftData
 /// you try to query it from random background threads. Also because UI updates, obviously.
 @MainActor
 protocol ChannelManageable {
-    /// Returns the total number of channels in the local database.
-    ///
-    /// This is the "before" number.  The raw, unfiltered count of every channel you've
-    /// accumulated. Whether you actually watch them or they're just digital hoarding,
-    /// is between you and your storage quota.
-    func totalChannelCount() -> Int
 
+    /// Returns the total number of IPTV channels in the catalog. Yes, all of them. Every. Single. One.
+    func totalIPChannelCatalogCount() -> Int
+
+    /// Counts channels for a specific bundle and the channels for and devices with included channel lineup set to true.
+    func combinedCountFor(bundleId: ChannelBundleId) -> Int
+    
+    /// Counts channels for a specific bundle. Because sometimes you need to know what you get for a free lunch.
+    func channelCountFor(bundleId: ChannelBundleId) -> Int
+    
     /// Counts channels for a specific tuner device. Because sometimes you need to know if that dusty HDHomeRun was worth the money.
-    func totalChannelCountFor(deviceId: HDHomeRunDeviceId) -> Int
+    func channelCountFor(deviceId: HDHomeRunDeviceId) -> Int
 
     /// Returns all your HDHomeRun devices. The ones sitting on your network, silently judging your cable cutting choices.
     func homeRunDevices() -> [HomeRunDevice]
@@ -52,7 +55,12 @@ protocol ChannelManageable {
     func channelsForCurrentFilter() -> [Channel]
     
     /// Grabs all your channel bundles. Think of them as playlists, but for live TV.
+    ///
+    /// Ordered by channel bundle name ascending.
     func channelBundles() -> [ChannelBundle]
+    
+    /// Creates a shiny new channel bundle. Like adopting a digital pet, but less responsibility.
+    func addChannelBundle(name: String) -> ChannelBundle?
     
     /// Fetches a specific channel bundle by ID. Returns nil if you're making up IDs again.
     func channelBundle(for bundleId: ChannelBundleId) -> ChannelBundle?

@@ -13,6 +13,7 @@ struct ChannelBundleDetailView: View {
     @Binding var navigationPath: [SettingsDestination]
     @Bindable var bundle: ChannelBundle
     
+    @State private var appState: AppStateProvider = InjectedValues[\.sharedAppState]
     @State private var swiftDataController: SwiftDataProvider = InjectedValues[\.swiftDataController]
     @State private var showingDeleteConfirmation = false
     @State private var canDelete: Bool = false
@@ -150,7 +151,7 @@ struct ChannelBundleDetailView: View {
                 }
             } header: {
                 HStack {
-                    Text("Available Channels")
+                    Text("Available IPTV Channels")
                     Spacer()
                     Text("\(filteredChannels.count) of \(availableChannelCount)")
                         .font(.caption)
@@ -266,13 +267,18 @@ struct ChannelBundleDetailView: View {
     
     private func deleteBundle() {
         guard canDelete else { return }
+        
         swiftDataController.viewContext.delete(bundle)
+        let channelBundles = swiftDataController.channelBundles()
         try? swiftDataController.viewContext.saveChangesIfNeeded()
+        if let bundleId = channelBundles.first?.id {
+            appState.selectedChannelBundleId = bundleId
+        }
         navigationPath.removeAll()
     }
     
     private func loadData() {
-        availableChannelCount = swiftDataController.totalChannelCount()
+        availableChannelCount = swiftDataController.totalIPChannelCatalogCount()
         categories = swiftDataController.programCategories()
         countries = swiftDataController.countries()
         

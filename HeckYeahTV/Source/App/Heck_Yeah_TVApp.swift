@@ -131,7 +131,7 @@ struct Heck_Yeah_TVApp: App {
         startupTask = Task.detached(name: "HYTV-background-bootstrap-tasks", priority: .high) {
             let appState: AppStateProvider = InjectedValues[\.sharedAppState]
             let container = await InjectedValues[\.swiftDataController].container
-            let chCount = await InjectedValues[\.swiftDataController].totalChannelCount()
+            let chCount = await InjectedValues[\.swiftDataController].totalIPChannelCatalogCount()
             logDebug("Current channel catalog count: \(chCount)")
             
             // Don't fetch unless its been at least six hours from the last fetch. (Or date was nil)

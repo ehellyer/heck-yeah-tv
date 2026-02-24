@@ -13,15 +13,19 @@ struct SettingsView: View {
     
     @State private var swiftDataController: SwiftDataProvider = InjectedValues[\.swiftDataController]
     @State private var appState: AppStateProvider = InjectedValues[\.sharedAppState]
-    @State private var channelBundles: [ChannelBundle] = []
     @Binding var navigationPath: [SettingsDestination]
-    @State private var iptvChannelCount: Int = 0
     @State private var isReloadingIPTV = false
     @State private var isReloadingHomeRun = false
-    @State private var discoveredDevices: [HomeRunDevice] = []
+    @State private var iptvChannelCount: Int = 0
+    
+    @Query(sort: \ChannelBundle.name)
+    private var channelBundles: [ChannelBundle]
+    
+    @Query(sort: \HomeRunDevice.friendlyName)
+    private var homeRunDevices: [HomeRunDevice]
     
     private func channelCount(for deviceId: HDHomeRunDeviceId) -> Int {
-        let count = swiftDataController.totalChannelCountFor(deviceId: deviceId)
+        let count = swiftDataController.channelCountFor(deviceId: deviceId)
         return count
     }
     
@@ -77,7 +81,7 @@ struct SettingsView: View {
                         VStack(alignment: .leading, spacing: 4) {
                             Text(bundle.name)
                                 .font(.body)
-                            Text("\(swiftDataController.channelBundleMap.mapCount) channels")
+                            Text(subtext(for: bundle))
                                 .font(.caption)
                         }
                     }
@@ -131,11 +135,11 @@ struct SettingsView: View {
 #if !os(tvOS)
             .listRowSeparatorTint(Color(white: 0.6).opacity(0.3))
 #endif
-
+            
             
             // MARK: - HDHomeRun Devices Section
             Section {
-                if discoveredDevices.isEmpty {
+                if homeRunDevices.isEmpty {
                     HStack {
                         Image(systemName: "antenna.radiowaves.left.and.right.slash")
                             .foregroundStyle(.secondary)
@@ -144,7 +148,7 @@ struct SettingsView: View {
                         Spacer()
                     }
                 } else {
-                    ForEach(discoveredDevices) { device in
+                    ForEach(homeRunDevices) { device in
                         NavigationLink {
                             DeviceDetailView(device: device)
                         } label: {
@@ -193,16 +197,26 @@ struct SettingsView: View {
                         navigationPath.append(.bundleDetail(bundleId: bundle.id))
                     })
                 case .bundleDetail(let bundleId):
-                    if let bundle = swiftDataController.channelBundles().first(where: { $0.id == bundleId }) {
+                    if let bundle = channelBundles.first(where: { $0.id == bundleId }) {
                         ChannelBundleDetailView(navigationPath: $navigationPath,
                                                 bundle: bundle)
                     }
             }
         }
         .onAppear() {
-            reloadData()
+            reloadIPTVChannelCount()
         }
-
+    }
+    
+    private func reloadIPTVChannelCount() {
+        iptvChannelCount = swiftDataController.totalIPChannelCatalogCount()
+    }
+    
+    private func subtext(for bundle: ChannelBundle) -> String {
+        let hasTunerEnabled = homeRunDevices.first(where: { $0.includeChannelLineUp }) != nil
+        var subtext = "\(bundle.channels.count) channels in bundle"
+        subtext = subtext + ((hasTunerEnabled) ? ", (inc. Tuner Channels)." : ".")
+        return subtext
     }
     
     // MARK: - Actions
@@ -214,10 +228,12 @@ struct SettingsView: View {
             let importer = IPTVImporter(container: container)
             do {
                 _ = try await importer.load()
+                
             } catch {
                 logError("Reload tuner devices failed.  Error: \(error)")
             }
             await MainActor.run {
+                reloadIPTVChannelCount()
                 isReloadingIPTV = false
             }
         }
@@ -238,15 +254,7 @@ struct SettingsView: View {
             }
         }
     }
-    
-    private func reloadData() {
-        channelBundles = swiftDataController.channelBundles()
-        discoveredDevices = swiftDataController.homeRunDevices()
-        iptvChannelCount = swiftDataController.totalChannelCount()
-    }
 }
-
-// MARK: - Add Bundle View
 
 
 
@@ -266,6 +274,7 @@ struct SettingsView: View {
         NavigationStack(path: $navigationPath) {
             SettingsView(navigationPath: $navigationPath)
                 .environment(\.colorScheme, .light)
+                .modelContext(swiftDataController.viewContext)
         }
     }
 }
@@ -285,6 +294,7 @@ struct SettingsView: View {
         NavigationStack(path: $navigationPath) {
             SettingsView(navigationPath: $navigationPath)
                 .environment(\.colorScheme, .dark)
+                .modelContext(swiftDataController.viewContext)
         }
     }
 }

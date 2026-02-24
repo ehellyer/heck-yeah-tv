@@ -37,12 +37,9 @@ struct AddBundleView: View {
         .toolbar {
             ToolbarItem(placement: .confirmationAction) {
                 Button("Add") {
-                    let newBundle = ChannelBundle(id: UUID().uuidString,
-                                                  name: bundleName,
-                                                  channels: [])
-                    swiftDataController.viewContext.insert(newBundle)
-                    try? swiftDataController.viewContext.saveChangesIfNeeded()
-                    onAdd(newBundle)
+                    if let newBundle = swiftDataController.addChannelBundle(name: bundleName) {
+                        onAdd(newBundle)
+                    }
                 }
                 .disabled(bundleName.trim().isEmpty)
             }

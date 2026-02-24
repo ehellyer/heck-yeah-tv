@@ -24,7 +24,6 @@
         "quality": {"fhd":{}},
         "hasDRM": false,
         "source": "homeRunTuner",
-        "deviceId": "10A81C77"
     },
     {
     "categories" : [],
@@ -1016,7 +1015,7 @@
   {
     "categories" : [],
     "country" : "ANY",
-    "deviceId" : "10A81C77",
+    "deviceId" : "20425D9B",
     "guideId" : "106.1",
     "hasDRM" : true,
     "id" : "132c20dba090a039c4deaeb9cdd6a0b144e97801b48240b397bc257f7798986f",
@@ -1033,7 +1032,7 @@
   {
     "categories" : [],
     "country" : "ANY",
-    "deviceId" : "10A81C77",
+    "deviceId" : "20425D9B",
     "guideId" : "108.1",
     "hasDRM" : false,
     "id" : "645154aaf07d3c0aa402d338fac2568fa327285cc2ebbdb3d33a898f94c96409",
@@ -1050,7 +1049,7 @@
   {
     "categories" : [],
     "country" : "ANY",
-    "deviceId" : "10A81C77",
+    "deviceId" : "20425D9B",
     "guideId" : "112.1",
     "hasDRM" : true,
     "id" : "4bae843c43dd5ea09c4cb85224f6c696ba855bdcec1db3ce1f53d8d21496f156",
@@ -1067,7 +1066,7 @@
   {
     "categories" : [],
     "country" : "ANY",
-    "deviceId" : "10A81C77",
+    "deviceId" : "20425D9B",
     "guideId" : "135.1",
     "hasDRM" : false,
     "id" : "eaa42de9b8d5bfd7c7fcdeb683184d3f506124e727f96b8b4ca27e06f0f56431",
@@ -1084,7 +1083,7 @@
   {
     "categories" : [],
     "country" : "ANY",
-    "deviceId" : "10A81C77",
+    "deviceId" : "20425D9B",
     "guideId" : "157.1",
     "hasDRM" : false,
     "id" : "33fea0947f19769e53e4a78687abd707d7be1d5617e60c0adff8c4900be71adf",
@@ -1101,7 +1100,7 @@
   {
     "categories" : [],
     "country" : "ANY",
-    "deviceId" : "10A81C77",
+    "deviceId" : "20425D9B",
     "guideId" : "165.1",
     "hasDRM" : true,
     "id" : "e8737db748ce684c4e6457921f8195a241242bdbf30ca8cec3230b2153f24510",

@@ -35,9 +35,11 @@ final class MockSwiftDataController: SwiftDataProvider {
     
     private(set) var channelBundleMap: ChannelBundleMap = ChannelBundleMap(channelBundleId: "", map: [:], channelIds: [])
     
-    func totalChannelCount() -> Int {
+    func totalIPChannelCatalogCount() -> Int {
         do {
-            let descriptor = FetchDescriptor<Channel>()
+            let iptvDeviceId = IPTVImporter.iptvDeviceId
+            let predicate = #Predicate<Channel> { $0.deviceId == iptvDeviceId }
+            let descriptor = FetchDescriptor<Channel>(predicate: predicate)
             let totalChannelCount = try viewContext.fetchCount(descriptor)
             return totalChannelCount
         } catch {
@@ -46,7 +48,40 @@ final class MockSwiftDataController: SwiftDataProvider {
         }
     }
     
-    func totalChannelCountFor(deviceId: HDHomeRunDeviceId) -> Int {
+    func combinedCountFor(bundleId: ChannelBundleId) -> Int {
+        do {
+            let deviceIds = try devices(enabledState: true)
+            let predicate = #Predicate<Channel> { channel in
+                deviceIds.contains(channel.deviceId)
+            }
+            let descriptor = FetchDescriptor<Channel>(predicate: predicate)
+            let tunerChannelCount = try viewContext.fetchCount(descriptor)
+            
+            let bundleChannelCount = channelCountFor(bundleId: bundleId)
+            
+            return tunerChannelCount + bundleChannelCount
+        } catch {
+            logError("Unable to determine total channel count (IPTV channels + HDHomeRun channels. Error: \(error)")
+            return 0
+        }
+    }
+    
+    func channelCountFor(bundleId: ChannelBundleId) -> Int {
+        do {
+            let deviceId = IPTVImporter.iptvDeviceId
+            let predicate = #Predicate<BundleEntry> { bundleEntry in
+                bundleEntry.channelBundle.id == bundleId && bundleEntry.channel?.deviceId == deviceId
+            }
+            let descriptor = FetchDescriptor<BundleEntry>(predicate: predicate)
+            let count = try viewContext.fetchCount(descriptor)
+            return count
+        } catch {
+            logError("Unable to determine channel count for bundleId: \(bundleId) Error: \(error)")
+            return 0
+        }
+    }
+    
+    func channelCountFor(deviceId: HDHomeRunDeviceId) -> Int {
         do {
             let predicate = #Predicate<Channel> { $0.deviceId == deviceId }
             let fetchDescriptor = FetchDescriptor<Channel>(predicate: predicate)
@@ -142,6 +177,21 @@ final class MockSwiftDataController: SwiftDataProvider {
         } catch {
             logError("Unable to fetch channel bundles. Error: \(error)")
             return []
+        }
+    }
+    
+    func addChannelBundle(name: String) -> ChannelBundle? {
+        do {
+            let newBundle = ChannelBundle(id: UUID().uuidString,
+                                          name: name,
+                                          channels: [])
+            viewContext.insert(newBundle)
+            try updateChannelBundleWithIncludedChannels()
+            try viewContext.saveChangesIfNeeded()
+            return newBundle
+        } catch {
+            logError("Unable to create new channel bundle: \(name). Error: \(error)")
+            return nil
         }
     }
     
@@ -575,9 +625,9 @@ final class MockSwiftDataController: SwiftDataProvider {
             result[item.channel!.id] = item.id
         }
         
-        channelBundleMap = ChannelBundleMap(channelBundleId: channelBundleId,
-                                            map: map,
-                                            channelIds: channelIds)
+        channelBundleMap.update(channelBundleId: channelBundleId,
+                                map: map,
+                                channelIds: channelIds)
         
         logDebug("Channel map built.  Total Channels: \(channelBundleMap.mapCount) 🏁")
     }

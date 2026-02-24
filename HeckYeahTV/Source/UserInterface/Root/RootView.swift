@@ -11,10 +11,13 @@ import SwiftUI
 
 struct RootView: View {
     @Binding var isBootComplete: Bool
-
+    
+    @State private var swiftDataController: SwiftDataProvider = InjectedValues[\.swiftDataController]
+    
     var body: some View {
         BootGateView(isBootComplete: $isBootComplete) {
             MainAppContentView()
+                .modelContext(swiftDataController.viewContext)
 #if os(macOS)
                 .frame(minWidth: 900, minHeight: 507)
 #endif

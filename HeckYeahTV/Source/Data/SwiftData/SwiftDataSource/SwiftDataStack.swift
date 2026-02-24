@@ -52,7 +52,7 @@ final class SwiftDataStack: SwiftDataStackProvider {
                                            configurations: [modelConfig])
             
             viewContext = ModelContext(container)
-            viewContext.autosaveEnabled = false
+            viewContext.autosaveEnabled = true
             
             try Self.updateSchemaVersionTable(context: viewContext)
             try Self.checkDefaultChannelBundle(context: viewContext)
@@ -87,14 +87,16 @@ final class SwiftDataStack: SwiftDataStackProvider {
     /// Model Container.
     let container: ModelContainer
     
-    /// MainActor UI ModelContext.  (Autosave disabled)
+    /// MainActor UI ModelContext.
     let viewContext: ModelContext
 }
 
 /// Because sometimes you just gotta get down and dirty with SQLite.
 /// When SwiftData's fancy APIs aren't enough, we roll up our sleeves and speak directly to the database gods.
-/// (Spoiler: They like to 'byte' and they're not always friendly.)
+/// (They like to 'byte' and they're not always friendly.)
 extension SwiftDataStack {
+    
+    // MARK: - Legacy store determination
     
     /// Checks if this database is older than your last app update (it probably is).
     /// Returns true if the store is using that ancient schema from two versions ago that we all agreed to forget about.
@@ -163,6 +165,8 @@ extension SwiftDataStack {
         
         return UUID(uuid: uuidBytes)
     }
+    
+    // MARK: - Declare war on the SQLite database.
     
     /// Nukes the persistent store from orbit. It's the only way to be sure.
     /// Deletes the main .sqlite file and its clingy friends (.sqlite-shm, .sqlite-wal).

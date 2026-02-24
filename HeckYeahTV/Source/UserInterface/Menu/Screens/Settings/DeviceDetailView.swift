@@ -41,7 +41,7 @@ struct DeviceDetailView: View {
                 // MARK: - Tuners Section
                 SectionHeader("Tuners")
                 DetailRow(label: "Tuner Count", value: "\(device.tunerCount)")
-                let channelCount = swiftDataController.totalChannelCountFor(deviceId: device.deviceId)
+                let channelCount = swiftDataController.channelCountFor(deviceId: device.deviceId)
                 DetailRow(label: "Channel Count", value: "\(channelCount)")
             }
             .padding(.horizontal)
