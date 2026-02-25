@@ -21,7 +21,7 @@ enum LocalNetworkAuthorizationStatus: Int {
 
 /// Triggers and reports the OS Local Network permission alert.
 ///
-/// Uses the NWBrowser + NWListener technique recommended by Apple (TN3179):
+/// Uses the NWBrowser + NWListener technique recommended by Apple ([TN3179](https://developer.apple.com/documentation/technotes/tn3179-understanding-local-network-privacy)):
 /// a listener advertises a temporary Bonjour service on the local device, and
 /// a browser looks for it. When the browser finds the listener, permission is
 /// confirmed as granted. If the OS returns a PolicyDenied DNS error, permission
@@ -30,6 +30,8 @@ enum LocalNetworkAuthorizationStatus: Int {
 /// Requires Info.plist entries:
 ///   - NSLocalNetworkUsageDescription
 ///   - NSBonjourServices containing "_preflight_check._tcp"
+///
+///
 ///
 /// Usage:
 /// ```swift

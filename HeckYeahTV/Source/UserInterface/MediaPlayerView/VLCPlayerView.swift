@@ -68,6 +68,7 @@ struct VLCPlayerView: CrossPlatformRepresentable {
         }
         
         //MARK: - Private API
+        
         private var swiftDataController: SwiftDataProvider = InjectedValues[\.swiftDataController]
         private let initVolume: Int32 = 120
         private var seekObservers: [NSObjectProtocol] = []
@@ -146,23 +147,39 @@ struct VLCPlayerView: CrossPlatformRepresentable {
                 }
                 
                 // Dev Note: - EJH
-                // By trial and error I found these player options worked better in handling Transport Stream (.ts) file or stream, data packet
-                // mismatches (discontinuities), and maintaining low CPU impact.  But!  it is not perfect.  Still researching.
+                // Some streams (e.g. PlutoTV), are likely using #​EXT​-​X​-​DISCONTINUITY tags for ad insertion.  Ads might need to switch avcodec due to different resolutions required by the ad video stream.
+                // My theory; this is causing VLC sometimes to do one of two things.
+                //      1) freeze (the video is still frame and no audio), or
+                //      2) loop back to the start of the previous chunk.
+                // By trial and error I found these player options worked better in improving HLS adaptive streaming handling - (.ts) stream data packet mismatches (discontinuities).
+                // But! It is not perfect. Still researching.
                 
                 let media = VLCMedia(url: channelURL)
                 // https://wiki.videolan.org/VLC_command-line_help/
                 media.addOptions([
-                    "network-caching": 2000,            // Network resource caching in milliseconds. Range: 0–60000. Keep low for live streams to reduce signed-URL expiry risk.
+                    "network-caching": 15000,           // Network resource caching in milliseconds. Increased to 15s to buffer through ad transitions.
                     "http-reconnect": "",               // Auto-reconnect on sudden stream drop. Default disabled; critical for live IPTV streams with unstable connections.
                     "no-lua": "",                       // Disable all lua plugins. Boolean flags use empty string, not true/false.
-                    "avcodec-hw": "none",               // Disable hardware decoding, use software decoding only.
+                    "avcodec-hw": "none",               // Disable hardware decoding, use software decoding only. Software decoder more flexible with format changes.
+                    "avcodec-skiploopfilter": "all",    // Skip loop filter for all frames. More lenient decoding, helps with codec/format switching during ads.
+                    "avcodec-skip-frame": 0,            // Don't skip any frames. 0=AVDISCARD_NONE ensures all frames processed during discontinuities.
+                    "avcodec-skip-idct": 0,             // Don't skip IDCT. Ensures proper decoding through format changes.
+                    "avcodec-threads": 0,               // 0=auto thread count. Helps decoder handle format changes faster.
+                    "avcodec-fast": "",                 // Enable fast decoding. May help prevent stalls during transitions.
+                    "adaptive-logic": "rate",           // Use rate-based adaptive logic for HLS quality selection. May handle discontinuities better than default.
+                    "adaptive-maxwidth": 1920,          // Max adaptive stream width. Prevents unexpected quality jumps during ads.
+                    "adaptive-maxheight": 1080,         // Max adaptive stream height.
                     "deinterlace": -1,                  // -1 = Automatic: only deinterlaces when the stream signals it is interlaced. Most IPTV/HLS streams are progressive.
                     "deinterlace-mode": "auto",         // Auto-select the deinterlace algorithm when deinterlacing is active.
-                    "no-ts-trust-pcr": "",              // Disable Trust in-stream PCR (default is enabled)
-                    "file-caching": 5000                // File caching (ms) <integer [0 .. 60000]>
-                    // Note: drop-late-frames and skip-frames are both enabled by default; no need to set them explicitly.
-                    // Note: video-title-show is disabled by default; no need to set it explicitly.
-                    // Note: video-filter "deinterlace" removed — redundant with deinterlace: -1 and causes double processing.
+                    "no-ts-trust-pcr": "",              // Disable Trust in-stream PCR (default is enabled). Helps with HLS discontinuities.
+                    "ts-seek-percent": "",              // Use percentage seeking instead of time-based. More reliable with discontinuous timestamps.
+                    "ts-extra-pmt": "",                 // Extra PMT for streams with multiple programs. Helps handle ad insertion as separate programs.
+                    "sout-ts-dts-delay": 400,           // Delay DTS (Decoding Time Stamp) by 400ms. Can help smooth transitions at discontinuities.
+                    "file-caching": 5000,               // File caching (ms) <integer [0 .. 60000]>
+                    "clock-jitter": 10000,              // Allow 10s clock jitter. Maximum tolerance for timestamp discontinuities at ad boundaries.
+                    "no-drop-late-frames": "",          // Don't drop frames that arrive late. Prevents stalls from timing issues during transitions.
+                    "no-skip-frames": "",               // Never skip frames even if behind. Prevents gaps during discontinuities.
+                    "avformat-format": "hls"            // Explicitly tell avformat this is HLS. May improve discontinuity handling.
                 ])
                 mediaPlayer.media = media
                 mediaPlayer.audio?.volume = initVolume
