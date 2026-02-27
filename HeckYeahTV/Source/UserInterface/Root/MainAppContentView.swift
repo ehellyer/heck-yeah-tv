@@ -36,15 +36,14 @@ struct MainAppContentView: View {
         ZStack(alignment: .bottomLeading)  {
             
             
-//            TVPreviewView() {
-            // Stream Player
-            VLCPlayerView()
+            // Stream Player - Automatically switches between VLC (HDHomeRun) and AVPlayer (IPTV)
+            UnifiedPlayerView()
+                .zIndex(0)
                 .ignoresSafeArea()
                 .accessibilityHidden(true)
                 .allowsHitTesting(false)
                 .focusable(false)
-//            }
-            
+
             
 #if os(macOS)
             if appState.showAppMenu {

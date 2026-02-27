@@ -8,9 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		089D175416ADEF60C0354B23 /* Pods_iOS_HeckYeahTV.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76A34A69F5505812676277A2 /* Pods_iOS_HeckYeahTV.framework */; };
-		E2A5EE63B6F0360CFDEA112A /* Pods_tvOS_HeckYeahTV.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4850C4BF6A440A7BD11EC2DD /* Pods_tvOS_HeckYeahTV.framework */; };
 		EB35E3122F00781200D31894 /* MobileVLCKit.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB35E3112F00781200D31894 /* MobileVLCKit.xcframework */; };
-		EB3785982F2141770086BB1F /* Pods_macOS_HeckYeahTV.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB3785972F2141770086BB1F /* Pods_macOS_HeckYeahTV.framework */; };
 		EB37859B2F21417F0086BB1F /* Pods_macOS_HeckYeahTV.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB33342D2EC8273700CFAC43 /* Pods_macOS_HeckYeahTV.framework */; };
 		EB37859F2F2142480086BB1F /* Pods_tvOS_HeckYeahTV.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB37859E2F2142480086BB1F /* Pods_tvOS_HeckYeahTV.framework */; };
 		EBB5B3292ED8B9D6004251CB /* Hellfire in Frameworks */ = {isa = PBXBuildFile; productRef = EBB5B3282ED8B9D6004251CB /* Hellfire */; };
@@ -177,6 +175,9 @@
 				Source/Data/SwiftData/SwiftDataSource/SwiftDataBootTasks.swift,
 				Source/Data/SwiftData/SwiftDataSource/SwiftDataController.swift,
 				Source/Data/SwiftData/SwiftDataSource/SwiftDataStack.swift,
+				Source/UserInterface/MediaPlayerView/AVPlayerView.swift,
+				Source/UserInterface/MediaPlayerView/MPEGTSParser.swift,
+				Source/UserInterface/MediaPlayerView/UnifiedPlayerView.swift,
 				Source/UserInterface/MediaPlayerView/VLCPlayerView.swift,
 				Source/UserInterface/Menu/Container/Enum/AppSection.swift,
 				Source/UserInterface/Menu/Container/MenuPickerView.swift,
@@ -348,6 +349,9 @@
 				Source/Data/SwiftData/SwiftDataSource/SwiftDataBootTasks.swift,
 				Source/Data/SwiftData/SwiftDataSource/SwiftDataController.swift,
 				Source/Data/SwiftData/SwiftDataSource/SwiftDataStack.swift,
+				Source/UserInterface/MediaPlayerView/AVPlayerView.swift,
+				Source/UserInterface/MediaPlayerView/MPEGTSParser.swift,
+				Source/UserInterface/MediaPlayerView/UnifiedPlayerView.swift,
 				Source/UserInterface/MediaPlayerView/VLCPlayerView.swift,
 				Source/UserInterface/Menu/Container/Enum/AppSection.swift,
 				Source/UserInterface/Menu/Container/MenuTabView.swift,
@@ -459,7 +463,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				EBB5B5212EDD46DC004251CB /* Hellfire in Frameworks */,
-				EB3785982F2141770086BB1F /* Pods_macOS_HeckYeahTV.framework in Frameworks */,
 				EBFFBD182F21A7AB0022F6A5 /* FirebaseCrashlytics in Frameworks */,
 				EBFFBD162F21A7AB0022F6A5 /* FirebaseAnalytics in Frameworks */,
 				EB37859B2F21417F0086BB1F /* Pods_macOS_HeckYeahTV.framework in Frameworks */,
@@ -510,7 +513,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E2A5EE63B6F0360CFDEA112A /* Pods_tvOS_HeckYeahTV.framework in Frameworks */,
 				EBB5B51F2EDD46C4004251CB /* Hellfire in Frameworks */,
 				EBFFBD142F21A79E0022F6A5 /* FirebaseCrashlytics in Frameworks */,
 				EBFFBD122F21A79E0022F6A5 /* FirebaseAnalytics in Frameworks */,

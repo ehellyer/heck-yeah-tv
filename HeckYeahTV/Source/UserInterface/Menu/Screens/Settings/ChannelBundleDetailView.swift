@@ -132,7 +132,7 @@ struct ChannelBundleDetailView: View {
                             Image(systemName: "tv.slash")
                                 .font(.largeTitle)
                                 .foregroundStyle(.secondary)
-                            Text("No channels found")
+                            Text("No channels available matching criteria")
                                 .foregroundStyle(.secondary)
                         }
                         .padding()
@@ -140,13 +140,11 @@ struct ChannelBundleDetailView: View {
                     }
                 } else {
                     ForEach(filteredChannels) { channel in
-                        ChannelRow(
-                            channel: channel,
-                            isInBundle: isChannelInBundle(channel),
-                            onToggle: {
-                                toggleChannel(channel)
-                            }
-                        )
+                        ChannelRow(channel: channel,
+                                   isInBundle: isChannelInBundle(channel),
+                                   onToggle: {
+                            toggleChannel(channel)
+                        })
                     }
                 }
             } header: {

@@ -9,7 +9,7 @@
 import UIKit
 import SwiftUI
 
-// (: :) Hack to make parts of SwiftUI to style the way I want it to look, not the way some Apple engineer wants it to look.  Good grief Ed, this is awful! (: :)
+// :) Hack to make parts of SwiftUI to style the way I want it to look.  Good grief Ed, this is awful! :)
 struct TransparentBackground: UIViewRepresentable {
     func makeUIView(context: Context) -> UIView {
         let view = UIView()
