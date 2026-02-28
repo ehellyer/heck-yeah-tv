@@ -68,6 +68,8 @@ import Foundation
 ///
 /// ## Audio/Video Codec Abbreviations
 ///
+/// ### Video Codecs
+///
 /// **AVC** - Advanced Video Coding (H.264)
 /// - Modern video compression standard, widely supported
 /// - Efficient compression for HD video, used by Blu-ray, streaming services, broadcasts
@@ -78,6 +80,45 @@ import Foundation
 /// - ~50% better compression than H.264 at same quality
 /// - Used for 4K/8K content, requires more processing power to decode
 /// - Stream type: 0x24 in MPEG-TS
+///
+/// **VVC** - Versatile Video Coding (H.266)
+/// - Latest video compression standard, successor to H.265
+/// - ~50% better compression than HEVC, optimized for 4K/8K and beyond
+/// - Stream type: 0x26 in MPEG-TS
+///
+/// **VP8** - Google's open-source video codec
+/// - Alternative to H.264, royalty-free
+/// - Used in WebRTC and some streaming applications
+/// - Stream type: 0x51 in MPEG-TS
+///
+/// **VP9** - Google's successor to VP8
+/// - Competes with H.265/HEVC in efficiency
+/// - Used by YouTube for 4K content
+/// - Stream type: 0x52 in MPEG-TS
+///
+/// **AV1** - AOMedia Video 1
+/// - Latest open-source video codec
+/// - Royalty-free, ~30% better compression than HEVC
+/// - Supported by Netflix, YouTube for high-quality streaming
+///
+/// **AVS/AVS2** - Chinese Audio Video Standard
+/// - Video coding standards developed in China
+/// - AVS2 competes with HEVC in compression efficiency
+/// - Stream types: 0x42 (AVS), 0xA0 (AVS2)
+///
+/// **VC-1** - Microsoft/SMPTE video codec
+/// - Used in Windows Media, Blu-ray discs
+/// - Stream types: 0xEA (Microsoft), 0xD2 (SMPTE)
+///
+/// **MPEG-2 Video** - Legacy standard video codec
+/// - Used in DVD, digital TV broadcasts, older streams
+/// - Stream types: 0x02, 0x80
+///
+/// **MPEG-4 Part 2** - DivX, Xvid
+/// - Predecessor to H.264, used in early internet video
+/// - Stream type: 0x10
+///
+/// ### Audio Codecs
 ///
 /// **AAC** - Advanced Audio Coding
 /// - Modern audio compression format, successor to MP3
@@ -108,6 +149,45 @@ import Foundation
 /// - Supports up to 15.1 channels, higher bitrates
 /// - Used by streaming services (Netflix, Disney+) and Blu-ray
 /// - Stream type: 0x87 in MPEG-TS
+///
+/// **AC-4** - Dolby AC-4
+/// - Next-generation audio codec from Dolby
+/// - Object-based audio, personalized sound experiences
+/// - Stream type: 0xAC in MPEG-TS
+///
+/// **DTS** - Digital Theater Systems
+/// - Alternative to Dolby Digital for surround sound
+/// - Used in cinemas, DVDs, Blu-rays
+/// - Stream type: 0x82 in MPEG-TS
+///
+/// **DTS-HD** - DTS High Definition
+/// - Lossless audio extension of DTS
+/// - Used in Blu-ray discs for premium audio
+/// - Stream types: 0x85, 0x86 (Master Audio)
+///
+/// **TrueHD** - Dolby TrueHD
+/// - Lossless audio codec from Dolby
+/// - Used in Blu-ray discs, supports up to 7.1 channels
+/// - Stream type: 0x83 in MPEG-TS
+///
+/// **Opus** - Open-source audio codec
+/// - Highly efficient, low-latency codec
+/// - Used in WebRTC, gaming, VoIP applications
+/// - Stream type: 0xA3 in MPEG-TS
+///
+/// **MPEG-H 3D Audio** - Next-generation immersive audio
+/// - Object-based 3D audio codec
+/// - Used in ATSC 3.0 broadcasts
+/// - Stream type: 0xA4 in MPEG-TS
+///
+/// **FLAC** - Free Lossless Audio Codec
+/// - Lossless compression for archival quality audio
+/// - Stream type: 0xA5 in MPEG-TS
+///
+/// **PCM** - Pulse Code Modulation
+/// - Uncompressed digital audio
+/// - Highest quality, largest file sizes
+/// - Stream type: 0x90 in MPEG-TS
 ///
 /// ## Streaming Protocol Abbreviations
 ///
@@ -721,9 +801,18 @@ class MPEGTSParser {
             case 0x10: return true       // MPEG-4 Part 2 Video
             case 0x1B: return true       // H.264 / AVC
             case 0x24: return true       // H.265 / HEVC
+            case 0x20: return true       // H.222.0 / MPEG-2 Video (MVC)
+            case 0x25: return true       // H.265 Temporal Video Subset
+            case 0x26: return true       // H.266 / VVC (Versatile Video Coding)
             case 0x42: return true       // Chinese AVS Video
+            case 0x51: return true       // VP8
+            case 0x52: return true       // VP9
             case 0xD1: return true       // BBC Dirac (VC-2)
+            case 0xD2: return true       // SMPTE VC-1
             case 0xEA: return true       // Microsoft VC-1
+            case 0x21: return true       // JPEG 2000 Video
+            case 0x80: return true       // MPEG-2 Video (alternative code)
+            case 0xA0: return true       // AVS2 Video
             default: return false
         }
     }
@@ -764,6 +853,29 @@ class MPEGTSParser {
             case 0x87: return true       // E-AC-3
             case 0xA1, 0xA2: return true // AC-3/DTS (DVB)
             case 0xAC: return true       // AC-4
+            case 0x05: return true       // ITU-T Rec. H.222.0 registration descriptor (often Opus)
+            case 0x0A: return true       // DSM-CC Multi-protocol Encapsulation (MPE)
+            case 0x0B: return true       // DSM-CC U-N Messages
+            case 0x0C: return true       // DSM-CC Stream Descriptors
+            case 0x0D: return true       // DSM-CC Sections
+            case 0x15: return true       // MPEG-2 AAC
+            case 0x1C: return true       // MPEG-4 Audio (AAC in MP4)
+            case 0x88: return true       // DCA (Digital Theater Systems)
+            case 0x89: return true       // ATSC E-AC-3
+            case 0x8A: return true       // DTS-HD (alternative)
+            case 0x8B: return true       // G.711
+            case 0x90: return true       // PCM / Linear PCM
+            case 0x91: return true       // ADPCM
+            case 0x92: return true       // G.722
+            case 0x93: return true       // G.723
+            case 0x94: return true       // G.726
+            case 0x95: return true       // G.729
+            case 0xA3: return true       // Opus
+            case 0xA4: return true       // MPEG-H 3D Audio
+            case 0xA5: return true       // FLAC
+            case 0xA6: return true       // Vorbis
+            case 0xA7: return true       // MLP (Meridian Lossless Packing)
+            case 0xA8: return true       // Dolby MAT (Metadata-enhanced Audio Transmission)
             default: return false
         }
     }
@@ -876,26 +988,58 @@ class MPEGTSParser {
             case 0x02: return "MPEG-2 Video"
             case 0x10: return "MPEG-4 Part 2 Video"
             case 0x1B: return "H.264 / AVC"
+            case 0x20: return "H.222.0 / MPEG-2 MVC"
             case 0x24: return "H.265 / HEVC"
-            case 0x42: return "AVS Video"
+            case 0x25: return "H.265 Temporal Subset"
+            case 0x26: return "H.266 / VVC"
+            case 0x42: return "AVS Video (Chinese)"
+            case 0x51: return "VP8"
+            case 0x52: return "VP9"
+            case 0x80: return "MPEG-2 Video (Alt)"
+            case 0xA0: return "AVS2 Video"
             case 0xD1: return "BBC Dirac (VC-2)"
-            case 0xEA: return "VC-1"
+            case 0xD2: return "SMPTE VC-1"
+            case 0xEA: return "Microsoft VC-1"
+            case 0x21: return "JPEG 2000 Video"
                 
                 // Audio codecs
-            case 0x03: return "MPEG-1 Audio"
+            case 0x03: return "MPEG-1 Audio (MP3)"
             case 0x04: return "MPEG-2 Audio"
+            case 0x05: return "H.222.0 Private (Opus/Other)"
             case 0x06: return "Private Data (AC-3/DTS/Other)"
+            case 0x0A: return "DSM-CC MPE"
+            case 0x0B: return "DSM-CC U-N Messages"
+            case 0x0C: return "DSM-CC Stream Descriptors"
+            case 0x0D: return "DSM-CC Sections"
             case 0x0F: return "AAC (ADTS)"
             case 0x11: return "AAC (LATM)"
+            case 0x15: return "MPEG-2 AAC"
+            case 0x1C: return "MPEG-4 Audio (AAC in MP4)"
             case 0x81: return "AC-3 (Dolby Digital)"
             case 0x82: return "DTS"
             case 0x83: return "TrueHD (Dolby TrueHD)"
             case 0x84: return "AC-3 (Alternate)"
             case 0x85: return "DTS-HD"
-            case 0x86: return "DTS-HD MA"
+            case 0x86: return "DTS-HD MA (Master Audio)"
             case 0x87: return "E-AC-3 (Dolby Digital Plus)"
+            case 0x88: return "DCA (DTS Coherent Acoustics)"
+            case 0x89: return "ATSC E-AC-3"
+            case 0x8A: return "DTS-HD (Alt)"
+            case 0x8B: return "G.711"
+            case 0x90: return "PCM / Linear PCM"
+            case 0x91: return "ADPCM"
+            case 0x92: return "G.722"
+            case 0x93: return "G.723"
+            case 0x94: return "G.726"
+            case 0x95: return "G.729"
             case 0xA1: return "AC-3 (DVB)"
             case 0xA2: return "DTS (DVB)"
+            case 0xA3: return "Opus"
+            case 0xA4: return "MPEG-H 3D Audio"
+            case 0xA5: return "FLAC"
+            case 0xA6: return "Vorbis"
+            case 0xA7: return "MLP (Meridian Lossless)"
+            case 0xA8: return "Dolby MAT"
             case 0xAC: return "AC-4 (Dolby AC-4)"
                 
             default: return "Unknown (0x\(String(format: "%02X", type)))"
