@@ -281,12 +281,22 @@ extension UserDefaults {
     /// - Returns: The volume level as an Int32 value.
     static var playerVolume: Int32 {
         get {
-            let value = standard.integer(forKey: AppKeys.SharedAppState.playerVolumeKey)
-            return value == 0 ? 120 : Int32(value) // Default to 120 if not set
+            if isKeyPresentInUserDefaults(key: AppKeys.SharedAppState.playerVolumeKey) {
+                let value = standard.integer(forKey: AppKeys.SharedAppState.playerVolumeKey)
+                return Int32(value)
+            }
+            return Int32(120)
         }
         set {
             standard.set(Int(newValue), forKey: AppKeys.SharedAppState.playerVolumeKey)
         }
     }
 
+    /// Checks to see if the key exists in `UserDefaults`, returns true if exists, false if not exists.
+    ///
+    /// Use the function to determine if the value for key needs to be a default value or the value for the key returned from `UserDefaults`.
+    /// Note: Returning types like integer, bool, etc from UserDefaults will always return a value even when the key does not exist.
+    static func isKeyPresentInUserDefaults(key: String) -> Bool {
+        return standard.object(forKey: key) != nil
+    }
 }

@@ -21,19 +21,17 @@ struct PlayerOverlay: View {
 
             Spacer()
 
-            // Center playback controls
-            HStack(spacing: 40) {
-                // Play/Pause button
-                controlButton(
-                    systemImage: appState.isPlayerPaused ? "play.fill" : "pause.fill",
-                    action: {
-                        appState.isPlayerPaused.toggle()
-                    }
-                )
+            // Play/Pause button
+            Button(action: {
+                appState.isPlayerPaused.toggle()
+            }) {
+                Image(systemName: appState.isPlayerPaused ? "play.fill" : "pause.fill")
+                    .font(.system(size: 50))
+                    .foregroundStyle(.white)
+                    .frame(width: 60, height: 60)
+                    .padding(20)
             }
-            .padding(30)
-            .glassEffect(.regular, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
-            .shadow(color: .black.opacity(0.5), radius: 10, x: 0, y: 5)
+            .glassEffect()
 
             Spacer()
 
@@ -46,7 +44,7 @@ struct PlayerOverlay: View {
                             .font(.system(size: 24))
                             .foregroundStyle(.white)
                             .frame(width: 50, height: 50)
-                            .glassEffect(.regular, in: Circle())
+                            .glassEffect()
                     }
 #if os(tvOS)
                     .buttonStyle(.card)
@@ -60,7 +58,7 @@ struct PlayerOverlay: View {
                             .font(.system(size: 24))
                             .foregroundStyle(.white)
                             .frame(width: 50, height: 50)
-                            .glassEffect(.regular, in: Circle())
+                            .glassEffect()
                     }
 #if os(tvOS)
                     .buttonStyle(.card)
@@ -99,42 +97,44 @@ struct PlayerOverlay: View {
                 }
                 
                 // Closed caption selector button
-                Menu {
-                    // "Off" option
-                    Button(action: {
-                        appState.closedCaptionsEnabled = false
-                        appState.selectedSubtitleTrackIndex = nil
-                    }) {
-                        HStack {
-                            Text("Off")
-                            if !appState.closedCaptionsEnabled {
-                                Image(systemName: "checkmark")
-                            }
-                        }
-                    }
-                    
-                    Divider()
-                    
-                    // Available subtitle tracks
-                    ForEach(appState.availableSubtitleTracks) { track in
+                if !appState.availableSubtitleTracks.isEmpty {
+                    Menu {
+                        // "Off" option
                         Button(action: {
-                            appState.closedCaptionsEnabled = true
-                            appState.selectedSubtitleTrackIndex = track.index
+                            appState.closedCaptionsEnabled = false
+                            appState.selectedSubtitleTrackIndex = nil
                         }) {
                             HStack {
-                                Text(track.name)
-                                if appState.closedCaptionsEnabled && appState.selectedSubtitleTrackIndex == track.index {
+                                Text("Off")
+                                if !appState.closedCaptionsEnabled {
                                     Image(systemName: "checkmark")
                                 }
                             }
                         }
+                        
+                        Divider()
+                        
+                        // Available subtitle tracks
+                        ForEach(appState.availableSubtitleTracks) { track in
+                            Button(action: {
+                                appState.closedCaptionsEnabled = true
+                                appState.selectedSubtitleTrackIndex = track.index
+                            }) {
+                                HStack {
+                                    Text(track.name)
+                                    if appState.closedCaptionsEnabled && appState.selectedSubtitleTrackIndex == track.index {
+                                        Image(systemName: "checkmark")
+                                    }
+                                }
+                            }
+                        }
+                    } label: {
+                        Image(systemName: appState.closedCaptionsEnabled ? "captions.bubble.fill" : "captions.bubble")
+                            .font(.system(size: 24))
+                            .foregroundStyle(appState.closedCaptionsEnabled ? .blue : .white)
+                            .frame(width: 50, height: 50)
+                            .glassEffect()
                     }
-                } label: {
-                    Image(systemName: appState.closedCaptionsEnabled ? "captions.bubble.fill" : "captions.bubble")
-                        .font(.system(size: 24))
-                        .foregroundStyle(appState.closedCaptionsEnabled ? .blue : .white)
-                        .frame(width: 50, height: 50)
-                        .glassEffect()
                 }
             }
             .padding(.trailing, 30)
@@ -142,23 +142,6 @@ struct PlayerOverlay: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .toastContainer()
-    }
-    
-    // MARK: - Control Button
-    
-    private func controlButton(systemImage: String,
-                               action: @escaping () -> Void) -> some View {
-        Button(action: action) {
-            Image(systemName: systemImage)
-                .font(.system(size: 40))
-                .foregroundStyle(.white)
-                .frame(width: 60, height: 60)
-        }
-#if os(tvOS)
-        .buttonStyle(.card)
-#else
-        .buttonStyle(.plain)
-#endif
     }
     
     // MARK: - Actions
@@ -185,6 +168,10 @@ struct PlayerOverlay: View {
 #Preview("Player Overlay") {
     @Previewable @State var appState: AppStateProvider = MockSharedAppState()
     InjectedValues[\.sharedAppState] = appState
+    
+    appState.availableSubtitleTracks = [SubtitleTrack(id: 0,
+                                                      index: 0,
+                                                      name: "Closed Captions")]
     
     appState.availableAudioTracks = [AudioTrack(id: 0,
                                                 index: 0,
