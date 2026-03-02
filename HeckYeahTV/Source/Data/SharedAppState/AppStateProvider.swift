@@ -8,6 +8,48 @@
 
 import Foundation
 
+/// Represents an audio track with its index and display name
+struct AudioTrack: Identifiable, Hashable, Sendable {
+    let id: Int32
+    let index: Int32
+    let name: String
+    
+    /// Extract language code from track name if present (e.g., "English [en]" -> "en")
+    var languageCode: String? {
+        // Try to extract language code from patterns like "English [en]" or just "en"
+        if let match = name.range(of: #"\[([a-z]{2,3})\]"#, options: .regularExpression) {
+            let code = name[match].replacingOccurrences(of: "[", with: "").replacingOccurrences(of: "]", with: "")
+            return code
+        }
+        // Check if the name itself is just a language code
+        if name.count == 2 || name.count == 3, name.allSatisfy({ $0.isLetter }) {
+            return name.lowercased()
+        }
+        return nil
+    }
+}
+
+/// Represents a subtitle/closed caption track with its index and display name
+struct SubtitleTrack: Identifiable, Hashable, Sendable {
+    let id: Int32
+    let index: Int32
+    let name: String
+    
+    /// Extract language code from track name if present
+    var languageCode: String? {
+        // Try to extract language code from patterns like "English [en]" or just "en"
+        if let match = name.range(of: #"\[([a-z]{2,3})\]"#, options: .regularExpression) {
+            let code = name[match].replacingOccurrences(of: "[", with: "").replacingOccurrences(of: "]", with: "")
+            return code
+        }
+        // Check if the name itself is just a language code
+        if name.count == 2 || name.count == 3, name.allSatisfy({ $0.isLetter }) {
+            return name.lowercased()
+        }
+        return nil
+    }
+}
+
 /// Represents the instance state of Heck Yeah TV app.  These are settings that would never be shared across
 /// CloudKit (tm) so that all your Heck Yeah TV apps would pause at the same time, or have the same selected channel,
 /// or show the same recent channels, etc...
@@ -91,9 +133,60 @@ protocol AppStateProvider {
     ///
     /// Remembers the most recent adventure when your app fetched the IPTV channel list.
     /// Checking too frequently may provoke the wrath of server guardians, or at least a stern warning in all caps.
-    /// If `nil`, we either haven’t fetched yet, or we’re just winging it and hoping for the best.
-    /// Set this after each successful fetch—your future self (and the API’s rate limiter) will thank you.
+    /// If `nil`, we either haven't fetched yet, or we're just winging it and hoping for the best.
+    /// Set this after each successful fetch—your future self (and the API's rate limiter) will thank you.
     var dateLastIPTVChannelFetch: Date? { get set }
+
+    /// Whether closed captions are currently enabled for video playback.
+    ///
+    /// When `true`, subtitles will display on screen for those who prefer reading along or need accessibility support.
+    /// When `false`, subtitles take a coffee break and you're on your own.
+    /// This setting persists across app launches because nobody wants to re-enable captions every single time.
+    var closedCaptionsEnabled: Bool { get set }
+    
+    /// The list of subtitle tracks available in the currently playing stream.
+    ///
+    /// This is populated dynamically when a stream starts playing and represents the available
+    /// subtitle/caption options (different languages). Empty array means no subtitle tracks
+    /// are available or no stream is playing. This state is transient and not persisted.
+    var availableSubtitleTracks: [SubtitleTrack] { get set }
+    
+    /// The index of the currently selected subtitle track, or `nil` if CC is disabled.
+    ///
+    /// This value corresponds to the VLC subtitle track index. When set, it triggers the player
+    /// to switch to that subtitle track. Set to `nil` or -1 when CC is disabled.
+    /// This state is transient and not persisted since each stream has unique tracks.
+    var selectedSubtitleTrackIndex: Int32? { get set }
+    
+    /// The list of audio tracks available in the currently playing stream.
+    ///
+    /// This is populated dynamically when a stream starts playing and represents the available
+    /// audio options (different languages, commentary tracks, etc.). Empty array means no audio
+    /// tracks are available or no stream is playing. This state is transient and not persisted.
+    var availableAudioTracks: [AudioTrack] { get set }
+    
+    /// The index of the currently selected audio track, or `nil` if none selected.
+    ///
+    /// This value corresponds to the VLC audio track index. When set, it triggers the player
+    /// to switch to that audio track. Set to `nil` when no stream is playing or no track is selected.
+    /// This state is transient and not persisted since each stream has unique tracks.
+    var selectedAudioTrackIndex: Int32? { get set }
+    
+    /// The current playback volume level (0-200).
+    ///
+    /// VLC supports volume levels from 0 (muted) to 200 (double volume), with 100 being normal volume.
+    /// Most users stick with 0-100, but VLC lets you crank it to 200 if you're feeling bold or your
+    /// audio is recorded at whisper levels. This setting persists across app launches because nobody
+    /// wants to manually adjust volume every time they watch something.
+    var playerVolume: Int32 { get set }
+    
+    /// Whether the current stream supports seeking (jumping forward/backward in time).
+    ///
+    /// When `true`, the stream allows you to skip around like you're in control of time itself.
+    /// When `false`, you're stuck watching linearly like some kind of broadcast television peasant.
+    /// Live streams typically aren't seekable, while VOD content usually is. This state is transient
+    /// and updates based on the currently playing stream's capabilities.
+    var isSeekable: Bool { get set }
 }
 
 extension AppStateProvider {

@@ -70,7 +70,7 @@ struct MainAppContentView: View {
             }
 #endif
             
-            if showPlayPauseButton {
+            if showPlayPauseButton && appState.selectedTab != .playerControls {
                 PlayPauseBadge()
             }
             

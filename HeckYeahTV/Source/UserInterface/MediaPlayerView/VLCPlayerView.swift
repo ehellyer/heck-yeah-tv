@@ -34,10 +34,15 @@ struct VLCPlayerView: View {
                 selectedChannelId: selectedChannelId,
                 shouldPause: appState.isPlayerPaused,
                 scenePhase: scenePhase,
-                isStreamUnplayable: $isStreamUnplayable
+                closedCaptionsEnabled: appState.closedCaptionsEnabled,
+                selectedSubtitleTrackIndex: appState.selectedSubtitleTrackIndex,
+                selectedAudioTrackIndex: appState.selectedAudioTrackIndex,
+                playerVolume: appState.playerVolume,
+                isStreamUnplayable: $isStreamUnplayable,
+                appState: appState
             )
             .opacity(isStreamUnplayable ? 0 : 1)
-            
+
             if isStreamUnplayable {
                 UnplayableStreamOverlay()
             }
@@ -63,32 +68,56 @@ struct UnplayableStreamOverlay: View {
 
 @MainActor
 struct VLCPlayerRepresentable: CrossPlatformRepresentable {
-    
+
     let selectedChannelId: ChannelId?
     let shouldPause: Bool
     let scenePhase: ScenePhase
+    let closedCaptionsEnabled: Bool
+    let selectedSubtitleTrackIndex: Int32?
+    let selectedAudioTrackIndex: Int32?
+    let playerVolume: Int32
     @Binding var isStreamUnplayable: Bool
-    
+    var appState: AppStateProvider
+
     //MARK: - CrossPlatformRepresentable overrides
 
     func makeCoordinator() -> VLCPlayerRepresentable.Coordinator {
-        VLCPlayerRepresentable.Coordinator(isStreamUnplayable: $isStreamUnplayable)
+        VLCPlayerRepresentable.Coordinator(
+            isStreamUnplayable: $isStreamUnplayable,
+            appState: appState
+        )
     }
-    
+
     func makeView(context: Context) -> PlatformView {
         return context.coordinator.platformView
     }
-    
+
     func updateView(_ view: PlatformView, context: Context) {
         // If app is not active, stop playback to release resources.
         if scenePhase != .active {
             context.coordinator.stop()
             return
         }
-        
+
         // Reconciles the selectedChannelId and player state intent to determine the actual player state.
         context.coordinator.updatePlayState(channelId: selectedChannelId,
                                             shouldPause: shouldPause)
+
+        // Update closed captions based on app state
+        context.coordinator.updateClosedCaptions(enabled: closedCaptionsEnabled)
+        
+        // Update subtitle track if user selected one
+        if let subtitleTrackIndex = selectedSubtitleTrackIndex, subtitleTrackIndex >= 0 {
+            context.coordinator.updateSubtitleTrack(index: subtitleTrackIndex)
+        }
+        
+        // Update audio track if user selected one
+        if let audioTrackIndex = selectedAudioTrackIndex {
+            context.coordinator.updateAudioTrack(index: audioTrackIndex)
+        }
+        
+        // Update volume
+        context.coordinator.updateVolume(playerVolume)
     }
     
     static func dismantleView(_ view: PlatformView, coordinator: Coordinator) {
@@ -101,15 +130,12 @@ struct VLCPlayerRepresentable: CrossPlatformRepresentable {
     final class Coordinator: NSObject {
         
         @Binding var isStreamUnplayable: Bool
+        var appState: AppStateProvider
 
-        deinit {
-            NotificationCenter.default.removeObserver(self)
-        }
-
-        init(isStreamUnplayable: Binding<Bool>) {
+        init(isStreamUnplayable: Binding<Bool>, appState: AppStateProvider) {
             self._isStreamUnplayable = isStreamUnplayable
+            self.appState = appState
             super.init()
-            registerObservers()
         }
         
         //MARK: - Private API
@@ -129,6 +155,7 @@ struct VLCPlayerRepresentable: CrossPlatformRepresentable {
             _player.drawable = self.platformView
             _player.delegate = self
             _player.audio?.volume = initVolume
+            
 //            let logger = VLCConsoleLogger()
 //            logger.level = VLCLogLevel.warning
 //            _player.libraryInstance.loggers = [logger]
@@ -138,18 +165,6 @@ struct VLCPlayerRepresentable: CrossPlatformRepresentable {
         private func resolveChannelURL(id: ChannelId) -> URL? {
             let channel = swiftDataController.channel(for: id)
             return channel?.url
-        }
-        
-        private func registerObservers() {
-            NotificationCenter.default.addObserver(self,
-                                                   selector: #selector(seekForward),
-                                                   name: .playerSeekForward,
-                                                   object: nil)
-            
-            NotificationCenter.default.addObserver(self,
-                                                   selector: #selector(seekBackward),
-                                                   name: .playerSeekBackward,
-                                                   object: nil)
         }
         
         //MARK: - Internal API
@@ -217,32 +232,33 @@ struct VLCPlayerRepresentable: CrossPlatformRepresentable {
                 
                 let media = VLCMedia(url: channelURL)
                 // https://wiki.videolan.org/VLC_command-line_help/
+                
                 media.addOptions([
-                    "network-caching": 1000,           // Network resource caching in milliseconds. Increased to 15s to buffer through ad transitions.
-                    "http-reconnect": "",               // Auto-reconnect on sudden stream drop. Default disabled; critical for live IPTV streams with unstable connections.
-                    "no-lua": "",                       // Disable all lua plugins. Boolean flags use empty string, not true/false.
-                    "avcodec-hw": "none",               // Disable hardware decoding, use software decoding only. Software decoder more flexible with format changes.
-//                    "avcodec-hw": "any",                // Prefer hardware decode when possible (VideoToolbox on Apple). Reduces CPU load.
-                    "avcodec-skiploopfilter": "all",    // Skip loop filter for all frames. More lenient decoding, helps with codec/format switching during ads.
-                    "avcodec-skip-frame": 0,            // Don't skip any frames. 0=AVDISCARD_NONE ensures all frames processed during discontinuities.
-                    "avcodec-skip-idct": 0,             // Don't skip IDCT. Ensures proper decoding through format changes.
-                    "avcodec-threads": 0,               // 0=auto thread count. Helps decoder handle format changes faster.
-                    "avcodec-fast": "",                 // Enable fast decoding. May help prevent stalls during transitions.
-                    "adaptive-logic": "highest",        // Start with highest quality variant, avoid low-res startup glitch. Options: rate, fixedrate, highest, lowest
-                    "adaptive-maxwidth": 3840,          // Max adaptive stream width. Set to 3840 for 4K support (1920 for Full HD).
-                    "adaptive-maxheight": 2160,         // Max adaptive stream height. Set to 2160 for 4K support (1080 for Full HD).
-                    "adaptive-bw": 15000000,            // Assume 15 Mbps bandwidth initially for 4K streams (2.5 Mbps for HD). Helps VLC pick higher quality at startup.
-                    "deinterlace": -1,                  // -1 = Automatic: only deinterlaces when the stream signals it is interlaced. Most IPTV/HLS streams are progressive.
-                    "deinterlace-mode": "auto",         // Auto-select the deinterlace algorithm when deinterlacing is active.
-                    "no-ts-trust-pcr": "",              // Disable Trust in-stream PCR (default is enabled). Helps with HLS discontinuities.
-                    "ts-seek-percent": "",              // Use percentage seeking instead of time-based. More reliable with discontinuous timestamps.
-                    "ts-extra-pmt": "",                 // Extra PMT for streams with multiple programs. Helps handle ad insertion as separate programs.
-                    "sout-ts-dts-delay": 400,           // Delay DTS (Decoding Time Stamp) by 400ms. Can help smooth transitions at discontinuities.
-                    "file-caching": 5000,               // File caching (ms) <integer [0 .. 60000]>
-                    "clock-jitter": 5000,              // Allow 10s clock jitter. Maximum tolerance for timestamp discontinuities at ad boundaries.
-                    "no-drop-late-frames": "",          // Don't drop frames that arrive late. Prevents stalls from timing issues during transitions.
-                    "no-skip-frames": "",              // Never skip frames even if behind. Prevents gaps during discontinuities.
-                    "avformat-format": "hls"            // Explicitly tell avformat this is HLS. May improve discontinuity handling.
+                    "network-caching": 1000,                    // Network resource caching in milliseconds. Increased to 15s to buffer through ad transitions.
+                    "http-reconnect": "",                       // Auto-reconnect on sudden stream drop. Default disabled; critical for live IPTV streams with unstable connections.
+                    "no-lua": "",                               // Disable all lua plugins. Boolean flags use empty string, not true/false.
+                    "avcodec-hw": "none",                       // Disable hardware decoding, use software decoding only. Software decoder more flexible with format changes.
+//                    "avcodec-hw": "any",                      // Prefer hardware decode when possible (VideoToolbox on Apple). Reduces CPU load.
+                    "avcodec-skiploopfilter": "all",            // Skip loop filter for all frames. More lenient decoding, helps with codec/format switching during ads.
+                    "avcodec-skip-frame": 0,                    // Don't skip any frames. 0=AVDISCARD_NONE ensures all frames processed during discontinuities.
+                    "avcodec-skip-idct": 0,                     // Don't skip IDCT. Ensures proper decoding through format changes.
+                    "avcodec-threads": 0,                       // 0=auto thread count. Helps decoder handle format changes faster.
+                    "avcodec-fast": "",                         // Enable fast decoding. May help prevent stalls during transitions.
+                    "adaptive-logic": "highest",                // Start with highest quality variant, avoid low-res startup glitch. Options: rate, fixedrate, highest, lowest
+                    "adaptive-maxwidth": 3840,                  // Max adaptive stream width. Set to 3840 for 4K support (1920 for Full HD).
+                    "adaptive-maxheight": 2160,                 // Max adaptive stream height. Set to 2160 for 4K support (1080 for Full HD).
+                    "adaptive-bw": 15000000,                    // Assume 15 Mbps bandwidth initially for 4K streams (2.5 Mbps for HD). Helps VLC pick higher quality at startup.
+                    "deinterlace": -1,                          // -1 = Automatic: only deinterlaces when the stream signals it is interlaced. Most IPTV/HLS streams are progressive.
+                    "deinterlace-mode": "auto",                 // Auto-select the deinterlace algorithm when deinterlacing is active.
+                    "no-ts-trust-pcr": "",                      // Disable Trust in-stream PCR (default is enabled). Helps with HLS discontinuities.
+                    "ts-seek-percent": "",                      // Use percentage seeking instead of time-based. More reliable with discontinuous timestamps.
+                    "ts-extra-pmt": "",                         // Extra PMT for streams with multiple programs. Helps handle ad insertion as separate programs.
+                    "sout-ts-dts-delay": 400,                   // Delay DTS (Decoding Time Stamp) by 400ms. Can help smooth transitions at discontinuities.
+                    "file-caching": 5000,                       // File caching (ms) <integer [0 .. 60000]>
+                    "clock-jitter": 5000,                       // Allow 10s clock jitter. Maximum tolerance for timestamp discontinuities at ad boundaries.
+                    "no-drop-late-frames": "",                  // Don't drop frames that arrive late. Prevents stalls from timing issues during transitions.
+                    "no-skip-frames": "",                       // Never skip frames even if behind. Prevents gaps during discontinuities.
+                    "avformat-format": "hls",                   // Explicitly tell avformat this is HLS. May improve discontinuity handling.
                 ])
                 mediaPlayer.media = media
                 mediaPlayer.audio?.volume = initVolume
@@ -309,17 +325,191 @@ struct VLCPlayerRepresentable: CrossPlatformRepresentable {
         
         func clearVideoLayer() {
             // Clear the video layer to remove any frozen frame
-            #if os(macOS)
+#if os(macOS)
             if let layer = platformView.layer {
                 layer.contents = nil
                 layer.backgroundColor = PlatformColor.clear.cgColor
             }
-            #else
+#else
             platformView.layer.contents = nil
             platformView.backgroundColor = PlatformColor.clear
-            #endif
+#endif
+        }
+
+        func detectAndUpdateAvailableSubtitleTracks() {
+            // Get available subtitle tracks from VLC
+            guard let subtitleIndexes = mediaPlayer.videoSubTitlesIndexes as? [Int] else {
+                logDebug("VLC: videoSubTitlesIndexes is nil or wrong type")
+                appState.availableSubtitleTracks = []
+                appState.selectedSubtitleTrackIndex = nil
+                return
+            }
+            
+            logDebug("VLC: Found subtitle indexes: \(subtitleIndexes)")
+            
+            // Try to get names if available, otherwise use generic names
+            let subtitleNames: [String]
+            if let names = mediaPlayer.videoSubTitlesNames as? [String] {
+                logDebug("VLC: Found subtitle names: \(names)")
+                subtitleNames = names
+            } else {
+                logDebug("VLC: videoSubTitlesNames not available, using generic names")
+                // Generate generic names based on index
+                subtitleNames = subtitleIndexes.map { index in
+                    if index == -1 {
+                        return "Disable"
+                    } else {
+                        return "Track \(index)"
+                    }
+                }
+            }
+            
+            // Filter out the "Disable" track (index -1) if present
+            let validTracks = zip(subtitleIndexes, subtitleNames)
+                .filter { $0.0 >= 0 }
+                .map { SubtitleTrack(id: Int32($0.0), index: Int32($0.0), name: $0.1) }
+            
+            if let firstTrack = validTracks.first {
+                appState.availableSubtitleTracks = [firstTrack]
+            } else {
+                appState.availableSubtitleTracks = []
+            }
+            
+            // Get current subtitle track
+            let currentIndex = mediaPlayer.currentVideoSubTitleIndex
+            appState.selectedSubtitleTrackIndex = currentIndex >= 0 ? currentIndex : nil
+            
+            logDebug("VLC: Detected \(validTracks.count) subtitle tracks, current: \(currentIndex)")
+            for track in validTracks {
+                logDebug("  - Subtitle Track \(track.index): \(track.name)")
+            }
         }
         
+        func updateClosedCaptions(enabled: Bool) {
+            // Enable or disable subtitle tracks
+            if enabled {
+                // If user has selected a specific track, use that
+                if let selectedIndex = appState.selectedSubtitleTrackIndex, selectedIndex >= 0 {
+                    logDebug("VLC: Enabling selected subtitle track (index: \(selectedIndex))")
+                    mediaPlayer.currentVideoSubTitleIndex = selectedIndex
+                    return
+                }
+                
+                // Otherwise, try to auto-select a track
+                let validTracks = appState.availableSubtitleTracks
+                if !validTracks.isEmpty {
+                    // Try to match user's preferred language
+                    if let preferredLanguages = Locale.preferredLanguages.first {
+                        let preferredCode = String(preferredLanguages.prefix(2)).lowercased()
+                        if let matchingTrack = validTracks.first(where: { $0.languageCode == preferredCode }) {
+                            logDebug("VLC: Auto-selecting subtitle track matching language \(preferredCode): \(matchingTrack.name)")
+                            mediaPlayer.currentVideoSubTitleIndex = matchingTrack.index
+                            appState.selectedSubtitleTrackIndex = matchingTrack.index
+                            return
+                        }
+                    }
+                    
+                    // No language match, use first track
+                    if let firstTrack = validTracks.first {
+                        logDebug("VLC: Enabling first subtitle track (index: \(firstTrack.index))")
+                        mediaPlayer.currentVideoSubTitleIndex = firstTrack.index
+                        appState.selectedSubtitleTrackIndex = firstTrack.index
+                    }
+                } else {
+                    logDebug("VLC: No valid subtitle tracks available to enable")
+                    // Show toast notification and disable CC
+                    ToastManager.shared.show("No subtitles available")
+                    appState.closedCaptionsEnabled = false
+                    appState.selectedSubtitleTrackIndex = nil
+                }
+            } else {
+                // Disable subtitles by setting index to -1
+                logDebug("VLC: Disabling closed captions")
+                mediaPlayer.currentVideoSubTitleIndex = -1
+                appState.selectedSubtitleTrackIndex = nil
+            }
+        }
+        
+        func updateSubtitleTrack(index: Int32) {
+            guard mediaPlayer.currentVideoSubTitleIndex != index else { return }
+            logDebug("VLC: Switching to subtitle track index: \(index)")
+            mediaPlayer.currentVideoSubTitleIndex = index
+        }
+        
+        func detectAndUpdateAvailableAudioTracks() {
+            // Get available audio tracks from VLC
+            guard let audioTrackIndexes = mediaPlayer.audioTrackIndexes as? [Int],
+                  let audioTrackNames = mediaPlayer.audioTrackNames as? [String] else {
+                logDebug("VLC: No audio tracks available")
+                appState.availableAudioTracks = []
+                appState.selectedAudioTrackIndex = nil
+                return
+            }
+            
+            // Filter out the "Disable" track (index -1) if present
+            let validTracks = zip(audioTrackIndexes, audioTrackNames)
+                .filter { $0.0 >= 0 }
+                .map { AudioTrack(id: Int32($0.0), index: Int32($0.0), name: $0.1) }
+            
+            appState.availableAudioTracks = validTracks
+            
+            // Get current audio track
+            let currentIndex = mediaPlayer.currentAudioTrackIndex
+            appState.selectedAudioTrackIndex = currentIndex >= 0 ? currentIndex : nil
+            
+            logDebug("VLC: Detected \(validTracks.count) audio tracks, current: \(currentIndex)")
+            for track in validTracks {
+                logDebug("  - Track \(track.index): \(track.name)")
+            }
+            
+            // Auto-select preferred language track if this is a new stream and no selection made yet
+            if appState.selectedAudioTrackIndex == nil && !validTracks.isEmpty {
+                selectPreferredAudioTrack(from: validTracks)
+            }
+        }
+        
+        func updateAudioTrack(index: Int32) {
+            guard mediaPlayer.currentAudioTrackIndex != index else { return }
+            logDebug("VLC: Switching to audio track index: \(index)")
+            mediaPlayer.currentAudioTrackIndex = index
+        }
+        
+        func updateVolume(_ volume: Int32) {
+            guard let audio = mediaPlayer.audio else { return }
+            guard audio.volume != volume else { return }
+            logDebug("VLC: Setting volume to \(volume)")
+            audio.volume = volume
+        }
+        
+        private func selectPreferredAudioTrack(from tracks: [AudioTrack]) {
+            // Get user's preferred language from Locale
+            let preferredLanguages = Locale.preferredLanguages
+            guard let primaryLanguage = preferredLanguages.first else {
+                // No preference, use first track
+                if let firstTrack = tracks.first {
+                    logDebug("VLC: No language preference, selecting first track: \(firstTrack.name)")
+                    updateAudioTrack(index: firstTrack.index)
+                }
+                return
+            }
+            
+            // Extract language code from preferred language (e.g., "en-US" -> "en")
+            let preferredCode = String(primaryLanguage.prefix(2)).lowercased()
+            
+            // Try to find a matching track by language code
+            if let matchingTrack = tracks.first(where: { $0.languageCode == preferredCode }) {
+                logDebug("VLC: Found preferred language track (\(preferredCode)): \(matchingTrack.name)")
+                updateAudioTrack(index: matchingTrack.index)
+                return
+            }
+            
+            // No match found, use first track as default
+            if let firstTrack = tracks.first {
+                logDebug("VLC: No matching language track for \(preferredCode), using first track: \(firstTrack.name)")
+                updateAudioTrack(index: firstTrack.index)
+            }
+        }
+
         func dismantle() {
             stopPlaybackMonitoring()
             stop()
@@ -390,6 +580,25 @@ extension VLCPlayerRepresentable.Coordinator: VLCMediaPlayerDelegate {
                     self.stopPlaybackMonitoring()
                     self.errorRetryCount = 0
                     self.isStreamUnplayable = false  // Clear unplayable indicator when playing
+                    
+                    // Wait 1 second for VLC to fully initialize tracks
+                    try? await Task.sleep(for: .seconds(1))
+                    
+                    // Detect and populate available subtitle tracks
+                    self.detectAndUpdateAvailableSubtitleTracks()
+                    
+                    // Detect and populate available audio tracks
+                    self.detectAndUpdateAvailableAudioTracks()
+                    
+                    // Update seekable state
+                    self.appState.isSeekable = player.isSeekable
+                    logDebug("VLC: Stream is \(player.isSeekable ? "seekable" : "not seekable")")
+                    
+                    // Re-apply closed captions setting if enabled
+                    // This ensures CC persists when switching channels
+                    if self.appState.closedCaptionsEnabled {
+                        self.updateClosedCaptions(enabled: true)
+                    }
                 }
             case .paused:
                 logDebug("VLC State: Paused")

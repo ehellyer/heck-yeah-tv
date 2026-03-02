@@ -109,7 +109,6 @@
 				Source/Common/DependencyInjection/InjectedSharedAppState/SharedAppStateInjectionKey.swift,
 				Source/Common/DependencyInjection/InjectedSwiftDataController/SwiftDataControllerInjectionKey.swift,
 				"Source/Common/Extensions/Color+Extension.swift",
-				"Source/Common/Extensions/Notification+Extension.swift",
 				"Source/Common/Extensions/NSView+AsImage.swift",
 				"Source/Common/Extensions/PlatformImage+AsImage.swift",
 				"Source/Common/Extensions/String+Extension.swift",
@@ -282,7 +281,6 @@
 				Source/Common/DependencyInjection/InjectedSwiftDataController/SwiftDataControllerInjectionKey.swift,
 				"Source/Common/Extensions/Color+Extension.swift",
 				"Source/Common/Extensions/FocusTargetView+FocusAnimation.swift",
-				"Source/Common/Extensions/Notification+Extension.swift",
 				"Source/Common/Extensions/PlatformImage+AsImage.swift",
 				"Source/Common/Extensions/String+Extension.swift",
 				"Source/Common/Extensions/UIView+AsImage.swift",
@@ -1192,7 +1190,7 @@
 					"$(PROJECT_DIR)/Frameworks",
 					"@loader_path/../",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 15.6;
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
 				MARKETING_VERSION = 1.0;
 				OTHER_LDFLAGS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.hellyermultimedia.heckyeahtv.go;
@@ -1235,7 +1233,7 @@
 					"$(PROJECT_DIR)/Frameworks",
 					"@loader_path/../",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 15.6;
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
 				MARKETING_VERSION = 1.0;
 				OTHER_LDFLAGS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.hellyermultimedia.heckyeahtv.go;
@@ -1491,7 +1489,7 @@
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
-				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited)";
 				MACOSX_DEPLOYMENT_TARGET = 15.6;
 				MARKETING_VERSION = 1.0;
@@ -1531,7 +1529,7 @@
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
-				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited)";
 				MACOSX_DEPLOYMENT_TARGET = 15.6;
 				MARKETING_VERSION = 1.0;
@@ -1659,7 +1657,7 @@
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 3;
-				TVOS_DEPLOYMENT_TARGET = 18.6;
+				TVOS_DEPLOYMENT_TARGET = 26.0;
 			};
 			name = Debug;
 		};
@@ -1695,7 +1693,7 @@
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 3;
-				TVOS_DEPLOYMENT_TARGET = 18.6;
+				TVOS_DEPLOYMENT_TARGET = 26.0;
 			};
 			name = Release;
 		};

@@ -23,8 +23,15 @@ final class MockSharedAppState: AppStateProvider {
         self.selectedChannelBundleId = "mock#1.guide"// AppKeys.Application.defaultChannelBundleId
         self.dateLastHomeRunChannelProgramFetch = nil
         self.dateLastIPTVChannelFetch = nil
+        self.closedCaptionsEnabled = false
+        self.availableSubtitleTracks = []
+        self.selectedSubtitleTrackIndex = nil
+        self.availableAudioTracks = []
+        self.selectedAudioTrackIndex = nil
+        self.playerVolume = 120
+        self.isSeekable = true
     }
-    
+
     var isPlayerPaused: Bool
     var showAppMenu: Bool
     var showProgramDetailCarousel: ChannelProgram?
@@ -41,8 +48,15 @@ final class MockSharedAppState: AppStateProvider {
     var selectedChannelBundleId: ChannelBundleId
     var dateLastHomeRunChannelProgramFetch: Date?
     var dateLastIPTVChannelFetch: Date?
+    var closedCaptionsEnabled: Bool
+    var availableSubtitleTracks: [SubtitleTrack]
+    var selectedSubtitleTrackIndex: Int32?
+    var availableAudioTracks: [AudioTrack]
+    var selectedAudioTrackIndex: Int32?
+    var playerVolume: Int32
+    var isSeekable: Bool
 
-    
+
     func resetRecentChannelIds() {
         recentChannelIds = []
     }

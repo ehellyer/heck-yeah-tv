@@ -128,7 +128,38 @@ final class SharedAppState: AppStateProvider {
             }
         }
     }
+
+    var closedCaptionsEnabled: Bool {
+        get {
+            access(keyPath: \.closedCaptionsEnabled)
+            return UserDefaults.closedCaptionsEnabled
+        }
+        set {
+            withMutation(keyPath: \.closedCaptionsEnabled) {
+                UserDefaults.closedCaptionsEnabled = newValue
+            }
+        }
+    }
     
+    var availableSubtitleTracks: [SubtitleTrack] = []
+    var selectedSubtitleTrackIndex: Int32? = nil
+    var availableAudioTracks: [AudioTrack] = []
+    var selectedAudioTrackIndex: Int32? = nil
+    
+    var playerVolume: Int32 {
+        get {
+            access(keyPath: \.playerVolume)
+            return UserDefaults.playerVolume
+        }
+        set {
+            withMutation(keyPath: \.playerVolume) {
+                UserDefaults.playerVolume = newValue
+            }
+        }
+    }
+    
+    var isSeekable: Bool = true
+
     func resetRecentChannelIds() {
         recentChannelIds = []
     }
