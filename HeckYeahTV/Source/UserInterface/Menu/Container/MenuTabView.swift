@@ -25,47 +25,47 @@ struct MenuTabView: View {
     }
     
     var body: some View {
-        TabView(selection: selectedTab) {
-            
-            Tab(AppSection.guide.title,
-                systemImage: AppSection.guide.systemImage,
-                value: AppSection.guide) {
-                ChannelsContainer()
-                    .padding(.leading, -20) // Expand on the left edge to prevent the clipping of the focus effect on the fav toggle view.
+        NavigationStack {
+            TabView(selection: selectedTab) {
+                
+                Tab(AppSection.guide.title,
+                    systemImage: AppSection.guide.systemImage,
+                    value: AppSection.guide) {
+                    ChannelsContainer()
+                        .padding(.leading, -20) // Expand on the left edge to prevent the clipping of the focus effect on the fav toggle view.
+                }
+                
+                Tab(AppSection.recents.title,
+                    systemImage: AppSection.recents.systemImage,
+                    value: AppSection.recents) {
+                    RecentsView()
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                }
+                
+                Tab(AppSection.settings.title,
+                    systemImage: AppSection.settings.systemImage,
+                    value: AppSection.settings) {
+                    SettingsContainerView()
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                }
+            }
+            .frame(maxWidth: .infinity)
+            .background(Color.clear)
+            .task {
+                // Sanity check.  PlayerOverlay is not used on tvOS.
+                if appState.selectedTab == .playerControls {
+                    appState.selectedTab = .guide
+                }
             }
             
-            Tab(AppSection.recents.title,
-                systemImage: AppSection.recents.systemImage,
-                value: AppSection.recents) {
-                RecentsView()
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-            }
             
-            Tab(AppSection.settings.title,
-                systemImage: AppSection.settings.systemImage,
-                value: AppSection.settings) {
-                SettingsContainerView()
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-            }
-        }
-        .frame(maxWidth: .infinity)
-        .background(Color.clear)
-        .task {
-            if appState.selectedTab == .playerControls {
-                appState.selectedTab = .guide
-            }
-        }
-        
-        // Support for dismissing the tabview by tapping menu on Siri remote for tvOS.
-        .onExitCommand {
-            withAnimation {
-                // TODO: EJH - This is a quick and dirty fix for when on tvOS and in the bundle edit screen.
-                if appState.selectedTab != .settings {
+            // Support for dismissing the tabview by tapping menu on Siri remote for tvOS.
+            .onExitCommand {
+                withAnimation {
                     appState.showAppMenu = false
                 }
             }
         }
-        
         .transition(
             .move(edge: .bottom)
             .combined(with: .opacity)

@@ -47,12 +47,7 @@ struct PlayerOverlay: View {
                             .frame(width: 50, height: 50)
                             .glassEffect()
                     }
-#if os(tvOS)
-                    .buttonStyle(.card)
-#else
                     .buttonStyle(.plain)
-#endif
-                    .shadow(color: .black.opacity(0.3), radius: 5, x: 0, y: 2)
                     
                     Button(action: volumeUp) {
                         Image(systemName: "speaker.plus.fill")
@@ -61,12 +56,7 @@ struct PlayerOverlay: View {
                             .frame(width: 50, height: 50)
                             .glassEffect()
                     }
-#if os(tvOS)
-                    .buttonStyle(.card)
-#else
                     .buttonStyle(.plain)
-#endif
-                    .shadow(color: .black.opacity(0.3), radius: 5, x: 0, y: 2)
                 }
                 .padding(.leading, 30)
                 
