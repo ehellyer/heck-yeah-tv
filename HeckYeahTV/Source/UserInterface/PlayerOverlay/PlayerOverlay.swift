@@ -30,8 +30,9 @@ struct PlayerOverlay: View {
                     .foregroundStyle(.white)
                     .frame(width: 60, height: 60)
                     .padding(20)
+                    .glassEffect()
             }
-            .glassEffect()
+            .buttonStyle(.plain)
 
             Spacer()
 
