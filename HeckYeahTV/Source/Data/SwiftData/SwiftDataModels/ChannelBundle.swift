@@ -12,6 +12,7 @@ import Hellfire
 extension SchemaV1 {
     
     @Model final class ChannelBundle: JSONSerializable {
+        #Unique<ChannelBundle>([\.id])
         #Index<ChannelBundle>([\.id])
         
         init(id: ChannelBundleId,
@@ -21,8 +22,7 @@ extension SchemaV1 {
             self.name = name
             self.channels = channels
         }
-        
-        @Attribute(.unique)
+
         var id: ChannelBundleId
         var name: String
         

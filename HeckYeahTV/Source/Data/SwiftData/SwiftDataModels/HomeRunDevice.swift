@@ -13,6 +13,7 @@ import Hellfire
 extension SchemaV1 {
     
     @Model final class HomeRunDevice: JSONSerializable {
+        #Unique<HomeRunDevice>([\.deviceId])
         #Index<HomeRunDevice>([\.deviceId], [\.includeChannelLineUp, \.deviceId])
         
         init(deviceId: HDHomeRunDeviceId,
@@ -37,7 +38,6 @@ extension SchemaV1 {
             self.includeChannelLineUp = includeChannelLineUp
         }
         
-        @Attribute(.unique)
         var deviceId: HDHomeRunDeviceId
         var friendlyName: String
         var modelNumber: String

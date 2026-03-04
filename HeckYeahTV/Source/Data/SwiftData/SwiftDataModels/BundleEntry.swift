@@ -13,6 +13,7 @@ import Hellfire
 extension SchemaV1 {
     
     @Model final class BundleEntry: JSONSerializable {
+        #Unique<BundleEntry>([\.id])
         #Index<BundleEntry>([\.sortHint, \.id], [\.id])
         
         init(channel: Channel,
@@ -30,8 +31,6 @@ extension SchemaV1 {
             self.isFavorite = isFavorite
         }
         
-        /// Unique identifier which is a stable hash of ChannelId and ChannelBundleId
-        @Attribute(.unique)
         var id: BundleEntryId
         
         @Relationship(deleteRule: .nullify)

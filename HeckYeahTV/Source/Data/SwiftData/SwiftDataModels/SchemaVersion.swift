@@ -13,15 +13,16 @@ import SwiftData
 extension HeckYeahSchema {
     
     @Model final class SchemaVersion {
+        #Unique<SchemaVersion>([\.id])
         #Index<SchemaVersion>([\.id])
         
         init() {
+            // There will always only be one instance of SchemaVersion that holds the schema version of the database.  Used at dev time when opening the SQLite DB directly.
             self.id = UUID(uuidString: "fe7046c4-c15d-4e78-ba5b-50378a50c0b1")!
             self.version = HeckYeahSchema.versionIdentifier.description
         }
         
         /// Unique identifier for the only instance
-        @Attribute(.unique)
         private(set) var id: UUID
         
         /// Version of the current schema

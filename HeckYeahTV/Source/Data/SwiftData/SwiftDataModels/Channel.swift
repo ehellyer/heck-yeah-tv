@@ -14,6 +14,7 @@ extension SchemaV1 {
     
     /// Represents an instance from the master list of all possible channels.
     @Model final class Channel: JSONSerializable {
+        #Unique<Channel>([\.id])
         #Index<Channel>([\.sortHint, \.id], [\.id], [\.deviceId])
         
         init(id: ChannelId,
@@ -44,12 +45,10 @@ extension SchemaV1 {
             self.deviceId = deviceId
         }
         
-        @Attribute(.unique)
         var id: ChannelId
         
         /// The unique identifier to link guide information from the channels originating source.
         var guideId: String?
-        
         var sortHint: String
         var title: String
         var number: String?

@@ -43,14 +43,16 @@ final class SwiftDataStack: SwiftDataStackProvider {
             
             // Dev note: HeckYeahSchema always points to latest schema, which holds the version number and model definitions.
             let schema = Schema(versionedSchema: HeckYeahSchema.self)
-            let modelConfig = ModelConfiguration(schema: schema,
+            let modelConfig = ModelConfiguration("HeckYeahTVDB",
+                                                 schema: schema,
                                                  url: _storeURL,
+                                                 allowsSave: true,
                                                  cloudKitDatabase: .none)
             
             container = try ModelContainer(for: schema,
                                            migrationPlan: UpgradeSchemaMigrationPlan.self,
                                            configurations: [modelConfig])
-            
+          
             viewContext = ModelContext(container)
             viewContext.autosaveEnabled = true
             
@@ -101,23 +103,34 @@ extension SwiftDataStack {
     /// Checks if this database is older than your last app update (it probably is).
     /// Returns true if the store is using that ancient schema from two versions ago that we all agreed to forget about.
     private static func isLegacyStore(at url: URL) -> Bool {
+        var db: OpaquePointer? // OpaquePointer: Because nothing says "modern Swift" like a C pointer from the 90s.
+        var statement: OpaquePointer?
+
+        defer {
+            // Finalize the statement first, before closing the database
+            if statement != nil {
+                sqlite3_finalize(statement)
+                statement = nil
+                logDebug("sqlite3_finalize called")
+            }
+            
+            if db != nil {
+                // Always close what you open. It's not just good manners, it's the law.
+                sqlite3_close(db)
+                db = nil
+                logDebug("sqlite3_close called")
+            }
+        }
+        
         guard FileManager.default.fileExists(atPath: url.path) else {
             return false
         }
         
-        var db: OpaquePointer? // OpaquePointer: Because nothing says "modern Swift" like a C pointer from the 90s.
         guard sqlite3_open_v2(url.path, &db, SQLITE_OPEN_READONLY, nil) == SQLITE_OK else {
             logWarning("Could not open store to check version.")
             return true // Can't check the version if we can't even open the door.
         }
         
-        defer {
-            // Always close what you open. It's not just good manners, it's the law.
-            sqlite3_close(db)
-            db = nil
-        }
-        
-        var statement: OpaquePointer?
         let query = "SELECT ZID, ZVERSION FROM ZSCHEMAVERSION LIMIT 1" // LIMIT 1 because there's only one schema version. If there's more than one, we've got bigger problems.
         
         var isLegacyStore = false

@@ -9,26 +9,21 @@
 import SwiftUI
 import SwiftData
 
+@ModelActor
 actor IPTVImporter {
     
     deinit {
         logDebug("Deallocated")
     }
     
-    init(container: ModelContainer) {
-        self.context = ModelContext(container)
-        self.context.autosaveEnabled = false
-    }
-    
     static let iptvDeviceId = "IPTV"
     
     private var batchCount: Int = 0
     private let batchSize: Int = 500
-    private let context: ModelContext
     
     private lazy var existingCategories: [ProgramCategory] = {
         do {
-            return try context.fetch(FetchDescriptor<ProgramCategory>())
+            return try modelContext.fetch(FetchDescriptor<ProgramCategory>())
         } catch {
             logError("Unable to fetch categories.  Error: \(error)")
             return []
@@ -39,7 +34,7 @@ actor IPTVImporter {
         let chPredicate = #Predicate<Channel> { $0.id == id }
         var chDescriptor = FetchDescriptor<Channel>(predicate: chPredicate)
         chDescriptor.fetchLimit = 1
-        let model = try context.fetch(chDescriptor).first
+        let model = try modelContext.fetch(chDescriptor).first
         return model
     }
     
@@ -48,7 +43,7 @@ actor IPTVImporter {
             let predicate: Predicate<Channel> = #Predicate { $0.id == channelId }
             var descriptor = FetchDescriptor<Channel>(predicate: predicate)
             descriptor.fetchLimit = 1
-            return try context.fetch(descriptor).first
+            return try modelContext.fetch(descriptor).first
         } catch {
             logDebug("Unable to fetch existing `Channel` .")
             return nil
@@ -66,9 +61,9 @@ actor IPTVImporter {
         
         //Delete all existing IPTV channels, faster than upsert.  (We preserve favorites).
         let deviceId = IPTVImporter.iptvDeviceId
-        try context.delete(model: Channel.self, where: #Predicate { channel in channel.deviceId == deviceId })
-        if context.hasChanges {
-            try context.save()
+        try modelContext.delete(model: Channel.self, where: #Predicate { channel in channel.deviceId == deviceId })
+        if modelContext.hasChanges {
+            try modelContext.save()
         }
         
         try await self.importIPChannels(ipFeeds: feeds,
@@ -94,7 +89,7 @@ actor IPTVImporter {
                 let predicate = #Predicate<Channel> { $0.deviceId == deviceId }
                 var descriptor = FetchDescriptor<Channel>(predicate: predicate)
                 descriptor.propertiesToFetch = [\.id]
-                return try context.fetch(descriptor)
+                return try modelContext.fetch(descriptor)
             } catch {
                 logError("Unable to fetch existing `IPTV channels` from SwiftData.")
                 return []
@@ -107,7 +102,7 @@ actor IPTVImporter {
         // delete
         logDebug("Existing IPTV channels to delete: \(existingChannels.count)")
         for model in existingChannels where !incomingIDs.contains(model.id) {
-            context.delete(model)
+            modelContext.delete(model)
         }
         
         //Build import indexes
@@ -144,18 +139,18 @@ actor IPTVImporter {
                 hasDRM: src.hasDRMHint,
                 deviceId: src.deviceIdHint
             )
-            context.insert(newChannel)
+            modelContext.insert(newChannel)
             
             batchCount += 1
             
             if batchCount % batchSize == 0 {
-                try context.save()
+                try modelContext.save()
                 await Task.yield()
             }
         }
         
-        if context.hasChanges {
-            try context.save()
+        if modelContext.hasChanges {
+            try modelContext.save()
             await Task.yield()
         }
         
@@ -172,7 +167,7 @@ actor IPTVImporter {
         
         // insert or update
         for src in countries {
-            context.insert(
+            modelContext.insert(
                 Country(name: src.name,
                         code: src.code,
                         languages: src.languages,
@@ -180,8 +175,8 @@ actor IPTVImporter {
             )
         }
         
-        if context.hasChanges {
-            try context.save()
+        if modelContext.hasChanges {
+            try modelContext.save()
         }
         
         logDebug("Country import process completed. Total imported: \(countries.count) 🏁")
@@ -200,15 +195,15 @@ actor IPTVImporter {
         
         // insert or update
         for src in categories {
-            context.insert(
+            modelContext.insert(
                 ProgramCategory(categoryId: src.categoryId,
                              name: src.name,
                              categoryDescription: src.description)
             )
         }
         
-        if context.hasChanges {
-            try context.save()
+        if modelContext.hasChanges {
+            try modelContext.save()
         }
         
         logDebug("Categories import process completed. Total imported: \(categories.count) 🏁")

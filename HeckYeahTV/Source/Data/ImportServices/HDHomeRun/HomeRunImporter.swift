@@ -9,28 +9,23 @@
 import SwiftUI
 import SwiftData
 
+@ModelActor
 actor HomeRunImporter {
     
     deinit {
         logDebug("Deallocated")
     }
     
-    init(container: ModelContainer) {
-        self.context = ModelContext(container)
-        self.context.autosaveEnabled = false
-    }
-    
     @Injected(\.sharedAppState) private var appState: AppStateProvider
     
     private var batchCount: Int = 0
     private let batchSize: Int = 500
-    private let context: ModelContext
 
     private func fetchChannel(id: ChannelId) async throws -> Channel? {
         let chPredicate = #Predicate<Channel> { $0.id == id }
         var chDescriptor = FetchDescriptor<Channel>(predicate: chPredicate)
         chDescriptor.fetchLimit = 1
-        let model = try context.fetch(chDescriptor).first
+        let model = try modelContext.fetch(chDescriptor).first
         return model
     }
     
@@ -48,7 +43,7 @@ actor HomeRunImporter {
                 let predicate = #Predicate<Channel> { deviceIds.contains($0.deviceId) }
                 var descriptor = FetchDescriptor<Channel>(predicate: predicate)
                 descriptor.propertiesToFetch = [\.id]
-                return try context.fetch(descriptor)
+                return try modelContext.fetch(descriptor)
             } catch {
                 logError("Unable to fetch existing `HDHomeRun Channels` from SwiftData.")
                 return []
@@ -61,7 +56,7 @@ actor HomeRunImporter {
         // delete
         logDebug("Existing HomeRun channels to delete: \(existingChannels.count)")
         for model in existingChannels where !incomingIDs.contains(model.id) {
-            context.delete(model)
+            modelContext.delete(model)
         }
         
         // insert
@@ -83,18 +78,18 @@ actor HomeRunImporter {
                 hasDRM: src.hasDRMHint,
                 deviceId: src.deviceIdHint
             )
-            context.insert(newChannel)
+            modelContext.insert(newChannel)
             
             batchCount += 1
             
             if batchCount % batchSize == 0 {
-                try context.save()
+                try modelContext.save()
                 await Task.yield()
             }
         }
 
-        if context.hasChanges {
-            try context.save()
+        if modelContext.hasChanges {
+            try modelContext.save()
             await Task.yield()
         }
         
@@ -113,7 +108,7 @@ actor HomeRunImporter {
             do {
                 var descriptor = FetchDescriptor<HomeRunDevice>()
                 descriptor.propertiesToFetch = [\.deviceId]
-                return try context.fetch(descriptor)
+                return try modelContext.fetch(descriptor)
             } catch {
                 logError("Unable to fetch existing `HomeRunDevice`. \(error)")
                 return []
@@ -125,12 +120,12 @@ actor HomeRunImporter {
         
         // delete
         for model in existingHomeRunDevices where !incomingIDs.contains(model.deviceId) {
-            context.delete(model)
+            modelContext.delete(model)
         }
         
         // insert
         for src in devices where !existingIDs.contains(src.deviceId) {
-            context.insert(
+            modelContext.insert(
                 HomeRunDevice(deviceId: src.deviceId,
                                 friendlyName: src.friendlyName,
                                 modelNumber: src.modelNumber,
@@ -149,8 +144,8 @@ actor HomeRunImporter {
 //            context.delete(model)
 //        }
         
-        if context.hasChanges {
-            try context.save()
+        if modelContext.hasChanges {
+            try modelContext.save()
             await Task.yield()
         }
         
@@ -170,7 +165,7 @@ actor HomeRunImporter {
             if let channelId = channelGuideMap[guide.guideNumber] {
                 for program in guide.programs {
                     let id: ChannelProgramId = String.stableHashHex(channelId, program.startTime.ISO8601Format())
-                    context.insert(
+                    modelContext.insert(
                         ChannelProgram(id: id,
                                        channelId: channelId,
                                        startTime: program.startTime,
@@ -189,15 +184,15 @@ actor HomeRunImporter {
                     batchCount += 1
                     
                     if batchCount % batchSize == 0 {
-                        try context.save()
+                        try modelContext.save()
                         await Task.yield()
                     }
                 }
             }
         }
         
-        if context.hasChanges {
-            try context.save()
+        if modelContext.hasChanges {
+            try modelContext.save()
             await Task.yield()
         }
         

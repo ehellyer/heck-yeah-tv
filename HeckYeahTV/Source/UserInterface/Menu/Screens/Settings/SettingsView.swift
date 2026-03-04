@@ -225,7 +225,7 @@ struct SettingsView: View {
         isReloadingIPTV = true
         Task.detached(name: "HeckYeahTV.IPTVImporter") {
             let container = await swiftDataController.container
-            let importer = IPTVImporter(container: container)
+            let importer = IPTVImporter(modelContainer: container)
             do {
                 _ = try await importer.load()
                 
@@ -243,7 +243,7 @@ struct SettingsView: View {
         isReloadingHomeRun = true
         Task.detached(name: "HeckYeahTV.HomeRunImporter") {
             let container = await swiftDataController.container
-            let importer = HomeRunImporter(container: container)
+            let importer = HomeRunImporter(modelContainer: container)
             do {
                 _ = try await importer.load(shouldFetchGuideData: true)
             } catch {

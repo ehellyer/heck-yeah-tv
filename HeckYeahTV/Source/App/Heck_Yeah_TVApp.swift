@@ -159,13 +159,13 @@ struct Heck_Yeah_TVApp: App {
                                 return hoursElapsed >= randomHours
                             }()
                             
-                            let hdTunerImporter = HomeRunImporter(container: container)
+                            let hdTunerImporter = HomeRunImporter(modelContainer: container)
                             let _ = try? await hdTunerImporter.load(shouldFetchGuideData: shouldFetchGuideData)
                         }
                     }
                     
                     group.addTask {
-                        let iptvImporter = IPTVImporter(container: container)
+                        let iptvImporter = IPTVImporter(modelContainer: container)
                         let _ = try? await iptvImporter.load()
                     }
                 }

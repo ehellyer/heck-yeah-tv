@@ -13,6 +13,7 @@ import Hellfire
 extension SchemaV1 {
     
     @Model final class ChannelProgram: JSONSerializable {
+        #Unique<ChannelProgram>([\.id])
         #Index<ChannelProgram>([\.id], [\.channelId, \.startTime])
         
         init(id: ChannelProgramId,
@@ -47,7 +48,6 @@ extension SchemaV1 {
         
         
         // Stable hash on channelId and startTime.  This is done in the HomeRunImporter where the init is first called.  It is the only place where all the mapping can be done on dependent fetches.
-        #Unique<ChannelProgram>([\.id])
         var id: ChannelProgramId
         var channelId: ChannelId
         var startTime: Date

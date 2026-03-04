@@ -12,6 +12,7 @@ import Hellfire
 extension SchemaV1 {
     
     @Model final class ProgramCategory: JSONSerializable {
+        #Unique<ProgramCategory>([\.categoryId])
         #Index<ProgramCategory>([\.categoryId])
         
         init(categoryId: String,
@@ -23,7 +24,6 @@ extension SchemaV1 {
             self.categoryDescription = categoryDescription
         }
         
-        @Attribute(.unique)
         var categoryId: CategoryId
         
         /// Name of the category

@@ -13,6 +13,7 @@ import Hellfire
 extension SchemaV1 {
     
     @Model final class Country: JSONSerializable {
+        #Unique<Country>([\.code])
         #Index<Country>([\.code])
         
         init(name: String,
@@ -29,7 +30,6 @@ extension SchemaV1 {
         var name: String
         
         /// [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) code of the country
-        @Attribute(.unique)
         var code: CountryCodeId
         
         /// List of official languages of the country ([ISO 639-3](https://en.wikipedia.org/wiki/ISO_639-3) code)

@@ -380,9 +380,6 @@ struct VLCPlayerRepresentable: CrossPlatformRepresentable {
             appState.selectedSubtitleTrackIndex = currentIndex >= 0 ? currentIndex : nil
             
             logDebug("VLC: Detected \(validTracks.count) subtitle tracks, current: \(currentIndex)")
-            for track in validTracks {
-                logDebug("  - Subtitle Track \(track.index): \(track.name)")
-            }
         }
         
         func updateClosedCaptions(enabled: Bool) {
@@ -458,9 +455,6 @@ struct VLCPlayerRepresentable: CrossPlatformRepresentable {
             appState.selectedAudioTrackIndex = currentIndex >= 0 ? currentIndex : nil
             
             logDebug("VLC: Detected \(validTracks.count) audio tracks, current: \(currentIndex)")
-            for track in validTracks {
-                logDebug("  - Track \(track.index): \(track.name)")
-            }
             
             // Auto-select preferred language track if this is a new stream and no selection made yet
             if appState.selectedAudioTrackIndex == nil && !validTracks.isEmpty {
