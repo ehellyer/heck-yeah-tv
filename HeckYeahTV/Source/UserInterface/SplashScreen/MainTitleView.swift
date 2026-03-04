@@ -37,6 +37,6 @@ struct MainTitleView: View {
 }
 
 #Preview {
-    MainTitleView(title: "MyT Vision")
+    MainTitleView(title: "Heck Yeah TV")
 }
 
