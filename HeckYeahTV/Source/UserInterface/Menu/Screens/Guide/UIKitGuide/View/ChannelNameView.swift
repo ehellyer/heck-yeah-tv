@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SwiftUI //Imported for Image to UIImage conversion only (at the moment)
 
 @MainActor
 class ChannelNameView: UIView {
@@ -87,6 +88,7 @@ class ChannelNameView: UIView {
         stackView.addArrangedSubview(numberLabel)
         stackView.addArrangedSubview(qualityImageView)
         stackView.addArrangedSubview(languageLabel)
+        stackView.addArrangedSubview(countryFlagImageView)
         return stackView
     }()
     
@@ -126,6 +128,17 @@ class ChannelNameView: UIView {
         imageView.setContentCompressionResistancePriority(.required, for: .horizontal)
         imageView.contentMode = .scaleAspectFit
         imageView.tintColor = .white
+        return imageView
+    }()
+    
+    private lazy var countryFlagImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.setContentCompressionResistancePriority(.required, for: .horizontal)
+        imageView.contentMode = .scaleAspectFill
+        // ~2:3 aspect ratio
+        imageView.widthAnchor.constraint(equalToConstant: 30).isActive = true
+        imageView.heightAnchor.constraint(equalToConstant: 20).isActive = true
         return imageView
     }()
     
@@ -217,31 +230,35 @@ class ChannelNameView: UIView {
         self.channelId = channel?.id
         backgroundColor = (isPlaying) ? .guideSelectedChannelBackground : .guideBackgroundNoFocus
         
-        //Leading Logo
+        // Channel Logo / Default logo
         updateLogoImage(for: channel)
         
         // 1st line - Set title label
         titleLabel.text = channel?.title ?? nbsp  // the nbsp is to maintain label height for layout when title is nil.
         
         // 2nd line - Channel Number
-        if channel?.deviceId != IPTVImporter.iptvDeviceId {
-            numberLabel.text = channel?.number
+        if channel?.deviceId != IPTVImporter.iptvDeviceId, let channelNumber = channel?.number {
+            numberLabel.text = channelNumber
+            subTextStackView.insertArrangedSubview(numberLabel, at: 0)
         } else {
+            // Remove the number label if it is nil so the empty label does not take up padding.
             numberLabel.text = nil
+            numberLabel.removeFromSuperview()
         }
         
         // 2nd line - Stream Video Quality
         qualityImageView.image = channel?.quality.image
         
-        // 2nd line - Stream Audio Language
+        // 2nd line - Stream Audio Language / NBSP to maintain label height on 2nd line.
         languageLabel.text = channel?.languages.first?.uppercased() ?? nbsp
         
-        // Remove the number label if it is nil so the empty label does not take up padding.
-        if numberLabel.text == nil {
-            numberLabel.removeFromSuperview()
+        // 2nd line - Stream country flag
+        if let countryFlag = channel?.countryFlag {
+            countryFlagImageView.image = ImageRenderer(content: countryFlag).uiImage
+            subTextStackView.addArrangedSubview(countryFlagImageView) // Last view in, adds at end.
         } else {
-            // A view can have only one parent, so it does not matter if the view is already in the stack view (regardless of index).
-            subTextStackView.insertArrangedSubview(numberLabel, at: 0)
+            countryFlagImageView.image = nil
+            countryFlagImageView.removeFromSuperview()
         }
     }
 }

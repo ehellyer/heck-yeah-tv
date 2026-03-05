@@ -56,17 +56,18 @@ struct ChannelViewSubTitle: View {
                 _qualityImage
             }
             
-            if let countryFlag = channel?.countryFlag {
-                countryFlag
-                    .resizable()
-                    .frame(width: 20, height: 13) // ~2:3 aspect ratio
-            }
-            
             if let _languageText = languageText {
                 Text(_languageText)
                     .font(AppStyle.Fonts.gridRowFont)
                     .lineLimit(1)
                     .truncationMode(.tail)
+            }
+
+            if let countryFlag = channel?.countryFlag {
+                countryFlag
+                    .resizable()
+                    .frame(width: AppStyle.ChannelView.countryFlagSize.width,
+                           height: AppStyle.ChannelView.countryFlagSize.height) // ~2:3 aspect ratio
             }
             
             // If there is no subtext, we want a nbsp to size the label vertically so it does not collapse to zero,

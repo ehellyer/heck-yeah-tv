@@ -31,8 +31,6 @@ struct SettingsRowModifier: ViewModifier {
             )
 #if !os(tvOS)
             .listRowSeparatorTint(Color(white: 0.6).opacity(0.3))
-#else
-            .listRowSeparator(.hidden)
 #endif
     }
 }

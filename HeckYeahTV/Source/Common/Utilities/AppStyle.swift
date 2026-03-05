@@ -67,6 +67,7 @@ struct AppStyle {
         static let internalHorizontalPadding: CGFloat = 15
         static let internalVerticalPadding: CGFloat = 15
         static let favButtonTrailing: CGFloat = 25
+        static let countryFlagSize = CGSize(width: 30, height: 20)
 #else
         static let minWidth: CGFloat = 300
         static let height : CGFloat = AppStyle.rowHeight
@@ -74,6 +75,7 @@ struct AppStyle {
         static let internalHorizontalPadding: CGFloat = 15
         static let internalVerticalPadding: CGFloat = 15
         static let favButtonTrailing: CGFloat = 15
+        static let countryFlagSize = CGSize(width: 20, height: 13)
 #endif
     }
     
