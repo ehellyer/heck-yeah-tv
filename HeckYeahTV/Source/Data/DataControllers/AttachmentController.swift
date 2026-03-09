@@ -9,7 +9,7 @@
 import SwiftUI
 import Hellfire
 
-/// The AttachmentController: Because someone has to wrangle all these pixels from the internet.
+/// The AttachmentController: Responsible for using a URL to wrangle all those pixels from the internet.
 ///
 /// This controller is your friendly neighborhood image fetcher. It goes out into the wild web,
 /// finds your images, and brings them back home safely. Think of it as a golden retriever,
@@ -21,7 +21,6 @@ import Hellfire
 /// It even caches things because downloading the same cat picture 47 times is inefficient
 /// (and the cats judge you for it).
 ///
-
 /// ## Fetching Images Like a Boss
 /// - ``fetchImage(_:cachePolicyType:)``
 /// - ``fetchPlatformImage(_:cachePolicyType:)``
@@ -51,7 +50,7 @@ final class AttachmentController {
     ///     your images don't go stale like milk. Unless they're food photos, in which case... 🤷‍♂️
     ///
     /// - Returns: A SwiftUI `Image` if everything went well, or `nil` if the internet failed you
-    ///   (or you gave us a bad URL, but we won't point fingers).
+    ///   (or you used a bad URL, but we won't point fingers).
     ///
     /// - Throws: Various networking errors, because the internet is a wild and unpredictable place.
     ///   Could be 404, could be no connection, could be Mercury in retrograde. Who knows?

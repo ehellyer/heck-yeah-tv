@@ -70,8 +70,8 @@ struct ChannelViewSubTitle: View {
                            height: AppStyle.ChannelView.countryFlagSize.height) // ~2:3 aspect ratio
             }
             
-            // If there is no subtext, we want a nbsp to size the label vertically so it does not collapse to zero,
-            // but is also still responsive to dynamic text size.
+            // If there is no subtext, we want a nbsp to size the label vertically so it
+            // does not collapse to zero, but still remains responsive to dynamic text size.
             if noSubText {
                 Text(nbsp)
                     .font(AppStyle.Fonts.gridRowFont)
