@@ -54,10 +54,10 @@ struct SettingsView: View {
                     } label: {
                         HStack {
                             Text(selectedName)
-                                .foregroundStyle(.white)
+//                                .foregroundStyle(.white)
                             Spacer()
                             Image(systemName: "chevron.up.chevron.down")
-                                .foregroundStyle(.white)
+//                                .foregroundStyle(.white)
                         }
                     }
                 } header: {
@@ -65,8 +65,8 @@ struct SettingsView: View {
                 } footer: {
                     Text("The active bundle determines which channels appear in the guide.")
                 }
-                .foregroundStyle(.white)
-                .listRowBackground(Color(white: 0.1).opacity(0.8))
+//                .foregroundStyle(.white)
+//                .listRowBackground(Color(white: 0.1).opacity(0.8))
 #if !os(tvOS)
                 .listRowSeparatorTint(Color(white: 0.6).opacity(0.3))
 #endif
@@ -99,8 +99,8 @@ struct SettingsView: View {
             } footer: {
                 Text("Tap a bundle to edit its name, filters, and channels.")
             }
-            .foregroundStyle(.white)
-            .listRowBackground(Color(white: 0.1).opacity(0.8))
+           // .foregroundStyle(.white)
+           // .listRowBackground(Color(white: 0.1).opacity(0.8))
 #if !os(tvOS)
             .listRowSeparatorTint(Color(white: 0.6).opacity(0.3))
 #endif
@@ -130,8 +130,8 @@ struct SettingsView: View {
                         .foregroundStyle(.white)
                 }
             }
-            .foregroundStyle(.white)
-            .listRowBackground(Color(white: 0.1).opacity(0.8))
+//            .foregroundStyle(.white)
+//            .listRowBackground(Color(white: 0.1).opacity(0.8))
 #if !os(tvOS)
             .listRowSeparatorTint(Color(white: 0.6).opacity(0.3))
 #endif
@@ -181,8 +181,8 @@ struct SettingsView: View {
                 Text("HDHomeRun Devices")
                     .foregroundStyle(.white)
             }
-            .foregroundStyle(.white)
-            .listRowBackground(Color(white: 0.1).opacity(0.8))
+//            .foregroundStyle(.white)
+//            .listRowBackground(Color(white: 0.1).opacity(0.8))
 #if !os(tvOS)
             .listRowSeparatorTint(Color(white: 0.6).opacity(0.3))
 #endif
@@ -208,18 +208,18 @@ struct SettingsView: View {
         }
     }
     
-    private func reloadIPTVChannelCount() {
-        iptvChannelCount = swiftDataController.totalIPChannelCatalogCount()
-    }
-    
+    // MARK: - Private View API
+
     private func subtext(for bundle: ChannelBundle) -> String {
         let hasTunerEnabled = homeRunDevices.first(where: { $0.includeChannelLineUp }) != nil
         var subtext = "\(bundle.channels.count) channels in bundle"
         subtext = subtext + ((hasTunerEnabled) ? ", (inc. Tuner Channels)." : ".")
         return subtext
     }
-    
-    // MARK: - Actions
+
+    private func reloadIPTVChannelCount() {
+        iptvChannelCount = swiftDataController.totalIPChannelCatalogCount()
+    }
     
     private func reloadIPTVChannels() {
         isReloadingIPTV = true
@@ -273,10 +273,12 @@ struct SettingsView: View {
     return TVPreviewView() {
         NavigationStack(path: $navigationPath) {
             SettingsView(navigationPath: $navigationPath)
-                .environment(\.colorScheme, .light)
+                
                 .modelContext(swiftDataController.viewContext)
         }
+        .background(Color.white)
     }
+    .environment(\.colorScheme, .light)
 }
 
 #Preview("Dark Mode") {
@@ -293,8 +295,10 @@ struct SettingsView: View {
     return TVPreviewView() {
         NavigationStack(path: $navigationPath) {
             SettingsView(navigationPath: $navigationPath)
-                .environment(\.colorScheme, .dark)
+                
                 .modelContext(swiftDataController.viewContext)
         }
+        .background(Color.black)
     }
+    .environment(\.colorScheme, .dark)
 }
