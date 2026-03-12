@@ -9,41 +9,56 @@
 import SwiftUI
 
 struct AddBundleView: View {
+
+    @Binding var navigationPath: [SettingsDestination]
+    let onAdd: (ChannelBundle) -> Void
+
     @Environment(\.dismiss) private var dismiss
     @State private var swiftDataController: SwiftDataProvider = InjectedValues[\.swiftDataController]
     @State private var bundleName = ""
-    @Binding var navigationPath: [SettingsDestination]
-    let onAdd: (ChannelBundle) -> Void
     
 #if os(tvOS)
     @FocusState private var isNameFieldFocused: Bool
 #endif
     
     var body: some View {
-        Form {
+        VStack(alignment: .leading) {
             Section {
                 TextField("Bundle Name", text: $bundleName)
 #if os(tvOS)
                     .focused($isNameFieldFocused)
 #endif
+                    .submitLabel(.done)
+                    .onSubmit {
+                        guard not(bundleName.trim().isEmpty) else {
+                            return
+                        }
+                        if let newBundle = swiftDataController.addChannelBundle(name: bundleName) {
+                            onAdd(newBundle)
+                        }
+                    }
             } header: {
                 Text("New Channel Bundle")
             }
+
+            Spacer()
         }
         .navigationTitle("Add Bundle")
 #if os(iOS)
         .navigationBarTitleDisplayMode(.inline)
 #endif
-        .toolbar {
-            ToolbarItem(placement: .confirmationAction) {
-                Button("Add") {
-                    if let newBundle = swiftDataController.addChannelBundle(name: bundleName) {
-                        onAdd(newBundle)
-                    }
-                }
-                .disabled(bundleName.trim().isEmpty)
-            }
-        }
+//#if !os(tvOS)
+//        .toolbar {
+//            ToolbarItem (placement: .confirmationAction) {
+//                Button("Done") {
+//                    if let newBundle = swiftDataController.addChannelBundle(name: bundleName) {
+//                        onAdd(newBundle)
+//                    }
+//                }
+//                .disabled(bundleName.trim().isEmpty)
+//            }
+//        }
+//#endif
 #if os(tvOS)
         .onAppear {
             isNameFieldFocused = true
@@ -51,3 +66,75 @@ struct AddBundleView: View {
 #endif
     }
 }
+
+
+struct OutlinedTextFieldStyle: TextFieldStyle {
+    @FocusState var isFocused: Bool
+    func _body(configuration: TextField<Self._Label>) -> some View {
+        let shape = RoundedRectangle(cornerRadius: 8, style: .continuous)
+        
+        configuration
+            .focused($isFocused)
+            .defaultHoverEffect(nil) // 👈 Suppress the lifting effect
+            .background(.clear)
+            .padding(.horizontal, isFocused ? 16 : 0) // 👈 Suppress the padding effect
+            .overlay {
+                shape.strokeBorder(.gray, lineWidth: isFocused ? 4 : 2)
+            }
+            .mask(shape) // 👈 Suppress the default shadow
+    }
+}
+
+// MARK: - Preview
+
+#Preview("Light Mode") {
+    @Previewable @State var navigationPath: [SettingsDestination] = []
+    // Override the injected AppStateProvider
+    @Previewable @State var appState: AppStateProvider = MockSharedAppState()
+    InjectedValues[\.sharedAppState] = appState
+    
+    // Override the injected SwiftDataController
+    let swiftDataController = MockSwiftDataController()
+    InjectedValues[\.swiftDataController] = swiftDataController
+    
+    return TVPreviewView() {
+        NavigationStack {
+            AddBundleView(navigationPath: $navigationPath) { bundle in
+                print(bundle.name)
+            }
+        }
+        .background(.clear)
+#if os(iOS)
+        .toolbarBackground(.hidden, for: .navigationBar)
+        .containerBackground(.clear, for: .navigation)
+#endif
+    }
+    .environment(\.colorScheme, .light)
+}
+
+
+#Preview("Dark Mode") {
+    @Previewable @State var navigationPath: [SettingsDestination] = []
+    // Override the injected AppStateProvider
+    @Previewable @State var appState: AppStateProvider = MockSharedAppState()
+    InjectedValues[\.sharedAppState] = appState
+    
+    // Override the injected SwiftDataController
+    let swiftDataController = MockSwiftDataController()
+    InjectedValues[\.swiftDataController] = swiftDataController
+    
+    return TVPreviewView() {
+        NavigationStack {
+            AddBundleView(navigationPath: $navigationPath) { bundle in
+                print(bundle.name)
+            }
+        }
+        .background(.clear)
+#if os(iOS)
+        .toolbarBackground(.hidden, for: .navigationBar)
+        .containerBackground(.clear, for: .navigation)
+#endif
+    }
+    .environment(\.colorScheme, .dark)
+}
+

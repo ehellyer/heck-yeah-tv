@@ -107,10 +107,10 @@ final class MockSwiftDataController: SwiftDataProvider {
     
     func toggleDeviceChannelLineupInclusion(device: HomeRunDevice) {
         do {
-            device.includeChannelLineUp.toggle()
+            device.isEnabled.toggle()
             try viewContext.saveChangesIfNeeded()
         } catch {
-            logError("Unable to toggle HDHomeRunDevice includeChannelLineUp property. Error: \(error)")
+            logError("Unable to toggle HDHomeRunDevice isEnabled property. Error: \(error)")
         }
     }
     
@@ -478,7 +478,7 @@ final class MockSwiftDataController: SwiftDataProvider {
     }
     
     private func devices(enabledState: Bool) throws -> [HDHomeRunDeviceId] {
-        let predicate = #Predicate<HomeRunDevice> { $0.includeChannelLineUp == enabledState }
+        let predicate = #Predicate<HomeRunDevice> { $0.isEnabled == enabledState }
         var descriptor = FetchDescriptor<HomeRunDevice>(predicate: predicate)
         descriptor.propertiesToFetch = [\.deviceId]
         let devices = try viewContext.fetch(descriptor)

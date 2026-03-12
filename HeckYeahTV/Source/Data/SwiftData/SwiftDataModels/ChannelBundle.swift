@@ -23,12 +23,19 @@ extension SchemaV1 {
             self.channels = channels
         }
 
+        /// A unique identifier representing the ChannelBundle.  e.g. "4ea6d879-ffec-4325-a680-41713c672be4"
         var id: ChannelBundleId
+        
+        /// A name for the channel bundle provided by the user who created the bundle.  e.g. "Ed's channel bundle"
         var name: String
         
-        // Relationship to Channel (nullify on delete to preserve channel when channelBundle is deleted)
+        // Relationship to Channel (cascade on delete to clean up the `BundleEntry` when channelBundle is deleted)
         @Relationship(deleteRule: .cascade, inverse: \BundleEntry.channelBundle)
         var channels: [BundleEntry]
+        
+        // Relationship to device associations (cascade on delete to clean up join entries when bundle is deleted)
+        @Relationship(deleteRule: .cascade)
+        var deviceAssociations: [ChannelBundleDevice] = []
 
         
         // MARK: - JSONSerializable Implementation (added for mock data)
@@ -42,6 +49,7 @@ extension SchemaV1 {
             case id
             case name
             case channels
+            case deviceAssociations
         }
         
         func encode(to encoder: Encoder) throws {
@@ -49,6 +57,7 @@ extension SchemaV1 {
             try container.encode(id, forKey: .id)
             try container.encode(name, forKey: .name)
             try container.encodeIfPresent(channels, forKey: .channels)
+            try container.encodeIfPresent(deviceAssociations, forKey: .deviceAssociations)
         }
         
         init(from decoder: Decoder) throws {
@@ -56,6 +65,7 @@ extension SchemaV1 {
             self.id = try container.decode(ChannelBundleId.self, forKey: .id)
             self.name = try container.decode(String.self, forKey: .name)
             self.channels = try container.decodeIfPresent([BundleEntry].self, forKey: .channels) ?? []
+            self.deviceAssociations = try container.decodeIfPresent([ChannelBundleDevice].self, forKey: .deviceAssociations) ?? []
         }
     }
 }

@@ -54,43 +54,39 @@ struct SettingsView: View {
                     } label: {
                         HStack {
                             Text(selectedName)
-//                                .foregroundStyle(.white)
                             Spacer()
                             Image(systemName: "chevron.up.chevron.down")
-//                                .foregroundStyle(.white)
                         }
+                        .tint(.blue)
                     }
                 } header: {
                     Text("Active Bundle")
                 } footer: {
                     Text("The active bundle determines which channels appear in the guide.")
                 }
-//                .foregroundStyle(.white)
-//                .listRowBackground(Color(white: 0.1).opacity(0.8))
-#if !os(tvOS)
-                .listRowSeparatorTint(Color(white: 0.6).opacity(0.3))
-#endif
             }
             
             
             // MARK: - Manage Bundles
             Section {
                 ForEach(channelBundles) { bundle in
-                    
                     NavigationLink(value: SettingsDestination.bundleDetail(bundleId: bundle.id)) {
-                        VStack(alignment: .leading, spacing: 4) {
+                        HStack {
                             Text(bundle.name)
                                 .font(.body)
+                            Spacer()
                             Text(subtext(for: bundle))
                                 .font(.caption)
                         }
                     }
+                    .tint(.blue)
                 }
                 
                 Button {
                     navigationPath.append(.addBundle)
                 } label: {
                     Label("Add Channel Bundle", systemImage: "plus.circle.fill")
+                        
                 }
                 .foregroundStyle(.blue)
                 
@@ -99,11 +95,6 @@ struct SettingsView: View {
             } footer: {
                 Text("Tap a bundle to edit its name, filters, and channels.")
             }
-           // .foregroundStyle(.white)
-           // .listRowBackground(Color(white: 0.1).opacity(0.8))
-#if !os(tvOS)
-            .listRowSeparatorTint(Color(white: 0.6).opacity(0.3))
-#endif
             
             
             // MARK: - IPTV Section
@@ -130,11 +121,7 @@ struct SettingsView: View {
                         .foregroundStyle(.white)
                 }
             }
-//            .foregroundStyle(.white)
-//            .listRowBackground(Color(white: 0.1).opacity(0.8))
-#if !os(tvOS)
-            .listRowSeparatorTint(Color(white: 0.6).opacity(0.3))
-#endif
+           
             
             
             // MARK: - HDHomeRun Devices Section
@@ -175,18 +162,13 @@ struct SettingsView: View {
                 } label: {
                     Label("Refresh Devices", systemImage: "arrow.clockwise")
                 }
-                .foregroundStyle(.blue)
+                .tint(.blue)
                 .disabled(isReloadingHomeRun)
             } header: {
                 Text("HDHomeRun Devices")
-                    .foregroundStyle(.white)
             }
-//            .foregroundStyle(.white)
-//            .listRowBackground(Color(white: 0.1).opacity(0.8))
-#if !os(tvOS)
-            .listRowSeparatorTint(Color(white: 0.6).opacity(0.3))
-#endif
         }
+
 #if !os(tvOS)
         .scrollContentBackground(.hidden)
 #endif
@@ -194,7 +176,11 @@ struct SettingsView: View {
             switch destination {
                 case .addBundle:
                     AddBundleView(navigationPath: $navigationPath, onAdd: { bundle in
-                        navigationPath.append(.bundleDetail(bundleId: bundle.id))
+                        // Copy path, edit copy to prevent redraws and strange animations, then set back.
+                        var navPath = navigationPath
+                        navPath.removeAll(where: { $0 == .addBundle })
+                        navPath.append(.bundleDetail(bundleId: bundle.id))
+                        navigationPath = navPath
                     })
                 case .bundleDetail(let bundleId):
                     if let bundle = channelBundles.first(where: { $0.id == bundleId }) {
@@ -211,7 +197,7 @@ struct SettingsView: View {
     // MARK: - Private View API
 
     private func subtext(for bundle: ChannelBundle) -> String {
-        let hasTunerEnabled = homeRunDevices.first(where: { $0.includeChannelLineUp }) != nil
+        let hasTunerEnabled = homeRunDevices.first(where: { $0.isEnabled }) != nil
         var subtext = "\(bundle.channels.count) channels in bundle"
         subtext = subtext + ((hasTunerEnabled) ? ", (inc. Tuner Channels)." : ".")
         return subtext
@@ -257,6 +243,34 @@ struct SettingsView: View {
 }
 
 
+struct ListRowModifier: ViewModifier {
+    
+    @Environment(\.isFocused) private var isFocused: Bool
+    
+    func body(content: Content) -> some View {
+        content
+            //.background(isFocused ? .red : .blue)
+            //.scaleEffect(isFocused ? 1.1 : 1.0)
+            .shadow(color: isFocused ? Color.black.opacity(0.3) : Color.clear, radius: 10, x: 0, y: 5)
+            .animation(.easeInOut(duration: 0.2), value: isFocused)
+            .focusable()
+
+            .foregroundStyle(.white)
+        
+            .listItemTint(ListItemTint.fixed(Color.white))
+#if !os(tvOS)
+            .listRowSeparatorTint(Color(white: 0.6).opacity(0.3))
+#endif
+
+        
+    }
+}
+
+extension View {
+    func focusableListRowStyle() -> some View {
+        self.modifier(ListRowModifier())
+    }
+}
 
 
 #Preview("Light Mode") {
@@ -273,10 +287,8 @@ struct SettingsView: View {
     return TVPreviewView() {
         NavigationStack(path: $navigationPath) {
             SettingsView(navigationPath: $navigationPath)
-                
                 .modelContext(swiftDataController.viewContext)
         }
-        .background(Color.white)
     }
     .environment(\.colorScheme, .light)
 }
@@ -295,10 +307,8 @@ struct SettingsView: View {
     return TVPreviewView() {
         NavigationStack(path: $navigationPath) {
             SettingsView(navigationPath: $navigationPath)
-                
                 .modelContext(swiftDataController.viewContext)
         }
-        .background(Color.black)
     }
     .environment(\.colorScheme, .dark)
 }

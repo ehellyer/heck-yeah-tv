@@ -10,7 +10,7 @@
         "baseURL": "http://192.168.1.100",
         "lineupURL": "http://192.168.1.100/lineup.json",
         "tunerCount": 4,
-        "includeChannelLineUp": true
+        "isEnabled": true
     },
     {
         "deviceId": "20425D9B",
@@ -22,6 +22,6 @@
         "baseURL": "http://192.168.1.101",
         "lineupURL": "http://192.168.1.101/lineup.json",
         "tunerCount": 2,
-        "includeChannelLineUp": false
+        "isEnabled": false
     }
 ]

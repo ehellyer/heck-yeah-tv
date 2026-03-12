@@ -19,6 +19,7 @@ enum SchemaV1: VersionedSchema {
             BundleEntry.self,
             Channel.self,
             ChannelBundle.self,
+            ChannelBundleDevice.self,
             ChannelProgram.self,
             Country.self,
             HomeRunDevice.self,

@@ -135,7 +135,7 @@ actor HomeRunImporter {
                                 baseURL: src.baseURL,
                                 lineupURL: src.lineupURL,
                                 tunerCount: src.tunerCount,
-                                includeChannelLineUp: true)
+                                isEnabled: true)
             )
         }
         

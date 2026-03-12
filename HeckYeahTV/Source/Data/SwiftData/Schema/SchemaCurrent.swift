@@ -18,6 +18,7 @@ typealias HeckYeahSchema = SchemaV1
 typealias BundleEntry = HeckYeahSchema.BundleEntry
 typealias Channel = HeckYeahSchema.Channel
 typealias ChannelBundle = HeckYeahSchema.ChannelBundle
+typealias ChannelBundleDevice = HeckYeahSchema.ChannelBundleDevice
 typealias ChannelProgram = HeckYeahSchema.ChannelProgram
 typealias Country = HeckYeahSchema.Country
 typealias HomeRunDevice = HeckYeahSchema.HomeRunDevice

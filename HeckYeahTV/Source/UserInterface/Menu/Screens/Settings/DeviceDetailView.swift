@@ -1,9 +1,156 @@
+//
+//  DeviceDetailView.swift
+//  HeckYeahTV
+//
+//  Created by Ed Hellyer on 2/20/26.
+//  Copyright © 2026 Hellyer Multimedia. All rights reserved.
+//
+
 import SwiftUI
 
+fileprivate let leadingPadding: CGFloat = 8
+
+struct DeviceDetailView: View {
+    
+    let device: HomeRunDevice
+    
+    @State private var isRefreshing = false
+    @State private var swiftDataController: SwiftDataProvider = InjectedValues[\.swiftDataController]
+
+    var body: some View {
+        ScrollView {
+
+            VStack(alignment: .leading, spacing: 4) {
+                
+                // MARK: - Settings Section
+                Section {
+                    Button(action: {
+                        device.isEnabled.toggle()
+                    }) {
+                        HStack(alignment: .center) {
+                            Text("Include Channel Line-up")
+                            Text(device.isEnabled ? "Yes" : "No")
+                        }
+                        .tint(.blue)
+                    }
+                    .buttonStyle(.glass)
+                    
+                    
+                } header: {
+                    SectionHeader("Settings")
+                } footer: {
+                    Text("When enabled, channels from this device will be available to be included in a channel bundle.")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+#if os(tvOS)
+                .padding(.leading, leadingPadding)
+#endif
+                
+                // MARK: - Device Info Section
+                FocusableSection {
+                    SectionHeader("Device Information")
+                } content: {
+                    DetailRow(label: "Name", value: device.friendlyName)
+                    DetailRow(label: "Model", value: device.modelNumber)
+                    DetailRow(label: "Device ID", value: device.deviceId)
+                }
+                
+                // MARK: - Firmware Section
+                FocusableSection {
+                    SectionHeader("Firmware")
+                } content: {
+                    DetailRow(label: "Firmware Name", value: device.firmwareName)
+                    DetailRow(label: "Version", value: device.firmwareVersion)
+                }
+                
+                // MARK: - Network Section
+                FocusableSection {
+                    SectionHeader("Network")
+                } content: {
+                    DetailRow(label: "Base URL", value: device.baseURL.absoluteString)
+                }
+                
+                // MARK: - Tuners Section
+                FocusableSection {
+                    SectionHeader("Tuners")
+                } content: {
+                    DetailRow(label: "Tuner Count", value: "\(device.tunerCount)")
+                    let channelCount = swiftDataController.channelCountFor(deviceId: device.deviceId)
+                    DetailRow(label: "Channel Count", value: "\(channelCount)")
+                }
+            }
+        }
+        .contentMargins(10, for: .scrollContent)
+        .scrollClipDisabled() // Prevents tvOS focus effects at edge from being clipped.
+        .navigationTitle("Tuner Details")
+#if !os(tvOS)
+        .scrollContentBackground(.hidden)
+#endif
+
+#if os(iOS)
+        .navigationBarTitleDisplayMode(.inline)
+#endif
+        .background(.clear)
+        .onChange(of: device.isEnabled) {
+            swiftDataController.invalidateTunerLineUp()
+        }
+    }
+
+    
+    // MARK: - Actions
+    
+    private func refreshDevice() {
+        isRefreshing = true
+        // TODO: Implement device refresh logic
+        Task {
+            try? await Task.sleep(for: .seconds(1))
+            await MainActor.run {
+                isRefreshing = false
+            }
+        }
+    }
+}
+
+// MARK: - Section Header Component
+
+fileprivate struct SectionHeader: View {
+    let title: String
+
+    static let topPadding: CGFloat = 30
+    
+    init(_ title: String) {
+        self.title = title
+    }
+
+    var body: some View {
+        Text(title)
+            .font(.headline)
+            .fontWeight(.bold)
+            .padding(.top, SectionHeader.topPadding)
+    }
+}
+
+// MARK: - Detail Row Component
+
+fileprivate struct DetailRow: View {
+    let label: String
+    let value: String
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 2) {
+            Text(label)
+                .font(.caption)
+                .foregroundStyle(.secondary)
+            Text(value)
+                .font(.body)
+        }
+    }
+}
 
 // MARK: - Focusable Section Wrapper (tvOS focus indicator bar effect for section)
 
-struct FocusableSection<Header: View, Content: View, Footer: View>: View {
+fileprivate struct FocusableSection<Header: View, Content: View, Footer: View>: View {
     @FocusState private var isFocused: Bool
     
     let header: Header
@@ -33,7 +180,7 @@ struct FocusableSection<Header: View, Content: View, Footer: View>: View {
                 footer
             }
 #if os(tvOS)
-            .padding(.leading, DeviceDetailView.leadingPadding)
+            .padding(.leading, leadingPadding)
 #endif
         }
 #if os(tvOS)
@@ -43,145 +190,6 @@ struct FocusableSection<Header: View, Content: View, Footer: View>: View {
     }
 }
 
-
-struct DeviceDetailView: View {
-    let device: HomeRunDevice
-    @State private var isRefreshing = false
-    @State private var swiftDataController: SwiftDataProvider = InjectedValues[\.swiftDataController]
-    
-    static let leadingPadding: CGFloat = 8
-    
-    
-    var body: some View {
-        ScrollView {
-
-            VStack(alignment: .leading, spacing: 4) {
-                
-                // MARK: - Settings Section
-                Section {
-                    Button(action: {
-                        device.includeChannelLineUp_Save.toggle()
-                    }) {
-                        HStack(alignment: .center) {
-                            Text("Include Channel Line-up")
-                            Text(device.includeChannelLineUp_Save ? "Yes" : "No")
-                        }
-                    }
-                    .buttonStyle(.glass)
-                    
-                } header: {
-                    SectionHeader("Settings")
-                } footer: {
-                    Text("When enabled, channels from this device will appear in the guide regardless of the selected channel bundle.")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                }
-#if os(tvOS)
-                .padding(.leading, DeviceDetailView.leadingPadding)
-#endif
-                
-                // MARK: - Device Info Section
-                FocusableSection {
-                    SectionHeader("Device Information")
-                } content: {
-                    DetailRow(label: "Name", value: device.friendlyName)
-                    DetailRow(label: "Model", value: device.modelNumber)
-                    DetailRow(label: "Device ID", value: device.deviceId)
-                }
-                
-                // MARK: - Firmware Section
-                FocusableSection {
-                    SectionHeader("Firmware")
-                } content: {
-                    DetailRow(label: "Firmware Name", value: device.firmwareName)
-                    DetailRow(label: "Version", value: device.firmwareVersion)
-                }
-                
-                
-                // MARK: - Network Section
-                FocusableSection {
-                    SectionHeader("Network")
-                } content: {
-                    DetailRow(label: "Base URL", value: device.baseURL.absoluteString)
-                }
-                
-                // MARK: - Tuners Section
-                FocusableSection {
-                    SectionHeader("Tuners")
-                } content: {
-                    DetailRow(label: "Tuner Count", value: "\(device.tunerCount)")
-                    let channelCount = swiftDataController.channelCountFor(deviceId: device.deviceId)
-                    DetailRow(label: "Channel Count", value: "\(channelCount)")
-                }
-            }
-        }
-        .contentMargins(10, for: .scrollContent)
-        .scrollClipDisabled()
-        .navigationTitle("Tuner Details")
-        .background(.clear)
-
-#if !os(tvOS)
-        .scrollContentBackground(.hidden)
-#endif
-
-#if os(iOS)
-        .navigationBarTitleDisplayMode(.inline)
-#endif
-        .onChange(of: device.includeChannelLineUp_Save) {
-            swiftDataController.invalidateTunerLineUp()
-        }
-    }
-
-    
-    // MARK: - Actions
-    
-    private func refreshDevice() {
-        isRefreshing = true
-        // TODO: Implement device refresh logic
-        Task {
-            try? await Task.sleep(for: .seconds(1))
-            await MainActor.run {
-                isRefreshing = false
-            }
-        }
-    }
-}
-
-// MARK: - Section Header Component
-
-struct SectionHeader: View {
-    let title: String
-
-    static let topPadding: CGFloat = 30
-    
-    init(_ title: String) {
-        self.title = title
-    }
-
-    var body: some View {
-        Text(title)
-            .font(.headline)
-            .fontWeight(.bold)
-            .padding(.top, SectionHeader.topPadding)
-    }
-}
-
-// MARK: - Detail Row Component
-
-struct DetailRow: View {
-    let label: String
-    let value: String
-    
-    var body: some View {
-        VStack(alignment: .leading, spacing: 2) {
-            Text(label)
-                .font(.caption)
-                .foregroundStyle(.secondary)
-            Text(value)
-                .font(.body)
-        }
-    }
-}
 
 // MARK: - Preview
 

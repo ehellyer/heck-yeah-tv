@@ -14,7 +14,7 @@ extension SchemaV1 {
     
     @Model final class HomeRunDevice: JSONSerializable {
         #Unique<HomeRunDevice>([\.deviceId])
-        #Index<HomeRunDevice>([\.deviceId], [\.includeChannelLineUp, \.deviceId])
+        #Index<HomeRunDevice>([\.deviceId], [\.isEnabled, \.deviceId])
         
         init(deviceId: HDHomeRunDeviceId,
              friendlyName: String,
@@ -25,7 +25,7 @@ extension SchemaV1 {
              baseURL: URL,
              lineupURL: URL,
              tunerCount: Int,
-             includeChannelLineUp: Bool) {
+             isEnabled: Bool) {
             self.deviceId = deviceId
             self.friendlyName = friendlyName
             self.modelNumber = modelNumber
@@ -35,21 +35,42 @@ extension SchemaV1 {
             self.baseURL = baseURL
             self.lineupURL = lineupURL
             self.tunerCount = tunerCount
-            self.includeChannelLineUp = includeChannelLineUp
+            self.isEnabled = isEnabled
         }
         
+        /// The HomeRun unique device identifier. e.g. "21BC22D88"
         var deviceId: HDHomeRunDeviceId
-        var friendlyName: String
-        var modelNumber: String
-        var firmwareName: String
-        var firmwareVersion: String
-        var deviceAuth: String
-        var baseURL: URL
-        var lineupURL: URL
-        var tunerCount: Int
-        var includeChannelLineUp: Bool
         
-
+        /// The HomeRun display name for the device. e.g. "HDHomeRun FLEX 4K"
+        var friendlyName: String
+        
+        /// The HomeRun model number.  e.g.  "HDFX-4K"
+        var modelNumber: String
+        
+        /// The HomeRun firmware name. e.g. "hdhomerun_dvr_atsc3"
+        var firmwareName: String
+        
+        /// The HomeRun firmware version. e.g. "20250815"
+        var firmwareVersion: String
+        
+        /// The devices guide authorization string.  e.g. "fC5B4yXmTHYaiYecEOrFDWkY"
+        var deviceAuth: String
+        
+        /// The devices base URL. e.g. "http://192.168.1.210"
+        var baseURL: URL
+        
+        /// The URL for the devices channel lineup. e.g. "http://192.168.1.210/lineup.json"
+        var lineupURL: URL
+        
+        /// The number of tuners available in this device.  This equates to the number of concurrent TV channels this device can serve.
+        var tunerCount: Int
+        
+        /// A boolean to indicate if this device is enabled and available for use in the Heck Yeah TV application.
+        var isEnabled: Bool
+        
+        // Relationship to bundle associations (cascade on delete to clean up join entries when device is deleted)
+        @Relationship(deleteRule: .cascade)
+        var bundleAssociations: [ChannelBundleDevice] = []
         
         // MARK: - JSONSerializable Implementation (added for mock data)
         //
@@ -68,7 +89,8 @@ extension SchemaV1 {
             case baseURL
             case lineupURL
             case tunerCount
-            case includeChannelLineUp
+            case isEnabled
+            case bundleAssociations
         }
         
         func encode(to encoder: Encoder) throws {
@@ -82,7 +104,8 @@ extension SchemaV1 {
             try container.encode(baseURL, forKey: .baseURL)
             try container.encode(lineupURL, forKey: .lineupURL)
             try container.encode(tunerCount, forKey: .tunerCount)
-            try container.encode(includeChannelLineUp, forKey: .includeChannelLineUp)
+            try container.encode(isEnabled, forKey: .isEnabled)
+            try container.encodeIfPresent(bundleAssociations, forKey: .bundleAssociations)
         }
         
         init(from decoder: Decoder) throws {
@@ -96,20 +119,21 @@ extension SchemaV1 {
             self.baseURL = try container.decode(URL.self, forKey: .baseURL)
             self.lineupURL = try container.decode(URL.self, forKey: .lineupURL)
             self.tunerCount = try container.decode(Int.self, forKey: .tunerCount)
-            self.includeChannelLineUp = try container.decode(Bool.self, forKey: .includeChannelLineUp)
+            self.isEnabled = try container.decode(Bool.self, forKey: .isEnabled)
+            self.bundleAssociations = try container.decodeIfPresent([ChannelBundleDevice].self, forKey: .bundleAssociations) ?? []
         }
     }
 }
 
-extension HomeRunDevice {
-    
-    var includeChannelLineUp_Save: Bool {
-        get {
-            return includeChannelLineUp
-        }
-        set {
-            includeChannelLineUp = newValue
-            try? self.modelContext?.saveChangesIfNeeded()
-        }
-    }
-}
+//extension HomeRunDevice {
+//    
+//    var isEnabled_Save: Bool {
+//        get {
+//            return isEnabled
+//        }
+//        set {
+//            isEnabled = newValue
+//            try? self.modelContext?.saveChangesIfNeeded()
+//        }
+//    }
+//}
