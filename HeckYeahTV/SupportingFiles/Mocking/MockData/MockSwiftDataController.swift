@@ -329,7 +329,7 @@ final class MockSwiftDataController: SwiftDataProvider {
     func cleanupOldRecentlyViewedChannels(maxCount: Int = 5000) {
         do {
             // Fetch all entries sorted by viewedAt (oldest first)
-            let viewedAtSort = SortDescriptor<RecentlyViewedChannel>(\.viewedAt, order: .forward)
+            let viewedAtSort = SortDescriptor<RecentlyViewedChannel>(\.viewedAt, order: .reverse)
             let fetchDescriptor = FetchDescriptor<RecentlyViewedChannel>(sortBy: [viewedAtSort])
             let allEntries = try viewContext.fetch(fetchDescriptor)
             
