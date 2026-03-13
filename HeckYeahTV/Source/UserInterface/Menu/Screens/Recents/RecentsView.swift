@@ -7,19 +7,27 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct RecentsView: View {
 
     @State private var appState: AppStateProvider = InjectedValues[\.sharedAppState]
+    @Query(sort: \RecentlyViewedChannel.viewedAt, order: .reverse)
+    private var recentlyViewed: [RecentlyViewedChannel]
     @Namespace private var focusNamespace
     @FocusState private var focusedChannelId: String?
+    
+    private var recentChannelIds: [ChannelId] {
+        // Get top 10 channel IDs from recently viewed
+        recentlyViewed.prefix(10).compactMap { $0.channel.id }
+    }
     
     var body: some View {
         ZStack {
             ScrollViewReader { proxy in
                 ScrollView(.vertical) {
                     LazyVStack(alignment: .leading) {
-                        ForEach(appState.recentChannelIds, id: \.self) { channelId in
+                        ForEach(recentChannelIds, id: \.self) { channelId in
                             ChannelViewLoader(channelId: channelId,
                                               hideFavoritesView: true)
                             .id(channelId)
@@ -32,17 +40,17 @@ struct RecentsView: View {
                 .contentMargins(.bottom, 5)
                 .scrollIndicators(.visible)
                 .onAppear() {
-                    if let firstChannelId = appState.recentChannelIds.first {
+                    if let firstChannelId = recentChannelIds.first {
                         focusedChannelId = firstChannelId
                         DispatchQueue.main.asyncAfter(deadline: .now() + settleTime) {
-                            proxy.scrollTo(appState.recentChannelIds.first ?? "")
+                            proxy.scrollTo(recentChannelIds.first ?? "")
                         }
                     }
                 }
             }
 
             
-            if appState.recentChannelIds.isEmpty {
+            if recentChannelIds.isEmpty {
                 VStack(alignment: .center, spacing: 12) {
                     Image(systemName: "tv.slash")
                         .font(.system(size: 48))
@@ -60,29 +68,30 @@ struct RecentsView: View {
 }
 
 #Preview("RecentsView") {
+    @Previewable @State var appState: AppStateProvider = MockSharedAppState()
+    @Previewable @State var navigationPath: [SettingsDestination] = []
+    
     // Override the injected AppStateProvider
-    var appState: AppStateProvider = MockSharedAppState()
     InjectedValues[\.sharedAppState] = appState
     
     // Override the injected SwiftDataController
     let swiftDataController = MockSwiftDataController()
     InjectedValues[\.swiftDataController] = swiftDataController
     
-    return TVPreviewView() {
+    appState.selectedChannel = swiftDataController.channelBundleMap.channelIds[0]
+    appState.selectedChannel = swiftDataController.channelBundleMap.channelIds[2]
+    appState.selectedChannel = swiftDataController.channelBundleMap.channelIds[5]
+    appState.selectedChannel = swiftDataController.channelBundleMap.channelIds[6]
+    appState.selectedChannel = swiftDataController.channelBundleMap.channelIds[7]
+    
+    
+    return TVPreviewView {
         RecentsView()
-            .onAppear() {
-                // Load some recent channels
-                appState.selectedChannel = swiftDataController.channelBundleMap.channelIds[0]
-                appState.selectedChannel = swiftDataController.channelBundleMap.channelIds[1]
-                appState.selectedChannel = swiftDataController.channelBundleMap.channelIds[2]
-                appState.selectedChannel = swiftDataController.channelBundleMap.channelIds[3]
-                appState.selectedChannel = swiftDataController.channelBundleMap.channelIds[4]
+            .modelContainer(swiftDataController.container)
+            .task {
+                try? await Task.sleep(nanoseconds: 2_000_000_000)
+                logDebug("Updating selected channel")
                 appState.selectedChannel = swiftDataController.channelBundleMap.channelIds[5]
-                appState.selectedChannel = swiftDataController.channelBundleMap.channelIds[6]
-                appState.selectedChannel = swiftDataController.channelBundleMap.channelIds[7]
-                appState.selectedChannel = swiftDataController.channelBundleMap.channelIds[9]
-                appState.selectedChannel = swiftDataController.channelBundleMap.channelIds[10]
-                appState.selectedChannel = swiftDataController.channelBundleMap.channelIds[11]
             }
     }
 }

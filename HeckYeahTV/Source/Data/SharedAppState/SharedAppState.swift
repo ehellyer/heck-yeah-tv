@@ -62,21 +62,11 @@ final class SharedAppState: AppStateProvider {
         set {
             withMutation(keyPath: \.selectedChannel) {
                 if let channelId = newValue {
-                    recentChannelIds = addRecentChannelId(channelId)
+                    // Add to recently viewed in SwiftData
+                    let swiftDataController = InjectedValues[\.swiftDataController]
+                    swiftDataController.addRecentlyViewedChannel(channelId: channelId)
                 }
                 UserDefaults.selectedChannel = newValue
-            }
-        }
-    }
-    
-    private(set) var recentChannelIds: [ChannelId] {
-        get {
-            access(keyPath: \.recentChannelIds)
-            return UserDefaults.recentChannelIds
-        }
-        set {
-            withMutation(keyPath: \.recentChannelIds) {
-                UserDefaults.recentChannelIds = newValue
             }
         }
     }
@@ -159,8 +149,4 @@ final class SharedAppState: AppStateProvider {
     }
     
     var isSeekable: Bool = true
-
-    func resetRecentChannelIds() {
-        recentChannelIds = []
-    }
 }

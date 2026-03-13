@@ -206,8 +206,8 @@ struct Heck_Yeah_TVApp: App {
         if HeckYeahSchema.versionIdentifier == Schema.Version(0, 0, 0) {
             // DB was deletes as part of a hard reset, so clear out some app state to match.
             appState.selectedChannel = nil
-            appState.resetRecentChannelIds()
             appState.isPlayerPaused = false
+            swiftDataController.cleanupOldRecentlyViewedChannels(maxCount: 0)
         }
         
         // Always dismiss channel programs carousel

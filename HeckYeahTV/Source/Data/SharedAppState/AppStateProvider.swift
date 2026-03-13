@@ -80,21 +80,7 @@ protocol AppStateProvider {
     /// This is the Taylor Swift of channels, the one everyone's watching right now.
     /// `nil` means nobody's home and you're staring at a blank screen like it owes you money.
     var selectedChannel: ChannelId? { get set }
-    
-    /// Your viewing history that follows you around like a digital shadow.
-    ///
-    /// A chronological list of your channel-hopping shame. Perfect for answering the question
-    /// "Wait, what was that channel I was watching 3 clicks ago before I got distracted?"
-    /// Limited to 10 items because nobody needs to remember their entire life story.
-    var recentChannelIds: [ChannelId] { get }
-    
-    /// Wipes the channel history slate clean. A digital amnesia button for when you're not proud of your viewing choices.
-    ///
-    /// Clears `recentChannelIds` back to an empty list, as if you never spent 45 minutes channel-surfing
-    /// your way through 9 consecutive infomercials before settling on the one you started with.
-    /// No judgment. The list is gone. It never happened.
-    func resetRecentChannelIds()
-    
+
     /// Whether the app should actively hunt for HDHomeRun tuners on your network — if we've even
     /// had the nerve to ask yet.
     ///
@@ -187,26 +173,4 @@ protocol AppStateProvider {
     /// Live streams typically aren't seekable, while VOD content usually is. This state is transient
     /// and updates based on the currently playing stream's capabilities.
     var isSeekable: Bool { get set }
-}
-
-extension AppStateProvider {
-    
-    /// Puts your channel at the front of the line like it's VIP at a nightclub. If it's already in the list, we'll yank it
-    /// out and shove it to the front anyway because apparently being #4 isn't good enough for you.
-    /// Oh, and if your list gets too long? We'll ruthlessly cut it off at 10 like a bouncer checking IDs. No exceptions.
-    /// - Parameter channelId: The chosen one. The channel that gets to cut in line ahead of everyone else.
-    /// - Returns: Your updated list of recently selected channels, now with 100% more favoritism.
-    func addRecentChannelId(_ channelId: ChannelId) -> [ChannelId] {
-        var updatedList = recentChannelIds
-        let frontOfTheLineIndex: Int = 0
-        if let index = updatedList.firstIndex(of: channelId) {
-            updatedList.remove(at: index)
-            updatedList.insert(channelId, at: frontOfTheLineIndex)
-        } else {
-            let maxAllowed = 10
-            updatedList.insert(channelId, at: frontOfTheLineIndex)
-            updatedList = Array(updatedList.prefix(maxAllowed))
-        }
-        return updatedList
-    }
 }

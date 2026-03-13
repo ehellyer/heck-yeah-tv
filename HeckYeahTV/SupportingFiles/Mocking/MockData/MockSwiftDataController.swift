@@ -296,6 +296,63 @@ final class MockSwiftDataController: SwiftDataProvider {
         }
     }
     
+    func addRecentlyViewedChannel(channelId: ChannelId) {
+        guard let channel = channel(for: channelId) else {
+            logError("Failed to add recently viewed channel: Channel not found for ID \(channelId)")
+            return
+        }
+        do {
+            let recentlyViewed = RecentlyViewedChannel(channel: channel, viewedAt: Date())
+            viewContext.insert(recentlyViewed)
+            try viewContext.saveChangesIfNeeded()
+            
+            // Cleanup old entries if we've exceeded the max count
+            cleanupOldRecentlyViewedChannels(maxCount: 5000)
+        } catch {
+            logError("Failed to add recently viewed channel: \(channel.title). Error: \(error)")
+        }
+    }
+    
+    func recentlyViewedChannels(limit: Int = 10) -> [RecentlyViewedChannel] {
+        do {
+            let viewedAtSort = SortDescriptor<RecentlyViewedChannel>(\.viewedAt, order: .reverse)
+            var fetchDescriptor = FetchDescriptor<RecentlyViewedChannel>(sortBy: [viewedAtSort])
+            fetchDescriptor.fetchLimit = limit
+            let recentChannels = try viewContext.fetch(fetchDescriptor)
+            return recentChannels
+        } catch {
+            logError("Failed to fetch recently viewed channels. Error: \(error)")
+            return []
+        }
+    }
+    
+    func cleanupOldRecentlyViewedChannels(maxCount: Int = 5000) {
+        do {
+            // Fetch all entries sorted by viewedAt (oldest first)
+            let viewedAtSort = SortDescriptor<RecentlyViewedChannel>(\.viewedAt, order: .forward)
+            let fetchDescriptor = FetchDescriptor<RecentlyViewedChannel>(sortBy: [viewedAtSort])
+            let allEntries = try viewContext.fetch(fetchDescriptor)
+            
+            // Calculate how many to delete
+            let entryCount = allEntries.count
+            let deleteCount = entryCount - maxCount
+            
+            guard deleteCount > 0 else {
+                logDebug("There are \(entryCount) entries.  We are not at max count, therefore nothing to delete.")
+                return
+            }
+            
+            for entry in allEntries.suffix(from: maxCount) {
+                viewContext.delete(entry)
+            }
+            
+            try viewContext.saveChangesIfNeeded()
+            logDebug("Cleaned up \(deleteCount) old recently viewed entries.")
+        } catch {
+            logError("Failed to cleanup old recently viewed channels. Error: \(error)")
+        }
+    }
+    
     static func predicateBuilder(searchTerm: String?,
                                  countryCode: CountryCodeId,
                                  categoryId: CategoryId?) -> Predicate<Channel> {

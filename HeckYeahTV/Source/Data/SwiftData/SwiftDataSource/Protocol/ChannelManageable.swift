@@ -149,4 +149,46 @@ protocol ChannelManageable {
     static func predicateBuilder(searchTerm: String?,
                                  countryCode: CountryCodeId,
                                  categoryId: CategoryId?) -> Predicate<Channel>
+    
+    /// Adds a channel to the recently viewed list with the current timestamp.
+    ///
+    /// This creates a breadcrumb of your viewing history. Every time you select a channel,
+    /// this function stamps it with the current time and saves it to the database. Later,
+    /// when you're trying to remember "what was that channel I was watching?", these
+    /// breadcrumbs lead you back.
+    ///
+    /// - Parameter channelId: The ID of the channel you just started watching (or pretending
+    ///                       to watch while scrolling social media).
+    func addRecentlyViewedChannel(channelId: ChannelId)
+    
+    /// Fetches the most recently viewed channels, ordered by viewing time (newest first).
+    ///
+    /// Returns your viewing history in reverse chronological order, so the channel you
+    /// just watched is at the front of the line. Perfect for building a "recently viewed"
+    /// UI section or answering the age-old question: "What was I watching before I got
+    /// distracted?"
+    ///
+    /// - Parameter limit: Maximum number of channels to return. Defaults to 10 because
+    ///                   nobody needs to see their entire viewing history stretching back
+    ///                   to last Tuesday.
+    ///
+    /// - Returns: An array of `RecentlyViewedChannel` objects, sorted by most recent first.
+    ///           Could be empty if you've never watched anything (or if your database
+    ///           is brand new and hasn't had time to collect your digital footprints yet).
+    func recentlyViewedChannels(limit: Int) -> [RecentlyViewedChannel]
+    
+    /// Trims the recently viewed list down to size when it gets too long.
+    ///
+    /// This function keeps your viewing history from becoming a digital hoarder's paradise.
+    /// It deletes the oldest entries when the total count exceeds the specified maximum,
+    /// ensuring your database doesn't fill up with ancient viewing history that nobody
+    /// (including you) cares about anymore.
+    ///
+    /// Think of it as the bouncer at an exclusive club: only the most recent `maxCount`
+    /// entries get to stay, everyone else gets shown the door.
+    ///
+    /// - Parameter maxCount: The maximum number of recently viewed entries to keep.
+    ///                      Anything older than this threshold gets deleted without mercy.
+    ///                      Defaults to 5000 because we're generous but not infinite.
+    func cleanupOldRecentlyViewedChannels(maxCount: Int)
 }

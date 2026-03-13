@@ -65,11 +65,13 @@ extension SchemaV1 {
         var hasDRM: Bool
         var deviceId: HDHomeRunDeviceId
         
-        // Inverse relationship with nullify delete rule
+        // Inverse relationship - preserves user's bundle customizations when channels temporarily leave the catalog
         @Relationship(deleteRule: .nullify, inverse: \BundleEntry.channel)
         var bundleEntries: [BundleEntry] = []
         
-        
+        // Inverse relationship with cascade delete rule - when channel is deleted, delete all recently viewed entries
+        @Relationship(deleteRule: .cascade, inverse: \RecentlyViewedChannel.channel)
+        var recentlyViewedEntries: [RecentlyViewedChannel] = []
         
         // MARK: - JSONSerializable Implementation (added for mock data)
         //

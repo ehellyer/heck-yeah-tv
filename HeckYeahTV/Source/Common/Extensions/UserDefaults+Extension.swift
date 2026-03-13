@@ -107,24 +107,7 @@ extension UserDefaults {
         }
     }
     
-    /// A list of recently accessed channel identifiers, ordered from most to least recent.
-    ///
-    /// This property maintains a Last-In-First-Out (LIFO) list of channels the user has viewed,
-    /// where index 0 is the most recently accessed channel and higher indices represent older
-    /// selections. This can be used to implement a "recently watched" feature or quick channel
-    /// switching. The value is persisted in `UserDefaults.standard`.
-    ///
-    /// - Returns: An array of channel identifiers in reverse chronological order, or an empty array if none exist.
-    static var recentChannelIds: [ChannelId] {
-        get {
-            let _channelIds: [ChannelId] = standard.array(forKey: AppKeys.SharedAppState.recentChannelIdsKey) as? [ChannelId] ?? []
-            return _channelIds
-        }
-        set {
-            standard.set(newValue, forKey: AppKeys.SharedAppState.recentChannelIdsKey)
-        }
-    }
-    
+
     /// Whether the app should actively hunt for HDHomeRun tuners on your network — if we've even
     /// had the nerve to ask yet.
     ///
