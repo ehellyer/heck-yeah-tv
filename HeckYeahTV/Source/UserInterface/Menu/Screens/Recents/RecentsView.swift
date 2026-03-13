@@ -88,10 +88,5 @@ struct RecentsView: View {
     return TVPreviewView {
         RecentsView()
             .modelContainer(swiftDataController.container)
-            .task {
-                try? await Task.sleep(nanoseconds: 2_000_000_000)
-                logDebug("Updating selected channel")
-                appState.selectedChannel = swiftDataController.channelBundleMap.channelIds[5]
-            }
     }
 }
