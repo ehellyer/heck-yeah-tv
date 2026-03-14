@@ -30,14 +30,17 @@ struct CountryPickerView: View {
                                     .foregroundStyle(.blue)
                             }
                         }
+                        .foregroundStyle(.primary)
                         .contentShape(Rectangle())
                     }
                     .buttonStyle(.plain)
                 }
             } header: {
                 Text("Select Country")
+                    .foregroundStyle(.white)
             } footer: {
                 Text("Choose a country to filter available channels.")
+                    .foregroundStyle(.white)
             }
         }
         .navigationTitle("Country")

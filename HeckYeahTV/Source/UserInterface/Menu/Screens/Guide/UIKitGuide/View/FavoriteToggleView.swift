@@ -100,8 +100,8 @@ class FavoriteToggleView: UIView {
     
     @objc private func viewLeftSwipe(_ gesture: UISwipeGestureRecognizer) {
         guard gesture.state == .ended else { return }
-        logDebug("Left swipe detected on Siri remote")
-        
+        logDebug("Left swipe detected on FavoriteToggleView - requesting focus on ShowFavorites")
+        focusCoordinator.requestFocusOnShowFavorites()
     }
     
     //MARK: - Private API
@@ -110,6 +110,9 @@ class FavoriteToggleView: UIView {
     
     @Injected(\.swiftDataController)
     private var swiftDataController: SwiftDataProvider
+    
+    @Injected(\.guideFocusCoordinator)
+    private var focusCoordinator: GuideFocusCoordinator
     
     private func updateLoadingState(isLoading: Bool) {
         if isLoading {

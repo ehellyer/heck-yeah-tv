@@ -13,45 +13,53 @@ struct ShowFavorites: View {
     
     @State private var swiftDataController: SwiftDataProvider = InjectedValues[\.swiftDataController]
     
-    var rightSwipeRedirectAction: (() -> Void)?
+    let focusNamespace: Namespace.ID
+    @FocusState.Binding var focusedField: ChannelsContainer.FocusField?
     
     var body: some View {
-        VStack(spacing: 0) {
-
-            HStack {
-                
-                // Title
-                Text("Favorites")
-                    .font(.title2)
-                    .foregroundStyle(.white)
-                    .fontWeight(.bold)
-                    .focusable(false)
-                
-                // Button
-                Button {
-                    swiftDataController.showFavoritesOnly.toggle()
-                } label: {
+        HStack {
+            
+            Text("Favorites")
+                .font(.title2)
+                .foregroundStyle(.white)
+                .fontWeight(.bold)
+            
+            Button {
+                swiftDataController.showFavoritesOnly.toggle()
+            } label: {
+                HStack {
                     Label(swiftDataController.showFavoritesOnly ? "On" : "Off",
                           systemImage: swiftDataController.showFavoritesOnly ? "star.fill" : "star")
                     .font(.caption)
                     .foregroundStyle(.yellow)
                 }
-#if os(tvOS)
-                .onMoveCommand { direction in
-                    if direction == .right  {
-                        rightSwipeRedirectAction?()
-                    }
-                }
-#endif
-                Spacer()
+                .contentShape(Rectangle())
             }
-            .padding(.horizontal, 20)
+            .buttonStyle(.glass)
+            .prefersDefaultFocus(in: focusNamespace)
+            .focused($focusedField, equals: .showFavorites)
+            .onMoveCommand { direction in
+                if direction == .right  {
+                    logDebug("Right swipe detected on ShowFavorites button")
+                }
+            }
+
+            Spacer()
         }
+        .frame(maxWidth: .infinity)
+        .focusSection()
+        .padding(.horizontal, 20)
     }
 }
 
 #Preview {
+    @Previewable @Namespace var namespace
+    @Previewable @FocusState var focusField: ChannelsContainer.FocusField?
+    
     return TVPreviewView() {
-        ShowFavorites()
+        ShowFavorites(
+            focusNamespace: namespace,
+            focusedField: $focusField
+        )
     }
 }

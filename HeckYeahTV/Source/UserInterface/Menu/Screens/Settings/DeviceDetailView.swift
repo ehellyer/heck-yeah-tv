@@ -31,6 +31,7 @@ struct DeviceDetailView: View {
                             Text("Include Channel Line-up")
                             Text(device.isEnabled ? "Yes" : "No")
                         }
+                        .foregroundStyle(.primary)
                         .tint(.blue)
                     }
                     .buttonStyle(.glass)
@@ -41,7 +42,7 @@ struct DeviceDetailView: View {
                 } footer: {
                     Text("When enabled, channels from this device will be available to be included in a channel bundle.")
                         .font(.caption)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(.white)
                 }
 #if os(tvOS)
                 .padding(.leading, leadingPadding)
@@ -81,6 +82,7 @@ struct DeviceDetailView: View {
                 }
             }
         }
+        .frame(maxWidth: .infinity)
         .contentMargins(10, for: .scrollContent)
         .scrollClipDisabled() // Prevents tvOS focus effects at edge from being clipped.
         .navigationTitle("Tuner Details")
@@ -127,6 +129,7 @@ fileprivate struct SectionHeader: View {
         Text(title)
             .font(.headline)
             .fontWeight(.bold)
+            .foregroundStyle(.white)
             .padding(.top, SectionHeader.topPadding)
     }
 }
@@ -144,6 +147,7 @@ fileprivate struct DetailRow: View {
                 .foregroundStyle(.secondary)
             Text(value)
                 .font(.body)
+                .foregroundStyle(.primary)
         }
     }
 }

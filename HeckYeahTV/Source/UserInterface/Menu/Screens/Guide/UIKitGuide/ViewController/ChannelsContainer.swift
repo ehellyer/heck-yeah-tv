@@ -13,24 +13,47 @@ struct ChannelsContainer: View {
     
     // Private
     @State private var appState: AppStateProvider = InjectedValues[\.sharedAppState]
-    @FocusState private var isFocused: Bool
-    @State private var scrollToSelectedAndFocus: Bool = false
+    @State private var focusCoordinator: GuideFocusCoordinator = GuideFocusCoordinator()
+    
+    @Namespace private var focusNamespace
+    @FocusState private var focusedField: FocusField?
+    @FocusState private var isGuideFocused: Bool
+    
+    enum FocusField: Hashable {
+        case showFavorites
+        case guide
+    }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
             
-            ShowFavorites(rightSwipeRedirectAction: {
-                scrollToSelectedAndFocus = true
-            })
+            ShowFavorites(
+                focusNamespace: focusNamespace,
+                focusedField: $focusedField
+            )
             .padding(.bottom, 10)
             
-            GuideViewRepresentable(isFocused: $isFocused)
-                .focused($isFocused) // Bind to SwiftUI focus
+            GuideViewRepresentable(isFocused: $isGuideFocused)
+                .focused($focusedField, equals: .guide)
                 .onAppear {
-                    isFocused = true
+                    focusedField = .guide
+                    isGuideFocused = true
                 }
         }
         .background(Color.clear)
+        .onChange(of: focusedField) { _, newValue in
+            // Sync the guide focus state with our enum
+            isGuideFocused = (newValue == .guide)
+        }
+        .onChange(of: focusCoordinator.shouldFocusShowFavorites) { _, shouldFocus in
+            if shouldFocus {
+                focusedField = .showFavorites
+            }
+        }
+        .task {
+            // Inject the coordinator so UIKit can access it
+            InjectedValues[\.guideFocusCoordinator] = focusCoordinator
+        }
     }
 }
 

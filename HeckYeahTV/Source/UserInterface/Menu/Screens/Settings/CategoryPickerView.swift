@@ -29,6 +29,7 @@ struct CategoryPickerView: View {
                                 .foregroundStyle(.blue)
                         }
                     }
+                    .foregroundStyle(.primary)
                     .contentShape(Rectangle())
                 }
                 .buttonStyle(.plain)
@@ -46,14 +47,17 @@ struct CategoryPickerView: View {
                                     .foregroundStyle(.blue)
                             }
                         }
+                        .foregroundStyle(.primary)
                         .contentShape(Rectangle())
                     }
                     .buttonStyle(.plain)
                 }
             } header: {
                 Text("Select Category")
+                    .foregroundStyle(.white)
             } footer: {
                 Text("Choose a category to filter available channels, or select 'All Categories' to show all.")
+                    .foregroundStyle(.white)
             }
         }
         .navigationTitle("Category")

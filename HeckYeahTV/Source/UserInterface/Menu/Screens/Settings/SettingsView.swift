@@ -57,12 +57,14 @@ struct SettingsView: View {
                             Spacer()
                             Image(systemName: "chevron.up.chevron.down")
                         }
-                        .tint(.blue)
+                        .foregroundStyle(.primary)
                     }
                 } header: {
                     Text("Active Bundle")
+                        .foregroundStyle(.white)
                 } footer: {
                     Text("The active bundle determines which channels appear in the guide.")
+                        .foregroundStyle(.white)
                 }
             }
             
@@ -77,23 +79,25 @@ struct SettingsView: View {
                             Spacer()
                             Text(subtext(for: bundle))
                                 .font(.caption)
+                                .foregroundStyle(.secondary)
                         }
+                        .foregroundStyle(.primary)
                     }
-                    .tint(.blue)
                 }
                 
                 Button {
                     navigationPath.append(.addBundle)
                 } label: {
                     Label("Add Channel Bundle", systemImage: "plus.circle.fill")
-                        
                 }
-                .foregroundStyle(.blue)
+                .foregroundStyle(.primary)
                 
             } header: {
                 Text("Manage Bundles")
+                    .foregroundStyle(.white)
             } footer: {
                 Text("Tap a bundle to edit its name, filters, and channels.")
+                    .foregroundStyle(.white)
             }
             
             
@@ -103,14 +107,16 @@ struct SettingsView: View {
                     Text("Available Channels")
                     Spacer()
                     Text("\(iptvChannelCount)")
+                        .foregroundStyle(.secondary)
                 }
+                .foregroundStyle(.primary)
                 
                 Button {
                     reloadIPTVChannels()
                 } label: {
                     Label("Reload IPTV Channels", systemImage: "arrow.clockwise")
                 }
-                .foregroundStyle(.blue)
+                .foregroundStyle(.primary)
                 .disabled(isReloadingIPTV)
             } header: {
                 Text("IPTV")
@@ -129,11 +135,10 @@ struct SettingsView: View {
                 if homeRunDevices.isEmpty {
                     HStack {
                         Image(systemName: "antenna.radiowaves.left.and.right.slash")
-                            .foregroundStyle(.secondary)
                         Text("No devices discovered")
-                            .foregroundStyle(.secondary)
                         Spacer()
                     }
+                    .foregroundStyle(.secondary)
                 } else {
                     ForEach(homeRunDevices) { device in
                         NavigationLink {
@@ -141,18 +146,17 @@ struct SettingsView: View {
                         } label: {
                             HStack {
                                 Image(systemName: "antenna.radiowaves.left.and.right")
-                                    .foregroundStyle(.blue)
                                 
                                 VStack(alignment: .leading, spacing: 4) {
                                     Text(device.friendlyName)
                                         .font(.body)
-                                        .foregroundStyle(.primary)
                                     
                                     Text("\(channelCount(for: device.deviceId)) channels")
                                         .font(.caption)
-                                        .foregroundStyle(.primary)
+                                        .foregroundStyle(.secondary)
                                 }
                             }
+                            .foregroundStyle(.primary)
                         }
                     }
                 }
@@ -162,10 +166,11 @@ struct SettingsView: View {
                 } label: {
                     Label("Refresh Devices", systemImage: "arrow.clockwise")
                 }
-                .tint(.blue)
+                .foregroundStyle(.primary)
                 .disabled(isReloadingHomeRun)
             } header: {
                 Text("HDHomeRun Devices")
+                    .foregroundStyle(.white)
             }
         }
 
@@ -184,7 +189,7 @@ struct SettingsView: View {
                     })
                 case .bundleDetail(let bundleId):
                     if let bundle = channelBundles.first(where: { $0.id == bundleId }) {
-                        ChannelBundleDetailView(navigationPath: $navigationPath,
+                        ChannelBundleFilterView(navigationPath: $navigationPath,
                                                 bundle: bundle)
                     }
             }

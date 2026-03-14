@@ -12,29 +12,21 @@ import SwiftData
 struct ChannelBundleDetailView: View {
     @Binding var navigationPath: [SettingsDestination]
     @Bindable var bundle: ChannelBundle
-    
+
+    @Environment(\.dismiss) private var dismiss
+    @FocusState private var nameFieldFocused: Bool
+
     @State private var appState: AppStateProvider = InjectedValues[\.sharedAppState]
     @State private var swiftDataController: SwiftDataProvider = InjectedValues[\.swiftDataController]
     @State private var showingDeleteConfirmation = false
-    @State private var canDelete: Bool = false
-    @Environment(\.dismiss) private var dismiss
-    
     @State private var bundleNameBuffer: String = ""
     @State private var showingEmptyNameAlert = false
-    @FocusState private var nameFieldFocused: Bool
     @State private var searchTerm: String = ""
     @State private var availableChannelCount: Int = 0
     @State private var categories: [ProgramCategory] = []
     @State private var countries: [Country] = []
-    
-    private var nameIsInvalid: Bool {
-        bundleNameBuffer.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
-    }
-    
-    private var filteredChannels: [Channel] {
-        let channels = swiftDataController.channelsForCurrentFilter()
-        return channels
-    }
+
+
     
     private func isChannelInBundle(_ channel: Channel) -> Bool {
         bundle.channels.contains { $0.channel?.id == channel.id }
@@ -62,12 +54,13 @@ struct ChannelBundleDetailView: View {
                             .font(.body)
                             .foregroundStyle(.red)
                     }
+                    .foregroundStyle(.primary)
                 }
                 .disabled(!canDelete)
             } header: {
                 Text("Bundle Settings")
+                    .foregroundStyle(.white)
             }
-            .foregroundStyle(.white)
             .listRowBackground(Color(white: 0.1).opacity(0.8))
 #if !os(tvOS)
             .listRowSeparatorTint(Color(white: 0.6).opacity(0.3))
@@ -83,6 +76,7 @@ struct ChannelBundleDetailView: View {
                         Text(selectedCategoryName)
                             .foregroundStyle(.secondary)
                     }
+                    .foregroundStyle(.primary)
                 } destination: {
                     CategoryPickerView(
                         selectedCategory: Binding(
@@ -100,6 +94,7 @@ struct ChannelBundleDetailView: View {
                         Text(selectedCountryName)
                             .foregroundStyle(.secondary)
                     }
+                    .foregroundStyle(.primary)
                 } destination: {
                     CountryPickerView(
                         selectedCountry: Binding(
@@ -111,10 +106,11 @@ struct ChannelBundleDetailView: View {
                 }
             } header: {
                 Text("Channel Filters")
+                    .foregroundStyle(.white)
             } footer: {
                 Text("Filter which channels appear in the list below.")
+                    .foregroundStyle(.white)
             }
-            .foregroundStyle(.white)
             .listRowBackground(Color(white: 0.1).opacity(0.8))
 #if !os(tvOS)
             .listRowSeparatorTint(Color(white: 0.6).opacity(0.3))
@@ -156,12 +152,13 @@ struct ChannelBundleDetailView: View {
                         .foregroundStyle(.secondary)
                         .textCase(.none)
                 }
+                .foregroundStyle(.white)
             } footer: {
                 if filteredChannels.isEmpty == false {
                     Text("Tap channels to add or remove them from this bundle.")
+                        .foregroundStyle(.white)
                 }
             }
-            .foregroundStyle(.white)
             .listRowBackground(Color(white: 0.1).opacity(0.8))
 #if !os(tvOS)
             .listRowSeparatorTint(Color(white: 0.6).opacity(0.3))
@@ -230,6 +227,21 @@ struct ChannelBundleDetailView: View {
         return "Unknown"
     }
     
+    private var canDelete: Bool {
+        // Check if this bundle can be deleted
+        let totalBundles = swiftDataController.channelBundles().count
+        return totalBundles > 1
+    }
+    
+    private var nameIsInvalid: Bool {
+        bundleNameBuffer.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+    }
+    
+    private var filteredChannels: [Channel] {
+        let channels = swiftDataController.channelsForCurrentFilter()
+        return channels
+    }
+    
     // MARK: - Actions
     
     private func commitBundleName() {
@@ -279,10 +291,7 @@ struct ChannelBundleDetailView: View {
         availableChannelCount = swiftDataController.totalIPChannelCatalogCount()
         categories = swiftDataController.programCategories()
         countries = swiftDataController.countries()
-        
-        // Check if this bundle can be deleted
-        let totalBundles = swiftDataController.channelBundles().count
-        canDelete = totalBundles > 1
+
     }
 }
 
