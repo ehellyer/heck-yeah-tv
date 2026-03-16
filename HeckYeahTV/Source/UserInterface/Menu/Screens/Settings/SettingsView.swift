@@ -56,11 +56,13 @@ struct SettingsView: View {
                             Text(selectedName)
                             Spacer()
                             Image(systemName: "chevron.up.chevron.down")
+                                .foregroundStyle(.secondary)
                         }
                         .foregroundStyle(.primary)
                     }
                 } header: {
                     Text("Active Bundle")
+                        .fontWeight(.bold)
                         .foregroundStyle(.white)
                 } footer: {
                     Text("The active bundle determines which channels appear in the guide.")
@@ -73,27 +75,39 @@ struct SettingsView: View {
             Section {
                 ForEach(channelBundles) { bundle in
                     NavigationLink(value: SettingsDestination.bundleDetail(bundleId: bundle.id)) {
-                        HStack {
-                            Text(bundle.name)
-                                .font(.body)
-                            Spacer()
-                            Text(subtext(for: bundle))
-                                .font(.caption)
-                                .foregroundStyle(.secondary)
+                        
+                        HStack(spacing: 20) {
+                            Image(systemName: "pencil")
+                                .foregroundStyle(.blue)
+                            
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text(bundle.name)
+                                    .font(.body)
+                                
+                                Text(subtext(for: bundle))
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                            }
                         }
-                        .foregroundStyle(.primary)
                     }
                 }
                 
                 Button {
                     navigationPath.append(.addBundle)
                 } label: {
-                    Label("Add Channel Bundle", systemImage: "plus.circle.fill")
+                    HStack(spacing: 20) {
+                        Image(systemName: "plus.circle.fill")
+                            .foregroundStyle(.blue)
+                        Text("Add Channel Bundle")
+                            .font(.body)
+                    }
                 }
+                .buttonStyle(.plain)
                 .foregroundStyle(.primary)
                 
             } header: {
                 Text("Manage Bundles")
+                    .fontWeight(.bold)
                     .foregroundStyle(.white)
             } footer: {
                 Text("Tap a bundle to edit its name, filters, and channels.")
@@ -114,12 +128,18 @@ struct SettingsView: View {
                 Button {
                     reloadIPTVChannels()
                 } label: {
-                    Label("Reload IPTV Channels", systemImage: "arrow.clockwise")
+                    HStack(spacing: 20) {
+                        Image(systemName: "arrow.clockwise")
+                            .foregroundStyle(.blue)
+                        Text("Reload IPTV Channels")
+                            .font(.body)
+                    }
                 }
                 .foregroundStyle(.primary)
                 .disabled(isReloadingIPTV)
             } header: {
                 Text("IPTV")
+                    .fontWeight(.bold)
                     .foregroundStyle(.white)
             } footer: {
                 if isReloadingIPTV {
@@ -133,8 +153,9 @@ struct SettingsView: View {
             // MARK: - HDHomeRun Devices Section
             Section {
                 if homeRunDevices.isEmpty {
-                    HStack {
+                    HStack(spacing: 20) {
                         Image(systemName: "antenna.radiowaves.left.and.right.slash")
+                            .foregroundStyle(.blue)
                         Text("No devices discovered")
                         Spacer()
                     }
@@ -144,16 +165,25 @@ struct SettingsView: View {
                         NavigationLink {
                             DeviceDetailView(device: device)
                         } label: {
-                            HStack {
+                            HStack(spacing: 20) {
                                 Image(systemName: "antenna.radiowaves.left.and.right")
+                                    .foregroundStyle(.blue)
                                 
                                 VStack(alignment: .leading, spacing: 4) {
                                     Text(device.friendlyName)
                                         .font(.body)
                                     
-                                    Text("\(channelCount(for: device.deviceId)) channels")
-                                        .font(.caption)
-                                        .foregroundStyle(.secondary)
+                                    HStack {
+                                        Text("\(channelCount(for: device.deviceId)) channels")
+                                        
+                                        if device.isEnabled {
+                                            Text("(Enabled for TV)")
+                                        } else {
+                                            Text("(Disabled for TV)")
+                                        }
+                                    }
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
                                 }
                             }
                             .foregroundStyle(.primary)
@@ -161,21 +191,32 @@ struct SettingsView: View {
                     }
                 }
                 
+                
                 Button {
                     reloadTunerDevices()
                 } label: {
-                    Label("Refresh Devices", systemImage: "arrow.clockwise")
+                    HStack(spacing: 20) {
+                        Image(systemName: "arrow.clockwise")
+                            .foregroundStyle(.blue)
+                        Text("Refresh Devices")
+                            .font(.body)
+                    }
                 }
                 .foregroundStyle(.primary)
                 .disabled(isReloadingHomeRun)
             } header: {
                 Text("HDHomeRun Devices")
+                    .fontWeight(.bold)
                     .foregroundStyle(.white)
             }
         }
 
 #if !os(tvOS)
         .scrollContentBackground(.hidden)
+#endif
+#if os(macOS)
+        .listRowSeparator(.hidden)
+        .listSectionSeparator(.hidden)
 #endif
         .navigationDestination(for: SettingsDestination.self) { destination in
             switch destination {
@@ -248,35 +289,8 @@ struct SettingsView: View {
 }
 
 
-struct ListRowModifier: ViewModifier {
-    
-    @Environment(\.isFocused) private var isFocused: Bool
-    
-    func body(content: Content) -> some View {
-        content
-            //.background(isFocused ? .red : .blue)
-            //.scaleEffect(isFocused ? 1.1 : 1.0)
-            .shadow(color: isFocused ? Color.black.opacity(0.3) : Color.clear, radius: 10, x: 0, y: 5)
-            .animation(.easeInOut(duration: 0.2), value: isFocused)
-            .focusable()
 
-            .foregroundStyle(.white)
-        
-            .listItemTint(ListItemTint.fixed(Color.white))
-#if !os(tvOS)
-            .listRowSeparatorTint(Color(white: 0.6).opacity(0.3))
-#endif
-
-        
-    }
-}
-
-extension View {
-    func focusableListRowStyle() -> some View {
-        self.modifier(ListRowModifier())
-    }
-}
-
+//MARK: - Previews
 
 #Preview("Light Mode") {
     @Previewable @State var appState: AppStateProvider = MockSharedAppState()

@@ -26,7 +26,7 @@ struct RecentsView: View {
         ZStack {
             ScrollViewReader { proxy in
                 ScrollView(.vertical) {
-                    LazyVStack(alignment: .leading) {
+                    LazyVStack(alignment: .leading, spacing: AppStyle.GuideView.rowSpacing) {
                         ForEach(recentChannelIds, id: \.self) { channelId in
                             ChannelViewLoader(channelId: channelId,
                                               hideFavoritesView: true)

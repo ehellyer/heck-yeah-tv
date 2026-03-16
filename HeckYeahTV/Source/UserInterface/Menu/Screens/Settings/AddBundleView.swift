@@ -47,18 +47,7 @@ struct AddBundleView: View {
 #if os(iOS)
         .navigationBarTitleDisplayMode(.inline)
 #endif
-//#if !os(tvOS)
-//        .toolbar {
-//            ToolbarItem (placement: .confirmationAction) {
-//                Button("Done") {
-//                    if let newBundle = swiftDataController.addChannelBundle(name: bundleName) {
-//                        onAdd(newBundle)
-//                    }
-//                }
-//                .disabled(bundleName.trim().isEmpty)
-//            }
-//        }
-//#endif
+
 #if os(tvOS)
         .onAppear {
             isNameFieldFocused = true
@@ -75,7 +64,9 @@ struct OutlinedTextFieldStyle: TextFieldStyle {
         
         configuration
             .focused($isFocused)
+        #if !os(macOS)
             .defaultHoverEffect(nil) // 👈 Suppress the lifting effect
+        #endif
             .background(.clear)
             .padding(.horizontal, isFocused ? 16 : 0) // 👈 Suppress the padding effect
             .overlay {

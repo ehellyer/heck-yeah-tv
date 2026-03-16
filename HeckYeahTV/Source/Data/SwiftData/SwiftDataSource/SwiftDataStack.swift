@@ -103,6 +103,13 @@ extension SwiftDataStack {
     /// Checks if this database is older than your last app update (it probably is).
     /// Returns true if the store is using that ancient schema from two versions ago that we all agreed to forget about.
     private static func isLegacyStore(at url: URL) -> Bool {
+        
+        let devBuildVersion = "0.0.0" // The magic version that says "I'm still in development, feel free to delete me."
+        let currentSchemaVersion = HeckYeahSchema.versionIdentifier.description
+        if currentSchemaVersion == devBuildVersion {
+            return true
+        }
+        
         var db: OpaquePointer? // OpaquePointer: Because nothing says "modern Swift" like a C pointer from the 90s.
         var statement: OpaquePointer?
 
@@ -151,12 +158,10 @@ extension SwiftDataStack {
         let blobPointer = sqlite3_column_blob(statement, 0)
         let byteCount = Int(sqlite3_column_bytes(statement, 0))
         let id = uuidFromBlob(pointer: blobPointer, byteCount: byteCount)
-        let version = String(cString: sqlite3_column_text(statement, 1))
+        let dbSchemaVersion = String(cString: sqlite3_column_text(statement, 1))
 
         let verificationUUID = UUID(uuidString: "fe7046c4-c15d-4e78-ba5b-50378a50c0b1")! // Our secret handshake with the database.
-        let devBuildVersion = "0.0.0" // The magic version that says "I'm still in development, feel free to delete me."
-        
-        let isDevBuildVersion = devBuildVersion == version || HeckYeahSchema.versionIdentifier.description == devBuildVersion
+        let isDevBuildVersion = currentSchemaVersion < dbSchemaVersion //This logic is deleting DB when code schema is prior to DB schema.  (Don't ask questions)
 
         isLegacyStore = (id != verificationUUID || isDevBuildVersion)
         

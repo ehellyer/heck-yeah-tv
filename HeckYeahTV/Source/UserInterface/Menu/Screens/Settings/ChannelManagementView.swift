@@ -12,7 +12,7 @@ import SwiftUI
 struct ChannelManagementView: View {
     
     @Bindable var bundle: ChannelBundle
-    @Bindable var viewModel: ChannelBundleFilterViewModel
+    @Bindable var channelFilters: ChannelBundleFilterViewModel
     
     @State private var swiftDataController: SwiftDataProvider = InjectedValues[\.swiftDataController]
     @State private var filteredChannels: [Channel] = []
@@ -39,17 +39,17 @@ struct ChannelManagementView: View {
         .task {
             await loadChannels()
         }
-        .onChange(of: viewModel.searchTerm) { _, _ in
+        .onChange(of: channelFilters.searchTerm) { _, _ in
             Task {
                 await loadChannels()
             }
         }
-        .onChange(of: viewModel.selectedCountry) { _, _ in
+        .onChange(of: channelFilters.selectedCountry) { _, _ in
             Task {
                 await loadChannels()
             }
         }
-        .onChange(of: viewModel.selectedCategory) { _, _ in
+        .onChange(of: channelFilters.selectedCategory) { _, _ in
             Task {
                 await loadChannels()
             }
@@ -62,43 +62,28 @@ struct ChannelManagementView: View {
         List {
             Section {
                 ForEach(filteredChannels) { channel in
-                    channelRow(for: channel)
+                    //channelRow(for: channel)
+                    ChannelRow(channel: channel,
+                               isInBundle: isChannelInBundle(channel)) {
+                        toggleChannel(channel)
+                    }
                 }
             } header: {
-                Text("\(filteredChannels.count) channels")
-                    .foregroundStyle(.white)
-            } footer: {
-                Text("Tap a channel to add or remove it from this bundle")
-                    .foregroundStyle(.white)
-            }
-        }
-#if !os(tvOS)
-        .listStyle(.insetGrouped)
-#endif
-    }
-    
-    private func channelRow(for channel: Channel) -> some View {
-        Button {
-            toggleChannel(channel)
-        } label: {
-            HStack {
-                Text(channel.title)
-                    .font(.body)
-                
-                Spacer()
-                
-                if isChannelInBundle(channel) {
-                    Image(systemName: "checkmark.circle.fill")
-                        .foregroundStyle(.green)
-                } else {
-                    Image(systemName: "circle")
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("\(filteredChannels.count) channels")
+                        .foregroundStyle(.white)
+                    Text("Tap a channel to add or remove it from this bundle")
                         .foregroundStyle(.secondary)
+
                 }
             }
-            .foregroundStyle(.primary)
         }
+        
 #if os(tvOS)
-        .buttonStyle(.plain)
+        .clipped()
+#endif
+#if os(iOS)
+        .listStyle(.insetGrouped)
 #endif
     }
     
@@ -140,9 +125,9 @@ struct ChannelManagementView: View {
         let previousCountry = swiftDataController.selectedCountry
         let previousCategory = swiftDataController.selectedCategory
         
-        swiftDataController.searchTerm = viewModel.trimmedSearchTerm
-        swiftDataController.selectedCountry = viewModel.selectedCountry
-        swiftDataController.selectedCategory = viewModel.selectedCategory
+        swiftDataController.searchTerm = channelFilters.trimmedSearchTerm
+        swiftDataController.selectedCountry = channelFilters.selectedCountry
+        swiftDataController.selectedCategory = channelFilters.selectedCategory
         
         // Fetch filtered channels
         filteredChannels = swiftDataController.channelsForCurrentFilter()
@@ -166,11 +151,11 @@ struct ChannelManagementView: View {
     InjectedValues[\.swiftDataController] = swiftDataController
     
     let channelBundle = swiftDataController.channelBundles().first!
-    let viewModel = ChannelBundleFilterViewModel()
+    let channelFilters = ChannelBundleFilterViewModel()
     
     return TVPreviewView {
         NavigationStack {
-            ChannelManagementView(bundle: channelBundle, viewModel: viewModel)
+            ChannelManagementView(bundle: channelBundle, channelFilters: channelFilters)
         }
     }
     .environment(\.colorScheme, .light)
@@ -184,11 +169,11 @@ struct ChannelManagementView: View {
     InjectedValues[\.swiftDataController] = swiftDataController
     
     let channelBundle = swiftDataController.channelBundles().first!
-    let viewModel = ChannelBundleFilterViewModel()
+    let channelFilters = ChannelBundleFilterViewModel()
     
     return TVPreviewView {
         NavigationStack {
-            ChannelManagementView(bundle: channelBundle, viewModel: viewModel)
+            ChannelManagementView(bundle: channelBundle, channelFilters: channelFilters)
         }
     }
     .environment(\.colorScheme, .dark)

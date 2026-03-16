@@ -43,7 +43,8 @@ struct GuideView: View {
                 //Guide content vertical scroll view.
                 ScrollViewReader { proxy in
                     ScrollView(.vertical) {
-                        LazyVStack(alignment: .leading) {
+                        LazyVStack(alignment: .leading,
+                                   spacing: AppStyle.GuideView.rowSpacing) {
                             ForEach(swiftDataController.channelBundleMap.channelIds, id: \.self) { channelId in
                                 HStack(alignment: .top,
                                        spacing: AppStyle.GuideView.programSpacing) {

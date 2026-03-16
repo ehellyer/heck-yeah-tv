@@ -15,9 +15,9 @@ struct AppStyle {
     }
     
 #if os(tvOS)
-    static let rowHeight : CGFloat = 150
+    static let rowHeight : CGFloat = 110
 #else
-    static let rowHeight : CGFloat = 80
+    static let rowHeight : CGFloat = 70
 #endif
     
     
@@ -44,13 +44,13 @@ struct AppStyle {
     
     struct FavoritesView {
 #if os(tvOS)
-        static let width: CGFloat = 120
+        static let width: CGFloat = 100
         static let scaleEffect: CGFloat = 1.2
         static let height : CGFloat = AppStyle.rowHeight
         static let internalHorizontalPadding: CGFloat = 15
         static let internalVerticalPadding: CGFloat = 15
 #else
-        static let width: CGFloat = 70
+        static let width: CGFloat = 60
         static let scaleEffect: CGFloat = 1.5
         static let height : CGFloat = AppStyle.rowHeight
         static let internalHorizontalPadding: CGFloat = 15
@@ -111,6 +111,13 @@ struct AppStyle {
 #else
         static let programSpacing: CGFloat = 15
 #endif
+        
+#if os(tvOS)
+        static let rowSpacing: CGFloat = 15
+#else
+        static let rowSpacing: CGFloat = 10
+#endif
+        
         
         private static let focusGrowth: CGFloat = 5 // Fixed pixel growth
         

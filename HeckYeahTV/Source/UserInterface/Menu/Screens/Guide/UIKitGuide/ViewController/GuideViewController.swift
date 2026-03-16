@@ -243,7 +243,7 @@ class GuideViewController: UIViewController {
         self.setNeedsFocusUpdate()
         
         // Calling a 2nd time after a delay because the Focus engine is a real pain in the ass.  Yes this is a hack to get around an Apple Framework bug.
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.9) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
             // Request focus update on the view controller which triggers call to preferredFocusEnvironments
             self.updateFocusIfNeeded()
             self.setNeedsFocusUpdate()

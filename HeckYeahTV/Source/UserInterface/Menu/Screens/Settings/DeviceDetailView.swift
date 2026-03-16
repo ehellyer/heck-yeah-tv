@@ -27,12 +27,12 @@ struct DeviceDetailView: View {
                     Button(action: {
                         device.isEnabled.toggle()
                     }) {
-                        HStack(alignment: .center) {
-                            Text("Include Channel Line-up")
+                        HStack(spacing: 20) {
+                            Text("Enable for Heck Yeah TV")
                             Text(device.isEnabled ? "Yes" : "No")
                         }
                         .foregroundStyle(.primary)
-                        .tint(.blue)
+                        
                     }
                     .buttonStyle(.glass)
                     
@@ -40,7 +40,7 @@ struct DeviceDetailView: View {
                 } header: {
                     SectionHeader("Settings")
                 } footer: {
-                    Text("When enabled, channels from this device will be available to be included in a channel bundle.")
+                    Text("When enabled, channels from this device will be available to be included in a channel bundle.  Edit a channel bundle to include this devices channel line up.")
                         .font(.caption)
                         .foregroundStyle(.white)
                 }
@@ -81,10 +81,13 @@ struct DeviceDetailView: View {
                     DetailRow(label: "Channel Count", value: "\(channelCount)")
                 }
             }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            
         }
-        .frame(maxWidth: .infinity)
         .contentMargins(10, for: .scrollContent)
-        .scrollClipDisabled() // Prevents tvOS focus effects at edge from being clipped.
+#if os(tvOS)
+        .clipped()
+#endif
         .navigationTitle("Tuner Details")
 #if !os(tvOS)
         .scrollContentBackground(.hidden)
