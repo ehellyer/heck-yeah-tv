@@ -149,4 +149,6 @@ final class SharedAppState: AppStateProvider {
     }
     
     var isSeekable: Bool = true
+    var isReloadingIPTV: Bool = false
+    var isReloadingHomeRun: Bool = false
 }

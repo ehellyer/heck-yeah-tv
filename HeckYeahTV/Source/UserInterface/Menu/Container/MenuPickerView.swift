@@ -11,7 +11,7 @@ import SwiftUI
 struct MenuPickerView: View {
     
     @State private var appState: AppStateProvider = InjectedValues[\.sharedAppState]
-    @State private var swiftDataController: SwiftDataProvider = InjectedValues[\.swiftDataController]
+    @State private var swiftDataController: BaseSwiftDataController = InjectedValues[\.swiftDataController]
     
     var body: some View {
         NavigationStack {

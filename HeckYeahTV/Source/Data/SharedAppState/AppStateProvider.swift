@@ -173,4 +173,16 @@ protocol AppStateProvider {
     /// Live streams typically aren't seekable, while VOD content usually is. This state is transient
     /// and updates based on the currently playing stream's capabilities.
     var isSeekable: Bool { get set }
+    
+    /// Whether IPTV channels are currently being reloaded.
+    ///
+    /// When `true`, the app is fetching fresh IPTV channel data from the remote source.
+    /// This state is managed by IPTVImporter and observed by UI to show loading indicators.
+    var isReloadingIPTV: Bool { get set }
+    
+    /// Whether HDHomeRun devices are currently being refreshed.
+    ///
+    /// When `true`, the app is probing the network for tuner devices and fetching their channel lineups.
+    /// This state is managed by HomeRunImporter and observed by UI to show loading indicators.
+    var isReloadingHomeRun: Bool { get set }
 }

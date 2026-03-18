@@ -11,7 +11,7 @@ import SwiftData
 
 struct ShowFavorites: View {
     
-    @State private var swiftDataController: SwiftDataProvider = InjectedValues[\.swiftDataController]
+    @State private var swiftDataController: BaseSwiftDataController = InjectedValues[\.swiftDataController]
     
     let focusNamespace: Namespace.ID
     @FocusState.Binding var focusedField: ChannelsContainer.FocusField?

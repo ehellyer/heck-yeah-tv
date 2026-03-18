@@ -109,7 +109,7 @@ class FavoriteToggleView: UIView {
     private var channel: Channel?
     
     @Injected(\.swiftDataController)
-    private var swiftDataController: SwiftDataProvider
+    private var swiftDataController: BaseSwiftDataController
     
     @Injected(\.guideFocusCoordinator)
     private var focusCoordinator: GuideFocusCoordinator

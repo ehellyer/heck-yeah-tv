@@ -15,7 +15,7 @@ struct FavoriteView: View {
     
     @State private var bundleEntry: BundleEntry? = nil
     @State private var appState: AppStateProvider = InjectedValues[\.sharedAppState]
-    @State private var swiftDataController: SwiftDataProvider = InjectedValues[\.swiftDataController]
+    @State private var swiftDataController: BaseSwiftDataController = InjectedValues[\.swiftDataController]
     
     // Focus tracking for each button
     @FocusState private var focusedButton: FocusedButton?

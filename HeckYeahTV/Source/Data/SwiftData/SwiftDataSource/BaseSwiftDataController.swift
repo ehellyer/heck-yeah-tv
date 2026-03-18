@@ -428,10 +428,16 @@ class BaseSwiftDataController: SwiftDataProvider {
         }
     }
     
+    private var _searchTerm: String? = nil
+    
     /// Filter by channel title search term. Because scrolling through 10,000 channels wasn't tedious enough.
     var searchTerm: String? {
-        didSet {
-            guard searchTerm != oldValue else { return }
+        get {
+            return _searchTerm
+        }
+        set {
+            guard newValue != _searchTerm else { return }
+            _searchTerm = newValue.map { String($0.prefix(35)) }
             scheduleChannelBundleMapRebuild()
         }
     }

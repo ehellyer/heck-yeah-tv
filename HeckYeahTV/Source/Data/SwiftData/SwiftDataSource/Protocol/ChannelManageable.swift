@@ -20,6 +20,13 @@ import SwiftData
 @MainActor
 protocol ChannelManageable {
 
+    /// Returns the channels that survived your filter gauntlet, organized to drive the UI lazy loading.
+    ///
+    /// The map structure makes it easy to lazily load channel data as needed. Will be empty if the user
+    /// hasn't bothered to curate their own channel bundle yet—kind of like an empty shopping cart full
+    /// of good intentions but zero commitment.
+    var channelBundleMap: ChannelBundleMap { get }
+
     /// Returns the total number of IPTV channels in the catalog. Yes, all of them. Every. Single. One.
     func totalIPChannelCatalogCount() -> Int
 
@@ -37,13 +44,6 @@ protocol ChannelManageable {
     
     /// Flips the switch on whether a device's channels appear everywhere. Like a universal remote, but for channel visibility.
     func toggleDeviceChannelLineupInclusion(device: HomeRunDevice)
-    
-    /// Returns the channels that survived your filter gauntlet, organized to drive the UI lazy loading.
-    ///
-    /// The map structure makes it easy to lazily load channel data as needed. Will be empty if the user
-    /// hasn't bothered to curate their own channel bundle yet—kind of like an empty shopping cart full
-    /// of good intentions but zero commitment.
-    var channelBundleMap: ChannelBundleMap { get }
     
     /// Returns all available countries. For when you want to pretend you're watching TV in Iceland.
     func countries() -> [Country]

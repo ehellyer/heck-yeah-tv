@@ -29,8 +29,12 @@ final class MockSharedAppState: AppStateProvider {
         self.selectedAudioTrackIndex = nil
         self.playerVolume = 120
         self.isSeekable = true
+        self.isReloadingIPTV = false
+        self.isReloadingHomeRun = false
     }
 
+    var isReloadingIPTV: Bool
+    var isReloadingHomeRun: Bool
     var isPlayerPaused: Bool
     var showAppMenu: Bool
     var showProgramDetailCarousel: ChannelProgram?

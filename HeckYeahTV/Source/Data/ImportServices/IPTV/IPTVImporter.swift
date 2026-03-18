@@ -210,6 +210,31 @@ actor IPTVImporter {
     }
     
     func load() async throws -> FetchSummary {
+        
+        // Guard against concurrent execution
+        let isAlreadyLoading = await MainActor.run {
+            let appState: AppStateProvider = InjectedValues[\.sharedAppState]
+            return appState.isReloadingIPTV
+        }
+        
+        guard !isAlreadyLoading else {
+            logWarning("IPTV import already in progress, skipping concurrent execution")
+            return FetchSummary()
+        }
+        
+        // Set loading state
+        await MainActor.run {
+            var appState: AppStateProvider = InjectedValues[\.sharedAppState]
+            appState.isReloadingIPTV = true
+        }
+        
+        defer {
+            Task { @MainActor in
+                var appState: AppStateProvider = InjectedValues[\.sharedAppState]
+                appState.isReloadingIPTV = false
+            }
+        }
+        
         var summary = FetchSummary()
         
         let iptvController: IPTVController = IPTVController()

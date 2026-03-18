@@ -140,7 +140,7 @@ struct VLCPlayerRepresentable: CrossPlatformRepresentable {
         
         //MARK: - Private API
         
-        private var swiftDataController: SwiftDataProvider = InjectedValues[\.swiftDataController]
+        private var swiftDataController: BaseSwiftDataController = InjectedValues[\.swiftDataController]
         private let initVolume: Int32 = 120
         private var seekObservers: [NSObjectProtocol] = []
         private var lastTimeUpdate: Date?
@@ -223,10 +223,10 @@ struct VLCPlayerRepresentable: CrossPlatformRepresentable {
                 }
                 
                 // Dev Note: - EJH
-                // Some streams (e.g. PlutoTV), are likely using #​EXT​-​X​-​DISCONTINUITY tags for ad insertion.  Ads might need to switch avcodec due to different resolutions required by the ad video stream.
+                // Some streams (e.g. PlutoTV), are likely using #​EXT​-​X​-​DISCONTINUITY tags for ad insertion.  Ads might need to switch AV codec due to different resolutions required by the ad video stream.
                 // My theory; this is causing VLC sometimes to do one of two things.
                 //      1) freeze (the video is still frame and no audio), or
-                //      2) loop back to the start of the previous chunk.
+                //      2) loop back to the start of the previous chunk.  Sometimes replaying 5-10 minutes of video.
                 // By trial and error I found these player options worked better in improving HLS adaptive streaming handling - (.ts) stream data packet mismatches (discontinuities).
                 // But! It is not perfect. Still researching.
                 
@@ -234,31 +234,35 @@ struct VLCPlayerRepresentable: CrossPlatformRepresentable {
                 // https://wiki.videolan.org/VLC_command-line_help/
                 
                 media.addOptions([
-                    "network-caching": 1000,                    // Network resource caching in milliseconds. Increased to 15s to buffer through ad transitions.
-                    "http-reconnect": "",                       // Auto-reconnect on sudden stream drop. Default disabled; critical for live IPTV streams with unstable connections.
-                    "no-lua": "",                               // Disable all lua plugins. Boolean flags use empty string, not true/false.
-                    "avcodec-hw": "none",                       // Disable hardware decoding, use software decoding only. Software decoder more flexible with format changes.
-//                    "avcodec-hw": "any",                      // Prefer hardware decode when possible (VideoToolbox on Apple). Reduces CPU load.
-                    "avcodec-skiploopfilter": "all",            // Skip loop filter for all frames. More lenient decoding, helps with codec/format switching during ads.
-                    "avcodec-skip-frame": 0,                    // Don't skip any frames. 0=AVDISCARD_NONE ensures all frames processed during discontinuities.
-                    "avcodec-skip-idct": 0,                     // Don't skip IDCT. Ensures proper decoding through format changes.
-                    "avcodec-threads": 0,                       // 0=auto thread count. Helps decoder handle format changes faster.
-                    "avcodec-fast": "",                         // Enable fast decoding. May help prevent stalls during transitions.
-                    "adaptive-logic": "highest",                // Start with highest quality variant, avoid low-res startup glitch. Options: rate, fixedrate, highest, lowest
-                    "adaptive-maxwidth": 3840,                  // Max adaptive stream width. Set to 3840 for 4K support (1920 for Full HD).
-                    "adaptive-maxheight": 2160,                 // Max adaptive stream height. Set to 2160 for 4K support (1080 for Full HD).
-                    "adaptive-bw": 15000000,                    // Assume 15 Mbps bandwidth initially for 4K streams (2.5 Mbps for HD). Helps VLC pick higher quality at startup.
-                    "deinterlace": -1,                          // -1 = Automatic: only deinterlaces when the stream signals it is interlaced. Most IPTV/HLS streams are progressive.
-                    "deinterlace-mode": "auto",                 // Auto-select the deinterlace algorithm when deinterlacing is active.
-                    "no-ts-trust-pcr": "",                      // Disable Trust in-stream PCR (default is enabled). Helps with HLS discontinuities.
-                    "ts-seek-percent": "",                      // Use percentage seeking instead of time-based. More reliable with discontinuous timestamps.
-                    "ts-extra-pmt": "",                         // Extra PMT for streams with multiple programs. Helps handle ad insertion as separate programs.
-                    "sout-ts-dts-delay": 400,                   // Delay DTS (Decoding Time Stamp) by 400ms. Can help smooth transitions at discontinuities.
-                    "file-caching": 5000,                       // File caching (ms) <integer [0 .. 60000]>
-                    "clock-jitter": 5000,                       // Allow 10s clock jitter. Maximum tolerance for timestamp discontinuities at ad boundaries.
-                    "no-drop-late-frames": "",                  // Don't drop frames that arrive late. Prevents stalls from timing issues during transitions.
-                    "no-skip-frames": "",                       // Never skip frames even if behind. Prevents gaps during discontinuities.
-                    "avformat-format": "hls",                   // Explicitly tell avformat this is HLS. May improve discontinuity handling.
+                    "network-caching": 1000                    // Network resource caching in milliseconds. Increased to 15s to buffer through ad transitions.
+                    , "http-reconnect": ""                       // Auto-reconnect on sudden stream drop. Default disabled; critical for live IPTV streams with unstable connections.
+                    , "no-lua": ""                               // Disable all lua plugins. Boolean flags use empty string, not true/false.
+                    , "avcodec-hw": "none"                       // Disable hardware decoding, use software decoding only. Software decoder more flexible with format changes.
+//                    , "avcodec-hw": "any"                      // Prefer hardware decode when possible (VideoToolbox on Apple). Reduces CPU load.
+                    , "avcodec-skiploopfilter": "all"            // Skip loop filter for all frames. More lenient decoding, helps with codec/format switching during ads.
+                    , "avcodec-skip-frame": 0                    // Don't skip any frames. 0=AVDISCARD_NONE ensures all frames processed during discontinuities.
+                    , "avcodec-skip-idct": 0                     // Don't skip IDCT. Ensures proper decoding through format changes.
+                    , "avcodec-threads": 0                       // 0=auto thread count. Helps decoder handle format changes faster.
+                    , "avcodec-fast": ""                         // Enable fast decoding. May help prevent stalls during transitions.
+                    , "adaptive-logic": "highest"                // Start with highest quality variant, avoid low-res startup glitch. Options: rate, fixedrate, highest, lowest
+                    , "adaptive-maxwidth": 3840                  // Max adaptive stream width. Set to 3840 for 4K support (1920 for Full HD).
+                    , "adaptive-maxheight": 2160                 // Max adaptive stream height. Set to 2160 for 4K support (1080 for Full HD).
+                    , "adaptive-bw": 15000000                    // Assume 15 Mbps bandwidth initially for 4K streams (2.5 Mbps for HD). Helps VLC pick higher quality at startup.
+                    , "deinterlace": -1                          // -1 = Automatic: only deinterlaces when the stream signals it is interlaced. Most IPTV/HLS streams are progressive.
+                    , "deinterlace-mode": "auto"                 // Auto-select the deinterlace algorithm when deinterlacing is active.
+                    , "no-ts-trust-pcr": ""                      // Disable Trust in-stream PCR (default is enabled). Helps with HLS discontinuities.
+                    , "ts-seek-percent": ""                      // Use percentage seeking instead of time-based. More reliable with discontinuous timestamps.
+                    , "ts-extra-pmt": ""                         // Extra PMT for streams with multiple programs. Helps handle ad insertion as separate programs.
+                    , "sout-ts-dts-delay": 400                   // Delay DTS (Decoding Time Stamp) by 400ms. Can help smooth transitions at discontinuities.
+                    , "file-caching": 5000                       // File caching (ms) <integer [0 .. 60000]>
+                    , "clock-jitter": 5000                       // Allow 10s clock jitter. Maximum tolerance for timestamp discontinuities at ad boundaries.
+                    , "no-drop-late-frames": ""                  // Don't drop frames that arrive late. Prevents stalls from timing issues during transitions.
+                    , "no-skip-frames": ""                       // Never skip frames even if behind. Prevents gaps during discontinuities.
+                    , "avformat-format": "hls"                   // Explicitly tell avformat this is HLS. May improve discontinuity handling.
+//                    , "no-cc-opaque": ""
+//                    , "captions": 708
+//                    , "preferred-resolution": 1080
+//                    , "avcodec-debug": 1                         // FFmpeg debug mask: 1 = Detailed picture info, 2 = Rate Control details, 4 = Raw bit stream details. [https://www.ffmpeg.org/doxygen/0.6/avcodec_8h.html]
                 ])
                 mediaPlayer.media = media
                 mediaPlayer.audio?.volume = initVolume
@@ -270,7 +274,6 @@ struct VLCPlayerRepresentable: CrossPlatformRepresentable {
                 } else {
                     if not(PreviewDetector.isRunningInPreview) {
                         logDebug("VLC: Starting playback")
-                        hasLoggedPlaybackStart = false
                         startPlaybackMonitoring()
                         mediaPlayer.play()
                     }
@@ -290,7 +293,6 @@ struct VLCPlayerRepresentable: CrossPlatformRepresentable {
                 if !isCurrentlyPlaying {
                     logDebug("VLC: Resuming playback")
                     if not(PreviewDetector.isRunningInPreview) {
-                        hasLoggedPlaybackStart = false
                         startPlaybackMonitoring()
                         mediaPlayer.play()
                     }
@@ -516,6 +518,7 @@ struct VLCPlayerRepresentable: CrossPlatformRepresentable {
         
         /// Starts monitoring for stuck playback - if no time updates after 10 seconds, stream may be unplayable
         private func startPlaybackMonitoring() {
+            hasLoggedPlaybackStart = false
             stopPlaybackMonitoring()
             
             playbackStuckTimer = Task { @MainActor in

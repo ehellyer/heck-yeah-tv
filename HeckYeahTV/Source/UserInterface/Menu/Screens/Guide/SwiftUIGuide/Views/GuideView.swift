@@ -12,7 +12,7 @@ import SwiftData
 struct GuideView: View {
     
     @State private var appState: AppStateProvider = InjectedValues[\.sharedAppState]
-    @State private var swiftDataController: SwiftDataProvider = InjectedValues[\.swiftDataController]
+    @State private var swiftDataController: BaseSwiftDataController = InjectedValues[\.swiftDataController]
     @State private var rebuildChannelBundleMapTask: Task<Void, Never>? = nil
     @State private var scrollToSelectedTask: Task<Void, Never>? = nil
     @State private var guideWidth: CGFloat = 20 // Will update dynamically

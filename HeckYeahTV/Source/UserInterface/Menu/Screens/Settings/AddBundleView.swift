@@ -14,7 +14,7 @@ struct AddBundleView: View {
     let onAdd: (ChannelBundle) -> Void
 
     @Environment(\.dismiss) private var dismiss
-    @State private var swiftDataController: SwiftDataProvider = InjectedValues[\.swiftDataController]
+    @State private var swiftDataController: BaseSwiftDataController = InjectedValues[\.swiftDataController]
     @State private var bundleName = ""
     
 #if os(tvOS)

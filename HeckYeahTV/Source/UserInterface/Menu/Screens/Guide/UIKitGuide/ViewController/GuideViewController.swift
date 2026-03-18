@@ -118,7 +118,7 @@ class GuideViewController: UIViewController {
     //MARK: - Private API
     
     @Injected(\.swiftDataController)
-    private var swiftDataController: SwiftDataProvider
+    private var swiftDataController: BaseSwiftDataController
     
     @Injected(\.sharedAppState)
     private var appState: AppStateProvider

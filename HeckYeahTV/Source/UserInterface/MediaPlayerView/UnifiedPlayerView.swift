@@ -15,7 +15,7 @@ import SwiftUI
 struct UnifiedPlayerView: View {
     
 //    @Environment(\.scenePhase) private var scenePhase
-//    @State private var swiftDataController: SwiftDataProvider = InjectedValues[\.swiftDataController]
+//    @State private var swiftDataController: BaseSwiftDataController = InjectedValues[\.swiftDataController]
 //    @State private var appState: AppStateProvider = InjectedValues[\.sharedAppState]
 //    
     var body: some View {

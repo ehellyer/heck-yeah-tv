@@ -117,14 +117,18 @@ actor HomeRunImporter {
         
         let existingIDs = Set(existingHomeRunDevices.map(\.deviceId))
         let incomingIDs = Set(devices.map(\.deviceId))
+        let removeIDs = existingIDs.subtracting(incomingIDs)
         
         // delete
-        for model in existingHomeRunDevices where !incomingIDs.contains(model.deviceId) {
+        for model in existingHomeRunDevices where removeIDs.contains(model.deviceId) {
             modelContext.delete(model)
         }
         
         // insert
-        for src in devices where !existingIDs.contains(src.deviceId) {
+        for src in devices {
+            // isEnabled is a user set state and so if this is an existing device we need to preserve the current setting.  Else default to enabled.
+            let isEnabled = existingHomeRunDevices.first(where: { $0.deviceId == src.deviceId })?.isEnabled ?? true
+            
             modelContext.insert(
                 HomeRunDevice(deviceId: src.deviceId,
                                 friendlyName: src.friendlyName,
@@ -135,14 +139,9 @@ actor HomeRunImporter {
                                 baseURL: src.baseURL,
                                 lineupURL: src.lineupURL,
                                 tunerCount: src.tunerCount,
-                                isEnabled: true)
+                                isEnabled: isEnabled)
             )
         }
-        
-//        // For runtime debug only.  Simulates no tuners in the DB.
-//        for model in existing {
-//            context.delete(model)
-//        }
         
         if modelContext.hasChanges {
             try modelContext.save()
@@ -213,6 +212,30 @@ actor HomeRunImporter {
     //MARK: - Internal API
     
     func load(shouldFetchGuideData: Bool) async throws -> FetchSummary {
+        
+        // Guard against concurrent execution
+        let isAlreadyLoading = await MainActor.run {
+            let appState: AppStateProvider = InjectedValues[\.sharedAppState]
+            return appState.isReloadingHomeRun
+        }
+        
+        guard !isAlreadyLoading else {
+            logWarning("HomeRun import already in progress, skipping concurrent execution")
+            return FetchSummary()
+        }
+        
+        // Set loading state
+        await MainActor.run {
+            var appState: AppStateProvider = InjectedValues[\.sharedAppState]
+            appState.isReloadingHomeRun = true
+        }
+        
+        defer {
+            Task { @MainActor in
+                var appState: AppStateProvider = InjectedValues[\.sharedAppState]
+                appState.isReloadingHomeRun = false
+            }
+        }
 
         var summary = FetchSummary()
         

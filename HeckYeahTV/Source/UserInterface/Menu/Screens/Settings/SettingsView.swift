@@ -11,11 +11,9 @@ import SwiftData
 
 struct SettingsView: View {
     
-    @State private var swiftDataController: SwiftDataProvider = InjectedValues[\.swiftDataController]
+    @State private var swiftDataController: BaseSwiftDataController = InjectedValues[\.swiftDataController]
     @State private var appState: AppStateProvider = InjectedValues[\.sharedAppState]
     @Binding var navigationPath: [SettingsDestination]
-    @State private var isReloadingIPTV = false
-    @State private var isReloadingHomeRun = false
     @State private var iptvChannelCount: Int = 0
     
     @Query(sort: \ChannelBundle.name)
@@ -102,7 +100,7 @@ struct SettingsView: View {
                             .font(.body)
                     }
                 }
-                .buttonStyle(.plain)
+                .buttonStyle(.glass)
                 .foregroundStyle(.primary)
                 
             } header: {
@@ -129,20 +127,26 @@ struct SettingsView: View {
                     reloadIPTVChannels()
                 } label: {
                     HStack(spacing: 20) {
-                        Image(systemName: "arrow.clockwise")
-                            .foregroundStyle(.blue)
+                        if appState.isReloadingIPTV {
+                            ProgressView()
+                                .frame(width: 20, height: 20)
+                        } else {
+                            Image(systemName: "arrow.clockwise")
+                                .foregroundStyle(.blue)
+                        }
                         Text("Reload IPTV Channels")
                             .font(.body)
                     }
                 }
+                .buttonStyle(.glass)
                 .foregroundStyle(.primary)
-                .disabled(isReloadingIPTV)
+                .disabled(appState.isReloadingIPTV)
             } header: {
                 Text("IPTV")
                     .fontWeight(.bold)
                     .foregroundStyle(.white)
             } footer: {
-                if isReloadingIPTV {
+                if appState.isReloadingIPTV {
                     Text("Reloading channels, this may take up to a minute...")
                         .foregroundStyle(.white)
                 }
@@ -166,8 +170,13 @@ struct SettingsView: View {
                             DeviceDetailView(device: device)
                         } label: {
                             HStack(spacing: 20) {
-                                Image(systemName: "antenna.radiowaves.left.and.right")
-                                    .foregroundStyle(.blue)
+                                if device.isEnabled {
+                                    Image(systemName: "antenna.radiowaves.left.and.right")
+                                        .foregroundStyle(.blue)
+                                } else {
+                                    Image(systemName: "antenna.radiowaves.left.and.right.slash")
+                                        .foregroundStyle(.gray)
+                                }
                                 
                                 VStack(alignment: .leading, spacing: 4) {
                                     Text(device.friendlyName)
@@ -177,9 +186,9 @@ struct SettingsView: View {
                                         Text("\(channelCount(for: device.deviceId)) channels")
                                         
                                         if device.isEnabled {
-                                            Text("(Enabled for TV)")
+                                            Text("(Available for including in channel bundle)")
                                         } else {
-                                            Text("(Disabled for TV)")
+                                            Text("(Disabled for channel bundles)")
                                         }
                                     }
                                     .font(.caption)
@@ -196,18 +205,29 @@ struct SettingsView: View {
                     reloadTunerDevices()
                 } label: {
                     HStack(spacing: 20) {
-                        Image(systemName: "arrow.clockwise")
-                            .foregroundStyle(.blue)
+                        if appState.isReloadingHomeRun {
+                            ProgressView()
+                                .frame(width: 20, height: 20)
+                        } else {
+                            Image(systemName: "arrow.clockwise")
+                                .foregroundStyle(.blue)
+                        }
                         Text("Refresh Devices")
                             .font(.body)
                     }
                 }
+                .buttonStyle(.glass)
                 .foregroundStyle(.primary)
-                .disabled(isReloadingHomeRun)
+                .disabled(appState.isReloadingHomeRun)
             } header: {
                 Text("HDHomeRun Devices")
                     .fontWeight(.bold)
                     .foregroundStyle(.white)
+            } footer: {
+                if appState.isReloadingHomeRun {
+                    Text("Probing network for tuner devices...")
+                        .foregroundStyle(.white)
+                }
             }
         }
 
@@ -254,7 +274,6 @@ struct SettingsView: View {
     }
     
     private func reloadIPTVChannels() {
-        isReloadingIPTV = true
         Task.detached(name: "HeckYeahTV.IPTVImporter") {
             let container = await swiftDataController.container
             let importer = IPTVImporter(modelContainer: container)
@@ -262,17 +281,15 @@ struct SettingsView: View {
                 _ = try await importer.load()
                 
             } catch {
-                logError("Reload tuner devices failed.  Error: \(error)")
+                logError("Reload IPTV channels failed.  Error: \(error)")
             }
             await MainActor.run {
                 reloadIPTVChannelCount()
-                isReloadingIPTV = false
             }
         }
     }
     
     private func reloadTunerDevices() {
-        isReloadingHomeRun = true
         Task.detached(name: "HeckYeahTV.HomeRunImporter") {
             let container = await swiftDataController.container
             let importer = HomeRunImporter(modelContainer: container)
@@ -280,9 +297,6 @@ struct SettingsView: View {
                 _ = try await importer.load(shouldFetchGuideData: true)
             } catch {
                 logError("Reload tuner devices failed.  Error: \(error)")
-            }
-            await MainActor.run {
-                isReloadingHomeRun = false
             }
         }
     }

@@ -15,7 +15,7 @@ struct DeviceDetailView: View {
     let device: HomeRunDevice
     
     @State private var isRefreshing = false
-    @State private var swiftDataController: SwiftDataProvider = InjectedValues[\.swiftDataController]
+    @State private var swiftDataController: BaseSwiftDataController = InjectedValues[\.swiftDataController]
 
     var body: some View {
         ScrollView {

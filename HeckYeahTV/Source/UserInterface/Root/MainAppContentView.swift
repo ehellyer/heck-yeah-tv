@@ -14,7 +14,7 @@ struct MainAppContentView: View {
     @State private var appState: AppStateProvider = InjectedValues[\.sharedAppState]
     @State private var fadeTask: Task<Void, Never>?
     @State private var showPlayPauseButton = false
-    @State private var swiftDataController: SwiftDataProvider = InjectedValues[\.swiftDataController]
+    @State private var swiftDataController: BaseSwiftDataController = InjectedValues[\.swiftDataController]
     @Environment(\.scenePhase) private var scenePhase
     
     // Focus states

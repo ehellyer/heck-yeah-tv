@@ -1,7 +1,7 @@
 [
     {
         "id": "mock#1.guide",
-        "name": "Eds Mock Guide #1",
+        "name": "Eds Channels #1",
         "channelIds": [
             "62a302becea9e383492d2c8b4e6155a96780559225eafc9cca6034829ef59729",
             "e0b96af7c2e2342ec78ec2cc1b850574b250b9aa763ffb5e9056a6ed35fba7cb",
@@ -14,7 +14,7 @@
     },
     {
         "id": "mock#2.guide",
-        "name": "Eds Mock Guide #2",
+        "name": "Jamies Channels #2",
         "channelIds": [
             "8b012f7453ebd62cec1c56e81327d5225834ebf4db419cdf3a300ebf26920d6a",
             "0e10a616ad0fee37e3911f7a1b585b7ac44ab7dfde567fa7ece5c871aeb491f7",

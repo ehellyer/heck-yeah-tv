@@ -14,21 +14,13 @@ struct ChannelBundleFilterView: View {
     @Bindable var bundle: ChannelBundle
     
     @State private var appState: AppStateProvider = InjectedValues[\.sharedAppState]
-    @State private var swiftDataController: SwiftDataProvider = InjectedValues[\.swiftDataController]
-    @State private var channelFilters: ChannelBundleFilterViewModel
+    @State private var swiftDataController: BaseSwiftDataController = InjectedValues[\.swiftDataController]
     
     @State private var showingDeleteConfirmation = false
     @State private var bundleNameBuffer: String = ""
     @State private var matchingChannelCount: Int = 0
     @State private var categories: [ProgramCategory] = []
     @State private var countries: [Country] = []
-    
-    init(navigationPath: Binding<[SettingsDestination]>, bundle: ChannelBundle) {
-        self._navigationPath = navigationPath
-        self.bundle = bundle
-        // Initialize view model with default country
-        self._channelFilters = State(initialValue: ChannelBundleFilterViewModel())
-    }
     
     var body: some View {
         List {
@@ -61,14 +53,13 @@ struct ChannelBundleFilterView: View {
                 
                 if canDelete {
                     HStack {
+                        Spacer()
                         Button(role: .destructive) {
                             showingDeleteConfirmation = true
                         } label: {
                             Label("Delete Bundle", systemImage: "trash")
-                                .foregroundColor(.red)
                         }
-                        .buttonStyle(.glass)
-                        Spacer()
+                        .buttonStyle(.bordered)
                     }
                 }
                 
@@ -86,47 +77,55 @@ struct ChannelBundleFilterView: View {
                     Text("Search Term")
                     Spacer()
                     TextField("Channel name contains...",
-                              text: $channelFilters.searchTerm)
-                        .multilineTextAlignment(.trailing)
+                              text: Binding(
+                                get: { swiftDataController.searchTerm ?? "" },
+                                set: { swiftDataController.searchTerm = $0.isEmpty ? nil : $0 }
+                              )
+                    )
+                    .font(.body)
+                    .multilineTextAlignment(.center)
+                    .frame(maxWidth: 400)
                 }
                 .foregroundStyle(.primary)
                 
                 // Country Picker
-                TVNavigationLink {
+                NavigationLink {
+                    CountryPickerView(
+                        selectedCountry: Binding(
+                            get: { swiftDataController.selectedCountry },
+                            set: { swiftDataController.selectedCountry = $0 }
+                        ),
+                        countries: countries
+                    )
+                } label: {
                     HStack {
                         Text("Country")
                         Spacer()
                         Text(selectedCountryName)
-                            .foregroundStyle(.secondary)
                     }
-                    .foregroundStyle(.primary)
-                } destination: {
-                    CountryPickerView(
-                        selectedCountry: $channelFilters.selectedCountry,
-                        countries: countries
-                    )
                 }
-                
+
                 // Category Picker
-                TVNavigationLink {
+                NavigationLink {
+                    CategoryPickerView(
+                        selectedCategory: Binding(
+                            get: { swiftDataController.selectedCategory },
+                            set: { swiftDataController.selectedCategory = $0 }
+                        ),
+                        categories: categories
+                    )
+                } label: {
                     HStack {
                         Text("Category")
                         Spacer()
                         Text(selectedCategoryName)
-                            .foregroundStyle(.secondary)
                     }
-                    .foregroundStyle(.primary)
-                } destination: {
-                    CategoryPickerView(
-                        selectedCategory: $channelFilters.selectedCategory,
-                        categories: categories
-                    )
                 }
                 
                 // Clear Category Button (only show if category is selected)
-                if channelFilters.selectedCategory != nil {
+                if swiftDataController.selectedCategory != nil {
                     Button {
-                        channelFilters.selectedCategory = nil
+                        swiftDataController.selectedCategory = nil
                     } label: {
                         Label("Clear Category", systemImage: "xmark.circle")
                     }
@@ -149,7 +148,7 @@ struct ChannelBundleFilterView: View {
             // MARK: - Manage Channels Section
             Section {
                 NavigationLink {
-                    ChannelManagementView(bundle: bundle, channelFilters: channelFilters)
+                    ChannelManagementView(bundle: bundle)
                 } label: {
                     HStack {
                         Text("Filtered Channels")
@@ -216,13 +215,13 @@ struct ChannelBundleFilterView: View {
         .onChange(of: bundleNameBuffer) { _, _ in
             commitBundleName()
         }
-        .onChange(of: channelFilters.searchTerm) { _, _ in
+        .onChange(of: swiftDataController.searchTerm) { _, _ in
             Task { await updateMatchingCount() }
         }
-        .onChange(of: channelFilters.selectedCountry) { _, _ in
+        .onChange(of: swiftDataController.selectedCountry) { _, _ in
             Task { await updateMatchingCount() }
         }
-        .onChange(of: channelFilters.selectedCategory) { _, _ in
+        .onChange(of: swiftDataController.selectedCategory) { _, _ in
             Task { await updateMatchingCount() }
         }
     }
@@ -230,14 +229,14 @@ struct ChannelBundleFilterView: View {
     // MARK: - Computed Properties
     
     private var selectedCategoryName: String {
-        guard let categoryId = channelFilters.selectedCategory else {
+        guard let categoryId = swiftDataController.selectedCategory else {
             return "All Categories"
         }
         return categories.first(where: { $0.categoryId == categoryId })?.name ?? "Unknown"
     }
     
     private var selectedCountryName: String {
-        let countryCode = channelFilters.selectedCountry
+        let countryCode = swiftDataController.selectedCountry
         let country = countries.first(where: { $0.code == countryCode })
         if let country {
             return "\(country.flag) \(country.name)"
@@ -280,29 +279,12 @@ struct ChannelBundleFilterView: View {
         categories = swiftDataController.programCategories()
         countries = swiftDataController.countries()
         
-        // Reset view model to defaults
-        channelFilters.resetToDefaults()
-        
         await updateMatchingCount()
     }
     
     private func updateMatchingCount() async {
-        // Temporarily apply filters to get matching count
-        let previousSearchTerm = swiftDataController.searchTerm
-        let previousCountry = swiftDataController.selectedCountry
-        let previousCategory = swiftDataController.selectedCategory
-        
-        swiftDataController.searchTerm = channelFilters.trimmedSearchTerm
-        swiftDataController.selectedCountry = channelFilters.selectedCountry
-        swiftDataController.selectedCategory = channelFilters.selectedCategory
-        
         let channels = swiftDataController.channelsForCurrentFilter()
         matchingChannelCount = channels.count
-        
-        // Restore previous state
-        swiftDataController.searchTerm = previousSearchTerm
-        swiftDataController.selectedCountry = previousCountry
-        swiftDataController.selectedCategory = previousCategory
     }
 }
 
@@ -355,7 +337,8 @@ struct ChannelBundleFilterView: View {
     return TVPreviewView {
         NavigationStack(path: $navigationPath) {
             ChannelBundleFilterView(navigationPath: $navigationPath, bundle: channelBundle)
-        }
+        }.background(.gray)
     }
+    
     .environment(\.colorScheme, .dark)
 }

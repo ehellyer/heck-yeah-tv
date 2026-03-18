@@ -14,7 +14,7 @@ struct ChannelProgramsCarousel: View {
     
     @State private var channelPrograms: [ChannelProgram] = []
     @State private var channel: Channel? = nil
-    @State private var swiftDataController: SwiftDataProvider = InjectedValues[\.swiftDataController]
+    @State private var swiftDataController: BaseSwiftDataController = InjectedValues[\.swiftDataController]
     @State private var appState: AppStateProvider = InjectedValues[\.sharedAppState]
     @State private var scrollPositionId: Int?
 

@@ -12,9 +12,8 @@ import SwiftUI
 struct ChannelManagementView: View {
     
     @Bindable var bundle: ChannelBundle
-    @Bindable var channelFilters: ChannelBundleFilterViewModel
     
-    @State private var swiftDataController: SwiftDataProvider = InjectedValues[\.swiftDataController]
+    @State private var swiftDataController: BaseSwiftDataController = InjectedValues[\.swiftDataController]
     @State private var filteredChannels: [Channel] = []
     @State private var isLoading = true
     
@@ -39,17 +38,17 @@ struct ChannelManagementView: View {
         .task {
             await loadChannels()
         }
-        .onChange(of: channelFilters.searchTerm) { _, _ in
+        .onChange(of: swiftDataController.searchTerm) { _, _ in
             Task {
                 await loadChannels()
             }
         }
-        .onChange(of: channelFilters.selectedCountry) { _, _ in
+        .onChange(of: swiftDataController.selectedCountry) { _, _ in
             Task {
                 await loadChannels()
             }
         }
-        .onChange(of: channelFilters.selectedCategory) { _, _ in
+        .onChange(of: swiftDataController.selectedCategory) { _, _ in
             Task {
                 await loadChannels()
             }
@@ -120,22 +119,8 @@ struct ChannelManagementView: View {
     private func loadChannels() async {
         isLoading = true
         
-        // Apply filters to SwiftDataController temporarily
-        let previousSearchTerm = swiftDataController.searchTerm
-        let previousCountry = swiftDataController.selectedCountry
-        let previousCategory = swiftDataController.selectedCategory
-        
-        swiftDataController.searchTerm = channelFilters.trimmedSearchTerm
-        swiftDataController.selectedCountry = channelFilters.selectedCountry
-        swiftDataController.selectedCategory = channelFilters.selectedCategory
-        
-        // Fetch filtered channels
+        // Fetch filtered channels using current filter state
         filteredChannels = swiftDataController.channelsForCurrentFilter()
-        
-        // Restore previous filter state
-        swiftDataController.searchTerm = previousSearchTerm
-        swiftDataController.selectedCountry = previousCountry
-        swiftDataController.selectedCategory = previousCategory
         
         isLoading = false
     }
@@ -151,11 +136,10 @@ struct ChannelManagementView: View {
     InjectedValues[\.swiftDataController] = swiftDataController
     
     let channelBundle = swiftDataController.channelBundles().first!
-    let channelFilters = ChannelBundleFilterViewModel()
     
     return TVPreviewView {
         NavigationStack {
-            ChannelManagementView(bundle: channelBundle, channelFilters: channelFilters)
+            ChannelManagementView(bundle: channelBundle)
         }
     }
     .environment(\.colorScheme, .light)
@@ -169,11 +153,10 @@ struct ChannelManagementView: View {
     InjectedValues[\.swiftDataController] = swiftDataController
     
     let channelBundle = swiftDataController.channelBundles().first!
-    let channelFilters = ChannelBundleFilterViewModel()
     
     return TVPreviewView {
         NavigationStack {
-            ChannelManagementView(bundle: channelBundle, channelFilters: channelFilters)
+            ChannelManagementView(bundle: channelBundle)
         }
     }
     .environment(\.colorScheme, .dark)

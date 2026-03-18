@@ -10,7 +10,7 @@ import SwiftUI
 
 struct NoChannelsFavorites: View {
     
-    @State private var swiftDataController: SwiftDataProvider = InjectedValues[\.swiftDataController]
+    @State private var swiftDataController: BaseSwiftDataController = InjectedValues[\.swiftDataController]
     
     var body: some View {
         VStack(spacing: 15) {

@@ -14,7 +14,7 @@ final class ChannelRowLoader: ObservableObject {
     @Published var channel: Channel?
     
     private var task: Task<Void, Never>?
-    private var swiftDataController: SwiftDataProvider = InjectedValues[\.swiftDataController]
+    private var swiftDataController: BaseSwiftDataController = InjectedValues[\.swiftDataController]
     
     func cancel() {
         task?.cancel()

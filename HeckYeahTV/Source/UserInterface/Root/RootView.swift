@@ -12,7 +12,7 @@ import SwiftUI
 struct RootView: View {
     @Binding var isBootComplete: Bool
     
-    @State private var swiftDataController: SwiftDataProvider = InjectedValues[\.swiftDataController]
+    @State private var swiftDataController: BaseSwiftDataController = InjectedValues[\.swiftDataController]
     
     var body: some View {
         BootGateView(isBootComplete: $isBootComplete) {
