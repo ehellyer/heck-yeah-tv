@@ -503,6 +503,88 @@ class BaseSwiftDataController: SwiftDataProvider {
         }
     }
     
+    func isDeviceAssociated(device: HomeRunDevice, with bundle: ChannelBundle) -> Bool {
+        return bundle.deviceAssociations.contains(where: { $0.device.deviceId == device.deviceId })
+    }
+    
+    func addDeviceToBundle(device: HomeRunDevice, bundle: ChannelBundle) {
+        do {
+            // Check if already associated
+            guard !isDeviceAssociated(device: device, with: bundle) else {
+                logDebug("Device \(device.friendlyName) is already associated with bundle \(bundle.name)")
+                return
+            }
+            
+            // Create the association
+            let association = ChannelBundleDevice(bundle: bundle, device: device)
+            viewContext.insert(association)
+            
+            // Fetch all channels for this device
+            let predicate = #Predicate<Channel> { $0.deviceId == device.deviceId }
+            let descriptor = FetchDescriptor<Channel>(predicate: predicate)
+            let deviceChannels = try viewContext.fetch(descriptor)
+            
+            // Add bundle entries for all device channels
+            for channel in deviceChannels {
+                let bundleEntryId = BundleEntry.newBundleEntryId(channelBundleId: bundle.id, channelId: channel.id)
+                
+                // Check if entry already exists
+                let entryPredicate = #Predicate<BundleEntry> { $0.id == bundleEntryId }
+                var entryDescriptor = FetchDescriptor<BundleEntry>(predicate: entryPredicate)
+                entryDescriptor.fetchLimit = 1
+                let existingEntry = try viewContext.fetch(entryDescriptor).first
+                
+                if existingEntry == nil {
+                    let newEntry = BundleEntry(channel: channel,
+                                               channelBundle: bundle,
+                                               sortHint: channel.sortHint,
+                                               isFavorite: false)
+                    viewContext.insert(newEntry)
+                }
+            }
+            
+            try viewContext.saveChangesIfNeeded()
+            logDebug("Added device \(device.friendlyName) with \(deviceChannels.count) channels to bundle \(bundle.name)")
+        } catch {
+            logError("Failed to add device to bundle. Error: \(error)")
+        }
+    }
+    
+    func removeDeviceFromBundle(device: HomeRunDevice, bundle: ChannelBundle) {
+        do {
+            // Remove the association
+            if let association = bundle.deviceAssociations.first(where: { $0.device.deviceId == device.deviceId }) {
+                viewContext.delete(association)
+            }
+            
+            // Fetch all channels for this device
+            let predicate = #Predicate<Channel> { $0.deviceId == device.deviceId }
+            let descriptor = FetchDescriptor<Channel>(predicate: predicate)
+            let deviceChannels = try viewContext.fetch(descriptor)
+            
+            // Remove bundle entries for all device channels
+            var entriesToRemove: [BundleEntryId] = []
+            for channel in deviceChannels {
+                entriesToRemove.append(BundleEntry.newBundleEntryId(channelBundleId: bundle.id, channelId: channel.id))
+            }
+            
+            let entryPredicate = #Predicate<BundleEntry> { entry in
+                entriesToRemove.contains(entry.id)
+            }
+            let entryDescriptor = FetchDescriptor<BundleEntry>(predicate: entryPredicate)
+            let existingEntries = try viewContext.fetch(entryDescriptor)
+            
+            for entry in existingEntries {
+                viewContext.delete(entry)
+            }
+            
+            try viewContext.saveChangesIfNeeded()
+            logDebug("Removed device \(device.friendlyName) with \(deviceChannels.count) channels from bundle \(bundle.name)")
+        } catch {
+            logError("Failed to remove device from bundle. Error: \(error)")
+        }
+    }
+    
     //MARK: - Internal API - SwiftDataProvider protocol Implementation
     
     @ObservationIgnored

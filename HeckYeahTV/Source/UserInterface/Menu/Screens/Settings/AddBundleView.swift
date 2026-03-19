@@ -56,26 +56,6 @@ struct AddBundleView: View {
     }
 }
 
-
-struct OutlinedTextFieldStyle: TextFieldStyle {
-    @FocusState var isFocused: Bool
-    func _body(configuration: TextField<Self._Label>) -> some View {
-        let shape = RoundedRectangle(cornerRadius: 8, style: .continuous)
-        
-        configuration
-            .focused($isFocused)
-        #if !os(macOS)
-            .defaultHoverEffect(nil) // 👈 Suppress the lifting effect
-        #endif
-            .background(.clear)
-            .padding(.horizontal, isFocused ? 16 : 0) // 👈 Suppress the padding effect
-            .overlay {
-                shape.strokeBorder(.gray, lineWidth: isFocused ? 4 : 2)
-            }
-            .mask(shape) // 👈 Suppress the default shadow
-    }
-}
-
 // MARK: - Preview
 
 #Preview("Light Mode") {

@@ -21,6 +21,7 @@ struct ChannelBundleFilterView: View {
     @State private var matchingChannelCount: Int = 0
     @State private var categories: [ProgramCategory] = []
     @State private var countries: [Country] = []
+    @State private var allDevices: [HomeRunDevice] = []
     
     var body: some View {
         List {
@@ -32,7 +33,7 @@ struct ChannelBundleFilterView: View {
                     BundleNameEditView(bundleName: $bundleNameBuffer)
                 } label: {
                     HStack {
-                        Text("Bundle Name")
+                        Text("Edit Bundle Name")
                         Spacer()
                         Text(bundleNameBuffer)
                             .foregroundStyle(.secondary)
@@ -59,15 +60,15 @@ struct ChannelBundleFilterView: View {
                         } label: {
                             Label("Delete Bundle", systemImage: "trash")
                         }
-                        .buttonStyle(.bordered)
+                        .buttonStyle(.glass)
                     }
                 }
                 
             } header: {
-                Text("Bundle Settings")
-                    .padding(.top, 20)
+                Text("Channel Bundle")
                     .fontWeight(.bold)
                     .foregroundStyle(.white)
+                    .padding(.top, 20)
             }
             
             // MARK: - Filter Section
@@ -122,36 +123,49 @@ struct ChannelBundleFilterView: View {
                     }
                 }
                 
-                // Clear Category Button (only show if category is selected)
-                if swiftDataController.selectedCategory != nil {
-                    Button {
-                        swiftDataController.selectedCategory = nil
-                    } label: {
-                        Label("Clear Category", systemImage: "xmark.circle")
-                    }
-                    .foregroundStyle(.primary)
-                }
-                
             } header: {
                 VStack(alignment: .leading, spacing: 4) {
                     Text("Channel Filters")
-                        .padding(.top, 20)
                         .fontWeight(.bold)
                         .foregroundStyle(.white)
-                    Text("Set filters to narrow down which channels to add to this bundle. Country filter is always applied.")
+                        .padding(.top, 20)
+                    Text("Set filters to narrow down which IPTV channels to add to this bundle.")
                         .fontWeight(.regular)
-                        .font(.subheadline)
+                        .font(.caption2)
                         .foregroundStyle(.white)
+                        .padding(.bottom, 20)
                 }
             }
+
             
             // MARK: - Manage Channels Section
             Section {
+                if allDevices.isEmpty {
+                    Text("There are no HDHomeRun devices available")
+                        .foregroundStyle(.secondary)
+                } else if enabledDevices.isEmpty {
+                    Text("There are no HDHomeRun devices enabled")
+                        .foregroundStyle(.secondary)
+                } else {
+                    NavigationLink {
+                        DeviceSelectionView(bundle: bundle)
+                    } label: {
+                        HStack {
+                            Text("Select HDHomeRun device to include channels")
+                            Spacer()
+                            Text("\(associatedDeviceCount) selected")
+                                .foregroundStyle(.secondary)
+                                .font(.caption)
+                        }
+                        .foregroundStyle(.primary)
+                    }
+                }
+                
                 NavigationLink {
                     ChannelManagementView(bundle: bundle)
                 } label: {
                     HStack {
-                        Text("Filtered Channels")
+                        Text("Select IPTV Channels matching filter")
                         Spacer()
                         if matchingChannelCount > 0 {
                             Text("\(matchingChannelCount) matching")
@@ -164,21 +178,22 @@ struct ChannelBundleFilterView: View {
                 
             } header: {
                 VStack(alignment: .leading, spacing: 4) {
-                    Text("Manage Channels")
-                        .padding(.top, 20)
+                    Text("Manage Channel Bundle Channels")
                         .fontWeight(.bold)
                         .foregroundStyle(.white)
-                    Text("View and add/remove channels from this bundle based on your current filters.")
+                        .padding(.top, 20)
+                    Text("Add/Remove channels from this channel bundle.")
                         .fontWeight(.regular)
-                        .font(.subheadline)
+                        .font(.caption2)
                         .foregroundStyle(.white)
+                        .padding(.bottom, 20)
                 }
             }
         }
 #if os(iOS)
         .listStyle(.insetGrouped)
 #endif
-        .navigationTitle("Bundle Details")
+        .navigationTitle("Channel Bundle")
 #if os(iOS)
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden(true)
@@ -249,6 +264,14 @@ struct ChannelBundleFilterView: View {
         return totalBundles > 1
     }
     
+    private var associatedDeviceCount: Int {
+        bundle.deviceAssociations.count
+    }
+    
+    private var enabledDevices: [HomeRunDevice] {
+        allDevices.filter { $0.isEnabled }
+    }
+    
     // MARK: - Actions
     
     private func commitBundleName() {
@@ -278,6 +301,7 @@ struct ChannelBundleFilterView: View {
     private func loadData() async {
         categories = swiftDataController.programCategories()
         countries = swiftDataController.countries()
+        allDevices = swiftDataController.homeRunDevices()
         
         await updateMatchingCount()
     }

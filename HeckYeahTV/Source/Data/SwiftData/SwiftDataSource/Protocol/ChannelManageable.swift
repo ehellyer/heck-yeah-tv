@@ -222,4 +222,44 @@ protocol ChannelManageable {
     ///                      Anything older than this threshold gets deleted without mercy.
     ///                      Defaults to 5000 because we're generous but not infinite.
     func cleanupOldRecentlyViewedChannels(maxCount: Int)
+    
+    /// Checks if a device is associated with a specific bundle. Like checking your party guest list.
+    ///
+    /// This function peeks into the `ChannelBundleDevice` join table to see if the device
+    /// is already linked to the bundle. Returns true if they're BFFs, false if they've never met.
+    ///
+    /// - Parameters:
+    ///   - device: The HDHomeRun device you're curious about.
+    ///   - bundle: The channel bundle in question.
+    ///
+    /// - Returns: True if the device is associated with the bundle, false otherwise.
+    func isDeviceAssociated(device: HomeRunDevice, with bundle: ChannelBundle) -> Bool
+    
+    /// Adds a device to a bundle and imports all its channels. The ultimate bulk add operation.
+    ///
+    /// This function creates a `ChannelBundleDevice` association and then imports every channel
+    /// from the device's lineup into the bundle. It's like inviting someone to a party and they
+    /// bring their entire extended family—all at once.
+    ///
+    /// Perfect for when you want all those sweet broadcast channels in your bundle without
+    /// manually adding them one by one like some kind of digital archaeologist.
+    ///
+    /// - Parameters:
+    ///   - device: The HDHomeRun device whose channels you want to import.
+    ///   - bundle: The bundle that's about to get a whole lot more crowded.
+    func addDeviceToBundle(device: HomeRunDevice, bundle: ChannelBundle)
+    
+    /// Removes a device from a bundle and deletes all its channels. The nuclear option.
+    ///
+    /// This function severs the `ChannelBundleDevice` association and purges every channel
+    /// that came from this device. It's like unfriending someone on social media and also
+    /// deleting all their old posts from your timeline.
+    ///
+    /// Use with care—once those channels are gone, they're not coming back unless you
+    /// re-add the device. No undo button here, friend.
+    ///
+    /// - Parameters:
+    ///   - device: The device getting the boot.
+    ///   - bundle: The bundle saying goodbye to all those channels.
+    func removeDeviceFromBundle(device: HomeRunDevice, bundle: ChannelBundle)
 }
