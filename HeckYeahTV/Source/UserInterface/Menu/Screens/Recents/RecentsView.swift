@@ -27,6 +27,15 @@ struct RecentsView: View {
         recentlyViewed.prefix(10).compactMap { $0.channel.id }
     }
     
+    private func scrollToTopOfRecents(using proxy: ScrollViewProxy) {
+        if let firstChannelId = recentChannelIds.first {
+            focusedChannelId = firstChannelId
+            DispatchQueue.main.asyncAfter(deadline: .now() + settleTime) {
+                proxy.scrollTo(firstChannelId)
+            }
+        }
+    }
+    
     var body: some View {
         ZStack {
             ScrollViewReader { proxy in
@@ -45,12 +54,10 @@ struct RecentsView: View {
                 .contentMargins(.bottom, 5)
                 .scrollIndicators(.visible)
                 .onAppear() {
-                    if let firstChannelId = recentChannelIds.first {
-                        focusedChannelId = firstChannelId
-                        DispatchQueue.main.asyncAfter(deadline: .now() + settleTime) {
-                            proxy.scrollTo(recentChannelIds.first ?? "")
-                        }
-                    }
+                    scrollToTopOfRecents(using: proxy)
+                }
+                .onChange(of: recentChannelIds) { _, _ in
+                    scrollToTopOfRecents(using: proxy)
                 }
             }
 
