@@ -14,11 +14,12 @@ struct ChannelView: View {
     @State var channel: Channel?
     @State var hideFavoritesView: Bool = false
     @State private var appState: AppStateProvider = InjectedValues[\.sharedAppState]
+    @State private var swiftDataController: BaseSwiftDataController = InjectedValues[\.swiftDataController]
     @FocusState private var focusedButton: FocusedButton?
     
     private var isPlaying: Bool {
-        let selectedChannelId = appState.selectedChannel
-        return selectedChannelId != nil && selectedChannelId == channel?.id
+        let selectedChannel = swiftDataController.selectedChannel
+        return selectedChannel != nil && selectedChannel == channel
     }
     
     var body: some View {
@@ -29,7 +30,7 @@ struct ChannelView: View {
             }
             
             Button {
-                appState.selectedChannel = channel?.id
+                swiftDataController.selectedChannel = channel
             } label: {
                 ChannelName(channel: channel)
                     .frame(maxWidth: .infinity, alignment: .leading)
@@ -72,7 +73,7 @@ struct ChannelView: View {
             
         }
         .onAppear {
-            appState.selectedChannel = swiftDataController.channelBundleMap.channelIds[9]
+            swiftDataController.selectedChannel = channel2
         }
     }
 }

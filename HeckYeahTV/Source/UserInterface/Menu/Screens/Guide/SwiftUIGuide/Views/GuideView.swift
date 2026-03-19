@@ -112,7 +112,7 @@ private extension GuideView {
             try? await Task.sleep(nanoseconds: codeDebounceNS)
             guard !Task.isCancelled else { return }
             
-            if let channelId = appState.selectedChannel {
+            if let channelId = swiftDataController.selectedChannel?.id {
                 proxy.scrollTo(channelId, anchor: .center)
             }
         }

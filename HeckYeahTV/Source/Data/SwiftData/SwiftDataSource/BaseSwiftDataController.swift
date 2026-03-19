@@ -29,6 +29,44 @@ class BaseSwiftDataController: SwiftDataProvider {
     
     //MARK: - Internal API - ChannelManageable protocol implementation
 
+    private var _cachedSelectedChannel: Channel?
+    
+    /// The currently selected channel that should be played on app launch.
+    var selectedChannel: Channel? {
+        get {
+            access(keyPath: \.selectedChannel)
+            do {
+                guard _cachedSelectedChannel == nil else { return _cachedSelectedChannel }
+                let sortDescriptor = SortDescriptor<SelectedChannel>(\.dateAdded, order: .reverse)
+                var fetchDescriptor = FetchDescriptor<SelectedChannel>(sortBy: [sortDescriptor])
+                fetchDescriptor.fetchLimit = 1
+                let selectedChannel = try viewContext.fetch(fetchDescriptor).first
+                _cachedSelectedChannel = selectedChannel?.channel
+                return selectedChannel?.channel
+            } catch {
+                logError("Failed to fetch selectedChannel: \(error)")
+            }
+            return nil
+        }
+        set {
+            withMutation(keyPath: \.selectedChannel) {
+                do {
+                    //Cache the selected channel to prevent repeated reads on get {}
+                    _cachedSelectedChannel = newValue
+                    if let channel = newValue {
+                        addRecentlyViewedChannel(channel: channel)
+                        let selectedChannel = SelectedChannel(channel: channel)
+                        viewContext.insert(selectedChannel)
+                        try viewContext.saveChangesIfNeeded()
+                    }
+                    cleanupOldSelectedChannels()
+                } catch {
+                    logError("Failed to save selectedChannel: \(error)")
+                }
+            }
+        }
+    }
+    
     private(set) var channelBundleMap: ChannelBundleMap = ChannelBundleMap(channelBundleId: "", map: [:], channelIds: [])
 
     func totalIPChannelCatalogCount() -> Int {
@@ -292,28 +330,24 @@ class BaseSwiftDataController: SwiftDataProvider {
         }
     }
     
-    func addRecentlyViewedChannel(channelId: ChannelId) {
-        guard let channel = channel(for: channelId) else {
-            logError("Failed to add recently viewed channel: Channel not found for ID \(channelId)")
-            return
-        }
-        do {
-            let recentlyViewed = RecentlyViewedChannel(channel: channel, viewedAt: Date())
-            viewContext.insert(recentlyViewed)
-            try viewContext.saveChangesIfNeeded()
-            
-            // Cleanup old entries if we've exceeded the max count
-            cleanupOldRecentlyViewedChannels(maxCount: 5000)
-        } catch {
-            logError("Failed to add recently viewed channel: \(channel.title). Error: \(error)")
-        }
+    func addRecentlyViewedChannel(channel: Channel) {
+        let recentlyViewed = RecentlyViewedChannel(channel: channel, viewedAt: Date())
+        viewContext.insert(recentlyViewed)
+        // Cleanup old entries if we've exceeded the max count
+        cleanupOldRecentlyViewedChannels(maxCount: 5000)
+    }
+    
+    
+    func recentlyViewDescriptor(limit: Int = 10) -> FetchDescriptor<RecentlyViewedChannel> {
+        let viewedAtSort = SortDescriptor<RecentlyViewedChannel>(\.viewedAt, order: .reverse)
+        var fetchDescriptor = FetchDescriptor<RecentlyViewedChannel>(sortBy: [viewedAtSort])
+        fetchDescriptor.fetchLimit = limit
+        return fetchDescriptor
     }
     
     func recentlyViewedChannels(limit: Int = 10) -> [RecentlyViewedChannel] {
         do {
-            let viewedAtSort = SortDescriptor<RecentlyViewedChannel>(\.viewedAt, order: .reverse)
-            var fetchDescriptor = FetchDescriptor<RecentlyViewedChannel>(sortBy: [viewedAtSort])
-            fetchDescriptor.fetchLimit = limit
+            let fetchDescriptor = recentlyViewDescriptor(limit: limit)
             let recentChannels = try viewContext.fetch(fetchDescriptor)
             return recentChannels
         } catch {
@@ -334,7 +368,7 @@ class BaseSwiftDataController: SwiftDataProvider {
             let deleteCount = entryCount - maxCount
             
             guard deleteCount > 0 else {
-                logDebug("There are \(entryCount) entries.  We are not at max count, therefore nothing to delete.")
+                logDebug("There are \(entryCount) RecentlyViewedChannel entries.  We are not at max count, therefore nothing to delete.")
                 return
             }
                 
@@ -343,9 +377,36 @@ class BaseSwiftDataController: SwiftDataProvider {
             }
             
             try viewContext.saveChangesIfNeeded()
-            logDebug("Cleaned up \(deleteCount) old recently viewed entries.")
+            logDebug("Cleaned up \(deleteCount) old RecentlyViewedChannel entries.")
         } catch {
-            logError("Failed to cleanup old recently viewed channels. Error: \(error)")
+            logError("Failed to cleanup old RecentlyViewedChannel entries. Error: \(error)")
+        }
+    }
+
+    func cleanupOldSelectedChannels(maxCount: Int = 5000) {
+        do {
+            // Fetch all entries sorted by viewedAt (oldest first)
+            let sortDescriptor = SortDescriptor<SelectedChannel>(\.dateAdded, order: .reverse)
+            let fetchDescriptor = FetchDescriptor<SelectedChannel>(sortBy: [sortDescriptor])
+            let allEntries = try viewContext.fetch(fetchDescriptor)
+            
+            // Calculate how many to delete
+            let entryCount = allEntries.count
+            let deleteCount = entryCount - maxCount
+            
+            guard deleteCount > 0 else {
+                logDebug("There are \(entryCount) SelectedChannel entries.  We are not at max count, therefore nothing to delete.")
+                return
+            }
+            
+            for entry in allEntries.suffix(from: maxCount) {
+                viewContext.delete(entry)
+            }
+            
+            try viewContext.saveChangesIfNeeded()
+            logDebug("Cleaned up \(deleteCount) old SelectedChannel entries.")
+        } catch {
+            logError("Failed to cleanup old SelectedChannel entries. Error: \(error)")
         }
     }
     

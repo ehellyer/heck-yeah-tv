@@ -15,11 +15,12 @@ struct ChannelProgramView: View {
     @State var channelProgram: ChannelProgram
     
     @State private var appState: AppStateProvider = InjectedValues[\.sharedAppState]
+    @State private var swiftDataController: BaseSwiftDataController = InjectedValues[\.swiftDataController]
     @FocusState private var focusedButton: FocusedButton?
     
     private var isPlaying: Bool {
-        let selectedChannelId = appState.selectedChannel
-        return selectedChannelId != nil && selectedChannelId == channelProgram.channelId
+        let selectedChannel = swiftDataController.selectedChannel
+        return selectedChannel != nil && selectedChannel?.id == channelProgram.channelId
     }
     
     private let cornerRadius: CGFloat = AppStyle.cornerRadius
@@ -76,7 +77,8 @@ struct ChannelProgramView: View {
             if let channelProgram = channelPrograms.first {
                 ChannelProgramView(channelProgram: channelProgram)
                     .onAppear {
-                        appState.selectedChannel = channelId
+                        let channel = swiftDataController.channel(for: channelId)
+                        swiftDataController.selectedChannel = channel
                     }
             }
         }

@@ -17,17 +17,16 @@ struct UnifiedPlayerView: View {
 //    @Environment(\.scenePhase) private var scenePhase
 //    @State private var swiftDataController: BaseSwiftDataController = InjectedValues[\.swiftDataController]
 //    @State private var appState: AppStateProvider = InjectedValues[\.sharedAppState]
-//    
+    
     var body: some View {
-        ZStack {
-//            if let channelId = appState.selectedChannel,
-//               let channel = swiftDataController.channel(for: channelId) {
-                
+//        ZStack {
+//            if let channel = swiftDataController.selectedChannel {
+//                
 //                if channel.deviceId == IPTVImporter.iptvDeviceId {
 //                    // IPTV channels use AVPlayer (supports HLS)
 //                    AVPlayerView(channel: channel)
 //                } else {
-                    // HDHomeRun channels use VLC (supports MPEG-TS)
+//                    // HDHomeRun channels use VLC (supports MPEG-TS)
                     VLCPlayerView()
 //                }
 //            } else {
@@ -35,6 +34,6 @@ struct UnifiedPlayerView: View {
 //                Color.black
 //                    .ignoresSafeArea()
 //            }
-        }
+//        }
     }
 }

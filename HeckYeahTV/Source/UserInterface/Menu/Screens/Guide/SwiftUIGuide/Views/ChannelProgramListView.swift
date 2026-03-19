@@ -14,11 +14,12 @@ struct ChannelProgramListView: View {
     @State var channelId: ChannelId
 
     @State private var appState: AppStateProvider = InjectedValues[\.sharedAppState]
+    @State private var swiftDataController: BaseSwiftDataController = InjectedValues[\.swiftDataController]
     @StateObject private var loader = ProgramsRowLoader()
     @State private var scrollToProgramId: ChannelProgramId?
     
     private var isPlaying: Bool {
-        return appState.selectedChannel == channelId
+        return swiftDataController.selectedChannel?.id == channelId
     }
     
     var body: some View {
@@ -90,21 +91,23 @@ struct ChannelProgramListView: View {
     }
 }
 
-#Preview {
-    // Override the injected AppStateProvider
-    @Previewable @State var appState: AppStateProvider = MockSharedAppState()
-    InjectedValues[\.sharedAppState] = appState
-    
-    // Override the injected SwiftDataController
-    let swiftDataController = MockSwiftDataController()
-    InjectedValues[\.swiftDataController] = swiftDataController
-    
-    let channelId = swiftDataController.channelBundleMap.channelIds[1]
-    
-    return TVPreviewView() {
-        ChannelProgramListView(channelId: channelId)
-        .onAppear {
-            appState.selectedChannel = channelId
-        }
-    }
-}
+//#Preview {
+//    // Override the injected AppStateProvider
+//    @Previewable @State var appState: AppStateProvider = MockSharedAppState()
+//    InjectedValues[\.sharedAppState] = appState
+//    
+//    // Override the injected SwiftDataController
+//    let swiftDataController = MockSwiftDataController()
+//    InjectedValues[\.swiftDataController] = swiftDataController
+//    
+//    let channel = swiftDataController.channel(for: swiftDataController.channelBundleMap.channelIds[1])
+//    swiftDataController.selectedChannel = channel
+//    
+//    return TVPreviewView() {
+//        ChannelProgramListView(channelId: channel.id)
+//        .onAppear {
+//            let channel2 = swiftDataController.channel(for: swiftDataController.channelBundleMap.channelIds[11])
+//            swiftDataController.selectedChannel = channel2
+//        }
+//    }
+//}

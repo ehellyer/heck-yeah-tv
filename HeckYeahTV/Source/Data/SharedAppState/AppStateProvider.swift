@@ -74,12 +74,6 @@ protocol AppStateProvider {
     /// When set, this triggers a fancy swipeable carousel to show off program details like it's
     /// auditioning for a design award. Set to `nil` to dismiss it back into the void.
     var showProgramDetailCarousel: ChannelProgram? { get set }
-    
-    /// The channel that's currently getting all the attention.
-    ///
-    /// This is the Taylor Swift of channels, the one everyone's watching right now.
-    /// `nil` means nobody's home and you're staring at a blank screen like it owes you money.
-    var selectedChannel: ChannelId? { get set }
 
     /// Whether the app should actively hunt for HDHomeRun tuners on your network — if we've even
     /// had the nerve to ask yet.

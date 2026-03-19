@@ -17,7 +17,6 @@ final class MockSharedAppState: AppStateProvider {
         self.showAppMenu = false
         self.showProgramDetailCarousel = nil
         self.selectedTab = .guide
-        self.selectedChannel = nil
         self.scanForTuners = true
         self.selectedChannelBundleId = "mock#1.guide"// AppKeys.Application.defaultChannelBundleId
         self.dateLastHomeRunChannelProgramFetch = nil
@@ -39,15 +38,6 @@ final class MockSharedAppState: AppStateProvider {
     var showAppMenu: Bool
     var showProgramDetailCarousel: ChannelProgram?
     var selectedTab: AppSection
-    var selectedChannel: ChannelId? {
-        didSet {
-            if let channelId = selectedChannel {
-                // Add to recently viewed in SwiftData
-                let swiftDataController = InjectedValues[\.swiftDataController]
-                swiftDataController.addRecentlyViewedChannel(channelId: channelId)
-            }
-        }
-    }
     var scanForTuners: Bool?
     var selectedChannelBundleId: ChannelBundleId
     var dateLastHomeRunChannelProgramFetch: Date?

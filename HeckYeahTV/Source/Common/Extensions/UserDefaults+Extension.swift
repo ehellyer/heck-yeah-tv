@@ -90,24 +90,6 @@ extension UserDefaults {
         }
     }
 
-    /// The unique identifier of the currently selected/playing channel.
-    ///
-    /// This property stores which channel is currently active in the player. It can be used
-    /// to restore playback state or highlight the active channel in the UI.
-    /// The value is persisted in `UserDefaults.standard`.
-    ///
-    /// - Returns: The channel identifier string, or `nil` if no channel is selected.
-    static var selectedChannel: ChannelId? {
-        get {
-            let _channelId: String? = standard.string(forKey: AppKeys.SharedAppState.selectedChannelKey)
-            return _channelId
-        }
-        set {
-            standard.set(newValue, forKey: AppKeys.SharedAppState.selectedChannelKey)
-        }
-    }
-    
-
     /// Whether the app should actively hunt for HDHomeRun tuners on your network — if we've even
     /// had the nerve to ask yet.
     ///

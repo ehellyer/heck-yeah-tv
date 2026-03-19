@@ -126,7 +126,7 @@ class GuideViewController: UIViewController {
     private var reloadTableViewTask: Task<Void, Never>? = nil
     
     private var targetChannelId: ChannelId? {
-        return appState.selectedChannel ?? swiftDataController.channelBundleMap.channelIds.first
+        return swiftDataController.selectedChannel?.id ?? swiftDataController.channelBundleMap.channelIds.first
     }
     
     private func setupTableView() {
@@ -178,7 +178,8 @@ class GuideViewController: UIViewController {
     }
 
     private func setPlayingChannel(id: ChannelId) throws {
-        appState.selectedChannel = id
+        let channel = swiftDataController.channel(for: id)
+        swiftDataController.selectedChannel = channel
         reloadVisibleRows()
     }
     
@@ -188,11 +189,11 @@ class GuideViewController: UIViewController {
 
     private func reloadVisibleRows() {
         let cells = self.tableView.visibleCells as? [GuideRowCell] ?? []
-        let selectedChannel = appState.selectedChannel
+        let selectedChannel = swiftDataController.selectedChannel
         
         cells.forEach { cell in
             let channelId = cell.channelId ?? "666" // "666" will never be a valid channelId, but that is ok and safer than force unwrap.
-            let isPlaying = selectedChannel == channelId
+            let isPlaying = selectedChannel?.id == channelId
             cell.configure(with: channelId,
                            isPlaying: isPlaying)
         }
@@ -272,7 +273,7 @@ extension GuideViewController {
 extension GuideViewController: GuideViewDelegate {
         
     func selectChannel(_ channelId: ChannelId) {
-        guard channelId != appState.selectedChannel else { return }
+        guard channelId != swiftDataController.selectedChannel?.id else { return }
         try? self.setPlayingChannel(id: channelId)
     }
     
@@ -304,7 +305,7 @@ extension GuideViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let guideRowCell = tableView.dequeueReusableCell(withIdentifier: GuideRowCell.identifier, for: indexPath) as! GuideRowCell
         let channelId = swiftDataController.channelBundleMap.channelIds[indexPath.row]
-        let isPlaying = (channelId == appState.selectedChannel)
+        let isPlaying = (channelId == swiftDataController.selectedChannel?.id)
         guideRowCell.configure(with: channelId,
                                isPlaying: isPlaying)
         guideRowCell.delegate = self

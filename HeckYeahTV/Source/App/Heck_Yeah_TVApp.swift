@@ -65,6 +65,7 @@ struct Heck_Yeah_TVApp: App {
     @State private var tunerPromptContinuationBox = TunerPromptContinuationBox()
     
     @State private var appState: AppStateProvider = InjectedValues[\.sharedAppState]
+    @State private var swiftDataController: BaseSwiftDataController = InjectedValues[\.swiftDataController]
     
     var body: some Scene {
 #if os(macOS)
@@ -205,7 +206,7 @@ struct Heck_Yeah_TVApp: App {
         
         if HeckYeahSchema.versionIdentifier == Schema.Version(0, 0, 0) {
             // DB was deletes as part of a hard reset, so clear out some app state to match.
-            appState.selectedChannel = nil
+            swiftDataController.selectedChannel = nil
             appState.isPlayerPaused = false
             swiftDataController.cleanupOldRecentlyViewedChannels(maxCount: 0)
         }
@@ -214,7 +215,7 @@ struct Heck_Yeah_TVApp: App {
         appState.showProgramDetailCarousel = nil
         
         // Determine if should show menu.
-        appState.showAppMenu = (appState.selectedChannel == nil) || hasNoChannels
+        appState.showAppMenu = (swiftDataController.selectedChannel == nil) || hasNoChannels
         
         // If shown, determine default tab.
         appState.selectedTab = (hasNoChannels) ? .settings : .guide

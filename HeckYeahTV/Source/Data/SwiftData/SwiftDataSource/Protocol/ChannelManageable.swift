@@ -27,6 +27,9 @@ protocol ChannelManageable {
     /// of good intentions but zero commitment.
     var channelBundleMap: ChannelBundleMap { get }
 
+    /// The currently selected channel that should be played on app launch.
+    var selectedChannel: Channel? { get set }
+    
     /// Returns the total number of IPTV channels in the catalog. Yes, all of them. Every. Single. One.
     func totalIPChannelCatalogCount() -> Int
 
@@ -159,7 +162,21 @@ protocol ChannelManageable {
     ///
     /// - Parameter channelId: The ID of the channel you just started watching (or pretending
     ///                       to watch while scrolling social media).
-    func addRecentlyViewedChannel(channelId: ChannelId)
+    func addRecentlyViewedChannel(channel: Channel)
+    
+    /// Builds a fetch descriptor for recently viewed channels without actually fetching them.
+    ///
+    /// This is the lazy person's approach to database queries—it constructs the instructions
+    /// for how to fetch your viewing history, but doesn't actually do the work yet. Think of it
+    /// as writing a detailed grocery list without leaving the couch.
+    ///
+    /// Perfect for SwiftUI's `@Query` macro, which prefers to be handed a descriptor instead of
+    /// pre-fetched data. Like a sous chef who insists on reading the recipe themselves.
+    ///
+    /// - Parameter limit: Maximum number of recently viewed entries to include in the descriptor.
+    ///
+    /// - Returns: A `FetchDescriptor` ready to retrieve your viewing history, sorted newest first.
+    func recentlyViewDescriptor(limit: Int) -> FetchDescriptor<RecentlyViewedChannel>
     
     /// Fetches the most recently viewed channels, ordered by viewing time (newest first).
     ///
@@ -177,6 +194,20 @@ protocol ChannelManageable {
     ///           is brand new and hasn't had time to collect your digital footprints yet).
     func recentlyViewedChannels(limit: Int) -> [RecentlyViewedChannel]
     
+    /// Purges ancient selected channel history when your digital nostalgia gets out of hand.
+    ///
+    /// This is like `cleanupOldRecentlyViewedChannels`, but for the `SelectedChannel` table instead.
+    /// It keeps only the most recent `maxCount` entries and ruthlessly deletes the rest, because
+    /// nobody needs a permanent record of every channel decision they've ever made.
+    ///
+    /// Your database will thank you. Your storage quota will thank you. Future archaeologists
+    /// trying to piece together your viewing habits from ancient database records will be mildly
+    /// disappointed, but they'll get over it.
+    ///
+    /// - Parameter maxCount: How many selected channel entries to preserve. Everything older
+    ///                       gets shown the exit. Set responsibly—this is permanent.
+    func cleanupOldSelectedChannels(maxCount: Int)
+
     /// Trims the recently viewed list down to size when it gets too long.
     ///
     /// This function keeps your viewing history from becoming a digital hoarder's paradise.

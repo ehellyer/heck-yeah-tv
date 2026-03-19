@@ -25,7 +25,8 @@ enum SchemaV1: VersionedSchema {
             HomeRunDevice.self,
             ProgramCategory.self,
             RecentlyViewedChannel.self,
-            SchemaVersion.self
+            SchemaVersion.self,
+            SelectedChannel.self
         ]
     }
 }

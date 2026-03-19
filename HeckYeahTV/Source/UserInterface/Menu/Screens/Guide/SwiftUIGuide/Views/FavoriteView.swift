@@ -23,8 +23,8 @@ struct FavoriteView: View {
     private let cornerRadius: CGFloat = AppStyle.cornerRadius
     
     private var isPlaying: Bool {
-        let selectedChannelId = appState.selectedChannel
-        return selectedChannelId != nil && selectedChannelId == channelId
+        let selectedChannel = swiftDataController.selectedChannel
+        return selectedChannel != nil && selectedChannel?.id == channelId
     }
     
     var body: some View {
@@ -67,7 +67,7 @@ struct FavoriteView: View {
     InjectedValues[\.swiftDataController] = swiftDataController
     
     let channelId = swiftDataController.channelBundleMap.channelIds[8]
-    let selectedChannelId = swiftDataController.channelBundleMap.channelIds[0]
+    let selectedChannel = swiftDataController.channel(for: channelId)
     
     return TVPreviewView() {
         VStack {
@@ -81,7 +81,7 @@ struct FavoriteView: View {
             
         }
         .onAppear {
-            appState.selectedChannel = selectedChannelId
+            swiftDataController.selectedChannel = selectedChannel
         }
     }
 }

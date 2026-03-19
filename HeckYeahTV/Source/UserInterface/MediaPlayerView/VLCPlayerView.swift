@@ -24,14 +24,15 @@ struct VLCPlayerView: View {
     
     @Environment(\.scenePhase) private var scenePhase
     @State private var appState: AppStateProvider = InjectedValues[\.sharedAppState]
+    @State private var swiftDataController: SwiftDataProvider = InjectedValues[\.swiftDataController]
     @State private var isStreamUnplayable = false
     
-    private var selectedChannelId: ChannelId? { appState.selectedChannel }
+    private var selectedChannel: Channel? { swiftDataController.selectedChannel }
     
     var body: some View {
         ZStack {
             VLCPlayerRepresentable(
-                selectedChannelId: selectedChannelId,
+                selectedChannel: selectedChannel,
                 shouldPause: appState.isPlayerPaused,
                 scenePhase: scenePhase,
                 closedCaptionsEnabled: appState.closedCaptionsEnabled,
@@ -69,7 +70,7 @@ struct UnplayableStreamOverlay: View {
 @MainActor
 struct VLCPlayerRepresentable: CrossPlatformRepresentable {
 
-    let selectedChannelId: ChannelId?
+    let selectedChannel: Channel?
     let shouldPause: Bool
     let scenePhase: ScenePhase
     let closedCaptionsEnabled: Bool
@@ -100,7 +101,7 @@ struct VLCPlayerRepresentable: CrossPlatformRepresentable {
         }
 
         // Reconciles the selectedChannelId and player state intent to determine the actual player state.
-        context.coordinator.updatePlayState(channelId: selectedChannelId,
+        context.coordinator.updatePlayState(channel: selectedChannel,
                                             shouldPause: shouldPause)
 
         // Update closed captions based on app state
@@ -162,11 +163,6 @@ struct VLCPlayerRepresentable: CrossPlatformRepresentable {
             return _player
         }()
         
-        private func resolveChannelURL(id: ChannelId) -> URL? {
-            let channel = swiftDataController.channel(for: id)
-            return channel?.url
-        }
-        
         //MARK: - Internal API
         
         // Platform view that VLC renders into
@@ -186,18 +182,15 @@ struct VLCPlayerRepresentable: CrossPlatformRepresentable {
 
         /// Essentially this is the play() function, but it takes parameters to set player state based on channel selection and intent.
         /// - Parameters:
-        ///   - channelId: (Optional) The identifier of the channel to play.
+        ///   - channel: (Optional) The channel to play.
         ///   - shouldPause: Intent of the user to pause/resume an active playing stream.
-        func updatePlayState(channelId: ChannelId?, shouldPause: Bool) {
+        func updatePlayState(channel: Channel?, shouldPause: Bool) {
             
             // Resolve desired channel URL from channelId
-            let channelURL: URL? = {
-                guard let channelId else { return nil }
-                return self.resolveChannelURL(id: channelId)
-            }()
+            
             
             // If there is no channel URL, stop and clear media.
-            guard let channelURL else {
+            guard let channelURL = channel?.url else {
                 stop()
                 return
             }

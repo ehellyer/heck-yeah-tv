@@ -77,7 +77,6 @@ struct AppKeys {
         static let isPlayerPausedKey = "SharedAppState.isPlayerPausedKey"
         static let recentlyPlayedKey = "SharedAppState.recentlyPlayedKey"
         static let selectedTabKey = "SharedAppState.selectedTabKey"
-        static let selectedChannelKey = "SharedAppState.selectedChannelKey"
         static let scanForTunersKey = "SharedAppState.scanForTunersKey"
         static let selectedChannelBundleIdKey = "SharedAppState.selectedChannelBundleIdKey"
         static let dateLastHomeRunChannelProgramFetchKey = "SharedAppState.dateLastHomeRunChannelProgramFetchKey"

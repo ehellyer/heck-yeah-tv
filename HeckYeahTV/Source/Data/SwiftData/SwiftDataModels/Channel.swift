@@ -45,6 +45,8 @@ extension SchemaV1 {
             self.deviceId = deviceId
         }
         
+        // MARK: - Model Schema
+        
         var id: ChannelId
         
         /// The unique identifier to link guide information from the channels originating source.
@@ -65,13 +67,17 @@ extension SchemaV1 {
         var hasDRM: Bool
         var deviceId: HDHomeRunDeviceId
         
-        // Inverse relationship - preserves user's bundle customizations when channels temporarily leave the catalog
+        // Delete rule nullify preserves a ChannelBundle bundle entry when the corresponding channel is permanently or temporarily deleted from the channel catalog.
         @Relationship(deleteRule: .nullify, inverse: \BundleEntry.channel)
         var bundleEntries: [BundleEntry] = []
         
-        // Inverse relationship with cascade delete rule - when channel is deleted, delete all recently viewed entries
+        // Delete rule cascade, when channel is deleted we delete corresponding channel from recently viewed entries.
         @Relationship(deleteRule: .cascade, inverse: \RecentlyViewedChannel.channel)
         var recentlyViewedEntries: [RecentlyViewedChannel] = []
+        
+        // Delete rule cascade, when channel is deleted, delete corresponding SelectedChannel entry.
+        @Relationship(deleteRule: .cascade, inverse: \SelectedChannel.channel)
+        var selectedChannelEntries: [SelectedChannel] = []
         
         // MARK: - JSONSerializable Implementation (added for mock data)
         //

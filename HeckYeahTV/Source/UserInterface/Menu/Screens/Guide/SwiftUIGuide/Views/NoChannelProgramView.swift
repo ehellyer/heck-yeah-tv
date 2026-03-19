@@ -13,10 +13,11 @@ struct NoChannelProgramView: View {
     @State var channelId: ChannelId
     
     @State private var appState: AppStateProvider = InjectedValues[\.sharedAppState]
+    @State private var swiftDataController: BaseSwiftDataController = InjectedValues[\.swiftDataController]
     @FocusState private var focusedButton: FocusedButton?
     
     private var isPlaying: Bool {
-        return appState.selectedChannel == channelId
+        return swiftDataController.selectedChannel?.id == channelId
     }
     
     var body: some View {

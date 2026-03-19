@@ -11,11 +11,16 @@ import SwiftData
 
 struct RecentsView: View {
 
+    @State private var swiftDataController: BaseSwiftDataController = InjectedValues[\.swiftDataController]
     @State private var appState: AppStateProvider = InjectedValues[\.sharedAppState]
-    @Query(sort: \RecentlyViewedChannel.viewedAt, order: .reverse)
-    private var recentlyViewed: [RecentlyViewedChannel]
+    @Query private var recentlyViewed: [RecentlyViewedChannel]
     @Namespace private var focusNamespace
     @FocusState private var focusedChannelId: String?
+    
+    init() {
+        let descriptor = swiftDataController.recentlyViewDescriptor(limit: 10)
+        _recentlyViewed = Query(descriptor)
+    }
     
     private var recentChannelIds: [ChannelId] {
         // Get top 10 channel IDs from recently viewed
@@ -78,12 +83,17 @@ struct RecentsView: View {
     let swiftDataController = MockSwiftDataController()
     InjectedValues[\.swiftDataController] = swiftDataController
     
-    appState.selectedChannel = swiftDataController.channelBundleMap.channelIds[0]
-    appState.selectedChannel = swiftDataController.channelBundleMap.channelIds[2]
-    appState.selectedChannel = swiftDataController.channelBundleMap.channelIds[5]
-    appState.selectedChannel = swiftDataController.channelBundleMap.channelIds[6]
-    appState.selectedChannel = swiftDataController.channelBundleMap.channelIds[7]
+    let channel0 = swiftDataController.channel(for:  swiftDataController.channelBundleMap.channelIds[0])
+    let channel1 = swiftDataController.channel(for:  swiftDataController.channelBundleMap.channelIds[1])
+    let channel2 = swiftDataController.channel(for:  swiftDataController.channelBundleMap.channelIds[2])
+    let channel3 = swiftDataController.channel(for:  swiftDataController.channelBundleMap.channelIds[3])
+    let channel4 = swiftDataController.channel(for:  swiftDataController.channelBundleMap.channelIds[4])
     
+    swiftDataController.selectedChannel = channel0
+    swiftDataController.selectedChannel = channel1
+    swiftDataController.selectedChannel = channel2
+    swiftDataController.selectedChannel = channel3
+    swiftDataController.selectedChannel = channel4
     
     return TVPreviewView {
         RecentsView()

@@ -54,23 +54,6 @@ final class SharedAppState: AppStateProvider {
         }
     }
     
-    var selectedChannel: ChannelId? {
-        get {
-            access(keyPath: \.selectedChannel)
-            return UserDefaults.selectedChannel
-        }
-        set {
-            withMutation(keyPath: \.selectedChannel) {
-                if let channelId = newValue {
-                    // Add to recently viewed in SwiftData
-                    let swiftDataController = InjectedValues[\.swiftDataController]
-                    swiftDataController.addRecentlyViewedChannel(channelId: channelId)
-                }
-                UserDefaults.selectedChannel = newValue
-            }
-        }
-    }
-    
     var scanForTuners: Bool? {
         get {
             access(keyPath: \.scanForTuners)

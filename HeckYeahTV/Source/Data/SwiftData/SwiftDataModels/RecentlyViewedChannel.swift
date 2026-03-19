@@ -14,7 +14,7 @@ extension SchemaV1 {
     
     @Model final class RecentlyViewedChannel: JSONSerializable {
         #Unique<RecentlyViewedChannel>([\.channelId])
-        #Index<RecentlyViewedChannel>([\.viewedAt, \.channelId])
+        #Index<RecentlyViewedChannel>([\.viewedAt])
         
         init(channel: Channel,
              viewedAt: Date = Date()) {
