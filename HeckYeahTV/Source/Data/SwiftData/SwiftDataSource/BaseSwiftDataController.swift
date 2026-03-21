@@ -72,28 +72,9 @@ class BaseSwiftDataController: SwiftDataProvider {
     func totalIPChannelCatalogCount() -> Int {
         do {
             let iptvDeviceId = IPTVImporter.iptvDeviceId
-            let predicate = #Predicate<Channel> { $0.deviceId == iptvDeviceId }
-            let descriptor = FetchDescriptor<Channel>(predicate: predicate)
-            let totalChannelCount = try viewContext.fetchCount(descriptor)
+            let fetchDescriptor = ChannelPredicateFactory(deviceIds: [iptvDeviceId]).fetchDescriptor()
+            let totalChannelCount = try viewContext.fetchCount(fetchDescriptor)
             return totalChannelCount
-        } catch {
-            logError("Unable to determine total channel count (IPTV channels + HDHomeRun channels. Error: \(error)")
-            return 0
-        }
-    }
-    
-    func combinedCountFor(bundleId: ChannelBundleId) -> Int {
-        do {
-            let deviceIds = try devices(enabledState: true)
-            let predicate = #Predicate<Channel> { channel in
-                deviceIds.contains(channel.deviceId)
-            }
-            let descriptor = FetchDescriptor<Channel>(predicate: predicate)
-            let tunerChannelCount = try viewContext.fetchCount(descriptor)
-            
-            let bundleChannelCount = channelCountFor(bundleId: bundleId)
-
-            return tunerChannelCount + bundleChannelCount
         } catch {
             logError("Unable to determine total channel count (IPTV channels + HDHomeRun channels. Error: \(error)")
             return 0
@@ -117,8 +98,7 @@ class BaseSwiftDataController: SwiftDataProvider {
 
     func channelCountFor(deviceId: HDHomeRunDeviceId) -> Int {
         do {
-            let predicate = #Predicate<Channel> { $0.deviceId == deviceId }
-            let fetchDescriptor = FetchDescriptor<Channel>(predicate: predicate)
+            let fetchDescriptor = ChannelPredicateFactory(deviceIds: [deviceId]).fetchDescriptor()
             let count: Int = try viewContext.fetchCount(fetchDescriptor)
             return count
         } catch {
@@ -174,13 +154,12 @@ class BaseSwiftDataController: SwiftDataProvider {
     
     func channel(for channelId: ChannelId) -> Channel? {
         do {
-            let predicate = #Predicate<Channel> { $0.id == channelId }
-            var fetchDescriptor = FetchDescriptor<Channel>(predicate: predicate)
+            var fetchDescriptor = ChannelPredicateFactory(channelId: channelId).fetchDescriptor()
             fetchDescriptor.fetchLimit = 1
-            guard let _program = try viewContext.fetch(fetchDescriptor).first else {
+            guard let channel = try viewContext.fetch(fetchDescriptor).first else {
                 throw GuideStoreError.noChannelFoundForId(channelId)
             }
-            return _program
+            return channel
         } catch {
             logError("Unable to fetch channel for channelId: \(channelId). Error: \(error)")
             return nil
@@ -189,11 +168,10 @@ class BaseSwiftDataController: SwiftDataProvider {
     
     func channelsForCurrentFilter() -> [Channel] {
         do {
-            let predicate = Self.predicateBuilder(searchTerm: self.searchTerm,
-                                                  countryCode: self.selectedCountry,
-                                                  categoryId: self.selectedCategory)
-            let sortDescriptor = [SortDescriptor<Channel>(\.sortHint, order: .forward)]
-            let fetchDescriptor = FetchDescriptor<Channel>(predicate: predicate, sortBy: sortDescriptor)
+            let fetchDescriptor = ChannelPredicateFactory(searchTerm: self.searchTerm,
+                                                          countryCode: self.selectedCountry,
+                                                          categoryId: self.selectedCategory).fetchDescriptor()
+
             let _channels = try viewContext.fetch(fetchDescriptor)
             return _channels
         } catch {
@@ -293,6 +271,9 @@ class BaseSwiftDataController: SwiftDataProvider {
         scheduleChannelBundleMapRebuild()
     }
     
+    
+    /// An internal function that will add or remove bundle entries from the channel bundles as necessary.
+    /// In order for the `BundleEntry` to be added to a `ChannelBundle` the device that has the Channel that the BundleEntry points to must be enabled.  And the ChannelBundle must be associated with the HomeRunDevice
     func invalidateTunerLineUp() {
         do {
             try updateChannelBundleWithIncludedChannels()
@@ -314,22 +295,7 @@ class BaseSwiftDataController: SwiftDataProvider {
             return []
         }
     }
-    
-    func deletePastChannelPrograms() {
-        guard not(PreviewDetector.isRunningInPreview) else { return }
-        do {
-            logDebug("Deleting program data for programs that ended more than now.")
-            let now = Date()
-            let oldProgramsPredicate = #Predicate<ChannelProgram> { program in
-                program.endTime < now
-            }
-            try viewContext.delete(model: ChannelProgram.self, where: oldProgramsPredicate)
-            try viewContext.saveChangesIfNeeded()
-        } catch {
-            logError("Failed to delete past channel programs.  Error \(error)")
-        }
-    }
-    
+
     func addRecentlyViewedChannel(channel: Channel) {
         let recentlyViewed = RecentlyViewedChannel(channel: channel, viewedAt: Date())
         viewContext.insert(recentlyViewed)
@@ -353,6 +319,23 @@ class BaseSwiftDataController: SwiftDataProvider {
         } catch {
             logError("Failed to fetch recently viewed channels. Error: \(error)")
             return []
+        }
+    }
+    
+    // MARK: - Delete / clean up operations
+    
+    func deletePastChannelPrograms() {
+        guard not(PreviewDetector.isRunningInPreview) else { return }
+        do {
+            logDebug("Deleting program data for programs that ended more than now.")
+            let now = Date()
+            let oldProgramsPredicate = #Predicate<ChannelProgram> { program in
+                program.endTime < now
+            }
+            try viewContext.delete(model: ChannelProgram.self, where: oldProgramsPredicate)
+            try viewContext.saveChangesIfNeeded()
+        } catch {
+            logError("Failed to delete past channel programs.  Error \(error)")
         }
     }
     
@@ -407,35 +390,6 @@ class BaseSwiftDataController: SwiftDataProvider {
             logDebug("Cleaned up \(deleteCount) old SelectedChannel entries.")
         } catch {
             logError("Failed to cleanup old SelectedChannel entries. Error: \(error)")
-        }
-    }
-    
-    static func predicateBuilder(searchTerm: String?,
-                                 countryCode: CountryCodeId,
-                                 categoryId: CategoryId?) -> Predicate<Channel> {
-        
-        let deviceId = IPTVImporter.iptvDeviceId
-        var conditions: [Predicate<Channel>] = []
-        conditions.append( #Predicate<Channel> { $0.country == countryCode && $0.deviceId == deviceId })
-        
-        if let searchTerm, searchTerm.count > 0 {
-            conditions.append( #Predicate<Channel> { $0.title.localizedStandardContains(searchTerm) })
-        }
-        
-        if let categoryId {
-            conditions.append( #Predicate<Channel> { channel in
-                channel.categories.contains(where: { $0.categoryId == categoryId })
-            })
-        }
-        
-        // Combine conditions using '&&' (AND)
-        if conditions.isEmpty {
-            return #Predicate { _ in true } // Return a predicate that always evaluates to true if no conditions
-        } else {
-            let compoundPredicate = conditions.reduce(#Predicate { _ in true }) { current, next in
-                #Predicate { current.evaluate($0) && next.evaluate($0) }
-            }
-            return compoundPredicate
         }
     }
     
@@ -519,32 +473,8 @@ class BaseSwiftDataController: SwiftDataProvider {
             let association = ChannelBundleDevice(bundle: bundle, device: device)
             viewContext.insert(association)
             
-            // Fetch all channels for this device
-            let predicate = #Predicate<Channel> { $0.deviceId == device.deviceId }
-            let descriptor = FetchDescriptor<Channel>(predicate: predicate)
-            let deviceChannels = try viewContext.fetch(descriptor)
-            
-            // Add bundle entries for all device channels
-            for channel in deviceChannels {
-                let bundleEntryId = BundleEntry.newBundleEntryId(channelBundleId: bundle.id, channelId: channel.id)
-                
-                // Check if entry already exists
-                let entryPredicate = #Predicate<BundleEntry> { $0.id == bundleEntryId }
-                var entryDescriptor = FetchDescriptor<BundleEntry>(predicate: entryPredicate)
-                entryDescriptor.fetchLimit = 1
-                let existingEntry = try viewContext.fetch(entryDescriptor).first
-                
-                if existingEntry == nil {
-                    let newEntry = BundleEntry(channel: channel,
-                                               channelBundle: bundle,
-                                               sortHint: channel.sortHint,
-                                               isFavorite: false)
-                    viewContext.insert(newEntry)
-                }
-            }
-            
             try viewContext.saveChangesIfNeeded()
-            logDebug("Added device \(device.friendlyName) with \(deviceChannels.count) channels to bundle \(bundle.name)")
+            logDebug("Added device \(device.friendlyName) to bundle \(bundle.name)")
         } catch {
             logError("Failed to add device to bundle. Error: \(error)")
         }
@@ -553,33 +483,12 @@ class BaseSwiftDataController: SwiftDataProvider {
     func removeDeviceFromBundle(device: HomeRunDevice, bundle: ChannelBundle) {
         do {
             // Remove the association
-            if let association = bundle.deviceAssociations.first(where: { $0.device.deviceId == device.deviceId }) {
+            for association in device.bundleAssociations {
                 viewContext.delete(association)
             }
             
-            // Fetch all channels for this device
-            let predicate = #Predicate<Channel> { $0.deviceId == device.deviceId }
-            let descriptor = FetchDescriptor<Channel>(predicate: predicate)
-            let deviceChannels = try viewContext.fetch(descriptor)
-            
-            // Remove bundle entries for all device channels
-            var entriesToRemove: [BundleEntryId] = []
-            for channel in deviceChannels {
-                entriesToRemove.append(BundleEntry.newBundleEntryId(channelBundleId: bundle.id, channelId: channel.id))
-            }
-            
-            let entryPredicate = #Predicate<BundleEntry> { entry in
-                entriesToRemove.contains(entry.id)
-            }
-            let entryDescriptor = FetchDescriptor<BundleEntry>(predicate: entryPredicate)
-            let existingEntries = try viewContext.fetch(entryDescriptor)
-            
-            for entry in existingEntries {
-                viewContext.delete(entry)
-            }
-            
             try viewContext.saveChangesIfNeeded()
-            logDebug("Removed device \(device.friendlyName) with \(deviceChannels.count) channels from bundle \(bundle.name)")
+            logDebug("Removed device \(device.friendlyName) from bundle \(bundle.name)")
         } catch {
             logError("Failed to remove device from bundle. Error: \(error)")
         }
@@ -690,12 +599,9 @@ class BaseSwiftDataController: SwiftDataProvider {
     
     private func channelsFor(deviceIds: [HDHomeRunDeviceId]) throws -> [Channel] {
         guard not(deviceIds.isEmpty) else { return [] }
-        let channelPredicate = #Predicate<Channel> { channel in
-            deviceIds.contains(channel.deviceId)
-        }
-        let channelDescriptor = FetchDescriptor<Channel>(predicate: channelPredicate)
+        let fetchDescriptor = ChannelPredicateFactory(deviceIds: deviceIds).fetchDescriptor()
         do {
-            let channels = try viewContext.fetch(channelDescriptor)
+            let channels = try viewContext.fetch(fetchDescriptor)
             return channels
         } catch {
             logError("Error fetching channels for deviceId(s) \(deviceIds).  Error: \(error)")
@@ -703,45 +609,83 @@ class BaseSwiftDataController: SwiftDataProvider {
         }
     }
     
+    private func deviceChannelBundles() -> [ChannelBundleDevice] {
+        do {
+            let bundleDeviceDescriptor = FetchDescriptor<ChannelBundleDevice>()
+            let bundleDevices = try viewContext.fetch(bundleDeviceDescriptor)
+            return bundleDevices
+        } catch {
+            logError("Unable to fetch channel bundle devices. [ChannelBundleDevice].  Error: \(error)")
+        }
+        return []
+    }
+    
+    /// Synchronize the BundleEntry(s) in the ChannelBundles based on the Device enabled state and if the device is included in the channel bundle.
     private func updateChannelBundleWithIncludedChannels() throws {
         logDebug("Starting sync task for device(s) channel lineup... 🇺🇸")
-        
+
         // Fetch all channel bundles
-        let bundleDescriptor = FetchDescriptor<ChannelBundle>()
-        let allChannelBundles = try viewContext.fetch(bundleDescriptor)
+        let allBundles = channelBundles()
         
-        guard !allChannelBundles.isEmpty else {
-            return
+        // Process each bundle individually
+        for bundle in allBundles {
+            // Get enabled devices associated with this bundle
+            let associatedEnabledDeviceIds = bundle.deviceAssociations
+                .map { $0.device }
+                .filter { $0.isEnabled }
+                .map { $0.deviceId }
+            
+            let associatedDisabledDeviceIds = bundle.deviceAssociations
+                .filter { $0.device.isEnabled == false }
+                
+            associatedDisabledDeviceIds.forEach {
+                self.viewContext.delete($0)
+            }
+            
+            // Get channels for the enabled devices associated with this bundle
+            let channelsToAdd = try channelsFor(deviceIds: associatedEnabledDeviceIds)
+            
+            // Determine which channels should be removed from this bundle
+            // Remove if: device is disabled OR device is enabled but NOT associated with this bundle
+            let channelsToRemove = try channelsToRemoveFrom(bundle: bundle)
+            
+            // Add and remove entries for this specific bundle
+            try addBundleEntries(for: channelsToAdd, to: bundle)
+            try removeBundleEntries(for: channelsToRemove, from: bundle)
         }
         
-        // Get enabled and disabled device IDs
-        let enabledDeviceIds = try devices(enabledState: true)
-        let disabledDeviceIds = try devices(enabledState: false)
-        
-        // Fetch channels for enabled devices (to add)
-        let channelsToAdd = try channelsFor(deviceIds: enabledDeviceIds)
-        
-        // Fetch channels for disabled devices (to remove)
-        let channelsToRemove = try channelsFor(deviceIds: disabledDeviceIds)
-        
-        // Add and remove entries
-        try addBundleEntries(for: channelsToAdd, across: allChannelBundles)
-        try removeBundleEntries(for: channelsToRemove, across: allChannelBundles)
-        
         try viewContext.saveChangesIfNeeded()
-        
+          
         logDebug("Completed sync task for device(s) channel lineup... 🏁")
     }
     
-    private func addBundleEntries(for channels: [Channel], across bundles: [ChannelBundle]) throws {
+    /// Returns channels that should be removed from a bundle
+    /// (channels from disabled devices OR channels from enabled devices not associated with the bundle)
+    private func channelsToRemoveFrom(bundle: ChannelBundle) throws -> [Channel] {
+        // Get all HDHomeRun device IDs associated with this bundle (enabled or not)
+        let associatedDeviceIds = Set(bundle.deviceAssociations.map { $0.device.deviceId })
+        
+        // Get all enabled device IDs that are NOT associated with this bundle
+        let allEnabledDevices = try devices(enabledState: true)
+        let enabledButNotAssociated = allEnabledDevices.filter { !associatedDeviceIds.contains($0) }
+        
+        // Get all disabled device IDs
+        let allDisabledDevices = try devices(enabledState: false)
+        
+        // Combine: disabled devices + enabled but not associated devices
+        let deviceIdsToRemove = enabledButNotAssociated + allDisabledDevices
+        
+        // Get channels for these devices
+        return try channelsFor(deviceIds: deviceIdsToRemove)
+    }
+    
+    private func addBundleEntries(for channels: [Channel], to bundle: ChannelBundle) throws {
         guard !channels.isEmpty else { return }
         
-        // Compute all expected IDs for enabled channels across all bundles
+        // Compute all expected IDs for this bundle
         var expectedAddIds: [BundleEntryId] = []
-        for bundle in bundles {
-            for channel in channels {
-                expectedAddIds.append(BundleEntry.newBundleEntryId(channelBundleId: bundle.id, channelId: channel.id))
-            }
+        for channel in channels {
+            expectedAddIds.append(BundleEntry.newBundleEntryId(channelBundleId: bundle.id, channelId: channel.id))
         }
         
         // Fetch existing entries for these IDs
@@ -753,30 +697,26 @@ class BaseSwiftDataController: SwiftDataProvider {
         let existingAddIds = Set(existingAddEntries.map { $0.id })
         
         // Insert missing entries
-        for bundle in bundles {
-            for channel in channels {
-                let bundleEntryId = BundleEntry.newBundleEntryId(channelBundleId: bundle.id, channelId: channel.id)
-                
-                if !existingAddIds.contains(bundleEntryId) {
-                    let newEntry = BundleEntry(channel: channel,
-                                               channelBundle: bundle,
-                                               sortHint: channel.sortHint,
-                                               isFavorite: false)
-                    viewContext.insert(newEntry)
-                }
+        for channel in channels {
+            let bundleEntryId = BundleEntry.newBundleEntryId(channelBundleId: bundle.id, channelId: channel.id)
+            
+            if !existingAddIds.contains(bundleEntryId) {
+                let newEntry = BundleEntry(channel: channel,
+                                           channelBundle: bundle,
+                                           sortHint: channel.sortHint,
+                                           isFavorite: false)
+                viewContext.insert(newEntry)
             }
         }
     }
     
-    private func removeBundleEntries(for channels: [Channel], across bundles: [ChannelBundle]) throws {
+    private func removeBundleEntries(for channels: [Channel], from bundle: ChannelBundle) throws {
         guard !channels.isEmpty else { return }
         
-        // Compute all IDs to remove across all bundles
+        // Compute all IDs to remove from this bundle
         var expectedRemoveIds: [BundleEntryId] = []
-        for bundle in bundles {
-            for channel in channels {
-                expectedRemoveIds.append(BundleEntry.newBundleEntryId(channelBundleId: bundle.id, channelId: channel.id))
-            }
+        for channel in channels {
+            expectedRemoveIds.append(BundleEntry.newBundleEntryId(channelBundleId: bundle.id, channelId: channel.id))
         }
         
         // Fetch existing entries to delete

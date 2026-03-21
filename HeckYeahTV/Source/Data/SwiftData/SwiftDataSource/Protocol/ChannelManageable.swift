@@ -32,9 +32,6 @@ protocol ChannelManageable {
     
     /// Returns the total number of IPTV channels in the catalog. Yes, all of them. Every. Single. One.
     func totalIPChannelCatalogCount() -> Int
-
-    /// Counts channels for a specific bundle and the channels for and devices with included channel lineup set to true.
-    func combinedCountFor(bundleId: ChannelBundleId) -> Int
     
     /// Counts channels for a specific bundle. Because sometimes you need to know what you get for a free lunch.
     func channelCountFor(bundleId: ChannelBundleId) -> Int
@@ -136,23 +133,6 @@ protocol ChannelManageable {
     ///           rerun of a rerun and throws a fit. Handle accordingly.
     func deletePastChannelPrograms()
     
-    /// Constructs a SwiftData predicate based on your filtering whims.  This is what builds the ChannelBundleMap.
-    ///
-    /// This is where the magic happens: transforming user desires (favorites! Spain! sports!)
-    /// into a `Predicate<Channel>` that SwiftData can actually understand. It's like being
-    /// a translator between human indecision and database queries.
-    ///
-    /// - Parameters:
-    ///   - searchTerm: Whatever the user half remembered about that channel name
-    ///   - countryCode: Geographic limitations, because streaming rights are complicated
-    ///   - categoryId: Content category, or `nil` for "surprise me"
-    ///
-    /// - Returns: A predicate ready to be unleashed on your SwiftData model context.
-    ///            May return zero results if your criteria are unreasonably specific.
-    static func predicateBuilder(searchTerm: String?,
-                                 countryCode: CountryCodeId,
-                                 categoryId: CategoryId?) -> Predicate<Channel>
-    
     /// Adds a channel to the recently viewed list with the current timestamp.
     ///
     /// This creates a breadcrumb of your viewing history. Every time you select a channel,
@@ -235,28 +215,14 @@ protocol ChannelManageable {
     /// - Returns: True if the device is associated with the bundle, false otherwise.
     func isDeviceAssociated(device: HomeRunDevice, with bundle: ChannelBundle) -> Bool
     
-    /// Adds a device to a bundle and imports all its channels. The ultimate bulk add operation.
-    ///
-    /// This function creates a `ChannelBundleDevice` association and then imports every channel
-    /// from the device's lineup into the bundle. It's like inviting someone to a party and they
-    /// bring their entire extended family—all at once.
-    ///
-    /// Perfect for when you want all those sweet broadcast channels in your bundle without
-    /// manually adding them one by one like some kind of digital archaeologist.
+    /// Adds a device to a bundle.
     ///
     /// - Parameters:
-    ///   - device: The HDHomeRun device whose channels you want to import.
+    ///   - device: The HDHomeRun device.
     ///   - bundle: The bundle that's about to get a whole lot more crowded.
     func addDeviceToBundle(device: HomeRunDevice, bundle: ChannelBundle)
     
-    /// Removes a device from a bundle and deletes all its channels. The nuclear option.
-    ///
-    /// This function severs the `ChannelBundleDevice` association and purges every channel
-    /// that came from this device. It's like unfriending someone on social media and also
-    /// deleting all their old posts from your timeline.
-    ///
-    /// Use with care—once those channels are gone, they're not coming back unless you
-    /// re-add the device. No undo button here, friend.
+    /// Removes a device from a bundle
     ///
     /// - Parameters:
     ///   - device: The device getting the boot.

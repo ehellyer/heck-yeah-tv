@@ -14,7 +14,11 @@ extension SchemaV1 {
     
     @Model final class ChannelProgram: JSONSerializable {
         #Unique<ChannelProgram>([\.id])
-        #Index<ChannelProgram>([\.id], [\.channelId, \.startTime])
+        
+        // Index on the PK for upserting functionality.  (Insert, Update)
+        // Index on ChannelId, StartTime for program guide representation for a channel sorted by start time.
+        // Index on EndTime for cleaning up old program schedules past now.
+        #Index<ChannelProgram>([\.id], [\.channelId, \.startTime], [\.endTime])
         
         init(id: ChannelProgramId,
              channelId: ChannelId,
@@ -42,10 +46,8 @@ extension SchemaV1 {
             self.originalAirDate = originalAirDate
             self.programImageURL = programImageURL
             self.recordingRule = recordingRule
-            self.filter = filter
-            
+            self.filter = filter       
         }
-        
         
         // Stable hash on channelId and startTime.  This is done in the HomeRunImporter where the init is first called.  It is the only place where all the mapping can be done on dependent fetches.
         var id: ChannelProgramId
@@ -61,7 +63,6 @@ extension SchemaV1 {
         var programImageURL: URL?
         var recordingRule: Int?
         var filter: [String]
-        
         
         // MARK: - JSONSerializable Implementation (added for mock data)
         //
@@ -87,7 +88,6 @@ extension SchemaV1 {
         }
         
         func encode(to encoder: Encoder) throws {
-            
             var container = encoder.container(keyedBy: CodingKeys.self)
             try container.encode(id, forKey: .id)
             try container.encode(channelId, forKey: .channelId)

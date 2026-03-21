@@ -1,0 +1,93 @@
+//
+//  ChannelPredicateFactory.swift
+//  HeckYeahTV
+//
+//  Created by Ed Hellyer on 3/21/26.
+//  Copyright © 2026 Hellyer Multimedia. All rights reserved.
+//
+
+import SwiftData
+import Foundation
+
+
+struct ChannelPredicateFactory {
+    
+    /// Initialize with predicate values that will be AND together in the final predicate.
+    /// An array of device Ids are included as `AND deviceIds.contains(channel.deviceId)`.
+    init(channelId: ChannelId? = nil,
+         searchTerm: String? = nil,
+         countryCode: CountryCodeId? = nil,
+         categoryId: CategoryId? = nil,
+         deviceId: HDHomeRunDeviceId? = nil,
+         deviceIds: [HDHomeRunDeviceId]? = nil) {
+        self.channelId = channelId
+        self.searchTerm = searchTerm
+        self.countryCode = countryCode
+        self.categoryId = categoryId
+        self.deviceIds = deviceIds
+    }
+    
+    /// Returns a fetch descriptor with all the supplied criteria.   A sort descriptor is included on Channel.sortHint ascended.
+    func fetchDescriptor() -> FetchDescriptor<Channel> {
+        var descriptor = FetchDescriptor<Channel>()
+        descriptor.predicate = predicate()
+        descriptor.sortBy = sortDescriptor()
+        return descriptor
+    }
+    
+    func sortDescriptor() -> [SortDescriptor<Channel>] {
+        return [SortDescriptor<Channel>(\.sortHint, order: .forward)]
+    }
+    
+    /// Returns the predicate with the criteria values AND together.
+    /// An array of device Ids are included as `AND deviceIds.contains(channel.deviceId)`.
+    func predicate() -> Predicate<Channel> {
+        
+        var conditions: [Predicate<Channel>] = []
+        
+        if let channelId {
+            conditions.append( #Predicate<Channel> { $0.id == channelId })
+        }
+        
+        if let searchTerm, searchTerm.count > 0 {
+            conditions.append( #Predicate<Channel> { $0.title.localizedStandardContains(searchTerm) })
+        }
+        
+        if let countryCode {
+            conditions.append( #Predicate<Channel> { $0.country == countryCode })
+        }
+        
+        if let categoryId {
+            conditions.append( #Predicate<Channel> { channel in
+                channel.categories.contains(where: { $0.categoryId == categoryId })
+            })
+        }
+        
+        if let deviceIds, not(deviceIds.isEmpty) {
+            conditions.append(
+                #Predicate<Channel> { channel in
+                    deviceIds.contains(channel.deviceId)
+                }
+            )
+        }
+        
+        // Combine conditions using '&&' (AND)
+        if conditions.isEmpty {
+            return #Predicate { _ in true } // Return a predicate that always evaluates to true if no conditions
+        } else {
+            let compoundPredicate = conditions.reduce(#Predicate { _ in true }) { current, next in
+                #Predicate { current.evaluate($0) && next.evaluate($0) }
+            }
+            return compoundPredicate
+        }
+    }
+    
+    //MARK: - Private API
+    
+    private var channelId: ChannelId?
+    private var searchTerm: String?
+    private var countryCode: CountryCodeId?
+    private var categoryId: CategoryId?
+    private var deviceIds: [HDHomeRunDeviceId]?
+    
+}

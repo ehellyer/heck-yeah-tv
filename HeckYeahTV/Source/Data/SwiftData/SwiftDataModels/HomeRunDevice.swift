@@ -124,16 +124,3 @@ extension SchemaV1 {
         }
     }
 }
-
-//extension HomeRunDevice {
-//    
-//    var isEnabled_Save: Bool {
-//        get {
-//            return isEnabled
-//        }
-//        set {
-//            isEnabled = newValue
-//            try? self.modelContext?.saveChangesIfNeeded()
-//        }
-//    }
-//}

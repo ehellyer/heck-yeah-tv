@@ -263,7 +263,7 @@ struct SettingsView: View {
     // MARK: - Private View API
 
     private func subtext(for bundle: ChannelBundle) -> String {
-        let hasTunerEnabled = homeRunDevices.first(where: { $0.isEnabled }) != nil
+        let hasTunerEnabled = bundle.deviceAssociations.count > 0
         var subtext = "\(bundle.channels.count) channels in bundle"
         subtext = subtext + ((hasTunerEnabled) ? ", (inc. Tuner Channels)." : ".")
         return subtext

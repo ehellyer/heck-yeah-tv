@@ -78,6 +78,8 @@ struct DeviceSelectionView: View {
         } else {
             swiftDataController.addDeviceToBundle(device: device, bundle: bundle)
         }
+        
+        swiftDataController.invalidateTunerLineUp()
     }
 }
 
@@ -105,28 +107,10 @@ fileprivate struct DeviceRow: View {
                 
                 Spacer()
                 
-                
-                
                 Image(systemName: isAssociated ? "checkmark.circle.fill" : "circle")
                     .foregroundStyle(isAssociated ? .blue : .secondary)
                     .font(.title2)
                     .contentTransition(.symbolEffect(.replace))
-                
-                //#if os(tvOS)
-                //                // tvOS: Show checkmark when selected
-                //                if isAssociated {
-                //                    Image(systemName: "checkmark.circle.fill")
-                //                        .foregroundStyle(.green)
-                //                } else {
-                //                    Image(systemName: "circle")
-                //                        .foregroundStyle(.secondary)
-                //                }
-                //#else
-                //                // iOS/macOS: Use Toggle
-                //                Toggle("", isOn: .constant(isAssociated))
-                //                    .labelsHidden()
-                //                    .allowsHitTesting(false)
-                //#endif
             }
             .contentShape(Rectangle())
         }

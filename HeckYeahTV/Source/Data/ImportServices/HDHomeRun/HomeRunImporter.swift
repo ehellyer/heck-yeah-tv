@@ -97,9 +97,8 @@ actor HomeRunImporter {
     }
     
     private func importTunerDevices(_ devices: [HDHomeRunDevice]) async throws {
-        guard !devices.isEmpty else {
-            logWarning("No devices to import, exiting process without changes to local store.")
-            return
+        if devices.isEmpty {
+            logWarning("No devices to import. Updating local store to remove any devices.  Channels associated with removed devices will also be removed.")
         }
         
         logDebug("HomeRun Device import process starting... 🇺🇸")
@@ -151,6 +150,8 @@ actor HomeRunImporter {
         logDebug("HomeRun Device import process completed. Total imported: \(devices.count) 🏁")
     }
     
+    /// Dev note: Cleanup of the channel guides is done by time only.  A separate function will clean up any channel programs with an EndTime older than now.
+    /// The cleanup function is called once on cold app launch and once every time the guide is launched.
     private func importChannelGuides( _ channelGuides: [HDHomeRunChannelGuide], channelGuideMap: [GuideNumber: ChannelId]) async throws {
         guard !channelGuides.isEmpty else {
             logWarning("No channel guides to import, exiting process without changes to local store.")
@@ -210,6 +211,60 @@ actor HomeRunImporter {
     }
     
     //MARK: - Internal API
+    
+    // A tuner device might go offline, be removed, or the application host device itself might be on a network that can no longer reach the tuner device.
+    // This function identifies channels not from IPTV source that have no associated HomeRunDevice.  They are orphaned.
+    func deleteOrphanedTunerChannels() async {
+        do {
+            logDebug("Starting cleanup of orphaned tuner channels...")
+            
+            // Step 1: Get unique list of deviceIds from Channels (excluding IPTV)
+            let iptvDeviceId = IPTVImporter.iptvDeviceId
+            let channelPredicate = #Predicate<Channel> { $0.deviceId != iptvDeviceId }
+            var channelDescriptor = FetchDescriptor<Channel>(predicate: channelPredicate)
+            channelDescriptor.propertiesToFetch = [\.deviceId]
+            
+            let homeRunChannels = try modelContext.fetch(channelDescriptor)
+            let uniqueDeviceIds = Set(homeRunChannels.map { $0.deviceId })
+            
+            logDebug("Found \(uniqueDeviceIds.count) unique device IDs in channels (excluding IPTV)")
+            
+            // Step 2: For each deviceId, check if it exists in HomeRunDevices
+            var orphanedDeviceIds: [HDHomeRunDeviceId] = []
+            
+            for deviceId in uniqueDeviceIds {
+                let devicePredicate = #Predicate<HomeRunDevice> { $0.deviceId == deviceId }
+                let deviceDescriptor = FetchDescriptor<HomeRunDevice>(predicate: devicePredicate)
+                let deviceCount = try modelContext.fetchCount(deviceDescriptor)
+                
+                if deviceCount == 0 {
+                    orphanedDeviceIds.append(deviceId)
+                }
+            }
+            
+            // Step 3: Delete channels with orphaned deviceIds
+            guard !orphanedDeviceIds.isEmpty else {
+                logDebug("No orphaned channels found. ✅")
+                return
+            }
+            
+            logDebug("Found \(orphanedDeviceIds.count) orphaned device IDs: \(orphanedDeviceIds)")
+            
+            let deleteChannelPredicate = #Predicate<Channel> { channel in
+                orphanedDeviceIds.contains(channel.deviceId)
+            }
+            
+            try modelContext.delete(model: Channel.self, where: deleteChannelPredicate)
+            
+            if modelContext.hasChanges {
+                try modelContext.save()
+            }
+            
+            logDebug("Successfully deleted orphaned channels. 🏁")
+        } catch {
+            logError("Failed to delete orphaned tuner channels. Error: \(error)")
+        }
+    }
     
     func load(shouldFetchGuideData: Bool) async throws -> FetchSummary {
         
