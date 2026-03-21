@@ -72,7 +72,7 @@ class BaseSwiftDataController: SwiftDataProvider {
     func totalIPChannelCatalogCount() -> Int {
         do {
             let iptvDeviceId = IPTVImporter.iptvDeviceId
-            let fetchDescriptor = ChannelPredicateFactory(deviceIds: [iptvDeviceId]).fetchDescriptor()
+            let fetchDescriptor = ChannelPredicate(deviceIds: [iptvDeviceId]).fetchDescriptor()
             let totalChannelCount = try viewContext.fetchCount(fetchDescriptor)
             return totalChannelCount
         } catch {
@@ -84,10 +84,7 @@ class BaseSwiftDataController: SwiftDataProvider {
     func channelCountFor(bundleId: ChannelBundleId) -> Int {
         do {
             let deviceId = IPTVImporter.iptvDeviceId
-            let predicate = #Predicate<BundleEntry> { bundleEntry in
-                bundleEntry.channelBundle.id == bundleId && bundleEntry.channel?.deviceId == deviceId
-            }
-            let descriptor = FetchDescriptor<BundleEntry>(predicate: predicate)
+            let descriptor = BundleEntryPredicate(channelBundleId: bundleId, deviceId: deviceId).fetchDescriptor()
             let count = try viewContext.fetchCount(descriptor)
             return count
         } catch {
@@ -98,7 +95,7 @@ class BaseSwiftDataController: SwiftDataProvider {
 
     func channelCountFor(deviceId: HDHomeRunDeviceId) -> Int {
         do {
-            let fetchDescriptor = ChannelPredicateFactory(deviceIds: [deviceId]).fetchDescriptor()
+            let fetchDescriptor = ChannelPredicate(deviceIds: [deviceId]).fetchDescriptor()
             let count: Int = try viewContext.fetchCount(fetchDescriptor)
             return count
         } catch {
@@ -154,7 +151,7 @@ class BaseSwiftDataController: SwiftDataProvider {
     
     func channel(for channelId: ChannelId) -> Channel? {
         do {
-            var fetchDescriptor = ChannelPredicateFactory(channelId: channelId).fetchDescriptor()
+            var fetchDescriptor = ChannelPredicate(channelId: channelId).fetchDescriptor()
             fetchDescriptor.fetchLimit = 1
             guard let channel = try viewContext.fetch(fetchDescriptor).first else {
                 throw GuideStoreError.noChannelFoundForId(channelId)
@@ -168,7 +165,7 @@ class BaseSwiftDataController: SwiftDataProvider {
     
     func channelsForCurrentFilter() -> [Channel] {
         do {
-            let fetchDescriptor = ChannelPredicateFactory(searchTerm: self.searchTerm,
+            let fetchDescriptor = ChannelPredicate(searchTerm: self.searchTerm,
                                                           countryCode: self.selectedCountry,
                                                           categoryId: self.selectedCategory).fetchDescriptor()
 
@@ -182,8 +179,7 @@ class BaseSwiftDataController: SwiftDataProvider {
     
     func channelBundles() -> [ChannelBundle] {
         do {
-            let sortDescriptor = [SortDescriptor<ChannelBundle>(\.name, order: .forward)]
-            let fetchDescriptor = FetchDescriptor<ChannelBundle>(sortBy: sortDescriptor)
+            let fetchDescriptor = ChannelBundlePredicate().fetchDescriptor()
             let models = try viewContext.fetch(fetchDescriptor)
             return models
         } catch {
@@ -209,8 +205,7 @@ class BaseSwiftDataController: SwiftDataProvider {
     
     func channelBundle(for bundleId: ChannelBundleId) -> ChannelBundle? {
         do {
-            let predicate = #Predicate<ChannelBundle> { $0.id == bundleId }
-            var fetchDescriptor = FetchDescriptor<ChannelBundle>(predicate: predicate)
+            var fetchDescriptor = ChannelBundlePredicate(bundleId: bundleId).fetchDescriptor()
             fetchDescriptor.fetchLimit = 1
             guard let model = try viewContext.fetch(fetchDescriptor).first else {
                 throw GuideStoreError.noChannelBundleFoundForId(bundleId)
@@ -225,8 +220,7 @@ class BaseSwiftDataController: SwiftDataProvider {
     func bundleEntry(for bundleEntryId: BundleEntryId?) -> BundleEntry? {
         guard let bundleEntryId else { return nil }
         do {
-            let predicate = #Predicate<BundleEntry> { $0.id == bundleEntryId }
-            var fetchDescriptor = FetchDescriptor<BundleEntry>(predicate: predicate)
+            var fetchDescriptor = BundleEntryPredicate(bundleEntryIds: [bundleEntryId]).fetchDescriptor()
             fetchDescriptor.fetchLimit = 1
             let bundleEntry: BundleEntry? = try viewContext.fetch(fetchDescriptor).first
             return bundleEntry
@@ -239,8 +233,7 @@ class BaseSwiftDataController: SwiftDataProvider {
     func bundleEntry(for channelId: ChannelId?, channelBundleId: ChannelBundleId) -> BundleEntry? {
         guard let channelId else { return nil }
         do {
-            let predicate = #Predicate<BundleEntry> { $0.channel?.id == channelId && $0.channelBundle.id == channelBundleId }
-            var fetchDescriptor = FetchDescriptor<BundleEntry>(predicate: predicate)
+            var fetchDescriptor = BundleEntryPredicate(channelId: channelId, channelBundleId: channelBundleId).fetchDescriptor()
             fetchDescriptor.fetchLimit = 1
             let bundleEntry: BundleEntry? = try viewContext.fetch(fetchDescriptor).first
             return bundleEntry
@@ -599,7 +592,7 @@ class BaseSwiftDataController: SwiftDataProvider {
     
     private func channelsFor(deviceIds: [HDHomeRunDeviceId]) throws -> [Channel] {
         guard not(deviceIds.isEmpty) else { return [] }
-        let fetchDescriptor = ChannelPredicateFactory(deviceIds: deviceIds).fetchDescriptor()
+        let fetchDescriptor = ChannelPredicate(deviceIds: deviceIds).fetchDescriptor()
         do {
             let channels = try viewContext.fetch(fetchDescriptor)
             return channels
@@ -689,10 +682,7 @@ class BaseSwiftDataController: SwiftDataProvider {
         }
         
         // Fetch existing entries for these IDs
-        let addEntryPredicate = #Predicate<BundleEntry> { entry in
-            expectedAddIds.contains(entry.id)
-        }
-        let addEntryDescriptor = FetchDescriptor<BundleEntry>(predicate: addEntryPredicate)
+        let addEntryDescriptor = BundleEntryPredicate(bundleEntryIds: expectedAddIds).fetchDescriptor()
         let existingAddEntries = try viewContext.fetch(addEntryDescriptor)
         let existingAddIds = Set(existingAddEntries.map { $0.id })
         
@@ -720,10 +710,7 @@ class BaseSwiftDataController: SwiftDataProvider {
         }
         
         // Fetch existing entries to delete
-        let removeEntryPredicate = #Predicate<BundleEntry> { entry in
-            expectedRemoveIds.contains(entry.id)
-        }
-        let removeEntryDescriptor = FetchDescriptor<BundleEntry>(predicate: removeEntryPredicate)
+        let removeEntryDescriptor = BundleEntryPredicate(bundleEntryIds: expectedRemoveIds).fetchDescriptor()
         let entriesToRemove = try viewContext.fetch(removeEntryDescriptor)
         
         // Delete them
@@ -745,23 +732,13 @@ class BaseSwiftDataController: SwiftDataProvider {
         
         let appState: AppStateProvider = InjectedValues[\.sharedAppState]
         let channelBundleId = appState.selectedChannelBundleId
+
+        let channelsDescriptor = BundleEntryPredicate(channelBundleId: channelBundleId,
+                                                      hasChannel: true,
+                                                      showFavoritesOnly: showFavoritesOnly).fetchDescriptor()
+        let bundleEntries: [BundleEntry] = (try context.fetch(channelsDescriptor))
         
-        var conditions: [Predicate<BundleEntry>] = []
-        conditions.append( #Predicate<BundleEntry> { bundleEntry in
-            bundleEntry.channelBundle.id == channelBundleId &&
-            bundleEntry.channel != nil
-        } )
-        if showFavoritesOnly {
-            conditions.append(#Predicate<BundleEntry> { $0.isFavorite == true })
-        }
-        let compoundPredicate = conditions.reduce(#Predicate { _ in true }) { current, next in
-            #Predicate { current.evaluate($0) && next.evaluate($0) }
-        }
-        let sortDescriptor: [SortDescriptor] = [SortDescriptor(\BundleEntry.sortHint, order: .forward)]
-        let channelsDescriptor = FetchDescriptor<BundleEntry>(predicate: compoundPredicate, sortBy: sortDescriptor)
-        let bundleEntries: [BundleEntry] = (try context.fetch(channelsDescriptor)).filter({ $0.channel != nil})
-        
-        let channelIds = bundleEntries.map { $0.channel!.id }
+        let channelIds = bundleEntries.compactMap { $0.channel?.id }
         let map: ChannelMap =  bundleEntries.reduce(into: [:]) { result, item in
             // Note: Can force unwrap channelId here because of the filtering above.
             result[item.channel!.id] = item.id

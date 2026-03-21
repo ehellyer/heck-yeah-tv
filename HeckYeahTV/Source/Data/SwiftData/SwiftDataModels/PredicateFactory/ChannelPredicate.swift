@@ -1,5 +1,5 @@
 //
-//  ChannelPredicateFactory.swift
+//  ChannelPredicate.swift
 //  HeckYeahTV
 //
 //  Created by Ed Hellyer on 3/21/26.
@@ -9,8 +9,7 @@
 import SwiftData
 import Foundation
 
-
-struct ChannelPredicateFactory {
+struct ChannelPredicate {
     
     /// Initialize with predicate values that will be AND together in the final predicate.
     /// An array of device Ids are included as `AND deviceIds.contains(channel.deviceId)`.
@@ -27,7 +26,7 @@ struct ChannelPredicateFactory {
         self.deviceIds = deviceIds
     }
     
-    /// Returns a fetch descriptor with all the supplied criteria.   A sort descriptor is included on Channel.sortHint ascended.
+    /// Returns a fetch descriptor with all the supplied criteria.   A sort descriptor is included on `Channel`.sortHint ordered forward.
     func fetchDescriptor() -> FetchDescriptor<Channel> {
         var descriptor = FetchDescriptor<Channel>()
         descriptor.predicate = predicate()
@@ -35,6 +34,7 @@ struct ChannelPredicateFactory {
         return descriptor
     }
     
+    /// Returns a sort descriptor on `Channel`.sortHint ordered forward.
     func sortDescriptor() -> [SortDescriptor<Channel>] {
         return [SortDescriptor<Channel>(\.sortHint, order: .forward)]
     }
