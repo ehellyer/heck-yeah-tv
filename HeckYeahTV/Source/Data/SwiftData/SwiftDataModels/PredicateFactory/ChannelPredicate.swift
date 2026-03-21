@@ -17,7 +17,6 @@ struct ChannelPredicate {
          searchTerm: String? = nil,
          countryCode: CountryCodeId? = nil,
          categoryId: CategoryId? = nil,
-         deviceId: HDHomeRunDeviceId? = nil,
          deviceIds: [HDHomeRunDeviceId]? = nil) {
         self.channelId = channelId
         self.searchTerm = searchTerm

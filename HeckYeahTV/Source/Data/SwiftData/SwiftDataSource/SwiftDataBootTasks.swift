@@ -39,8 +39,7 @@ actor SwiftDataBootTasks {
             InjectedValues[\.sharedAppState].selectedChannelBundleId
         }
         
-        let sortDescriptor = [SortDescriptor<ChannelBundle>(\.name, order: .forward)]
-        let fetchDescriptor = FetchDescriptor<ChannelBundle>(sortBy: sortDescriptor)
+        let fetchDescriptor = ChannelBundlePredicate().fetchDescriptor()
         let savedBundles = try context.fetch(fetchDescriptor)
         
         if not(savedBundles.contains(where: { $0.id == channelBundleId })) {
@@ -65,11 +64,11 @@ actor SwiftDataBootTasks {
     ///
     /// - Throws: Any fetch or save error propagated from the actor's `ModelContext`.
     func mapOrphanedBundleEntryWithChannel() async throws {
-        let bundleEntryPredicate = #Predicate<BundleEntry> { $0.channel == nil }
-        let bundleEntryDescriptor = FetchDescriptor<BundleEntry>(predicate: bundleEntryPredicate)
+        let bundleEntryDescriptor = BundleEntryPredicate(hasChannel: false).fetchDescriptor()
         
-        var channelDescriptor = FetchDescriptor<Channel>()
+        var channelDescriptor = ChannelPredicate().fetchDescriptor()
         channelDescriptor.fetchLimit = 1
+        channelDescriptor.sortBy = []
         
         let bundleEntries: [BundleEntry] = try context.fetch(bundleEntryDescriptor)
         for bundleEntry in bundleEntries {

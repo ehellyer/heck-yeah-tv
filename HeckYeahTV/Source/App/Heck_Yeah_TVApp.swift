@@ -243,14 +243,7 @@ extension Heck_Yeah_TVApp {
         )
         
         let deviceId = IPTVImporter.iptvDeviceId
-        let cDescriptor: FetchDescriptor<Channel> = FetchDescriptor<Channel>(
-            predicate: #Predicate {
-                $0.deviceId == deviceId
-            },
-            sortBy: [
-                SortDescriptor(\.sortHint)
-            ]
-        )
+        let cDescriptor = ChannelPredicate(deviceIds: [deviceId]).fetchDescriptor()
         
         let viewContext = InjectedValues[\.swiftDataController].viewContext
         

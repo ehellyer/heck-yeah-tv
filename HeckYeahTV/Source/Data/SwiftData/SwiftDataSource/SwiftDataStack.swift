@@ -73,7 +73,7 @@ final class SwiftDataStack: SwiftDataStackProvider {
     // There must be at least one channel bundle, if one does not yet exist, we add the default.
     private static func checkDefaultChannelBundle(context: ModelContext) throws {
         let appState: AppStateProvider = InjectedValues[\.sharedAppState]
-        let descriptor = FetchDescriptor<ChannelBundle>()
+        let descriptor = ChannelBundlePredicate().fetchDescriptor()
         let count = try context.fetchCount(descriptor)
         if count == 0 {
             context.insert(ChannelBundle(id: appState.selectedChannelBundleId,

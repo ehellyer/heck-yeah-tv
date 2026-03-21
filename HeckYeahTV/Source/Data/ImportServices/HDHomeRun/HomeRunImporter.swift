@@ -22,8 +22,7 @@ actor HomeRunImporter {
     private let batchSize: Int = 500
 
     private func fetchChannel(id: ChannelId) async throws -> Channel? {
-        let chPredicate = #Predicate<Channel> { $0.id == id }
-        var chDescriptor = FetchDescriptor<Channel>(predicate: chPredicate)
+        var chDescriptor = ChannelPredicate(channelId: id).fetchDescriptor()
         chDescriptor.fetchLimit = 1
         let model = try modelContext.fetch(chDescriptor).first
         return model
@@ -40,8 +39,7 @@ actor HomeRunImporter {
         
         let existingChannels: [Channel] = {
             do {
-                let predicate = #Predicate<Channel> { deviceIds.contains($0.deviceId) }
-                var descriptor = FetchDescriptor<Channel>(predicate: predicate)
+                var descriptor = ChannelPredicate(deviceIds: deviceIds).fetchDescriptor()
                 descriptor.propertiesToFetch = [\.id]
                 return try modelContext.fetch(descriptor)
             } catch {

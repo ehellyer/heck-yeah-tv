@@ -30,26 +30,6 @@ actor IPTVImporter {
         }
     }()
     
-    private func fetchChannel(id: ChannelId) async throws -> Channel? {
-        let chPredicate = #Predicate<Channel> { $0.id == id }
-        var chDescriptor = FetchDescriptor<Channel>(predicate: chPredicate)
-        chDescriptor.fetchLimit = 1
-        let model = try modelContext.fetch(chDescriptor).first
-        return model
-    }
-    
-    private func iptvChannel(for channelId: ChannelId) -> Channel? {
-        do {
-            let predicate: Predicate<Channel> = #Predicate { $0.id == channelId }
-            var descriptor = FetchDescriptor<Channel>(predicate: predicate)
-            descriptor.fetchLimit = 1
-            return try modelContext.fetch(descriptor).first
-        } catch {
-            logDebug("Unable to fetch existing `Channel` .")
-            return nil
-        }
-    }
-    
     private func importChannels(feeds: [IPFeed],
                                 channels: [IPChannel],
                                 streams: [ChannelId : IPStream]) async throws {
@@ -86,8 +66,7 @@ actor IPTVImporter {
         let existingChannels: [Channel] = {
             do {
                 let deviceId = IPTVImporter.iptvDeviceId
-                let predicate = #Predicate<Channel> { $0.deviceId == deviceId }
-                var descriptor = FetchDescriptor<Channel>(predicate: predicate)
+                var descriptor = ChannelPredicate(deviceIds: [deviceId]).fetchDescriptor()
                 descriptor.propertiesToFetch = [\.id]
                 return try modelContext.fetch(descriptor)
             } catch {

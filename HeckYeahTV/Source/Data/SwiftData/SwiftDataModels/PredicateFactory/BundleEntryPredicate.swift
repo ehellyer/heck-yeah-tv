@@ -16,7 +16,7 @@ struct BundleEntryPredicate {
          channelId: ChannelId? = nil,
          channelBundleId: ChannelBundleId? = nil,
          deviceId: HDHomeRunDeviceId? = nil,
-         hasChannel: Bool = false,
+         hasChannel: Bool? = nil,
          showFavoritesOnly: Bool = false) {
         self.bundleEntryIds = bundleEntryIds
         self.channelId = channelId
@@ -64,8 +64,12 @@ struct BundleEntryPredicate {
             conditions.append( #Predicate<BundleEntry> { $0.channel?.deviceId == deviceId })
         }
         
-        if hasChannel {
-            conditions.append( #Predicate<BundleEntry> { $0.channel != nil })
+        if let hasChannel {
+            if hasChannel {
+                conditions.append(#Predicate<BundleEntry> { $0.channel != nil })
+            } else {
+                conditions.append(#Predicate<BundleEntry> { $0.channel == nil })
+            }
         }
         
         if showFavoritesOnly {
@@ -89,6 +93,6 @@ struct BundleEntryPredicate {
     private var channelId: ChannelId?
     private var channelBundleId: ChannelBundleId?
     private var deviceId: HDHomeRunDeviceId?
-    private var hasChannel: Bool
+    private var hasChannel: Bool?
     private var showFavoritesOnly: Bool
 }
