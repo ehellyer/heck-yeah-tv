@@ -135,12 +135,11 @@ struct Heck_Yeah_TVApp: App {
             let chCount = await InjectedValues[\.swiftDataController].totalIPChannelCatalogCount()
             logDebug("Current channel catalog count: \(chCount)")
             
-            // Don't fetch unless its been at least six hours from the last fetch. (Or date was nil)
-            let date = await appState.dateLastIPTVChannelFetch
-            if date.map({ $0 < Date().addingTimeInterval(-secondsPerHour * 6) }) ?? true {
                 // Concurrent background thread tasks.
                 await withTaskGroup(of: Void.self) { group in
                     let scanForTuners = await appState.scanForTuners ?? false
+
+                    //HDHomeRun Task
                     if scanForTuners && UserDefaults.lastLANAuthorizationStatus == .granted {
                         group.addTask {
                             
@@ -165,25 +164,28 @@ struct Heck_Yeah_TVApp: App {
                         }
                     }
                     
-                    group.addTask {
-                        let iptvImporter = IPTVImporter(modelContainer: container)
-                        let _ = try? await iptvImporter.load()
+                    //IPTV Task
+                    // Don't fetch unless its been at least six hours from the last fetch. (Or date was nil)
+                    let date = await appState.dateLastIPTVChannelFetch
+                    if date.map({ $0 < Date().addingTimeInterval(-secondsPerHour * 6) }) ?? true {
+
+                        group.addTask {
+                            let iptvImporter = IPTVImporter(modelContainer: container)
+                            let _ = try? await iptvImporter.load()
+                        }
+                    }
+                    
+                    await MainActor.run {
+                        var appState = appState
+                        appState.dateLastIPTVChannelFetch = Date()
                     }
                 }
-                
-                await MainActor.run {
-                    var appState = appState
-                    appState.dateLastIPTVChannelFetch = Date()
-                }
-            }
          
             logDebug("Performing final boot tasks")
             let otherBootTasks = SwiftDataBootTasks(container: container)
             try? await otherBootTasks.alignSelectedChannelBundleId()
             try? await otherBootTasks.mapOrphanedBundleEntryWithChannel()
-            let hdTunerImporter = HomeRunImporter(modelContainer: container)
-            await hdTunerImporter.deleteOrphanedTunerChannels()
-
+            
             
             await MainActor.run {
                 var appState = appState

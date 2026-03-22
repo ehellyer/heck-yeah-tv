@@ -115,10 +115,10 @@ struct SettingsView: View {
             
             // MARK: - IPTV Section
             Section {
-                HStack {
+                VStack(alignment: .leading, spacing: 4) {
                     Text("Available Channels")
-                    Spacer()
                     Text("\(iptvChannelCount)")
+                        .font(.caption)
                         .foregroundStyle(.secondary)
                 }
                 .foregroundStyle(.primary)
@@ -264,7 +264,7 @@ struct SettingsView: View {
 
     private func subtext(for bundle: ChannelBundle) -> String {
         let hasTunerEnabled = bundle.deviceAssociations.count > 0
-        var subtext = "\(bundle.channels.count) channels in bundle"
+        var subtext = "\(bundle.bundleChannelCount) channels in bundle"
         subtext = subtext + ((hasTunerEnabled) ? ", (inc. Tuner Channels)." : ".")
         return subtext
     }

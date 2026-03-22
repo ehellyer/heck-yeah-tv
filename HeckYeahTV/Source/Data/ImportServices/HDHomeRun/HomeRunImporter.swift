@@ -324,6 +324,9 @@ actor HomeRunImporter {
         } else {
             logDebug("Skipping guide data fetch. Last fetch was recent enough.")
         }
+
+        //After tuner imports or removals, run the cleanup.
+        await self.deleteOrphanedTunerChannels()
         
         return summary
     }
