@@ -20,7 +20,7 @@ extension SchemaV1 {
              channels: [BundleEntry] = []) {
             self.id = id
             self.name = name
-            self.channels = channels
+            self.channelEntries = channels
         }
 
         /// A unique identifier representing the ChannelBundle.  e.g. "4ea6d879-ffec-4325-a680-41713c672be4"
@@ -31,7 +31,7 @@ extension SchemaV1 {
         
         // Relationship to Channel (cascade on delete to clean up the `BundleEntry` when channelBundle is deleted)
         @Relationship(deleteRule: .cascade, inverse: \BundleEntry.channelBundle)
-        var channels: [BundleEntry]
+        var channelEntries: [BundleEntry]
         
         // Relationship to device associations (cascade on delete to clean up join entries when bundle is deleted)
         @Relationship(deleteRule: .cascade)
@@ -56,7 +56,7 @@ extension SchemaV1 {
             var container = encoder.container(keyedBy: CodingKeys.self)
             try container.encode(id, forKey: .id)
             try container.encode(name, forKey: .name)
-            try container.encodeIfPresent(channels, forKey: .channels)
+            try container.encodeIfPresent(channelEntries, forKey: .channels)
             try container.encodeIfPresent(deviceAssociations, forKey: .deviceAssociations)
         }
         
@@ -64,7 +64,7 @@ extension SchemaV1 {
             let container = try decoder.container(keyedBy: CodingKeys.self)
             self.id = try container.decode(ChannelBundleId.self, forKey: .id)
             self.name = try container.decode(String.self, forKey: .name)
-            self.channels = try container.decodeIfPresent([BundleEntry].self, forKey: .channels) ?? []
+            self.channelEntries = try container.decodeIfPresent([BundleEntry].self, forKey: .channels) ?? []
             self.deviceAssociations = try container.decodeIfPresent([ChannelBundleDevice].self, forKey: .deviceAssociations) ?? []
         }
     }

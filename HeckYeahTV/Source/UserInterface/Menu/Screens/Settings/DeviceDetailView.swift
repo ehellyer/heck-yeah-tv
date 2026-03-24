@@ -15,32 +15,54 @@ struct DeviceDetailView: View {
     let device: HomeRunDevice
     
     @State private var isRefreshing = false
+    @State private var showingDeleteConfirmation = false
     @State private var swiftDataController: BaseSwiftDataController = InjectedValues[\.swiftDataController]
 
     var body: some View {
         ScrollView {
 
-            VStack(alignment: .leading, spacing: 4) {
+            VStack(alignment: .leading, spacing: 8) {
                 
                 // MARK: - Settings Section
                 Section {
-                    Button(action: {
-                        device.isEnabled.toggle()
-                    }) {
-                        HStack(spacing: 20) {
-                            Text("Enable for Heck Yeah TV")
-                            Text(device.isEnabled ? "Yes" : "No")
+                    VStack(alignment: .leading, spacing: 20) {
+                        if device.isOffline {
+                            Button(role: .destructive, action: {
+                                showingDeleteConfirmation = true
+                            }) {
+                                HStack(spacing: 20) {
+                                    Image(systemName: "trash")
+                                        .foregroundStyle(.red)
+                                    Text("Delete HomeRun Device")
+                                }
+                                .foregroundStyle(.primary)
+                            }
+                            .buttonStyle(.glass)
                         }
-                        .foregroundStyle(.primary)
                         
+                        Button(action: {
+                            device.isEnabled.toggle()
+                        }) {
+                            HStack(spacing: 20) {
+                                if device.isEnabled {
+                                    Text("Enabled for Heck Yeah TV")
+                                    Image(systemName: "antenna.radiowaves.left.and.right")
+                                        .foregroundStyle(.blue)
+                                } else {
+                                    Text("Disabled for Heck Yeah TV")
+                                    Image(systemName: "antenna.radiowaves.left.and.right.slash")
+                                        .foregroundStyle(.gray)
+                                }
+                            }
+                            .foregroundStyle(.primary)
+                            
+                        }
+                        .buttonStyle(.glass)
                     }
-                    .buttonStyle(.glass)
-                    
-                    
                 } header: {
                     SectionHeader("Settings")
                 } footer: {
-                    Text("When enabled, channels from this device will be available to be included in a channel bundle.  Edit a channel bundle to include this devices channel line up.")
+                    Text("When enabled channels from this device are available to include in a channel bundle.  Edit a channel bundle to include this devices channel line up.")
                         .font(.caption)
                         .foregroundStyle(.white)
                 }
@@ -55,6 +77,10 @@ struct DeviceDetailView: View {
                     DetailRow(label: "Name", value: device.friendlyName)
                     DetailRow(label: "Model", value: device.modelNumber)
                     DetailRow(label: "Device ID", value: device.deviceId)
+                    VStack(alignment: .leading, spacing: 20) {
+                        StatusRow(label: "Status", isOffline: device.isOffline)
+                        
+                    }
                 }
                 
                 // MARK: - Firmware Section
@@ -87,6 +113,7 @@ struct DeviceDetailView: View {
         .contentMargins(10, for: .scrollContent)
 #if os(tvOS)
         .clipped()
+        .focusSection()
 #endif
         .navigationTitle("Tuner Details")
 #if !os(tvOS)
@@ -97,8 +124,29 @@ struct DeviceDetailView: View {
         .navigationBarTitleDisplayMode(.inline)
 #endif
         .background(.clear)
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button(action: refreshDevice) {
+                    Image(systemName: "arrow.clockwise")
+                }
+                .buttonStyle(.glass)
+                .disabled(isRefreshing)
+            }
+        }
         .onChange(of: device.isEnabled) {
             swiftDataController.invalidateTunerLineUp()
+        }
+        .confirmationDialog(
+            "Delete '\(device.friendlyName)'?",
+            isPresented: $showingDeleteConfirmation,
+            titleVisibility: .visible
+        ) {
+            Button("Delete Device", role: .destructive) {
+                deleteHomeRunDevice()
+            }
+            Button("Cancel", role: .cancel) {}
+        } message: {
+            Text("This action cannot be undone. All channels from this device will be removed from your channel bundles.  You will lose any favorited channels.")
         }
     }
 
@@ -114,6 +162,10 @@ struct DeviceDetailView: View {
                 isRefreshing = false
             }
         }
+    }
+    
+    private func deleteHomeRunDevice() {
+        
     }
 }
 
@@ -151,6 +203,29 @@ fileprivate struct DetailRow: View {
             Text(value)
                 .font(.body)
                 .foregroundStyle(.primary)
+        }
+    }
+}
+
+// MARK: - Status Row Component
+
+fileprivate struct StatusRow: View {
+    let label: String
+    let isOffline: Bool
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 2) {
+            Text(label)
+                .font(.caption)
+                .foregroundStyle(.secondary)
+            HStack(spacing: 8) {
+                Circle()
+                    .fill(isOffline ? Color.red : Color.green)
+                    .frame(width: 25, height: 25)
+                Text(isOffline ? "Offline" : "Online")
+                    .font(.body)
+                    .foregroundStyle(isOffline ? .red : .green)
+            }
         }
     }
 }
@@ -234,7 +309,7 @@ fileprivate struct FocusableSection<Header: View, Content: View, Footer: View>: 
     let swiftDataController = MockSwiftDataController()
     InjectedValues[\.swiftDataController] = swiftDataController
     
-    let device = swiftDataController.homeRunDevices()[1]
+    let device = swiftDataController.homeRunDevices()[0]
     
     return TVPreviewView() {
         NavigationStack {

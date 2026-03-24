@@ -45,15 +45,19 @@ struct BundleEntryPredicate {
         var conditions: [Predicate<BundleEntry>] = []
         
         if let bundleEntryIds, not(bundleEntryIds.isEmpty) {
-            conditions.append(
-                #Predicate<BundleEntry> { bundleEntry in
-                    bundleEntryIds.contains(bundleEntry.id)
-                }
-            )
+            if bundleEntryIds.count == 1 {
+                conditions.append(#Predicate<BundleEntry> { $0.id == bundleEntryIds.first! })
+            } else {
+                conditions.append(
+                    #Predicate<BundleEntry> { device in
+                        bundleEntryIds.contains(device.id)
+                    }
+                )
+            }
         }
         
         if let channelId {
-            conditions.append( #Predicate<BundleEntry> { $0.channel?.id == channelId })
+            conditions.append( #Predicate<BundleEntry> { $0.channelId == channelId })
         }
 
         if let channelBundleId {

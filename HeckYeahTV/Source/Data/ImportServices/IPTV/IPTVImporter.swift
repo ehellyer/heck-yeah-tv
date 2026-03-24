@@ -80,8 +80,8 @@ actor IPTVImporter {
         
         // delete
         logDebug("Existing IPTV channels to delete: \(existingChannels.count)")
-        for model in existingChannels where !incomingIDs.contains(model.id) {
-            modelContext.delete(model)
+        for channel in existingChannels where !incomingIDs.contains(channel.id) {
+            modelContext.delete(channel)
         }
         
         //Build import indexes

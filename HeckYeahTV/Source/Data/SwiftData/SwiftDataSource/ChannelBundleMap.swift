@@ -20,7 +20,7 @@ typealias ChannelMap = [ChannelId: BundleEntryId]
         self.channelBundleId = channelBundleId
         self.map = map
         self.channelIds = channelIds
-        self.mapCount = map.count
+        self.mapCount = channelIds.count
     }
     
     private(set) var channelBundleId: ChannelBundleId
@@ -34,6 +34,6 @@ typealias ChannelMap = [ChannelId: BundleEntryId]
         self.channelBundleId = channelBundleId
         self.map = map
         self.channelIds = channelIds
-        self.mapCount = map.count
+        self.mapCount = channelIds.count
     }
 }

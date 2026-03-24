@@ -125,10 +125,9 @@ actor HomeRunController {
     /// - Returns: A `FetchSummary` containing success/failure information for the guide data fetch operation,
     ///            including the number of channel guides retrieved and any errors encountered.
     private func channelGuideFetch(devices: [HDHomeRunDevice],
-                                    start: Int?,
-                                    duration: Int?,
-                                    channelNumber: String?) async -> FetchSummary {
-        
+                                   start: Int?,
+                                   duration: Int?,
+                                   channelNumber: String?) async -> FetchSummary {
 
         let guideURL = HomeRunDataSources.TVListings.guideURL
         var summary = FetchSummary()
@@ -162,7 +161,7 @@ actor HomeRunController {
         
         let request = NetworkRequest(url: url,
                                      method: .get,
-                                     timeoutInterval: 15.0,
+                                     timeoutInterval: 10.0,
                                      headers: self.defaultHeaders)
         
         do {
@@ -194,7 +193,7 @@ actor HomeRunController {
         logDebug("Looking for HDHomeRun Tuners, obtaining channel line up and fetching guide information. 🇺🇸")
         
         var summary = await deviceDiscovery()
-        if discoveredDevices.isEmpty == false {
+        if not(discoveredDevices.isEmpty) {
             summary.mergeSummary(await deviceDetails())
         }
         
@@ -203,11 +202,11 @@ actor HomeRunController {
             summary.mergeSummary(_summary)
         }
         
-        if includeGuideData && channels.isEmpty == false {
+        if includeGuideData && not(channels.isEmpty) {
             let _summary = await channelGuideFetch(devices: devices, start: nil, duration: 24, channelNumber: nil)
             summary.mergeSummary(_summary)
             
-            if channelGuides.isEmpty == false {
+            if not(channelGuides.isEmpty) {
                 logDebug("Found \(channelGuides.count) HDHomeRun channels with programs.")
                 for i in channels.indices {
                     channels[i].logoURL = indexedLogos[channels[i].guideNumber]

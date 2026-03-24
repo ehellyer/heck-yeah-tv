@@ -29,7 +29,6 @@ class GuideRowCell: UITableViewCell {
     
     override func prepareForReuse() {
         super.prepareForReuse()
-        logDebug("Preparing for reuse")
         channelId = nil
         programs = nil
         programsCollectionView.reloadData()

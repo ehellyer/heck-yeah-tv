@@ -36,6 +36,9 @@ typealias BundleEntryId = String
 /// Type used as the unique identifier of a ChannelBundle.
 typealias ChannelBundleId = String
 
+/// Type used as the unique identifier of a ChannelBundleDevice.
+typealias ChannelBundleDeviceId = String
+
 /// Type used as the unique identifier of a Channel.  The id is a stable hash of URL and one other non-optional property of `IPStream` or `HDHomeRunChannel`.
 typealias ChannelId = String
 

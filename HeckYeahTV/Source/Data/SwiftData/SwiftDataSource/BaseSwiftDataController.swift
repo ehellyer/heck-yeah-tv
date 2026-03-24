@@ -106,8 +106,7 @@ class BaseSwiftDataController: SwiftDataProvider {
 
     func homeRunDevices() -> [HomeRunDevice] {
         do {
-            let sort = [SortDescriptor<HomeRunDevice>(\.friendlyName, order: .forward)]
-            let fetchDescriptor = FetchDescriptor<HomeRunDevice>(sortBy: sort)
+            let fetchDescriptor = HomeRunDevicePredicate().fetchDescriptor()
             let devices = try viewContext.fetch(fetchDescriptor)
             return devices
         } catch {
@@ -260,10 +259,10 @@ class BaseSwiftDataController: SwiftDataProvider {
         }
     }
     
+    /// Rebuilds the ChannelBundleMap which drives the guide UI lazy loading.
     func invalidateChannelBundleMap() {
         scheduleChannelBundleMapRebuild()
     }
-    
     
     /// An internal function that will add or remove bundle entries from the channel bundles as necessary.
     /// In order for the `BundleEntry` to be added to a `ChannelBundle` the device that has the Channel that the BundleEntry points to must be enabled.  And the ChannelBundle must be associated with the HomeRunDevice
@@ -273,7 +272,6 @@ class BaseSwiftDataController: SwiftDataProvider {
         } catch {
             logError("Failed to synchronize tuner device channel lineup with all channel bundles.")
         }
-        
     }
     
     func channelPrograms(for channelId: ChannelId) -> [ChannelProgram] {
@@ -337,10 +335,10 @@ class BaseSwiftDataController: SwiftDataProvider {
             // Fetch all entries sorted by viewedAt (oldest first)
             let viewedAtSort = SortDescriptor<RecentlyViewedChannel>(\.viewedAt, order: .reverse)
             let fetchDescriptor = FetchDescriptor<RecentlyViewedChannel>(sortBy: [viewedAtSort])
-            let allEntries = try viewContext.fetch(fetchDescriptor)
+            let recentlyViewedChannels = try viewContext.fetch(fetchDescriptor)
             
             // Calculate how many to delete
-            let entryCount = allEntries.count
+            let entryCount = recentlyViewedChannels.count
             let deleteCount = entryCount - maxCount
             
             guard deleteCount > 0 else {
@@ -348,8 +346,8 @@ class BaseSwiftDataController: SwiftDataProvider {
                 return
             }
                 
-            for entry in allEntries.suffix(from: maxCount) {
-                viewContext.delete(entry)
+            for recentlyViewedChannel in recentlyViewedChannels.suffix(from: maxCount) {
+                viewContext.delete(recentlyViewedChannel)
             }
             
             try viewContext.saveChangesIfNeeded()
@@ -364,10 +362,10 @@ class BaseSwiftDataController: SwiftDataProvider {
             // Fetch all entries sorted by viewedAt (oldest first)
             let sortDescriptor = SortDescriptor<SelectedChannel>(\.dateAdded, order: .reverse)
             let fetchDescriptor = FetchDescriptor<SelectedChannel>(sortBy: [sortDescriptor])
-            let allEntries = try viewContext.fetch(fetchDescriptor)
+            let selectedChannels = try viewContext.fetch(fetchDescriptor)
             
             // Calculate how many to delete
-            let entryCount = allEntries.count
+            let entryCount = selectedChannels.count
             let deleteCount = entryCount - maxCount
             
             guard deleteCount > 0 else {
@@ -375,8 +373,8 @@ class BaseSwiftDataController: SwiftDataProvider {
                 return
             }
             
-            for entry in allEntries.suffix(from: maxCount) {
-                viewContext.delete(entry)
+            for selectedChannel in selectedChannels.suffix(from: maxCount) {
+                viewContext.delete(selectedChannel)
             }
             
             try viewContext.saveChangesIfNeeded()
@@ -581,9 +579,21 @@ class BaseSwiftDataController: SwiftDataProvider {
         }
     }
     
+    private func offlineDeviceIds() -> [HDHomeRunDeviceId] {
+        do {
+            var descriptor = HomeRunDevicePredicate(isOffline: true).fetchDescriptor()
+            descriptor.propertiesToFetch = [\.deviceId]
+            let devices = try viewContext.fetch(descriptor)
+            let deviceIds = devices.map { $0.deviceId }
+            return deviceIds
+        } catch {
+            logError("Failed to return offline deviceIds from SwiftData.  Error: \(error)")
+            return []
+        }
+    }
+    
     private func devices(enabledState: Bool) throws -> [HDHomeRunDeviceId] {
-        let predicate = #Predicate<HomeRunDevice> { $0.isEnabled == enabledState }
-        var descriptor = FetchDescriptor<HomeRunDevice>(predicate: predicate)
+        var descriptor = HomeRunDevicePredicate(isEnabled: enabledState).fetchDescriptor()
         descriptor.propertiesToFetch = [\.deviceId]
         let devices = try viewContext.fetch(descriptor)
         let deviceIds = devices.map { $0.deviceId }
@@ -613,7 +623,7 @@ class BaseSwiftDataController: SwiftDataProvider {
         return []
     }
     
-    /// Synchronize the BundleEntry(s) in the ChannelBundles based on the Device enabled state and if the device is included in the channel bundle.
+    /// Synchronize the `BundleEntry`(s) in the `ChannelBundle`(s) based on the `HomeRunDevice` enabled state and if the device is associated to the channel bundle.
     private func updateChannelBundleWithIncludedChannels() throws {
         logDebug("Starting sync task for device(s) channel lineup... 🇺🇸")
 
@@ -623,20 +633,20 @@ class BaseSwiftDataController: SwiftDataProvider {
         // Process each bundle individually
         for bundle in allBundles {
             // Get enabled devices associated with this bundle
-            let associatedEnabledDeviceIds = bundle.deviceAssociations
+            let enabledChannelBundleDeviceIds = bundle.deviceAssociations
                 .map { $0.device }
                 .filter { $0.isEnabled }
                 .map { $0.deviceId }
             
-            let associatedDisabledDeviceIds = bundle.deviceAssociations
+            let disabledChannelBundleDevices = bundle.deviceAssociations
                 .filter { $0.device.isEnabled == false }
                 
-            associatedDisabledDeviceIds.forEach {
-                self.viewContext.delete($0)
+            disabledChannelBundleDevices.forEach { channelBundleDevice in
+                self.viewContext.delete(channelBundleDevice)
             }
             
             // Get channels for the enabled devices associated with this bundle
-            let channelsToAdd = try channelsFor(deviceIds: associatedEnabledDeviceIds)
+            let channelsToAdd = try channelsFor(deviceIds: enabledChannelBundleDeviceIds)
             
             // Determine which channels should be removed from this bundle
             // Remove if: device is disabled OR device is enabled but NOT associated with this bundle
@@ -659,14 +669,14 @@ class BaseSwiftDataController: SwiftDataProvider {
         let associatedDeviceIds = Set(bundle.deviceAssociations.map { $0.device.deviceId })
         
         // Get all enabled device IDs that are NOT associated with this bundle
-        let allEnabledDevices = try devices(enabledState: true)
-        let enabledButNotAssociated = allEnabledDevices.filter { !associatedDeviceIds.contains($0) }
+        let allEnabledDeviceIds = try devices(enabledState: true)
+        let enabledButNotAssociated = allEnabledDeviceIds.filter { !associatedDeviceIds.contains($0) }
         
         // Get all disabled device IDs
-        let allDisabledDevices = try devices(enabledState: false)
+        let allDisabledDeviceIds = try devices(enabledState: false)
         
         // Combine: disabled devices + enabled but not associated devices
-        let deviceIdsToRemove = enabledButNotAssociated + allDisabledDevices
+        let deviceIdsToRemove = enabledButNotAssociated + allDisabledDeviceIds
         
         // Get channels for these devices
         return try channelsFor(deviceIds: deviceIdsToRemove)
@@ -675,28 +685,15 @@ class BaseSwiftDataController: SwiftDataProvider {
     private func addBundleEntries(for channels: [Channel], to bundle: ChannelBundle) throws {
         guard !channels.isEmpty else { return }
         
-        // Compute all expected IDs for this bundle
-        var expectedAddIds: [BundleEntryId] = []
+        // Upsert BundleEntry
         for channel in channels {
-            expectedAddIds.append(BundleEntry.newBundleEntryId(channelBundleId: bundle.id, channelId: channel.id))
-        }
-        
-        // Fetch existing entries for these IDs
-        let addEntryDescriptor = BundleEntryPredicate(bundleEntryIds: expectedAddIds).fetchDescriptor()
-        let existingAddEntries = try viewContext.fetch(addEntryDescriptor)
-        let existingAddIds = Set(existingAddEntries.map { $0.id })
-        
-        // Insert missing entries
-        for channel in channels {
-            let bundleEntryId = BundleEntry.newBundleEntryId(channelBundleId: bundle.id, channelId: channel.id)
+            let existingBundleEntry = bundleEntry(for: channel.id, channelBundleId: bundle.id)
             
-            if !existingAddIds.contains(bundleEntryId) {
-                let newEntry = BundleEntry(channel: channel,
-                                           channelBundle: bundle,
-                                           sortHint: channel.sortHint,
-                                           isFavorite: false)
-                viewContext.insert(newEntry)
-            }
+            let bundleEntry = BundleEntry(channel: channel,
+                                          channelBundle: bundle,
+                                          sortHint: channel.sortHint,
+                                          isFavorite: existingBundleEntry?.isFavorite ?? false)
+            viewContext.insert(bundleEntry)
         }
     }
     
@@ -714,8 +711,8 @@ class BaseSwiftDataController: SwiftDataProvider {
         let entriesToRemove = try viewContext.fetch(removeEntryDescriptor)
         
         // Delete them
-        for entry in entriesToRemove {
-            viewContext.delete(entry)
+        for bundleEntry in entriesToRemove {
+            viewContext.delete(bundleEntry)
         }
     }
     
@@ -733,15 +730,21 @@ class BaseSwiftDataController: SwiftDataProvider {
         let appState: AppStateProvider = InjectedValues[\.sharedAppState]
         let channelBundleId = appState.selectedChannelBundleId
 
+        let offlineDeviceIds = self.offlineDeviceIds()
+        
         let channelsDescriptor = BundleEntryPredicate(channelBundleId: channelBundleId,
                                                       hasChannel: true,
                                                       showFavoritesOnly: showFavoritesOnly).fetchDescriptor()
         let bundleEntries: [BundleEntry] = (try context.fetch(channelsDescriptor))
         
-        let channelIds = bundleEntries.compactMap { $0.channel?.id }
-        let map: ChannelMap =  bundleEntries.reduce(into: [:]) { result, item in
+        // BundleEntries that are not part of any offline device.
+        let onlineBundleEntries: [BundleEntry] = bundleEntries.filter({ not(offlineDeviceIds.contains($0.channel!.deviceId)) })
+        
+        let channelIds = onlineBundleEntries.compactMap { $0.channel?.id }
+        let map: ChannelMap =  onlineBundleEntries.reduce(into: [:]) { result, bundleEntry in
+            // Create a mapping index mapping `Channel` identifier to the `BundleEntry` identifier.
             // Note: Can force unwrap channelId here because of the filtering above.
-            result[item.channel!.id] = item.id
+            result[bundleEntry.channel!.id] = bundleEntry.id
         }
         
         channelBundleMap.update(channelBundleId: channelBundleId,

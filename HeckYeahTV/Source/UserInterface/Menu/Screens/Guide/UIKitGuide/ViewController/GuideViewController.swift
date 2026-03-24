@@ -37,6 +37,7 @@ class GuideViewController: UIViewController {
         setupTableView()
         setupSwiftDataObservation()
         updateShowNoChannels()
+        updateShowNoFavoriteChannels()
         swiftDataController.deletePastChannelPrograms()
     }
     
@@ -77,6 +78,13 @@ class GuideViewController: UIViewController {
         
         return _tableView
     }()
+
+    private lazy var noFavoriteChannelsHostingController: UIHostingController<NoChannelsFavorites> = {
+        let noFavoriteChannelsView = NoChannelsFavorites()
+        let _hostingVC = UIHostingController(rootView: noFavoriteChannelsView)
+        _hostingVC.view.translatesAutoresizingMaskIntoConstraints = false
+        return _hostingVC
+    }()
     
     private lazy var noChannelsHostingController: UIHostingController<NoChannelsInChannelBundle> = {
         let noChannelsView = NoChannelsInChannelBundle()
@@ -85,12 +93,45 @@ class GuideViewController: UIViewController {
         return _hostingVC
     }()
 
+    private var showFavoritesOnly: Bool { swiftDataController.showFavoritesOnly }
+    private var hasChannels: Bool { not(self.swiftDataController.channelBundleMap.map.isEmpty) }
+    
     private func updateShowNoChannels() {
-        if self.swiftDataController.channelBundleMap.map.isEmpty {
+        if not(showFavoritesOnly) && not(hasChannels) {
             self.showNoChannelsView()
         } else {
             self.hideNoChannelsView()
         }
+    }
+
+    private func updateShowNoFavoriteChannels() {
+        if showFavoritesOnly && not(hasChannels) {
+            self.showNoFavoriteChannelsView()
+        } else {
+            self.hideNoFavoriteChannelsView()
+        }
+    }
+    
+    private func showNoFavoriteChannelsView() {
+        guard noFavoriteChannelsHostingController.parent == nil else {
+            return
+        }
+        addChild(noFavoriteChannelsHostingController)
+        view.addSubview(noFavoriteChannelsHostingController.view)
+        noFavoriteChannelsHostingController.didMove(toParent: self)
+        noFavoriteChannelsHostingController.view.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+        noFavoriteChannelsHostingController.view.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        noFavoriteChannelsHostingController.view.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+        noFavoriteChannelsHostingController.view.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+    }
+    
+    private func hideNoFavoriteChannelsView() {
+        guard noFavoriteChannelsHostingController.parent != nil else {
+            return
+        }
+        noFavoriteChannelsHostingController.willMove(toParent: nil)
+        noFavoriteChannelsHostingController.view.removeFromSuperview()
+        noFavoriteChannelsHostingController.removeFromParent()
     }
     
     private func showNoChannelsView() {
@@ -144,6 +185,7 @@ class GuideViewController: UIViewController {
         withObservationTracking({
             // Access the property we care about. This registers the dependency.
             _ = swiftDataController.channelBundleMap.map
+            _ = swiftDataController.showFavoritesOnly
         }, onChange: { [weak self] in
             // Called when any accessed observed property in the tracking block changes.
             Task { @MainActor [weak self] in
@@ -155,6 +197,7 @@ class GuideViewController: UIViewController {
                     self?.tableView.reloadData()
                     self?.scrollToSelectedChannel()
                     self?.updateShowNoChannels()
+                    self?.updateShowNoFavoriteChannels()
                     self?.setupSwiftDataObservation()
                 }
             }

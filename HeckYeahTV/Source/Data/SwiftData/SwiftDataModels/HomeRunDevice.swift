@@ -25,7 +25,8 @@ extension SchemaV1 {
              baseURL: URL,
              lineupURL: URL,
              tunerCount: Int,
-             isEnabled: Bool) {
+             isEnabled: Bool,
+             isOffline: Bool) {
             self.deviceId = deviceId
             self.friendlyName = friendlyName
             self.modelNumber = modelNumber
@@ -36,6 +37,7 @@ extension SchemaV1 {
             self.lineupURL = lineupURL
             self.tunerCount = tunerCount
             self.isEnabled = isEnabled
+            self.isOffline = isOffline
         }
         
         /// The HomeRun unique device identifier. e.g. "21BC22D88"
@@ -68,9 +70,13 @@ extension SchemaV1 {
         /// A boolean to indicate if this device is enabled and available for use in the Heck Yeah TV application.
         var isEnabled: Bool
         
-        // Relationship to bundle associations (cascade on delete to clean up join entries when device is deleted)
+        /// A boolean to indicate when the device is not currently reachable on the network.
+        var isOffline: Bool
+        
+        /// Relationship to bundle associations (cascade on delete to clean up join entries when device is deleted)
         @Relationship(deleteRule: .cascade)
         var bundleAssociations: [ChannelBundleDevice] = []
+        
         
         // MARK: - JSONSerializable Implementation (added for mock data)
         //
@@ -90,6 +96,7 @@ extension SchemaV1 {
             case lineupURL
             case tunerCount
             case isEnabled
+            case isOffline
             case bundleAssociations
         }
         
@@ -105,6 +112,7 @@ extension SchemaV1 {
             try container.encode(lineupURL, forKey: .lineupURL)
             try container.encode(tunerCount, forKey: .tunerCount)
             try container.encode(isEnabled, forKey: .isEnabled)
+            try container.encode(isOffline, forKey: .isOffline)
             try container.encodeIfPresent(bundleAssociations, forKey: .bundleAssociations)
         }
         
@@ -120,6 +128,7 @@ extension SchemaV1 {
             self.lineupURL = try container.decode(URL.self, forKey: .lineupURL)
             self.tunerCount = try container.decode(Int.self, forKey: .tunerCount)
             self.isEnabled = try container.decode(Bool.self, forKey: .isEnabled)
+            self.isOffline = try container.decode(Bool.self, forKey: .isOffline)
             self.bundleAssociations = try container.decodeIfPresent([ChannelBundleDevice].self, forKey: .bundleAssociations) ?? []
         }
     }

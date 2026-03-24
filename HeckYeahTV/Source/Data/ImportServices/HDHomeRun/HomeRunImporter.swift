@@ -53,8 +53,8 @@ actor HomeRunImporter {
         
         // delete
         logDebug("Existing HomeRun channels to delete: \(existingChannels.count)")
-        for model in existingChannels where !incomingIDs.contains(model.id) {
-            modelContext.delete(model)
+        for channel in existingChannels where !incomingIDs.contains(channel.id) {
+            modelContext.delete(channel)
         }
         
         // insert
@@ -94,49 +94,44 @@ actor HomeRunImporter {
         logDebug("HomeRun channel import process completed  Total imported: \(tunerChannels.count)... 🏁")
     }
     
-    private func importTunerDevices(_ devices: [HDHomeRunDevice]) async throws {
-        if devices.isEmpty {
+    private func importTunerDevices(_ discoveredDevices: [HDHomeRunDevice]) async throws {
+        if discoveredDevices.isEmpty {
             logWarning("No devices to import. Updating local store to remove any devices.  Channels associated with removed devices will also be removed.")
         }
         
         logDebug("HomeRun Device import process starting... 🇺🇸")
         
-        let existingHomeRunDevices: [HomeRunDevice] = {
+        let existingDevices: [HomeRunDevice] = {
             do {
-                var descriptor = FetchDescriptor<HomeRunDevice>()
-                descriptor.propertiesToFetch = [\.deviceId]
-                return try modelContext.fetch(descriptor)
+                return try modelContext.fetch(HomeRunDevicePredicate().fetchDescriptor())
             } catch {
                 logError("Unable to fetch existing `HomeRunDevice`. \(error)")
                 return []
             }
         }()
         
-        let existingIDs = Set(existingHomeRunDevices.map(\.deviceId))
-        let incomingIDs = Set(devices.map(\.deviceId))
-        let removeIDs = existingIDs.subtracting(incomingIDs)
-        
-        // delete
-        for model in existingHomeRunDevices where removeIDs.contains(model.deviceId) {
-            modelContext.delete(model)
+        let discoveredDeviceIds = Set(discoveredDevices.map(\.deviceId))
+        let offlineDevices = existingDevices.filter({ not(discoveredDeviceIds.contains($0.deviceId)) })
+
+        // Mark devices as offline if they exist in the database but were not discovered on the network.
+        for device in offlineDevices {
+            device.isOffline = true
         }
         
-        // insert
-        for src in devices {
-            // isEnabled is a user set state and so if this is an existing device we need to preserve the current setting.  Else default to enabled.
-            let isEnabled = existingHomeRunDevices.first(where: { $0.deviceId == src.deviceId })?.isEnabled ?? true
-            
+        // DiscoveredDevices collection insert/update. (aka Upsert done by SwiftData on DeviceId)
+        for src in discoveredDevices {
             modelContext.insert(
                 HomeRunDevice(deviceId: src.deviceId,
-                                friendlyName: src.friendlyName,
-                                modelNumber: src.modelNumber,
-                                firmwareName: src.firmwareName,
-                                firmwareVersion: src.firmwareVersion,
-                                deviceAuth: src.deviceAuth,
-                                baseURL: src.baseURL,
-                                lineupURL: src.lineupURL,
-                                tunerCount: src.tunerCount,
-                                isEnabled: isEnabled)
+                              friendlyName: src.friendlyName,
+                              modelNumber: src.modelNumber,
+                              firmwareName: src.firmwareName,
+                              firmwareVersion: src.firmwareVersion,
+                              deviceAuth: src.deviceAuth,
+                              baseURL: src.baseURL,
+                              lineupURL: src.lineupURL,
+                              tunerCount: src.tunerCount,
+                              isEnabled: true,
+                              isOffline: false)  // <-- An upsert will flip an isOffline == true to isOffline == false.
             )
         }
         
@@ -145,13 +140,34 @@ actor HomeRunImporter {
             await Task.yield()
         }
         
-        logDebug("HomeRun Device import process completed. Total imported: \(devices.count) 🏁")
+        logDebug("HomeRun Device import process completed. Total imported: \(discoveredDevices.count) 🏁")
+    }
+    
+    
+    private func updateChannelBundleDevice() async {
+        do {
+            let devices: [HomeRunDevice] = try modelContext.fetch(HomeRunDevicePredicate().fetchDescriptor())
+            
+            guard devices.count == 1, let device = devices.first, device.isEnabled == true else { return }
+                
+            let channelBundles = try modelContext.fetch(ChannelBundlePredicate().fetchDescriptor())
+            for bundle in channelBundles {
+                bundle.deviceAssociations.append(ChannelBundleDevice(bundle: bundle, device: device))
+            }
+            
+            if modelContext.hasChanges {
+                try modelContext.save()
+                await Task.yield()
+            }
+        } catch {
+            logError("Unable to update ChannelBundles with discovered `HomeRunDevice`. \(error)")
+        }
     }
     
     /// Dev note: Cleanup of the channel guides is done by time only.  A separate function will clean up any channel programs with an EndTime older than now.
     /// The cleanup function is called once on cold app launch and once every time the guide is launched.
-    private func importChannelGuides( _ channelGuides: [HDHomeRunChannelGuide], channelGuideMap: [GuideNumber: ChannelId]) async throws {
-        guard !channelGuides.isEmpty else {
+    private func importChannelGuides( _ channelGuides: [HDHomeRunChannelGuide], guideToChannelMap: [GuideNumber: ChannelId]) async throws {
+        guard not(channelGuides.isEmpty) else {
             logWarning("No channel guides to import, exiting process without changes to local store.")
             return
         }
@@ -160,7 +176,7 @@ actor HomeRunImporter {
         
         // insert
         for guide in channelGuides {
-            if let channelId = channelGuideMap[guide.guideNumber] {
+            if let channelId = guideToChannelMap[guide.guideNumber] {
                 for program in guide.programs {
                     let id: ChannelProgramId = String.stableHashHex(channelId, program.startTime.ISO8601Format())
                     modelContext.insert(
@@ -212,30 +228,29 @@ actor HomeRunImporter {
     
     // A tuner device might go offline, be removed, or the application host device itself might be on a network that can no longer reach the tuner device.
     // This function identifies channels not from IPTV source that have no associated HomeRunDevice.  They are orphaned.
+    // Returns the count of orphaned tuner channels got removed.
     func deleteOrphanedTunerChannels() async {
         do {
             logDebug("Starting cleanup of orphaned tuner channels...")
             
-            // Step 1: Get unique list of deviceIds from Channels (excluding IPTV)
-            let iptvDeviceId = IPTVImporter.iptvDeviceId
-            let channelPredicate = #Predicate<Channel> { $0.deviceId != iptvDeviceId }
-            var channelDescriptor = FetchDescriptor<Channel>(predicate: channelPredicate)
+            // Step 1: Get unique list of deviceIds from Channels (excluding IPTV channels)
+            var channelDescriptor = ChannelPredicate(deviceChannelsOnly: true).fetchDescriptor()
             channelDescriptor.propertiesToFetch = [\.deviceId]
             
             let homeRunChannels = try modelContext.fetch(channelDescriptor)
             let uniqueDeviceIds = Set(homeRunChannels.map { $0.deviceId })
             
-            logDebug("Found \(uniqueDeviceIds.count) unique device IDs in channels (excluding IPTV)")
+            logDebug("Found \(uniqueDeviceIds.count) unique device IDs in channels (excluding IPTV channels).")
             
             // Step 2: For each deviceId, check if it exists in HomeRunDevices
             var orphanedDeviceIds: [HDHomeRunDeviceId] = []
             
             for deviceId in uniqueDeviceIds {
-                let devicePredicate = #Predicate<HomeRunDevice> { $0.deviceId == deviceId }
-                let deviceDescriptor = FetchDescriptor<HomeRunDevice>(predicate: devicePredicate)
-                let deviceCount = try modelContext.fetchCount(deviceDescriptor)
+                let deviceDescriptor = HomeRunDevicePredicate(deviceIds: [deviceId]).fetchDescriptor()
+                let device = try modelContext.fetch(deviceDescriptor).first
                 
-                if deviceCount == 0 {
+                // If the device has been removed or is currently offline, remove its channels from the channel catalog.  (Leave the bundle entries)
+                if device == nil || device?.isOffline == true {
                     orphanedDeviceIds.append(deviceId)
                 }
             }
@@ -258,7 +273,7 @@ actor HomeRunImporter {
                 try modelContext.save()
             }
             
-            logDebug("Successfully deleted orphaned channels. 🏁")
+            logDebug("Successfully deleted orphaned channels. 🤘🏻 🏁")
         } catch {
             logError("Failed to delete orphaned tuner channels. Error: \(error)")
         }
@@ -298,23 +313,27 @@ actor HomeRunImporter {
         
         summary.mergeSummary(homeRunSummary)
         
-        if summary.failures.isEmpty == false {
+        if not(summary.failures.isEmpty) {
             logError("\(summary.failures.count) failure(s) in HDHomeRun tuner fetch: \(summary.failures)")
         }
         
         try await self.importTunerDevices(homeRunController.devices)
         try await self.importHDHRChannels(homeRunController.channels)
         
+        /// If after the imports there is only one device in the database and it is enabled for use in the app, it is automatically added to all ChannelBundles.
+        await self.updateChannelBundleDevice()
+
         if shouldFetchGuideData {
-            let channelGuideMap: [GuideNumber : ChannelId] = await homeRunController.channels.reduce(into: [:]) { accumulator, channel in
+            let guideToChannelMap: [GuideNumber : ChannelId] = await homeRunController.channels.reduce(into: [:]) { accumulator, channel in
                 accumulator[channel.guideNumber] = channel.id
             }
             
             do {
-                try await self.importChannelGuides(homeRunController.channelGuides, channelGuideMap: channelGuideMap)
+                try await self.importChannelGuides(homeRunController.channelGuides,
+                                                   guideToChannelMap: guideToChannelMap)
                 
                 // Only update the timestamp if guide import was successful
-                if channelGuideMap.count > 0 {
+                if guideToChannelMap.count > 0 {
                     await self.updateHomeRunChannelProgramFetchDate()
                 }                
             } catch {
@@ -325,9 +344,6 @@ actor HomeRunImporter {
             logDebug("Skipping guide data fetch. Last fetch was recent enough.")
         }
 
-        //After tuner imports or removals, run the cleanup.
-        await self.deleteOrphanedTunerChannels()
-        
         return summary
     }
 }

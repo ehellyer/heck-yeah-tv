@@ -22,6 +22,10 @@ struct SettingsView: View {
     @Query(sort: \HomeRunDevice.friendlyName)
     private var homeRunDevices: [HomeRunDevice]
     
+    // This query triggers view updates when device associations change
+    @Query
+    private var deviceAssociations: [ChannelBundleDevice]
+    
     private func channelCount(for deviceId: HDHomeRunDeviceId) -> Int {
         let count = swiftDataController.channelCountFor(deviceId: deviceId)
         return count
@@ -184,11 +188,19 @@ struct SettingsView: View {
                                     
                                     HStack {
                                         Text("\(channelCount(for: device.deviceId)) channels")
-                                        
+
                                         if device.isEnabled {
-                                            Text("(Available for including in channel bundle)")
+                                            Text("Enabled for Heck Yeah TV")
                                         } else {
-                                            Text("(Disabled for channel bundles)")
+                                            Text("Disabled for Heck Yeah TV")
+                                        }
+                                        
+                                        if device.isOffline {
+                                            Text("Offline")
+                                                .foregroundStyle(.red)
+                                        } else {
+                                            Text("Online")
+                                                .foregroundStyle(.green)
                                         }
                                     }
                                     .font(.caption)
@@ -255,6 +267,7 @@ struct SettingsView: View {
                     }
             }
         }
+                  
         .onAppear() {
             reloadIPTVChannelCount()
         }
@@ -295,6 +308,14 @@ struct SettingsView: View {
             let importer = HomeRunImporter(modelContainer: container)
             do {
                 _ = try await importer.load(shouldFetchGuideData: true)
+                
+                await importer.deleteOrphanedTunerChannels()
+
+                await MainActor.run {
+                    swiftDataController.invalidateTunerLineUp()
+                    swiftDataController.invalidateChannelBundleMap()
+                }
+                
             } catch {
                 logError("Reload tuner devices failed.  Error: \(error)")
             }

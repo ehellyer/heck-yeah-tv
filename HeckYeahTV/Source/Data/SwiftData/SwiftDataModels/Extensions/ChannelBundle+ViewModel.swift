@@ -14,6 +14,6 @@ extension ChannelBundle {
     /// This happens much more on iPhone and iPad with HDHomeRunDevices where the user will frequently not be on their
     /// home network where the device is unreachable.
     var bundleChannelCount: Int {
-        return self.channels.filter({ $0.channel != nil }).count
+        return self.channelEntries.filter({ $0.channel != nil }).count
     }
 }

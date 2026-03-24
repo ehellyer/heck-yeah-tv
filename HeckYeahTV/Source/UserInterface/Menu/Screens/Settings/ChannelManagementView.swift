@@ -89,14 +89,13 @@ struct ChannelManagementView: View {
     // MARK: - Helper Methods
     
     private func isChannelInBundle(_ channel: Channel) -> Bool {
-        bundle.channels.contains { $0.channel?.id == channel.id }
+        bundle.channelEntries.contains { $0.channel?.id == channel.id }
     }
     
     private func toggleChannel(_ channel: Channel) {
-        if let existingEntry = bundle.channels.first(where: { $0.channel?.id == channel.id }) {
+        if let removeBundleEntry = bundle.channelEntries.first(where: { $0.channel?.id == channel.id }) {
             // Remove from bundle
-            bundle.channels.removeAll { $0.id == existingEntry.id }
-            swiftDataController.viewContext.delete(existingEntry)
+            swiftDataController.viewContext.delete(removeBundleEntry)
         } else {
             // Add to bundle
             let bundleEntry = BundleEntry(
@@ -106,7 +105,6 @@ struct ChannelManagementView: View {
                 isFavorite: false
             )
             swiftDataController.viewContext.insert(bundleEntry)
-            bundle.channels.append(bundleEntry)
         }
         
         // Save changes

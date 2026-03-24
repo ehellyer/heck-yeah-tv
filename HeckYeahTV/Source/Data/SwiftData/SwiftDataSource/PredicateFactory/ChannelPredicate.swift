@@ -17,12 +17,14 @@ struct ChannelPredicate {
          searchTerm: String? = nil,
          countryCode: CountryCodeId? = nil,
          categoryId: CategoryId? = nil,
-         deviceIds: [HDHomeRunDeviceId]? = nil) {
+         deviceIds: [HDHomeRunDeviceId]? = nil,
+         deviceChannelsOnly: Bool = false) {
         self.channelId = channelId
         self.searchTerm = searchTerm
         self.countryCode = countryCode
         self.categoryId = categoryId
         self.deviceIds = deviceIds
+        self.deviceChannelsOnly = deviceChannelsOnly
     }
     
     /// Returns a fetch descriptor with all the supplied criteria.   A sort descriptor is included on `Channel`.sortHint ordered forward.
@@ -63,11 +65,20 @@ struct ChannelPredicate {
         }
         
         if let deviceIds, not(deviceIds.isEmpty) {
-            conditions.append(
-                #Predicate<Channel> { channel in
-                    deviceIds.contains(channel.deviceId)
-                }
-            )
+            if deviceIds.count == 1 {
+                conditions.append(#Predicate<Channel> { $0.deviceId == deviceIds.first! })
+            } else {
+                conditions.append(
+                    #Predicate<Channel> { channel in
+                        deviceIds.contains(channel.deviceId)
+                    }
+                )
+            }
+        }
+        
+        if deviceChannelsOnly {
+            let iptvDeviceId = IPTVImporter.iptvDeviceId
+            conditions.append(#Predicate<Channel> { $0.deviceId != iptvDeviceId })
         }
         
         // Combine conditions using '&&' (AND)
@@ -88,5 +99,6 @@ struct ChannelPredicate {
     private var countryCode: CountryCodeId?
     private var categoryId: CategoryId?
     private var deviceIds: [HDHomeRunDeviceId]?
+    private var deviceChannelsOnly: Bool
     
 }

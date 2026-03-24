@@ -35,9 +35,18 @@ struct ChannelBundleFilterView: View {
                     HStack {
                         Text("Edit Bundle Name")
                         Spacer()
-                        Text(bundleNameBuffer)
-                            .foregroundStyle(.secondary)
-                            .lineLimit(1)
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text(bundleNameBuffer)
+                                .foregroundStyle(.secondary)
+                                .lineLimit(1)
+                                .font(.body)
+                            
+                            Text("\(bundle.bundleChannelCount) channels in bundle.")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
+                        
+                        
                     }
                     .foregroundStyle(.primary)
                 }
@@ -153,7 +162,7 @@ struct ChannelBundleFilterView: View {
                         HStack {
                             Text("Select HDHomeRun device to include channels")
                             Spacer()
-                            Text("\(associatedDeviceCount) selected")
+                            Text("\(associatedDeviceCount) device(s) selected")
                                 .foregroundStyle(.secondary)
                                 .font(.caption)
                         }
@@ -168,7 +177,7 @@ struct ChannelBundleFilterView: View {
                         Text("Select IPTV Channels matching filter")
                         Spacer()
                         if matchingChannelCount > 0 {
-                            Text("\(matchingChannelCount) matching")
+                            Text("\(matchingChannelCount) channels matching filter")
                                 .foregroundStyle(.secondary)
                                 .font(.caption)
                         }

@@ -24,6 +24,7 @@ extension SchemaV1 {
             self.categoryDescription = categoryDescription
         }
         
+        /// Unique identifier of a program category.
         var categoryId: CategoryId
         
         /// Name of the category
@@ -35,6 +36,7 @@ extension SchemaV1 {
         /// Channels that belong to this category (many-to-many relationship)
         @Relationship(deleteRule: .nullify, inverse: \Channel.categories)
         var channels: [Channel]? = []
+        
         
         // MARK: - JSONSerializable Implementation (added for mock data)
         //

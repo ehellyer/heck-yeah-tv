@@ -37,7 +37,10 @@ extension SchemaV1 {
         var channel: Channel?
         
         var channelId: ChannelId
+        
+        @Relationship(deleteRule: .nullify)
         var channelBundle: ChannelBundle
+        
         var sortHint: String
         var isFavorite: Bool
 

@@ -36,8 +36,9 @@ struct NoChannelsFavorites: View {
         .frame(maxWidth: .infinity)
         .frame(maxHeight: .infinity)
         .padding(40)
-        
-        .focusable(false)
+#if os(tvOS)
+        .focusSection()
+#endif
         .background(Color.clear)
     }
 }

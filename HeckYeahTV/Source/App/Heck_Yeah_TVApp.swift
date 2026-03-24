@@ -161,6 +161,9 @@ struct Heck_Yeah_TVApp: App {
                             
                             let hdTunerImporter = HomeRunImporter(modelContainer: container)
                             let _ = try? await hdTunerImporter.load(shouldFetchGuideData: shouldFetchGuideData)
+                            
+                            //After tuner imports or removals, run the channel cleanup.
+                            await hdTunerImporter.deleteOrphanedTunerChannels()
                         }
                     }
                     
@@ -186,11 +189,12 @@ struct Heck_Yeah_TVApp: App {
             try? await otherBootTasks.alignSelectedChannelBundleId()
             try? await otherBootTasks.mapOrphanedBundleEntryWithChannel()
             
-            
             await MainActor.run {
                 var appState = appState
                 appState.dateLastIPTVChannelFetch = Date()
                 
+                swiftDataController.invalidateTunerLineUp()
+                swiftDataController.invalidateChannelBundleMap()
                 initializeUIState()
 
                 // Update state variable that boot up processes are completed.
@@ -204,7 +208,7 @@ struct Heck_Yeah_TVApp: App {
         InjectedValues[\.swiftDataController].invalidateChannelBundleMap()
 
         let swiftDataController = InjectedValues[\.swiftDataController]
-        let hasNoChannels = swiftDataController.channelBundleMap.map.isEmpty
+        let hasNoChannels = swiftDataController.channelBundleMap.channelIds.isEmpty
         
         if HeckYeahSchema.versionIdentifier == Schema.Version(0, 0, 0) {
             // DB was deletes as part of a hard reset, so clear out some app state to match.
