@@ -91,23 +91,22 @@ struct ChannelProgramListView: View {
     }
 }
 
-//#Preview {
-//    // Override the injected AppStateProvider
-//    @Previewable @State var appState: AppStateProvider = MockSharedAppState()
-//    InjectedValues[\.sharedAppState] = appState
-//    
-//    // Override the injected SwiftDataController
-//    let swiftDataController = MockSwiftDataController()
-//    InjectedValues[\.swiftDataController] = swiftDataController
-//    
-//    let channel = swiftDataController.channel(for: swiftDataController.channelBundleMap.channelIds[1])
-//    swiftDataController.selectedChannel = channel
-//    
-//    return TVPreviewView() {
-//        ChannelProgramListView(channelId: channel.id)
-//        .onAppear {
-//            let channel2 = swiftDataController.channel(for: swiftDataController.channelBundleMap.channelIds[11])
-//            swiftDataController.selectedChannel = channel2
-//        }
-//    }
-//}
+#Preview {
+    // Override the injected AppStateProvider
+    @Previewable @State var appState: AppStateProvider = MockSharedAppState()
+    InjectedValues[\.sharedAppState] = appState
+    
+    // Override the injected SwiftDataController
+    let swiftDataController = MockSwiftDataController()
+    InjectedValues[\.swiftDataController] = swiftDataController
+    
+    let channelId = swiftDataController.channelBundleMap.channelIds[11]
+    
+    return TVPreviewView() {
+        ChannelProgramListView(channelId: channelId)
+        .onAppear {
+            let channel2 = swiftDataController.channel(for: channelId)
+            swiftDataController.selectedChannel = channel2
+        }
+    }
+}

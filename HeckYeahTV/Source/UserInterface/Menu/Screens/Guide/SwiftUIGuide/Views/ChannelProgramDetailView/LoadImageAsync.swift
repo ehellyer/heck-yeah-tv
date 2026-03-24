@@ -95,7 +95,7 @@ struct LoadImageAsync: View {
     let swiftDataController = MockSwiftDataController()
     InjectedValues[\.swiftDataController] = swiftDataController
     
-    let channelId = swiftDataController.channelBundleMap.channelIds[11]
+    let channelId = swiftDataController.channelBundleMap.channelIds[1]
     let channel = swiftDataController.channel(for: channelId)!
     
     return ZStack {

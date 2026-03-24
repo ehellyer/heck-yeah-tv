@@ -131,11 +131,11 @@ private extension GuideView {
     InjectedValues[\.swiftDataController] = swiftDataController
     
     //Test show only favorites
-//    swiftDataController.showFavoritesOnly = false
-    
+//    swiftDataController.showFavoritesOnly = true
+
     //Test the no channels view
-//    swiftDataController.channelBundleMap.update(map: [])
-    
+//    swiftDataController.channelBundleMap.update(channelBundleId: "123", map: [:], channelIds: [])
+
     return TVPreviewView() {
         GuideView()
     }
