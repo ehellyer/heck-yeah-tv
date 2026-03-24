@@ -222,7 +222,9 @@ extension MainAppContentView {
     let swiftDataController = MockSwiftDataController()
     InjectedValues[\.swiftDataController] = swiftDataController
     
-    ///    let selectedChannelId = swiftDataController.channelBundleMap.map[3]
+    
+    let channelId = swiftDataController.channelBundleMap.channelIds[2]
+    let selectedChannel = swiftDataController.channel(for: channelId)
     
     return ZStack {
         //Color.yellow.ignoresSafeArea()
@@ -230,8 +232,8 @@ extension MainAppContentView {
         MainAppContentView()
             .background(Color.clear)
             .onAppear {
-                //appState.selectedBundleChannel = selectedChannelId
-                appState.showAppMenu = false
+                swiftDataController.selectedChannel = selectedChannel
+                appState.showAppMenu = true
             }
             .environment(\.colorScheme, .dark)
     }
