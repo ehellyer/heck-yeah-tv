@@ -74,10 +74,13 @@ struct FavoriteView: View {
             
             FavoriteView(channelId: nil)
             
+            FavoriteView(channelId: nil)
+                .redacted(reason: .placeholder)
+            
             FavoriteView(channelId: channelId)
             
             FavoriteView(channelId: channelId)
-            .redacted(reason: .placeholder)
+                .redacted(reason: .placeholder)
             
         }
         .onAppear {

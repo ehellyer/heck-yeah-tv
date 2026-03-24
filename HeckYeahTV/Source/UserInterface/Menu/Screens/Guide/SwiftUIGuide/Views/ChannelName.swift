@@ -47,8 +47,9 @@ struct ChannelName: View {
     let swiftDataController = MockSwiftDataController()
     InjectedValues[\.swiftDataController] = swiftDataController
 
-//    let channelId = swiftDataController.channelBundleMap.channelIds[11]
-
-    let channel = swiftDataController.selectedChannel
+    let channelId = swiftDataController.channelBundleMap.channelIds[11]
+    let channel = swiftDataController.channel(for: channelId)
+    
     return ChannelName(channel: channel)
+        //.redacted(reason: .placeholder)
 }

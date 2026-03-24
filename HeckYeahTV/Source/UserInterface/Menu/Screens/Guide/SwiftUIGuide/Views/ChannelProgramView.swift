@@ -67,8 +67,7 @@ struct ChannelProgramView: View {
     let swiftDataController = MockSwiftDataController()
     InjectedValues[\.swiftDataController] = swiftDataController
     
-    
-    let channelId = "7a9b1eebc340e54fd8e0383b3952863ba491fcb655c7bbdefa6ab2afd2e57dfd"
+    let channelId = swiftDataController.channelBundleMap.channelIds[11]
     let channelPrograms = swiftDataController.channelPrograms(for: channelId)
     
     return TVPreviewView() {

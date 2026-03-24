@@ -137,13 +137,12 @@ struct ChannelProgramsCarousel: View {
     let swiftDataController = MockSwiftDataController()
     InjectedValues[\.swiftDataController] = swiftDataController
     
-    let channelId = swiftDataController.channelBundleMap.channelIds[11]
+    let channelId = swiftDataController.channelBundleMap.channelIds[1]
     let channelPrograms = swiftDataController.channelPrograms(for: channelId)
 
     let channelProgram = channelPrograms.first!
     
     return TVPreviewView() {
-        
         VStack {
             ChannelProgramsCarousel(channelProgram: channelProgram)
         }

@@ -49,7 +49,6 @@ struct NoChannelProgramView: View {
     InjectedValues[\.swiftDataController] = swiftDataController
     
     let channelId = swiftDataController.channelBundleMap.channelIds[1]
-    //appState.selectedChannel = channelId
     
     return TVPreviewView() {
         NoChannelProgramView(channelId: channelId)
