@@ -45,6 +45,8 @@ actor HomeRunController {
     
     private func deviceDiscovery() async -> FetchSummary {
         var summary = FetchSummary()
+        
+        
         let discoveryURL = HomeRunDataSources.Tuner.discoveryURL
         let request = NetworkRequest(url: discoveryURL,
                                      method: .get,
@@ -53,7 +55,11 @@ actor HomeRunController {
         do {
             let response: JSONSerializableResponse<[HDHomeRunDiscovery]> = try await self.sessionInterface.execute(request)
             self.discoveredDevices = response.jsonObject
+            
             summary.successes[discoveryURL] = discoveredDevices.count
+//            let probe = HDHomeRunProbe()
+//            let devices = try await probe.discoverDevices()
+//            summary.successes[discoveryURL] = 0
         } catch {
             summary.failures[discoveryURL] = error
         }

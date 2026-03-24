@@ -23,6 +23,13 @@ struct HDHomeRunDevice: JSONSerializable, Equatable {
     let baseURL: URL
     let lineupURL: URL
     let tunerCount: Int
+    /*
+     
+     let ipAddr: String         // e.g. "192.168.78.220"
+     let subnetMask: String     // e.g. "255.255.255.0"
+     let macAddr: String        // e.g. "00:18:DD:0A:81:C7"
+     let ATSC3-DRM: String      // e.g. "SD20230420"
+     */
 }
 
 //MARK: - JSONSerializable customization
