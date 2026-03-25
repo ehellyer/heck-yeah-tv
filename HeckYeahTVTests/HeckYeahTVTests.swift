@@ -58,4 +58,48 @@ struct HeckYeahTVTests {
 //        #expect(jsonString.isEmpty == false)
     }
     
+    @Test func testHDHomeRunProbeUnicast() async throws {
+        print("=== Starting HDHomeRun Probe Unicast Test ===")
+        let probe = HDHomeRunProbe()
+        
+        do {
+            let devices: [HDHomeRunProbe.DiscoveredDevice] = try await probe.discoverDevices(targetIP: "192.168.78.220")
+            print("✅ Found \(devices.count) device(s)")
+            
+            for device in devices {
+                print("Device ID: \(device.deviceID)")
+                print("Device Type: \(device.deviceType)")
+                print("Base URL: \(device.baseURL)")
+                print("IP Address: \(device.ipAddress)")
+            }
+            
+            #expect(devices.count > 0, "Expected to find at least one device")
+        } catch {
+            print("❌ Error: \(error)")
+            throw error
+        }
+    }
+    
+    @Test func testHDHomeRunProbeBroadcast() async throws {
+        print("=== Starting HDHomeRun Probe Broadcast Test ===")
+        let probe = HDHomeRunProbe()
+        
+        do {
+            let devices: [HDHomeRunProbe.DiscoveredDevice] = try await probe.discoverDevices()
+            print("✅ Found \(devices.count) device(s) via broadcast")
+            
+            for device in devices {
+                print("Device ID: \(device.deviceID)")
+                print("Device Type: \(device.deviceType)")
+                print("Base URL: \(device.baseURL)")
+                print("IP Address: \(device.ipAddress)")
+            }
+            
+            #expect(devices.count > 0, "Expected to find at least one device")
+        } catch {
+            print("❌ Error: \(error)")
+            throw error
+        }
+    }
+    
 }

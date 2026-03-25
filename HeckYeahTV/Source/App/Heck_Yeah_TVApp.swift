@@ -72,6 +72,12 @@ struct Heck_Yeah_TVApp: App {
         Window("Heck Yeah TV", id: "main") {
             content()
         }
+//        #if DEBUG
+//        Window("HDHomeRun Probe Test", id: "probe-test") {
+//            HDHomeRunProbeTestView()
+//        }
+//        .keyboardShortcut("t", modifiers: [.command, .shift])
+//        #endif
 #else
         WindowGroup {
             content()

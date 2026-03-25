@@ -9,29 +9,21 @@
 import Foundation
 import Network
 
-#if canImport(Darwin)
-import Darwin
-#elseif canImport(Glibc)
-import Glibc
-#endif
-
 /// Low-level HDHomeRun device discovery using UDP broadcast.
 ///
 /// Based on the HDHomeRun discovery protocol specification:
-/// - Protocol: UDP broadcast on port 65001 to 255.255.255.255
+/// - Protocol: UDP broadcast on port 65001
+///   - macOS: Uses global broadcast (255.255.255.255)
+///   - iOS/tvOS: Uses subnet-specific broadcast addresses for each network interface
 /// - Packet format: Type (2 bytes) + Length (2 bytes) + Payload + CRC (4 bytes)
 /// - All values are big-endian except CRC (little-endian)
-///
-/// **Important**: This implementation uses BSD sockets and UDP broadcast/unicast.
-/// It will NOT work in the iOS/tvOS Simulator due to network isolation limitations.
-/// Testing must be done on real hardware (Apple TV device).
 ///
 /// References:
 /// - https://github.com/Silicondust/libhdhomerun
 /// - https://github.com/waypar/hdhomerun-protocol-docs
 /// - https://www.silicondust.com/hdhomerun/hdhomerun_development.pdf
 actor HDHomeRunProbe {
-    
+
     // MARK: - Constants
     
     private static let discoveryPort: UInt16 = 65001
@@ -54,31 +46,31 @@ actor HDHomeRunProbe {
         case timeout
         case invalidResponse(String)
         case networkUnavailable(Error)
-        
+
         var errorDescription: String? {
             switch self {
-            case .socketCreationFailed(let error):
-                if let error = error {
-                    return "Failed to create UDP socket for device discovery: \(error.localizedDescription)"
-                }
-                return "Failed to create UDP socket for device discovery"
-            case .broadcastSendFailed(let error):
-                return "Failed to send broadcast discovery packet: \(error.localizedDescription)"
-            case .noDevicesFound:
-                return "No HDHomeRun devices found on the network"
-            case .timeout:
-                return "Device discovery timed out"
-            case .invalidResponse(let reason):
-                return "Received invalid response from device: \(reason)"
-            case .networkUnavailable(let error):
-                return "Network is unavailable: \(error.localizedDescription)"
+                case .socketCreationFailed(let error):
+                    if let error = error {
+                        return "Failed to create UDP socket for device discovery: \(error.localizedDescription)"
+                    }
+                    return "Failed to create UDP socket for device discovery"
+                case .broadcastSendFailed(let error):
+                    return "Failed to send broadcast discovery packet: \(error.localizedDescription)"
+                case .noDevicesFound:
+                    return "No HDHomeRun devices found on the network"
+                case .timeout:
+                    return "Device discovery timed out"
+                case .invalidResponse(let reason):
+                    return "Received invalid response from device: \(reason)"
+                case .networkUnavailable(let error):
+                    return "Network is unavailable: \(error.localizedDescription)"
             }
         }
     }
     
-    struct DiscoveredDevice {
+    struct DiscoveredDevice: Hashable {
         let deviceID: String
-        let deviceType: String
+        let deviceType: Int // 1 = Tuner, 5 = Storage
         let baseURL: String
         let ipAddress: String
     }
@@ -87,22 +79,22 @@ actor HDHomeRunProbe {
     
     /// Discovers HDHomeRun devices on the local network.
     ///
-    /// This function broadcasts a discovery packet on UDP port 65001 and listens for responses
-    /// from HDHomeRun devices.
+    /// Sends a discovery packet on UDP port 65001 and listens for responses from HDHomeRun devices.
+    /// On macOS, uses global broadcast (255.255.255.255). On iOS/tvOS, sends to subnet-specific
+    /// broadcast addresses for each active network interface.
     ///
-    /// **Note**: This will NOT work in the iOS/tvOS Simulator due to network isolation.
-    /// Must be tested on real Apple TV hardware.
-    ///
-    /// - Returns: An array of discovered devices
+    /// - Parameter targetIP: Optional specific IP address to probe via unicast instead of broadcast
+    /// - Returns: An array of discovered devices (duplicates are automatically filtered)
     /// - Throws: `ProbeError` if discovery fails or no devices are found
-    func discoverDevices() async throws -> [DiscoveredDevice] {
-        let devices = try await self.performDiscovery()
+    func discoverDevices(targetIP: String? = nil) async throws -> [DiscoveredDevice] {
+        let devices = try await self.performDiscovery(targetIP: targetIP)
         return devices
     }
     
     // MARK: - Private Implementation
     
     private func performDiscovery(targetIP: String? = nil) async throws -> [DiscoveredDevice] {
+        
         // Create UDP socket
         let socket = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)
         guard socket >= 0 else {
@@ -115,7 +107,8 @@ actor HDHomeRunProbe {
         
         // Enable broadcast
         var broadcastEnable: Int32 = 1
-        guard setsockopt(socket, SOL_SOCKET, SO_BROADCAST, &broadcastEnable, socklen_t(MemoryLayout<Int32>.size)) >= 0 else {
+        let broadcastResult = setsockopt(socket, SOL_SOCKET, SO_BROADCAST, &broadcastEnable, socklen_t(MemoryLayout<Int32>.size))
+        guard broadcastResult >= 0 else {
             throw ProbeError.socketCreationFailed(nil)
         }
         
@@ -137,10 +130,11 @@ actor HDHomeRunProbe {
         
         // Set socket timeout
         var timeout = timeval(tv_sec: 1, tv_usec: 0)
-        setsockopt(socket, SOL_SOCKET, SO_RCVTIMEO, &timeout, socklen_t(MemoryLayout<timeval>.size))
+        _ = setsockopt(socket, SOL_SOCKET, SO_RCVTIMEO, &timeout, socklen_t(MemoryLayout<timeval>.size))
         
         // Send discovery broadcast or unicast
         let discoveryPacket = createDiscoveryPacket()
+        
         if let targetIP = targetIP {
             try sendUnicast(socket: socket, data: discoveryPacket, targetIP: targetIP)
         } else {
@@ -157,28 +151,19 @@ actor HDHomeRunProbe {
         return devices
     }
     
-
-    
     private func createDiscoveryPacket() -> Data {
+        var payload = Data()
+        
+        // Device type tag - HDHOMERUN_DEVICE_TYPE_TUNER (0x00000001)
+        payload.append(Self.tagDeviceType)  // Tag: 0x01
+        payload.append(0x04)  // Length: 4 bytes
+        payload.append(contentsOf: withUnsafeBytes(of: UInt32(0x00000001).bigEndian) { Array($0) })  // Tuner type
+        
+        // Packet header
         var packet = Data()
-        
-        // Packet type (discovery request) - big-endian
-        packet.append(contentsOf: withUnsafeBytes(of: Self.packetTypeDiscoveryRequest.bigEndian) { Array($0) })
-        
-        // Payload length - big-endian
-        let payloadLength: UInt16 = 8  // Device ID tag (1) + length (1) + value (4) + device type tag (1) + length (1)
-        packet.append(contentsOf: withUnsafeBytes(of: payloadLength.bigEndian) { Array($0) })
-        
-        // Payload: Device ID wildcard (tag + length + value)
-        packet.append(Self.tagDeviceID)  // Tag: 0x02
-        packet.append(0x04)  // Length: 4 bytes
-        packet.append(contentsOf: withUnsafeBytes(of: UInt32(0xFFFFFFFF).bigEndian) { Array($0) })  // Wildcard device ID
-        
-        // Device type wildcard
-        packet.append(Self.tagDeviceType)  // Tag: 0x01
-        packet.append(0x01)  // Length: 1 byte
-        packet.append(0xFF)  // Value: wildcard
-        packet.append(0x00)  // Padding for 4-byte alignment
+        packet.append(contentsOf: withUnsafeBytes(of: Self.packetTypeDiscoveryRequest.bigEndian) { Array($0) })  // Type
+        packet.append(contentsOf: withUnsafeBytes(of: UInt16(payload.count).bigEndian) { Array($0) })  // Length
+        packet.append(payload)  // Payload
         
         // Calculate and append CRC32 (little-endian)
         let crc = calculateCRC32(data: packet)
@@ -188,10 +173,38 @@ actor HDHomeRunProbe {
     }
     
     private func sendBroadcast(socket: Int32, data: Data) throws {
+#if os(iOS) || os(tvOS)
+        // On iOS/tvOS, send to all available network interfaces
+        let broadcastAddresses = getAllSubnetBroadcastAddresses()
+        
+        if broadcastAddresses.isEmpty {
+            try sendToBroadcastAddress(socket: socket, data: data, address: Self.broadcastAddress)
+        } else {
+            var sentCount = 0
+            for (interface, address) in broadcastAddresses {
+                do {
+                    try sendToBroadcastAddress(socket: socket, data: data, address: address)
+                    sentCount += 1
+                } catch {
+                    logError("   ⚠️ Failed on \(interface): \(address) - \(error)")
+                }
+            }
+            
+            guard sentCount > 0 else {
+                throw ProbeError.broadcastSendFailed(NSError(domain: NSPOSIXErrorDomain, code: Int(errno)))
+            }
+        }
+#else
+        // macOS: use global broadcast
+        try sendToBroadcastAddress(socket: socket, data: data, address: Self.broadcastAddress)
+#endif
+    }
+    
+    private func sendToBroadcastAddress(socket: Int32, data: Data, address: String) throws {
         var addr = sockaddr_in()
         addr.sin_family = sa_family_t(AF_INET)
         addr.sin_port = Self.discoveryPort.bigEndian
-        addr.sin_addr.s_addr = inet_addr(Self.broadcastAddress)
+        addr.sin_addr.s_addr = inet_addr(address)
         
         let sent = data.withUnsafeBytes { buffer in
             withUnsafePointer(to: addr) { addrPtr in
@@ -204,6 +217,50 @@ actor HDHomeRunProbe {
         guard sent >= 0 else {
             throw ProbeError.broadcastSendFailed(NSError(domain: NSPOSIXErrorDomain, code: Int(errno)))
         }
+    }
+    
+    /// Gets all subnet broadcast addresses for all available network interfaces (iOS/tvOS only).
+    ///
+    /// Enumerates IPv4 network interfaces (excluding loopback) and returns their broadcast addresses.
+    /// This is necessary on iOS/tvOS because global broadcast (255.255.255.255) is restricted.
+    ///
+    /// - Returns: Array of (interface name, broadcast address) tuples
+    private func getAllSubnetBroadcastAddresses() -> [(String, String)] {
+        var results: [(String, String)] = []
+        
+#if os(iOS) || os(tvOS)
+        var ifaddr: UnsafeMutablePointer<ifaddrs>?
+        guard getifaddrs(&ifaddr) == 0 else { return results }
+        defer { freeifaddrs(ifaddr) }
+        
+        var ptr = ifaddr
+        while ptr != nil {
+            defer { ptr = ptr?.pointee.ifa_next }
+            
+            guard let interface = ptr?.pointee else { continue }
+            let addrFamily = interface.ifa_addr.pointee.sa_family
+            
+            // Only look at IPv4 addresses
+            guard addrFamily == UInt8(AF_INET) else { continue }
+            
+            // Skip loopback
+            let name = String(cString: interface.ifa_name)
+            guard name != "lo0" else { continue }
+            
+            // Get broadcast address if available
+            if let broadAddr = interface.ifa_dstaddr {
+                var hostname = [CChar](repeating: 0, count: Int(NI_MAXHOST))
+                if getnameinfo(broadAddr, socklen_t(interface.ifa_addr.pointee.sa_len),
+                               &hostname, socklen_t(hostname.count),
+                               nil, 0, NI_NUMERICHOST) == 0 {
+                    let address = String(cString: hostname)
+                    results.append((name, address))
+                }
+            }
+        }
+#endif
+        
+        return results
     }
     
     private func sendUnicast(socket: Int32, data: Data, targetIP: String) throws {
@@ -221,6 +278,7 @@ actor HDHomeRunProbe {
         }
         
         guard sent >= 0 else {
+            logError("Unicast send failed: errno=\(errno), sent=\(sent)")
             throw ProbeError.broadcastSendFailed(NSError(domain: NSPOSIXErrorDomain, code: Int(errno)))
         }
     }
@@ -235,7 +293,7 @@ actor HDHomeRunProbe {
                     devices.append(device)
                 }
             } catch {
-                // Timeout or no more responses
+                logError("Receive loop ended: \(error)")
                 break
             }
         }
@@ -276,18 +334,22 @@ actor HDHomeRunProbe {
     }
     
     nonisolated private func parseDiscoveryResponse(data: Data, ipAddress: String) throws -> DiscoveredDevice {
-        // Verify packet type (should be discovery reply)
-        let packetType = data.withUnsafeBytes { $0.load(fromByteOffset: 0, as: UInt16.self) }.bigEndian
+        guard data.count >= 8 else {
+            throw ProbeError.invalidResponse("Packet too small: \(data.count) bytes")
+        }
+        
+        // Verify packet type (should be 0x0003 for discovery reply) - read as big-endian
+        let packetType = UInt16(data[0]) << 8 | UInt16(data[1])
         guard packetType == Self.packetTypeDiscoveryReply else {
             throw ProbeError.invalidResponse("Invalid packet type: \(packetType)")
         }
         
-        // Get payload length
-        let payloadLength = data.withUnsafeBytes { $0.load(fromByteOffset: 2, as: UInt16.self) }.bigEndian
+        // Get payload length - read as big-endian
+        let payloadLength = UInt16(data[2]) << 8 | UInt16(data[3])
         
         // Parse TLV payload
         var deviceID: String?
-        var deviceType: String?
+        var deviceType: Int?
         var baseURL: String?
         
         var offset = 4  // Skip type and length fields
@@ -312,14 +374,28 @@ actor HDHomeRunProbe {
             offset += length
             
             switch tag {
-            case Self.tagDeviceID:
-                deviceID = String(format: "%08X", value.withUnsafeBytes { $0.load(as: UInt32.self) }.bigEndian)
-            case Self.tagDeviceType:
-                deviceType = String(data: value, encoding: .ascii) ?? "unknown"
-            case Self.tagBaseURL:
-                baseURL = String(data: value, encoding: .ascii)
-            default:
-                break
+                case Self.tagDeviceID:
+                    // Read 4 bytes as big-endian UInt32 and format as hex string
+                    if value.count >= 4 {
+                        let id = UInt32(value[value.startIndex]) << 24 |
+                        UInt32(value[value.startIndex + 1]) << 16 |
+                        UInt32(value[value.startIndex + 2]) << 8 |
+                        UInt32(value[value.startIndex + 3])
+                        deviceID = String(format: "%08X", id)
+                    }
+                case Self.tagDeviceType:
+                    // Device type is sent as a 4-byte big-endian integer
+                    if value.count >= 4 {
+                        let type = Int(UInt32(value[value.startIndex]) << 24 |
+                                       UInt32(value[value.startIndex + 1]) << 16 |
+                                       UInt32(value[value.startIndex + 2]) << 8 |
+                                       UInt32(value[value.startIndex + 3]))
+                        deviceType = type
+                    }
+                case Self.tagBaseURL:
+                    baseURL = String(data: value, encoding: .ascii)
+                default:
+                    break
             }
         }
         
@@ -337,23 +413,23 @@ actor HDHomeRunProbe {
         )
     }
     
-
-    
     nonisolated private func calculateCRC32(data: Data) -> UInt32 {
-        // Ethernet-style CRC32 (polynomial 0x04C11DB7)
+        // HDHomeRun CRC32 calculation - matches official libhdhomerun implementation
         var crc: UInt32 = 0xFFFFFFFF
         
         for byte in data {
-            crc ^= UInt32(byte)
-            for _ in 0..<8 {
-                if (crc & 1) != 0 {
-                    crc = (crc >> 1) ^ 0xEDB88320
-                } else {
-                    crc = crc >> 1
-                }
-            }
+            let x = UInt8(crc & 0xFF) ^ byte
+            crc >>= 8
+            if (x & 0x01) != 0 { crc ^= 0x77073096 }
+            if (x & 0x02) != 0 { crc ^= 0xEE0E612C }
+            if (x & 0x04) != 0 { crc ^= 0x076DC419 }
+            if (x & 0x08) != 0 { crc ^= 0x0EDB8832 }
+            if (x & 0x10) != 0 { crc ^= 0x1DB71064 }
+            if (x & 0x20) != 0 { crc ^= 0x3B6E20C8 }
+            if (x & 0x40) != 0 { crc ^= 0x76DC4190 }
+            if (x & 0x80) != 0 { crc ^= 0xEDB88320 }
         }
         
-        return ~crc
+        return crc ^ 0xFFFFFFFF
     }
 }

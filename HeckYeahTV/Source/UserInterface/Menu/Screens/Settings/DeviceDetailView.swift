@@ -125,7 +125,7 @@ struct DeviceDetailView: View {
 #endif
         .background(.clear)
         .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
+            ToolbarItem(placement: .automatic) {
                 Button(action: refreshDevice) {
                     Image(systemName: "arrow.clockwise")
                 }

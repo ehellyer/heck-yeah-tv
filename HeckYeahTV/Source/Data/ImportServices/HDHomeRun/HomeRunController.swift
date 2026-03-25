@@ -38,28 +38,35 @@ actor HomeRunController {
     
     private let sessionInterface: SessionInterface = SessionInterface.sharedInstance
     
-    // keep-alive off for this request. Example: Underlying layer 3/2 changes while app is running, e.g. VPN was on, then turned off or vice versa.
+    // keep-alive off for this request because we need each attempt to create a new session. Example: Underlying layer 3/2 changes while app is running, e.g. VPN was on, then turned off or vice versa.
     private var defaultHeaders: [HTTPHeader] = [HTTPHeader.defaultUserAgent,
                                                 HTTPHeader(name: "Accept-Encoding", value: "application/json"),
                                                 HTTPHeader(name: "connection", value: "close")]
     
     private func deviceDiscovery() async -> FetchSummary {
         var summary = FetchSummary()
-        
-        
         let discoveryURL = HomeRunDataSources.Tuner.discoveryURL
-        let request = NetworkRequest(url: discoveryURL,
-                                     method: .get,
-                                     timeoutInterval: 10.0,
-                                     headers: self.defaultHeaders)
         do {
-            let response: JSONSerializableResponse<[HDHomeRunDiscovery]> = try await self.sessionInterface.execute(request)
-            self.discoveredDevices = response.jsonObject
+            let probe = HDHomeRunProbe()
+            let devices = try await probe.discoverDevices()
             
-            summary.successes[discoveryURL] = discoveredDevices.count
-//            let probe = HDHomeRunProbe()
-//            let devices = try await probe.discoverDevices()
-//            summary.successes[discoveryURL] = 0
+            let homeRunDiscovery: [HDHomeRunDiscovery] = Set(devices).compactMap({
+                guard let baseURL = URL(string: $0.baseURL),
+                      let discoverURL = URL(string: "http://\($0.ipAddress)/discover.json"),
+                      let lineupURL = URL(string: "http://\($0.ipAddress)/lineup.json")
+                else {
+                    return nil
+                }
+                
+                return HDHomeRunDiscovery(deviceId: $0.deviceID,
+                                          localIP: $0.ipAddress,
+                                          baseURL: baseURL,
+                                          discoverURL: discoverURL,
+                                          lineupURL: lineupURL)
+            })
+            self.discoveredDevices = homeRunDiscovery
+            
+            summary.successes[discoveryURL] = homeRunDiscovery.count
         } catch {
             summary.failures[discoveryURL] = error
         }
