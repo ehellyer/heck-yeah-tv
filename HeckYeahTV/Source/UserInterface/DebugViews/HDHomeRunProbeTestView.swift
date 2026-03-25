@@ -2,8 +2,8 @@
 //  HDHomeRunProbeTestView.swift
 //  Heck Yeah TV
 //
-//  Created for testing HDHomeRun discovery
-//
+//  Created by Ed Hellyer on 3/24/26.
+//  Copyright © 2026 Hellyer Multimedia. All rights reserved.
 
 import SwiftUI
 
