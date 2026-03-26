@@ -37,6 +37,9 @@ actor HDHomeRunProbe {
     private static let tagDeviceID: UInt8 = 0x02
     private static let tagBaseURL: UInt8 = 0x2A
     
+    static let HDHomeRunDeviceType_Tuner: Int = 1
+    static let HDHomeRunDeviceType_Storage: Int = 5
+    
     // MARK: - Types
     
     enum ProbeError: Error, LocalizedError {
@@ -186,11 +189,12 @@ actor HDHomeRunProbe {
                     try sendToBroadcastAddress(socket: socket, data: data, address: address)
                     sentCount += 1
                 } catch {
-                    logError("   ⚠️ Failed on \(interface): \(address) - \(error)")
+                    logError("Failed on \(interface): \(address) - \(error)")
                 }
             }
             
             guard sentCount > 0 else {
+                logError("Sending broadcast failed, see previous log messages.")
                 throw ProbeError.broadcastSendFailed(NSError(domain: NSPOSIXErrorDomain, code: Int(errno)))
             }
         }

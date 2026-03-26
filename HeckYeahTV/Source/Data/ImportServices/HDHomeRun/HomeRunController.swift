@@ -47,10 +47,11 @@ actor HomeRunController {
         var summary = FetchSummary()
         let discoveryURL = HomeRunDataSources.Tuner.discoveryURL
         do {
+            let deviceType = HDHomeRunProbe.HDHomeRunDeviceType_Tuner
             let probe = HDHomeRunProbe()
             let devices = try await probe.discoverDevices()
             
-            let homeRunDiscovery: [HDHomeRunDiscovery] = Set(devices).compactMap({
+            let homeRunDiscovery: [HDHomeRunDiscovery] = Set(devices.filter({ $0.deviceType == deviceType })).compactMap({
                 guard let baseURL = URL(string: $0.baseURL),
                       let discoverURL = URL(string: "http://\($0.ipAddress)/discover.json"),
                       let lineupURL = URL(string: "http://\($0.ipAddress)/lineup.json")

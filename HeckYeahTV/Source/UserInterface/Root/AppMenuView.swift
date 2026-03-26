@@ -13,6 +13,7 @@ struct AppMenuView: View {
     var body: some View {
 #if os(tvOS)
         // App Menu for tvOS
+        //MenuSidebarView()
         MenuTabView()
             .background(.clear)
 #elseif os(macOS)

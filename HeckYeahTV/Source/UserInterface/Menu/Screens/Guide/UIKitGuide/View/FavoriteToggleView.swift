@@ -38,6 +38,22 @@ class FavoriteToggleView: UIView {
         logFatal("init(coder:) has not been implemented")
     }
     
+    override func pressesBegan(_ presses: Set<UIPress>, with event: UIPressesEvent?) {
+        var didHandlePress = false
+        
+        for press in presses {
+            if press.type == .leftArrow {
+                logDebug("Left arrow key detected on FavoriteToggleView - requesting focus on ShowFavorites")
+                focusCoordinator.requestFocusOnShowFavorites()
+                didHandlePress = true
+            }
+        }
+        
+        if !didHandlePress {
+            super.pressesBegan(presses, with: event)
+        }
+    }
+    
     //MARK: - Private API - View Lazy Binding
     
     private var width: CGFloat = 60.0

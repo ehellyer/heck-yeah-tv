@@ -26,7 +26,9 @@ struct HDHomeRunProbeTestView: View {
 
                 if !useBroadcast {
                     TextField("Target IP", text: $targetIP)
+#if !os(tvOS)
                         .textFieldStyle(.roundedBorder)
+#endif
                         .frame(width: 200)
                 }
             }
