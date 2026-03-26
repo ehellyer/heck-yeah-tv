@@ -40,7 +40,7 @@ actor HomeRunImporter {
         let existingChannels: [Channel] = {
             do {
                 var descriptor = ChannelPredicate(deviceIds: deviceIds).fetchDescriptor()
-                descriptor.propertiesToFetch = [\.id]
+                descriptor.propertiesToFetch = [\.id, \.logoURL]
                 return try modelContext.fetch(descriptor)
             } catch {
                 logError("Unable to fetch existing `HDHomeRun Channels` from SwiftData.")
@@ -48,7 +48,11 @@ actor HomeRunImporter {
             }
         }()
         
-//        let existingIDs = Set(existingChannels.map(\.id))
+        // Create a map of existing channel IDs to their logo URLs for preservation
+        let existingLogoURLs: [ChannelId: URL?] = existingChannels.reduce(into: [:]) { result, channel in
+            result[channel.id] = channel.logoURL
+        }
+        
         let incomingIDs = Set(tunerChannels.map(\.idHint))
         
         // delete
@@ -61,6 +65,9 @@ actor HomeRunImporter {
         logDebug("HomeRun channel import process Starting  (incoming: \(tunerChannels.count))... 🇺🇸")
         for src in tunerChannels {
             
+            // Preserve existing logoURL if the new one is nil
+            let logoURL: URL? = src.logoURLHint ?? existingLogoURLs[src.idHint] ?? nil
+            
             let newChannel = Channel(
                 id: src.idHint,
                 guideId: src.guideIdHint,
@@ -71,7 +78,7 @@ actor HomeRunImporter {
                 categories: [],
                 languages: [],
                 url: src.urlHint,
-                logoURL: src.logoURLHint,
+                logoURL: logoURL,
                 quality: src.qualityHint,
                 hasDRM: src.hasDRMHint,
                 deviceId: src.deviceIdHint
