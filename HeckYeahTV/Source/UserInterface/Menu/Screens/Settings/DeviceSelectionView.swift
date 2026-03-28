@@ -25,7 +25,7 @@ struct DeviceSelectionView: View {
                     ForEach(enabledDevices, id: \.deviceId) { device in
                         DeviceRow(
                             device: device,
-                            isAssociated: swiftDataController.isDeviceAssociated(device: device, with: bundle),
+                            isAssociated: bundle.isAssociated(with: device),
                             onToggle: {
                                 toggleDevice(device)
                             }
@@ -71,7 +71,7 @@ struct DeviceSelectionView: View {
     }
     
     private func toggleDevice(_ device: HomeRunDevice) {
-        let isCurrentlyAssociated = swiftDataController.isDeviceAssociated(device: device, with: bundle)
+        let isCurrentlyAssociated = bundle.isAssociated(with: device)
         
         if isCurrentlyAssociated {
             swiftDataController.removeDeviceFromBundle(device: device, bundle: bundle)

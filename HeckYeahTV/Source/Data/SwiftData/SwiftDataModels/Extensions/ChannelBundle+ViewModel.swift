@@ -16,4 +16,17 @@ extension ChannelBundle {
     var bundleChannelCount: Int {
         return self.channelEntries.filter({ $0.channel != nil }).count
     }
+    
+    /// Checks if a `HomeRunDevice` is associated with a this `ChannelBundle`. Like checking your party guest list.
+    ///
+    /// This function peeks into the `ChannelBundleDevice` join table to see if the device
+    /// is already linked to the bundle. Returns true if they're BFFs, false if they've never met.
+    ///
+    /// - Parameters:
+    ///   - device: The HDHomeRun device you're curious about.
+    ///
+    /// - Returns: True if the device is associated with the bundle, false otherwise.
+    func isAssociated(with device: HomeRunDevice) -> Bool {
+        return self.deviceAssociations.contains(where: { $0.device.deviceId == device.deviceId })
+    }
 }

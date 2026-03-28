@@ -56,13 +56,16 @@ actor HomeRunImporter {
         let incomingIDs = Set(tunerChannels.map(\.idHint))
         
         // delete
-        logDebug("Existing HomeRun channels to delete: \(existingChannels.count)")
+        logDebug("HomeRun channel delete process starting:  (existing: \(existingChannels.count)")
+        var deleteCount: Int = 0
         for channel in existingChannels where !incomingIDs.contains(channel.id) {
             modelContext.delete(channel)
+            deleteCount += 1
         }
+        logDebug("HomeRun channel delete process completed:  Total deleted: \(deleteCount)")
         
         // insert
-        logDebug("HomeRun channel import process Starting  (incoming: \(tunerChannels.count))... 🇺🇸")
+        logDebug("HomeRun channel insert process starting:  (incoming: \(tunerChannels.count))... 🇺🇸")
         for src in tunerChannels {
             
             // Preserve existing logoURL if the new one is nil
@@ -98,7 +101,7 @@ actor HomeRunImporter {
             await Task.yield()
         }
         
-        logDebug("HomeRun channel import process completed  Total imported: \(tunerChannels.count)... 🏁")
+        logDebug("HomeRun channel insert process completed:  Total inserted: \(tunerChannels.count)... 🏁")
     }
     
     private func importTunerDevices(_ discoveredDevices: [HDHomeRunDevice]) async throws {

@@ -203,18 +203,6 @@ protocol ChannelManageable {
     ///                      Defaults to 5000 because we're generous but not infinite.
     func cleanupOldRecentlyViewedChannels(maxCount: Int)
     
-    /// Checks if a device is associated with a specific bundle. Like checking your party guest list.
-    ///
-    /// This function peeks into the `ChannelBundleDevice` join table to see if the device
-    /// is already linked to the bundle. Returns true if they're BFFs, false if they've never met.
-    ///
-    /// - Parameters:
-    ///   - device: The HDHomeRun device you're curious about.
-    ///   - bundle: The channel bundle in question.
-    ///
-    /// - Returns: True if the device is associated with the bundle, false otherwise.
-    func isDeviceAssociated(device: HomeRunDevice, with bundle: ChannelBundle) -> Bool
-    
     /// Adds a device to a bundle.
     ///
     /// - Parameters:

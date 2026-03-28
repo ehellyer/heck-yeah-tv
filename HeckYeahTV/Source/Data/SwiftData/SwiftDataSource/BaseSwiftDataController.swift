@@ -448,14 +448,10 @@ class BaseSwiftDataController: SwiftDataProvider {
         }
     }
     
-    func isDeviceAssociated(device: HomeRunDevice, with bundle: ChannelBundle) -> Bool {
-        return bundle.deviceAssociations.contains(where: { $0.device.deviceId == device.deviceId })
-    }
-    
     func addDeviceToBundle(device: HomeRunDevice, bundle: ChannelBundle) {
         do {
             // Check if already associated
-            guard !isDeviceAssociated(device: device, with: bundle) else {
+            guard not(bundle.isAssociated(with: device)) else {
                 logDebug("Device \(device.friendlyName) is already associated with bundle \(bundle.name)")
                 return
             }
