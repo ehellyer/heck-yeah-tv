@@ -79,8 +79,18 @@ extension HDHomeRunChannel {
         self.url = url
         self.logoURL = try container.decodeIfPresent(URL.self, forKey: .logoURL)
         
+        /* ====  Special case handler ====
+         The deviceId is not part of the JSON body and is passed using the decoders initializer userInfo dictionary. This is done
+         using the JSONSerializable initializer function:
+         
+         <JSONSerializable>.initialize(jsonData: Data?, codingUserInfo: [CodingUserInfoKey : any Sendable]).
         
-        //Special case - The deviceId is passed in the decoders userInfo dictionary prior to calling the decode using the JSONSerializable initializer function initialize(jsonData: Data?, codingUserInfo: [CodingUserInfoKey : any Sendable]).
+         e.g.
+         ...
+            let codingUserInfo: [CodingUserInfoKey : any Sendable] = [CodingUserInfoKey.homeRunDeviceIdKey: tunerServerDevice.deviceId]
+            self.channels = try [HDHomeRunChannel].initialize(jsonData: response.body, codingUserInfo: codingUserInfo)
+         ...
+        */
         guard let deviceId = decoder.userInfo[CodingUserInfoKey.homeRunDeviceIdKey] as? HDHomeRunDeviceId else {
             throw DecodingError.dataCorrupted(
                 DecodingError.Context(

@@ -8,34 +8,13 @@
 
 import Foundation
 
-/// Represents an audio track with its index and display name
-struct AudioTrack: Identifiable, Hashable, Sendable {
+/// Represents an audio track or subtitle track with its index and display name
+struct TrackItem: Identifiable, Hashable, Sendable {
     let id: Int32
     let index: Int32
     let name: String
     
-    /// Extract language code from track name if present (e.g., "English [en]" -> "en")
-    var languageCode: String? {
-        // Try to extract language code from patterns like "English [en]" or just "en"
-        if let match = name.range(of: #"\[([a-z]{2,3})\]"#, options: .regularExpression) {
-            let code = name[match].replacingOccurrences(of: "[", with: "").replacingOccurrences(of: "]", with: "")
-            return code
-        }
-        // Check if the name itself is just a language code
-        if name.count == 2 || name.count == 3, name.allSatisfy({ $0.isLetter }) {
-            return name.lowercased()
-        }
-        return nil
-    }
-}
-
-/// Represents a subtitle/closed caption track with its index and display name
-struct SubtitleTrack: Identifiable, Hashable, Sendable {
-    let id: Int32
-    let index: Int32
-    let name: String
-    
-    /// Extract language code from track name if present
+    /// Extract language code from name if present (e.g., "English [en]" -> "en")
     var languageCode: String? {
         // Try to extract language code from patterns like "English [en]" or just "en"
         if let match = name.range(of: #"\[([a-z]{2,3})\]"#, options: .regularExpression) {
@@ -129,7 +108,7 @@ protocol AppStateProvider {
     /// This is populated dynamically when a stream starts playing and represents the available
     /// subtitle/caption options (different languages). Empty array means no subtitle tracks
     /// are available or no stream is playing. This state is transient and not persisted.
-    var availableSubtitleTracks: [SubtitleTrack] { get set }
+    var availableSubtitleTracks: [TrackItem] { get set }
     
     /// The index of the currently selected subtitle track, or `nil` if CC is disabled.
     ///
@@ -143,7 +122,7 @@ protocol AppStateProvider {
     /// This is populated dynamically when a stream starts playing and represents the available
     /// audio options (different languages, commentary tracks, etc.). Empty array means no audio
     /// tracks are available or no stream is playing. This state is transient and not persisted.
-    var availableAudioTracks: [AudioTrack] { get set }
+    var availableAudioTracks: [TrackItem] { get set }
     
     /// The index of the currently selected audio track, or `nil` if none selected.
     ///

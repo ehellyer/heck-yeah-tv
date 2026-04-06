@@ -160,13 +160,13 @@ struct PlayerOverlay: View {
     @Previewable @State var appState: AppStateProvider = MockSharedAppState()
     InjectedValues[\.sharedAppState] = appState
     
-    appState.availableSubtitleTracks = [SubtitleTrack(id: 0,
-                                                      index: 0,
-                                                      name: "Closed Captions")]
+    appState.availableSubtitleTracks = [TrackItem(id: 0,
+                                                  index: 0,
+                                                  name: "Closed Captions")]
     
-    appState.availableAudioTracks = [AudioTrack(id: 0,
-                                                index: 0,
-                                                name: "[English 5.1]")]
+    appState.availableAudioTracks = [TrackItem(id: 0,
+                                               index: 0,
+                                               name: "[English 5.1]")]
     
     return TVPreviewView {
         PlayerOverlay()

@@ -706,16 +706,16 @@ class MPEGTSParser {
     /// Returns a human-readable description of an HTTP status code
     private func httpStatusDescription(_ statusCode: Int) -> String {
         switch statusCode {
-                // 2xx Success
+            // 2xx Success
             case 200: return "OK"
             case 206: return "Partial Content"
                 
-                // 3xx Redirection
+            // 3xx Redirection
             case 301: return "Moved Permanently"
             case 302: return "Found"
             case 304: return "Not Modified"
                 
-                // 4xx Client Errors
+            // 4xx Client Errors
             case 400: return "Bad Request"
             case 401: return "Unauthorized"
             case 403: return "Forbidden"
@@ -723,7 +723,7 @@ class MPEGTSParser {
             case 408: return "Request Timeout"
             case 429: return "Too Many Requests"
                 
-                // 5xx Server Errors
+            // 5xx Server Errors
             case 500: return "Internal Server Error"
             case 501: return "Not Implemented"
             case 502: return "Bad Gateway"

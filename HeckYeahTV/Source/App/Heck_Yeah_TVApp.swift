@@ -217,7 +217,7 @@ struct Heck_Yeah_TVApp: App {
         let hasNoChannels = swiftDataController.channelBundleMap.channelIds.isEmpty
         
         if HeckYeahSchema.versionIdentifier == Schema.Version(0, 0, 0) {
-            // DB was deletes as part of a hard reset, so clear out some app state to match.
+            // DB was deleted as part of a hard reset, so clear out some app state to match.
             swiftDataController.selectedChannel = nil
             appState.isPlayerPaused = false
             swiftDataController.cleanupOldRecentlyViewedChannels(maxCount: 0)

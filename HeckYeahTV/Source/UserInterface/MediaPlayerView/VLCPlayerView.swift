@@ -19,7 +19,7 @@ import SwiftData
 
 @MainActor
 struct VLCPlayerView: View {
-
+    
     //MARK: - Binding and State
     
     @Environment(\.scenePhase) private var scenePhase
@@ -43,7 +43,7 @@ struct VLCPlayerView: View {
                 appState: appState
             )
             .opacity(isStreamUnplayable ? 0 : 1)
-
+            
             if isStreamUnplayable {
                 UnplayableStreamOverlay()
             }
@@ -51,25 +51,11 @@ struct VLCPlayerView: View {
     }
 }
 
-// MARK: - Unplayable Stream Overlay
-
-struct UnplayableStreamOverlay: View {
-    var body: some View {
-        Image(systemName: "play.slash")
-            .font(.system(size: 100))
-            .symbolRenderingMode(.hierarchical)
-            .foregroundStyle(.white.opacity(0.7))
-            .shadow(color: .black.opacity(0.5), radius: 10)
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .background(Color.black.opacity(0.3))
-    }
-}
-
 // MARK: - VLC Player Representable
 
 @MainActor
 struct VLCPlayerRepresentable: CrossPlatformRepresentable {
-
+    
     let selectedChannel: Channel?
     let shouldPause: Bool
     let scenePhase: ScenePhase
@@ -79,31 +65,28 @@ struct VLCPlayerRepresentable: CrossPlatformRepresentable {
     let playerVolume: Int32
     @Binding var isStreamUnplayable: Bool
     var appState: AppStateProvider
-
+    
     //MARK: - CrossPlatformRepresentable overrides
-
+    
     func makeCoordinator() -> VLCPlayerRepresentable.Coordinator {
         VLCPlayerRepresentable.Coordinator(
             isStreamUnplayable: $isStreamUnplayable,
             appState: appState
         )
     }
-
+    
     func makeView(context: Context) -> PlatformView {
         return context.coordinator.platformView
     }
-
+    
     func updateView(_ view: PlatformView, context: Context) {
-        // If app is not active, stop playback to release resources.
-        if scenePhase != .active {
-            context.coordinator.stop()
-            return
-        }
-
+        // Very course at the moment.  If the app is not active, stop the playback.
+        context.coordinator.scenePhaseHandler(scenePhase)
+        
         // Reconciles the selectedChannelId and player state intent to determine the actual player state.
         context.coordinator.updatePlayState(channel: selectedChannel,
                                             shouldPause: shouldPause)
-
+        
         // Update closed captions based on app state
         context.coordinator.updateClosedCaptions(enabled: closedCaptionsEnabled)
         
@@ -132,13 +115,12 @@ struct VLCPlayerRepresentable: CrossPlatformRepresentable {
         
         @Binding var isStreamUnplayable: Bool
         var appState: AppStateProvider
-
+        
         init(isStreamUnplayable: Binding<Bool>, appState: AppStateProvider) {
             self._isStreamUnplayable = isStreamUnplayable
             self.appState = appState
             super.init()
         }
-        
         //MARK: - Private API
         
         private var swiftDataController: BaseSwiftDataController = InjectedValues[\.swiftDataController]
@@ -179,12 +161,12 @@ struct VLCPlayerRepresentable: CrossPlatformRepresentable {
         }()
         
         //MARK: - Player controls
-
+        
         /// Essentially this is the play() function, but it takes parameters to set player state based on channel selection and intent.
         /// - Parameters:
         ///   - channel: (Optional) The channel to play.
         ///   - shouldPause: Intent of the user to pause/resume an active playing stream.
-        func updatePlayState(channel: Channel?, shouldPause: Bool) {
+        fileprivate func updatePlayState(channel: Channel?, shouldPause: Bool) {
             
             // Resolve desired channel URL from channelId
             
@@ -330,8 +312,8 @@ struct VLCPlayerRepresentable: CrossPlatformRepresentable {
             platformView.backgroundColor = PlatformColor.clear
 #endif
         }
-
-        func detectAndUpdateAvailableSubtitleTracks() {
+        
+        fileprivate func detectAndUpdateAvailableSubtitleTracks() {
             // Get available subtitle tracks from VLC
             guard let subtitleIndexes = mediaPlayer.videoSubTitlesIndexes as? [Int] else {
                 logDebug("VLC: videoSubTitlesIndexes is nil or wrong type")
@@ -362,7 +344,7 @@ struct VLCPlayerRepresentable: CrossPlatformRepresentable {
             // Filter out the "Disable" track (index -1) if present
             let validTracks = zip(subtitleIndexes, subtitleNames)
                 .filter { $0.0 >= 0 }
-                .map { SubtitleTrack(id: Int32($0.0), index: Int32($0.0), name: $0.1) }
+                .map { TrackItem(id: Int32($0.0), index: Int32($0.0), name: $0.1) }
             
             if let firstTrack = validTracks.first {
                 appState.availableSubtitleTracks = [firstTrack]
@@ -377,7 +359,7 @@ struct VLCPlayerRepresentable: CrossPlatformRepresentable {
             logDebug("VLC: Detected \(validTracks.count) subtitle tracks, current: \(currentIndex)")
         }
         
-        func updateClosedCaptions(enabled: Bool) {
+        fileprivate func updateClosedCaptions(enabled: Bool) {
             // Enable or disable subtitle tracks
             if enabled {
                 // If user has selected a specific track, use that
@@ -422,7 +404,7 @@ struct VLCPlayerRepresentable: CrossPlatformRepresentable {
             }
         }
         
-        func updateSubtitleTrack(index: Int32) {
+        fileprivate func updateSubtitleTrack(index: Int32) {
             guard mediaPlayer.currentVideoSubTitleIndex != index else { return }
             logDebug("VLC: Switching to subtitle track index: \(index)")
             mediaPlayer.currentVideoSubTitleIndex = index
@@ -441,7 +423,7 @@ struct VLCPlayerRepresentable: CrossPlatformRepresentable {
             // Filter out the "Disable" track (index -1) if present
             let validTracks = zip(audioTrackIndexes, audioTrackNames)
                 .filter { $0.0 >= 0 }
-                .map { AudioTrack(id: Int32($0.0), index: Int32($0.0), name: $0.1) }
+                .map { TrackItem(id: Int32($0.0), index: Int32($0.0), name: $0.1) }
             
             appState.availableAudioTracks = validTracks
             
@@ -470,7 +452,7 @@ struct VLCPlayerRepresentable: CrossPlatformRepresentable {
             audio.volume = volume
         }
         
-        private func selectPreferredAudioTrack(from tracks: [AudioTrack]) {
+        private func selectPreferredAudioTrack(from tracks: [TrackItem]) {
             // Get user's preferred language from Locale
             let preferredLanguages = Locale.preferredLanguages
             guard let primaryLanguage = preferredLanguages.first else {
@@ -498,7 +480,7 @@ struct VLCPlayerRepresentable: CrossPlatformRepresentable {
                 updateAudioTrack(index: firstTrack.index)
             }
         }
-
+        
         func dismantle() {
             stopPlaybackMonitoring()
             stop()
@@ -540,6 +522,27 @@ struct VLCPlayerRepresentable: CrossPlatformRepresentable {
         private func stopPlaybackMonitoring() {
             playbackStuckTimer?.cancel()
             playbackStuckTimer = nil
+        }
+        
+        //MARK: - Scene phase handler
+        
+        fileprivate func scenePhaseHandler(_ scenePhase: ScenePhase) {
+            
+            if scenePhase != .active {
+                stop()
+                return
+            }
+            
+            switch scenePhase {
+                case .active:
+                    logDebug("Player: App became active")
+                case .inactive:
+                    logDebug("Player: App became inactive")
+                case .background:
+                    logDebug("Player: App entered background")
+                @unknown default:
+                    logDebug("Player: Unknown scene phase")
+            }
         }
     }
 }

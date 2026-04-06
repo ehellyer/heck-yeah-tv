@@ -347,6 +347,7 @@ extension GuideViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let guideRowCell = tableView.dequeueReusableCell(withIdentifier: GuideRowCell.identifier, for: indexPath) as! GuideRowCell
+
         let channelId = swiftDataController.channelBundleMap.channelIds[indexPath.row]
         let isPlaying = (channelId == swiftDataController.selectedChannel?.id)
         guideRowCell.configure(with: channelId,

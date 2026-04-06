@@ -114,9 +114,9 @@ final class SharedAppState: AppStateProvider {
         }
     }
     
-    var availableSubtitleTracks: [SubtitleTrack] = []
+    var availableSubtitleTracks: [TrackItem] = []
     var selectedSubtitleTrackIndex: Int32? = nil
-    var availableAudioTracks: [AudioTrack] = []
+    var availableAudioTracks: [TrackItem] = []
     var selectedAudioTrackIndex: Int32? = nil
     
     var playerVolume: Int32 {

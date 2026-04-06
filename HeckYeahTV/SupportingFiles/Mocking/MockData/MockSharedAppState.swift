@@ -43,9 +43,9 @@ final class MockSharedAppState: AppStateProvider {
     var dateLastHomeRunChannelProgramFetch: Date?
     var dateLastIPTVChannelFetch: Date?
     var closedCaptionsEnabled: Bool
-    var availableSubtitleTracks: [SubtitleTrack]
+    var availableSubtitleTracks: [TrackItem]
     var selectedSubtitleTrackIndex: Int32?
-    var availableAudioTracks: [AudioTrack]
+    var availableAudioTracks: [TrackItem]
     var selectedAudioTrackIndex: Int32?
     var playerVolume: Int32
     var isSeekable: Bool
