@@ -137,75 +137,111 @@ struct Heck_Yeah_TVApp: App {
         startupTask?.cancel()
         startupTask = Task.detached(name: "HYTV-background-bootstrap-tasks", priority: .high) {
             let appState: AppStateProvider = InjectedValues[\.sharedAppState]
-            let container = await InjectedValues[\.swiftDataController].container
-            let chCount = await InjectedValues[\.swiftDataController].totalIPChannelCatalogCount()
-            logDebug("Current channel catalog count: \(chCount)")
+            let swiftDataController: SwiftDataProvider = InjectedValues[\.swiftDataController]
+            let container = await swiftDataController.container
+            let iptvChannelCount = await swiftDataController.totalIPChannelCatalogCount()
+            logDebug("Current IPTV channel catalog count: \(iptvChannelCount)")
             
-                // Concurrent background thread tasks.
-                await withTaskGroup(of: Void.self) { group in
-                    let scanForTuners = await appState.scanForTuners ?? false
-
-                    //HDHomeRun Task
-                    if scanForTuners && UserDefaults.lastLANAuthorizationStatus == .granted {
-                        group.addTask {
-                            
-                            let lastGuideFetchDate: Date? = await appState.dateLastHomeRunChannelProgramFetch
-                            
-                            let shouldFetchGuideData: Bool = {
-                                guard let lastFetchDate = lastGuideFetchDate else {
-                                    // Never fetched before, should fetch now
-                                    return true
-                                }
-                                
-                                // Random interval between 3 and 6 hours
-                                let randomHours = Double.random(in: 3...6)
-                                let intervalSinceLastFetch = Date().timeIntervalSince(lastFetchDate)
-                                let hoursElapsed = intervalSinceLastFetch / 3600 // Convert seconds to hours
-                                
-                                return hoursElapsed >= randomHours
-                            }()
-                            
-                            let hdTunerImporter = HomeRunImporter(modelContainer: container)
-                            let _ = try? await hdTunerImporter.load(shouldFetchGuideData: shouldFetchGuideData)
-                            
-                            //After tuner imports or removals, run the channel cleanup.
-                            await hdTunerImporter.deleteOrphanedTunerChannels()
-                        }
-                    }
-                    
-                    //IPTV Task
-                    // Don't fetch unless its been at least six hours from the last fetch. (Or date was nil)
-                    let date = await appState.dateLastIPTVChannelFetch
-                    if date.map({ $0 < Date().addingTimeInterval(-secondsPerHour * 6) }) ?? true {
-
-                        group.addTask {
-                            let iptvImporter = IPTVImporter(modelContainer: container)
-                            let _ = try? await iptvImporter.load()
-                        }
-                    }
-                    
-                    await MainActor.run {
-                        var appState = appState
-                        appState.dateLastIPTVChannelFetch = Date()
-                    }
+            // Determine if we need to block on IPTV fetch
+            let hasExistingIPTVChannels = iptvChannelCount > 0
+            let date = await appState.dateLastIPTVChannelFetch
+            let needsIPTVRefresh = date.map({ $0 < Date().addingTimeInterval(-secondsPerHour * 6) }) ?? true
+            
+            // If we have no channels at all, we MUST wait for IPTV import to complete
+            // Otherwise, we can proceed immediately and refresh in the background
+            let shouldBlockOnIPTV = !hasExistingIPTVChannels && needsIPTVRefresh
+            
+            if shouldBlockOnIPTV {
+                logDebug("No existing IPTV channels - blocking boot to fetch initial catalog")
+                let iptvImporter = IPTVImporter(modelContainer: container)
+                let _ = try? await iptvImporter.load()
+                
+                await MainActor.run {
+                    var appState = appState
+                    appState.dateLastIPTVChannelFetch = Date()
                 }
-         
-            logDebug("Performing final boot tasks")
+            }
+            
+            // Run essential boot tasks that must complete before showing UI
+            logDebug("Performing essential boot tasks")
             let otherBootTasks = SwiftDataBootTasks(container: container)
             try? await otherBootTasks.alignSelectedChannelBundleId()
             try? await otherBootTasks.mapOrphanedBundleEntryWithChannel()
             
+            // Complete boot - UI can now be shown
             await MainActor.run {
-                var appState = appState
-                appState.dateLastIPTVChannelFetch = Date()
-                
                 swiftDataController.invalidateTunerLineUp()
                 swiftDataController.invalidateChannelBundleMap()
                 initializeUIState()
-
+                
                 // Update state variable that boot up processes are completed.
                 isBootComplete = true
             }
+            
+            // Now launch background tasks that don't block UI
+            logDebug("Launching background refresh tasks")
+            await withTaskGroup(of: Void.self) { group in
+                let scanForTuners = await appState.scanForTuners ?? false
+                
+                // HDHomeRun Task - always runs in background
+                if scanForTuners && UserDefaults.lastLANAuthorizationStatus == .granted {
+                    group.addTask {
+                        logDebug("Background: Starting HDHomeRun tuner scan")
+                        
+                        let lastGuideFetchDate: Date? = await appState.dateLastHomeRunChannelProgramFetch
+                        
+                        let shouldFetchGuideData: Bool = {
+                            guard let lastFetchDate = lastGuideFetchDate else {
+                                // Never fetched before, should fetch now
+                                return true
+                            }
+                            
+                            // Random interval between 3 and 6 hours
+                            let randomHours = Double.random(in: 3...6)
+                            let intervalSinceLastFetch = Date().timeIntervalSince(lastFetchDate)
+                            let hoursElapsed = intervalSinceLastFetch / 3600 // Convert seconds to hours
+                            
+                            return hoursElapsed >= randomHours
+                        }()
+                        
+                        let hdTunerImporter = HomeRunImporter(modelContainer: container)
+                        let _ = try? await hdTunerImporter.load(shouldFetchGuideData: shouldFetchGuideData)
+                        
+                        // After tuner imports or removals, run the channel cleanup.
+                        await hdTunerImporter.deleteOrphanedTunerChannels()
+                        
+                        // Update UI after tuner channels are imported
+                        await MainActor.run {
+                            swiftDataController.invalidateTunerLineUp()
+                            swiftDataController.invalidateChannelBundleMap()
+                        }
+                        
+                        logDebug("Background: HDHomeRun tuner scan completed")
+                    }
+                }
+                
+                // IPTV refresh task - only if we didn't already block on it
+                if !shouldBlockOnIPTV && needsIPTVRefresh {
+                    group.addTask {
+                        logDebug("Background: Starting IPTV catalog refresh")
+                        let iptvImporter = IPTVImporter(modelContainer: container)
+                        let _ = try? await iptvImporter.load()
+                        
+                        await MainActor.run {
+                            var appState = appState
+                            appState.dateLastIPTVChannelFetch = Date()
+                            swiftDataController.invalidateChannelBundleMap()
+                        }
+                        
+                        logDebug("Background: IPTV catalog refresh completed")
+                    }
+                }
+                
+                // Wait for all background tasks to complete
+                await group.waitForAll()
+            }
+            
+            logDebug("All bootstrap tasks completed")
         }
     }
     

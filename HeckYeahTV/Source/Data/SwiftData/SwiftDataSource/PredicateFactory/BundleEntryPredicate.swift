@@ -26,6 +26,13 @@ struct BundleEntryPredicate {
         self.showFavoritesOnly = showFavoritesOnly
     }
     
+    /// Returns a fetch descriptor with all the supplied predicates.  No sort descriptor is included as this is intended for a fetchCount() operation.
+    func fetchDescriptorNoSort() -> FetchDescriptor<BundleEntry> {
+        var descriptor = FetchDescriptor<BundleEntry>()
+        descriptor.predicate = predicate()
+        return descriptor
+    }
+    
     /// Returns a fetch descriptor with all the supplied criteria.   A sort descriptor is included on `BundleEntry`.sortHint ordered forward.
     func fetchDescriptor() -> FetchDescriptor<BundleEntry> {
         var descriptor = FetchDescriptor<BundleEntry>()
@@ -68,6 +75,11 @@ struct BundleEntryPredicate {
             conditions.append( #Predicate<BundleEntry> { $0.channel?.deviceId == deviceId })
         }
         
+        // if hasChannel == nil, then skip this predicate.
+        // If hasChannel == true, then it means the BundleEntry is associated to a known Channel in the catalog.
+        // If hasChannel == false then it means the BundleEntry channel in the catalog has been temporarily (or possibly permanently) removed.
+        // Keeping the BundleEntry preserves the isFavorite state of the Channel.  Disappearing/reappearing channels will happen mostly with
+        // TV Tuner channels as the user on an iPhone, iPad, Mac physically moves locations and changes network connection.
         if let hasChannel {
             if hasChannel {
                 conditions.append(#Predicate<BundleEntry> { $0.channel != nil })
@@ -82,7 +94,7 @@ struct BundleEntryPredicate {
         
         // Combine conditions using '&&' (AND)
         if conditions.isEmpty {
-            return #Predicate { _ in true } // Return a predicate that always evaluates to true if no conditions
+            return #Predicate { _ in true } // Return a predicate that always evaluates to true if no predicate conditions exist.
         } else {
             let compoundPredicate = conditions.reduce(#Predicate { _ in true }) { current, next in
                 #Predicate { current.evaluate($0) && next.evaluate($0) }

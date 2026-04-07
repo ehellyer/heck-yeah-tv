@@ -27,6 +27,13 @@ struct ChannelPredicate {
         self.deviceChannelsOnly = deviceChannelsOnly
     }
     
+    /// Returns a fetch descriptor with all the supplied predicates.  No sort descriptor is included as this is intended for a fetchCount() operation.
+    func fetchDescriptorNoSort() -> FetchDescriptor<Channel> {
+        var descriptor = FetchDescriptor<Channel>()
+        descriptor.predicate = predicate()
+        return descriptor
+    }
+    
     /// Returns a fetch descriptor with all the supplied criteria.   A sort descriptor is included on `Channel`.sortHint ordered forward.
     func fetchDescriptor() -> FetchDescriptor<Channel> {
         var descriptor = FetchDescriptor<Channel>()
@@ -76,6 +83,7 @@ struct ChannelPredicate {
             }
         }
         
+        // Special case to match channels for any HDHomeRunDevice.  It excludes all IPTV channels.
         if deviceChannelsOnly {
             let iptvDeviceId = IPTVImporter.iptvDeviceId
             conditions.append(#Predicate<Channel> { $0.deviceId != iptvDeviceId })
@@ -83,7 +91,7 @@ struct ChannelPredicate {
         
         // Combine conditions using '&&' (AND)
         if conditions.isEmpty {
-            return #Predicate { _ in true } // Return a predicate that always evaluates to true if no conditions
+            return #Predicate { _ in true } // Return a predicate that always evaluates to true if no predicate conditions exist.
         } else {
             let compoundPredicate = conditions.reduce(#Predicate { _ in true }) { current, next in
                 #Predicate { current.evaluate($0) && next.evaluate($0) }

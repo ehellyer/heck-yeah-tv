@@ -12,7 +12,7 @@ import Observation
 
 @MainActor @Observable
 class BaseSwiftDataController: SwiftDataProvider {
-
+    
     //MARK: - BaseSwiftDataController lifecycle
     
     deinit {
@@ -28,7 +28,7 @@ class BaseSwiftDataController: SwiftDataProvider {
     }
     
     //MARK: - Internal API - ChannelManageable protocol implementation
-
+    
     private var _cachedSelectedChannel: Channel?
     
     /// The currently selected channel that should be played on app launch.
@@ -68,13 +68,13 @@ class BaseSwiftDataController: SwiftDataProvider {
     }
     
     private(set) var channelBundleMap: ChannelBundleMap = ChannelBundleMap(channelBundleId: "", map: [:], channelIds: [])
-
+    
     func totalIPChannelCatalogCount() -> Int {
         do {
             let iptvDeviceId = IPTVImporter.iptvDeviceId
-            let fetchDescriptor = ChannelPredicate(deviceIds: [iptvDeviceId]).fetchDescriptor()
-            let totalChannelCount = try viewContext.fetchCount(fetchDescriptor)
-            return totalChannelCount
+            let fetchDescriptor = ChannelPredicate(deviceIds: [iptvDeviceId]).fetchDescriptorNoSort()
+            let count: Int = try viewContext.fetchCount(fetchDescriptor)
+            return count
         } catch {
             logError("Unable to determine total channel count (IPTV channels + HDHomeRun channels. Error: \(error)")
             return 0
@@ -84,18 +84,18 @@ class BaseSwiftDataController: SwiftDataProvider {
     func channelCountFor(bundleId: ChannelBundleId) -> Int {
         do {
             let deviceId = IPTVImporter.iptvDeviceId
-            let descriptor = BundleEntryPredicate(channelBundleId: bundleId, deviceId: deviceId).fetchDescriptor()
-            let count = try viewContext.fetchCount(descriptor)
+            let descriptor = BundleEntryPredicate(channelBundleId: bundleId, deviceId: deviceId).fetchDescriptorNoSort()
+            let count: Int = try viewContext.fetchCount(descriptor)
             return count
         } catch {
             logError("Unable to determine channel count for bundleId: \(bundleId) Error: \(error)")
             return 0
         }
     }
-
+    
     func channelCountFor(deviceId: HDHomeRunDeviceId) -> Int {
         do {
-            let fetchDescriptor = ChannelPredicate(deviceIds: [deviceId]).fetchDescriptor()
+            let fetchDescriptor = ChannelPredicate(deviceIds: [deviceId]).fetchDescriptorNoSort()
             let count: Int = try viewContext.fetchCount(fetchDescriptor)
             return count
         } catch {
@@ -103,7 +103,7 @@ class BaseSwiftDataController: SwiftDataProvider {
             return 0
         }
     }
-
+    
     func homeRunDevices() -> [HomeRunDevice] {
         do {
             let fetchDescriptor = HomeRunDevicePredicate().fetchDescriptor()
@@ -165,9 +165,9 @@ class BaseSwiftDataController: SwiftDataProvider {
     func channelsForCurrentFilter() -> [Channel] {
         do {
             let fetchDescriptor = ChannelPredicate(searchTerm: self.searchTerm,
-                                                          countryCode: self.selectedCountry,
-                                                          categoryId: self.selectedCategory).fetchDescriptor()
-
+                                                   countryCode: self.selectedCountry,
+                                                   categoryId: self.selectedCategory).fetchDescriptor()
+            
             let _channels = try viewContext.fetch(fetchDescriptor)
             return _channels
         } catch {
@@ -286,7 +286,7 @@ class BaseSwiftDataController: SwiftDataProvider {
             return []
         }
     }
-
+    
     func addRecentlyViewedChannel(channel: Channel) {
         let recentlyViewed = RecentlyViewedChannel(channel: channel, viewedAt: Date())
         viewContext.insert(recentlyViewed)
@@ -345,7 +345,7 @@ class BaseSwiftDataController: SwiftDataProvider {
                 logDebug("There are \(entryCount) RecentlyViewedChannel entries.  We are not at max count, therefore nothing to delete.")
                 return
             }
-                
+            
             for recentlyViewedChannel in recentlyViewedChannels.suffix(from: maxCount) {
                 viewContext.delete(recentlyViewedChannel)
             }
@@ -356,7 +356,7 @@ class BaseSwiftDataController: SwiftDataProvider {
             logError("Failed to cleanup old RecentlyViewedChannel entries. Error: \(error)")
         }
     }
-
+    
     func cleanupOldSelectedChannels(maxCount: Int = 5000) {
         do {
             // Fetch all entries sorted by viewedAt (oldest first)
@@ -496,7 +496,7 @@ class BaseSwiftDataController: SwiftDataProvider {
     
     @ObservationIgnored
     private var didSaveObserverTask: Task<Void, Never>?
-
+    
     @ObservationIgnored
     private var selectedBundleObserverTask: Task<Void, Never>?
     
@@ -523,12 +523,59 @@ class BaseSwiftDataController: SwiftDataProvider {
                 // Background importer contexts also post this notification and we
                 // don't want their saves triggering a map rebuild.
                 guard (notification.object as? ModelContext) === self.viewContext else { continue }
-                logDebug("Main Context did save detected.")
-                self.scheduleChannelBundleMapRebuild()
+                
+                // Check if the save contains changes that affect the channel bundle map
+                if self.shouldRebuildMapForSave(notification: notification) {
+                    logDebug("Main Context did save detected with relevant changes - scheduling rebuild.")
+                    self.scheduleChannelBundleMapRebuild()
+                } else {
+                    logDebug("Main Context did save detected but no relevant changes - skipping rebuild.")
+                }
             }
         }
     }
-
+    
+    /// Determines if a save notification contains changes that require rebuilding the channel bundle map.
+    ///
+    /// Only changes to these models affect the guide UI and require a rebuild:
+    /// - `Channel`: new channels, deletions, property changes
+    /// - `ChannelBundle`: bundle creation, deletion, modification
+    /// - `BundleEntry`: channels added/removed, favorite toggles
+    /// - `ChannelBundleDevice`: device-to-bundle associations
+    /// - `HomeRunDevice`: enabled/disabled state changes
+    ///
+    /// Changes to these models are ignored:
+    /// - `SelectedChannel`: tracks current playback only
+    /// - `RecentlyViewedChannel`: view history only
+    /// - `ChannelProgram`: guide data, doesn't affect channel list
+    ///
+    /// - Parameter notification: The `ModelContext.didSave` notification
+    /// - Returns: `true` if the map should be rebuilt, `false` otherwise
+    private func shouldRebuildMapForSave(notification: Notification) -> Bool {
+        // Get the changed objects - SwiftData provides these as arrays of identifiers
+        let dataChanges = notification.dataChanges
+        
+        // Combine all changes
+        let allChangedIDs = dataChanges.inserted.union(dataChanges.updated).union(dataChanges.deleted)
+        
+        // Check if any of the changed objects are types that affect the channel bundle map
+        for identifier in allChangedIDs {
+            let entityName = identifier.entityName
+            
+            // Types that require a rebuild
+            if entityName == String(describing: Channel.self) ||
+               entityName == String(describing: ChannelBundle.self) ||
+               entityName == String(describing: BundleEntry.self) ||
+               entityName == String(describing: ChannelBundleDevice.self) ||
+               entityName == String(describing: HomeRunDevice.self) {
+                return true
+            }
+        }
+        
+        // No relevant changes found
+        return false
+    }
+    
     /// Rebuilds the channel map whenever the active channel bundle selection changes.
     private func observeSelectedChannelBundle() {
         selectedBundleObserverTask = Task { @MainActor in
@@ -552,7 +599,7 @@ class BaseSwiftDataController: SwiftDataProvider {
             }
         }
     }
-
+    
     /// Schedules a channel map rebuild with debouncing to prevent excessive rebuilds.
     ///
     /// This method cancels any pending rebuild and schedules a new one after a 300ms delay.
@@ -622,7 +669,7 @@ class BaseSwiftDataController: SwiftDataProvider {
     /// Synchronize the `BundleEntry`(s) in the `ChannelBundle`(s) based on the `HomeRunDevice` enabled state and if the device is associated to the channel bundle.
     private func updateChannelBundleWithIncludedChannels() throws {
         logDebug("Starting sync task for device(s) channel lineup... 🇺🇸")
-
+        
         // Fetch all channel bundles
         let allBundles = channelBundles()
         
@@ -636,7 +683,7 @@ class BaseSwiftDataController: SwiftDataProvider {
             
             let disabledChannelBundleDevices = bundle.deviceAssociations
                 .filter { $0.device.isEnabled == false }
-                
+            
             disabledChannelBundleDevices.forEach { channelBundleDevice in
                 self.viewContext.delete(channelBundleDevice)
             }
@@ -654,7 +701,7 @@ class BaseSwiftDataController: SwiftDataProvider {
         }
         
         try viewContext.saveChangesIfNeeded()
-          
+        
         logDebug("Completed sync task for device(s) channel lineup... 🏁")
     }
     
@@ -725,7 +772,7 @@ class BaseSwiftDataController: SwiftDataProvider {
         
         let appState: AppStateProvider = InjectedValues[\.sharedAppState]
         let channelBundleId = appState.selectedChannelBundleId
-
+        
         let offlineDeviceIds = self.offlineDeviceIds()
         
         let channelsDescriptor = BundleEntryPredicate(channelBundleId: channelBundleId,

@@ -76,12 +76,24 @@ struct VLCPlayerRepresentable: CrossPlatformRepresentable {
     }
     
     func makeView(context: Context) -> PlatformView {
-        return context.coordinator.platformView
+        return context.coordinator.platformView!
     }
     
     func updateView(_ view: PlatformView, context: Context) {
         // Very course at the moment.  If the app is not active, stop the playback.
         context.coordinator.scenePhaseHandler(scenePhase)
+        
+        // Check if the channel has changed - if so, reset the unplayable flag to allow retry
+        let currentURL = context.coordinator.currentStreamURL
+        let newURL = selectedChannel?.url
+        let channelChanged = currentURL != newURL
+        
+        // If stream is marked unplayable, don't try to play it
+        // This prevents an infinite retry loop when the monitoring timer marks a stream as unplayable
+        guard channelChanged || isStreamUnplayable == false else {
+            context.coordinator.stop()
+            return
+        }
         
         // Reconciles the selectedChannelId and player state intent to determine the actual player state.
         context.coordinator.updatePlayState(channel: selectedChannel,
@@ -128,14 +140,13 @@ struct VLCPlayerRepresentable: CrossPlatformRepresentable {
         private var seekObservers: [NSObjectProtocol] = []
         private var lastTimeUpdate: Date?
         private var playbackStuckTimer: Task<Void, Never>?
-        private var hasLoggedPlaybackStart = false
         private var errorRetryCount = 0
         private let maxErrorRetries = 3
-        private var currentStreamURL: URL?
+        fileprivate var currentStreamURL: URL?
         
         private lazy var mediaPlayer: VLCMediaPlayer = {
             let _player = VLCMediaPlayer()
-            _player.drawable = self.platformView
+            _player.drawable = newPlayerView()
             _player.delegate = self
             _player.audio?.volume = initVolume
             
@@ -147,8 +158,7 @@ struct VLCPlayerRepresentable: CrossPlatformRepresentable {
         
         //MARK: - Internal API
         
-        // Platform view that VLC renders into
-        lazy var platformView: PlatformView = {
+        private func newPlayerView() -> PlatformView {
             let view = PlatformView()
 #if os(macOS)
             view.wantsLayer = true
@@ -158,7 +168,12 @@ struct VLCPlayerRepresentable: CrossPlatformRepresentable {
             view.backgroundColor = PlatformColor.clear
 #endif
             return view
-        }()
+        }
+        
+        // Platform view that VLC renders into
+        var platformView: PlatformView? {
+            return mediaPlayer.drawable as? PlatformView
+        }
         
         //MARK: - Player controls
         
@@ -167,9 +182,6 @@ struct VLCPlayerRepresentable: CrossPlatformRepresentable {
         ///   - channel: (Optional) The channel to play.
         ///   - shouldPause: Intent of the user to pause/resume an active playing stream.
         fileprivate func updatePlayState(channel: Channel?, shouldPause: Bool) {
-            
-            // Resolve desired channel URL from channelId
-            
             
             // If there is no channel URL, stop and clear media.
             guard let channelURL = channel?.url else {
@@ -209,11 +221,11 @@ struct VLCPlayerRepresentable: CrossPlatformRepresentable {
                 // https://wiki.videolan.org/VLC_command-line_help/
                 
                 media.addOptions([
-                    "network-caching": 1000                    // Network resource caching in milliseconds. Increased to 15s to buffer through ad transitions.
+                      "network-caching": 1000                    // Network resource caching in milliseconds. Increased to 15s to buffer through ad transitions.
                     , "http-reconnect": ""                       // Auto-reconnect on sudden stream drop. Default disabled; critical for live IPTV streams with unstable connections.
                     , "no-lua": ""                               // Disable all lua plugins. Boolean flags use empty string, not true/false.
-                    , "avcodec-hw": "none"                       // Disable hardware decoding, use software decoding only. Software decoder more flexible with format changes.
-//                    , "avcodec-hw": "any"                      // Prefer hardware decode when possible (VideoToolbox on Apple). Reduces CPU load.
+//                    , "avcodec-hw": "none"                       // Disable hardware decoding, use software decoding only. Software decoder more flexible with format changes.
+                    , "avcodec-hw": "any"                        // Prefer hardware decode when possible (VideoToolbox on Apple). Reduces CPU load.
                     , "avcodec-skiploopfilter": "all"            // Skip loop filter for all frames. More lenient decoding, helps with codec/format switching during ads.
                     , "avcodec-skip-frame": 0                    // Don't skip any frames. 0=AVDISCARD_NONE ensures all frames processed during discontinuities.
                     , "avcodec-skip-idct": 0                     // Don't skip IDCT. Ensures proper decoding through format changes.
@@ -249,7 +261,6 @@ struct VLCPlayerRepresentable: CrossPlatformRepresentable {
                 } else {
                     if not(PreviewDetector.isRunningInPreview) {
                         logDebug("VLC: Starting playback")
-                        startPlaybackMonitoring()
                         mediaPlayer.play()
                     }
                 }
@@ -260,15 +271,14 @@ struct VLCPlayerRepresentable: CrossPlatformRepresentable {
             if shouldPause {
                 if mediaPlayer.canPause, isCurrentlyPlaying {
                     logDebug("VLC: Pausing playback")
-                    stopPlaybackMonitoring()
                     mediaPlayer.pause()
                 }
             } else {
                 // Should be playing: if not already, start/resume.
                 if !isCurrentlyPlaying {
                     logDebug("VLC: Resuming playback")
+                    startPlaybackMonitoring()
                     if not(PreviewDetector.isRunningInPreview) {
-                        startPlaybackMonitoring()
                         mediaPlayer.play()
                     }
                 }
@@ -292,7 +302,6 @@ struct VLCPlayerRepresentable: CrossPlatformRepresentable {
         
         func stop() {
             logDebug("VLC: Stop requested")
-            stopPlaybackMonitoring()
             if mediaPlayer.isPlaying {
                 logDebug("VLC: Stopping active playback")
                 mediaPlayer.stop()
@@ -300,17 +309,31 @@ struct VLCPlayerRepresentable: CrossPlatformRepresentable {
             mediaPlayer.media = nil
         }
         
-        func clearVideoLayer() {
-            // Clear the video layer to remove any frozen frame
-#if os(macOS)
-            if let layer = platformView.layer {
-                layer.contents = nil
-                layer.backgroundColor = PlatformColor.clear.cgColor
+        
+        private func initializeAudioAndSubtitleTracksForStream() {
+            Task { @MainActor [weak self] in
+                
+                // Wait 1 second for VLC to fully initialize stream.
+                try? await Task.sleep(for: .seconds(1))
+                
+                guard let self else { return }
+                
+                // Detect and populate available subtitle tracks
+                self.detectAndUpdateAvailableSubtitleTracks()
+                
+                // Detect and populate available audio tracks
+                self.detectAndUpdateAvailableAudioTracks()
+                
+                // Update seekable state
+                self.appState.isSeekable = self.mediaPlayer.isSeekable
+                logDebug("VLC: Stream is \(self.mediaPlayer.isSeekable ? "seekable" : "not seekable")")
+                
+                // Re-apply closed captions setting if enabled
+                // This ensures CC persists when switching channels
+                if self.appState.closedCaptionsEnabled {
+                    self.updateClosedCaptions(enabled: true)
+                }
             }
-#else
-            platformView.layer.contents = nil
-            platformView.backgroundColor = PlatformColor.clear
-#endif
         }
         
         fileprivate func detectAndUpdateAvailableSubtitleTracks() {
@@ -482,46 +505,55 @@ struct VLCPlayerRepresentable: CrossPlatformRepresentable {
         }
         
         func dismantle() {
-            stopPlaybackMonitoring()
             stop()
             mediaPlayer.drawable = nil
             mediaPlayer.delegate = nil
-            platformView.removeFromSuperview()
+            platformView?.removeFromSuperview()
         }
         
         // MARK: - Playback Monitoring
         
-        /// Starts monitoring for stuck playback - if no time updates after 10 seconds, stream may be unplayable
+        private let watchdog = Watchdog()
+        
+        /// Starts monitoring for stuck playback - if no time updates after 10 seconds, stream is considered unplayable
         private func startPlaybackMonitoring() {
-            hasLoggedPlaybackStart = false
-            stopPlaybackMonitoring()
-            
-            playbackStuckTimer = Task { @MainActor in
-                try? await Task.sleep(for: .seconds(10))
-                
-                guard !Task.isCancelled else { return }
-                
-                // Check if we've received any time updates
-                if let lastUpdate = lastTimeUpdate {
-                    let timeSinceUpdate = Date().timeIntervalSince(lastUpdate)
-                    if timeSinceUpdate > 8 {
-                        logError("VLC: WARNING - No playback progress for \(String(format: "%.1f", timeSinceUpdate))s - stream may be stuck or unplayable")
-                        logError("VLC: Player state: \(mediaPlayer.state.rawValue), isPlaying: \(mediaPlayer.isPlaying)")
+            Task {
+                await watchdog.start { @MainActor [weak self] in
+                    
+                    guard let self else { return false }
+                    
+                    // Check if we've received any time updates
+                    if let lastUpdate = self.lastTimeUpdate {
+                        let timeSinceUpdate = Date().timeIntervalSince(lastUpdate)
+                        if timeSinceUpdate > 6 && self.appState.isPlayerPaused == false {
+                            logError("VLC: ERROR - No playback progress for \(String(format: "%.1f", timeSinceUpdate))s - marking stream as unplayable")
+                            logError("VLC: Player state: \(self.mediaPlayer.state.rawValue), isPlaying: \(self.mediaPlayer.isPlaying)")
+                            if let url = self.mediaPlayer.media?.url {
+                                logError("VLC: Failed URL: \(url.absoluteString)")
+                            }
+                            
+                            // Mark stream as unplayable and stop playback
+                            self.isStreamUnplayable = true
+                            
+                            // Stop watchdog.
+                            return false
+                        } else {
+                            // Not yet reached max time.
+                            return true
+                        }
                     }
-                } else if !hasLoggedPlaybackStart {
-                    logError("VLC: WARNING - Playback did not start after 10 seconds - stream may be unplayable")
-                    logError("VLC: Player state: \(mediaPlayer.state.rawValue), isPlaying: \(mediaPlayer.isPlaying)")
-                    if let url = mediaPlayer.media?.url {
-                        logError("VLC: Failed URL: \(url.absoluteString)")
-                    }
+
+                    //Should not get here because lastTimeUpdate will have been set, but if we do, we stop the watchdog.
+                    return false
                 }
             }
         }
         
         /// Stops the playback monitoring task
         private func stopPlaybackMonitoring() {
-            playbackStuckTimer?.cancel()
-            playbackStuckTimer = nil
+            Task {
+                await watchdog.stop()
+            }
         }
         
         //MARK: - Scene phase handler
@@ -535,13 +567,13 @@ struct VLCPlayerRepresentable: CrossPlatformRepresentable {
             
             switch scenePhase {
                 case .active:
-                    logDebug("Player: App became active")
+                    logDebug("Player: App scene phase is active.")
                 case .inactive:
-                    logDebug("Player: App became inactive")
+                    logDebug("Player: App scene phase is inactive.")
                 case .background:
-                    logDebug("Player: App entered background")
+                    logDebug("Player: App scene phase is in background.")
                 @unknown default:
-                    logDebug("Player: Unknown scene phase")
+                    logDebug("Player: Unknown scene phase.")
             }
         }
     }
@@ -550,6 +582,7 @@ struct VLCPlayerRepresentable: CrossPlatformRepresentable {
 //MARK: - VLCMediaPlayerDelegate protocol
 
 extension VLCPlayerRepresentable.Coordinator: VLCMediaPlayerDelegate {
+
     
     nonisolated func mediaPlayerStateChanged(_ aNotification: Notification) {
         guard let player = aNotification.object as? VLCMediaPlayer else { return }
@@ -557,69 +590,68 @@ extension VLCPlayerRepresentable.Coordinator: VLCMediaPlayerDelegate {
         
         // Log all state changes for debugging
         switch state {
+ 
+            case .opening:
+                logDebug("VLC State: Opening stream...")
+                Task { @MainActor in
+                    self.lastTimeUpdate = Date()
+                    self.startPlaybackMonitoring()
+                }
+                
+            case .esAdded:
+                // Elementary Stream added
+                logDebug("VLC State: Elementary Stream Added")
+                
+            case .buffering:
+                logDebug("VLC State: Buffering")
+                Task { @MainActor in
+                    self.lastTimeUpdate = Date()
+                }
+                
+            case .playing:
+                logDebug("VLC State: Playing")
+                Task { @MainActor in
+                    // Playback started successfully, cancel stuck monitoring and reset error count
+                    self.errorRetryCount = 0
+                    self.isStreamUnplayable = false  // Clear unplayable indicator when playing
+                    self.initializeAudioAndSubtitleTracksForStream()
+                }
+                
+            case .paused:
+                logDebug("VLC State: Paused")
+                Task { @MainActor in
+                    self.stopPlaybackMonitoring()
+                }
+
             case .stopped:
                 logDebug("VLC State: Stopped")
                 Task { @MainActor in
                     self.stopPlaybackMonitoring()
                 }
-            case .opening:
-                logDebug("VLC State: Opening stream...")
-            case .buffering:
-                logDebug("VLC State: Buffering")
-            case .playing:
-                logDebug("VLC State: Playing")
-                Task { @MainActor in
-                    // Playback started successfully, cancel stuck monitoring and reset error count
-                    self.stopPlaybackMonitoring()
-                    self.errorRetryCount = 0
-                    self.isStreamUnplayable = false  // Clear unplayable indicator when playing
-                    
-                    // Wait 1 second for VLC to fully initialize tracks
-                    try? await Task.sleep(for: .seconds(1))
-                    
-                    // Detect and populate available subtitle tracks
-                    self.detectAndUpdateAvailableSubtitleTracks()
-                    
-                    // Detect and populate available audio tracks
-                    self.detectAndUpdateAvailableAudioTracks()
-                    
-                    // Update seekable state
-                    self.appState.isSeekable = player.isSeekable
-                    logDebug("VLC: Stream is \(player.isSeekable ? "seekable" : "not seekable")")
-                    
-                    // Re-apply closed captions setting if enabled
-                    // This ensures CC persists when switching channels
-                    if self.appState.closedCaptionsEnabled {
-                        self.updateClosedCaptions(enabled: true)
-                    }
-                }
-            case .paused:
-                logDebug("VLC State: Paused")
+                
             case .ended:
-                logError("VLC State: Ended - Stream closed unexpectedly or completed")
+                logWarning("VLC State: Ended - Stream closed unexpectedly or completed")
                 if let url = player.media?.url {
-                    logError("VLC: Stream that ended: \(url.absoluteString)")
+                    logDebug("VLC: Stream that ended: \(url.absoluteString)")
                 }
                 Task { @MainActor in
                     self.stopPlaybackMonitoring()
                     self.errorRetryCount = 0  // Reset retry count
-                    self.clearVideoLayer()  // Clear frozen frame
                     self.isStreamUnplayable = true  // Mark stream as unplayable
                 }
+                
             case .error:
                 logError("VLC State: ERROR - Stream failed to play")
                 logError("VLC: Media URL: \(player.media?.url?.absoluteString ?? "unknown")")
                 
                 Task { @MainActor in
-                    self.stopPlaybackMonitoring()
-                    
                     // Check if we should retry
                     self.errorRetryCount += 1
                     
                     if self.errorRetryCount <= self.maxErrorRetries {
                         logError("VLC: Retry attempt \(self.errorRetryCount) of \(self.maxErrorRetries)")
                         
-                        // Attempt reconnect
+                        // Attempt reconnect - restart monitoring for this retry
                         Task { @MainActor [weak player] in
                             player?.stop()
                             try? await Task.sleep(for: .seconds(0.5))
@@ -628,35 +660,19 @@ extension VLCPlayerRepresentable.Coordinator: VLCMediaPlayerDelegate {
                     } else {
                         logError("VLC: Max retry attempts (\(self.maxErrorRetries)) reached - stream is unplayable")
                         logError("VLC: Stopping further retry attempts to prevent infinite loop")
-                        self.clearVideoLayer()  // Clear frozen frame
-                        self.isStreamUnplayable = true  // Mark stream as unplayable
-                        // Don't retry anymore - stream is genuinely unplayable
+                        self.isStreamUnplayable = true
                     }
                 }
-            case .esAdded:
-                logDebug("VLC State: Elementary Stream Added")
+                
             @unknown default:
-                logDebug("VLC State: Unknown state (\(state.rawValue))")
+                logWarning("VLC State: Unknown state (\(state.rawValue))")
         }
     }
     
     nonisolated func mediaPlayerTimeChanged(_ aNotification: Notification) {
-        guard let player = aNotification.object as? VLCMediaPlayer else { return }
-        
         Task { @MainActor in
             // Update last time we saw playback progressing
             self.lastTimeUpdate = Date()
-            
-            // Log first successful playback
-            if !self.hasLoggedPlaybackStart && player.isPlaying {
-                self.hasLoggedPlaybackStart = true
-                if let timeValue = player.time.value {
-                    let timeInSeconds = Double(timeValue.intValue) / 1000.0
-                    logDebug("VLC: Playback started successfully (position: \(String(format: "%.1f", timeInSeconds))s)")
-                } else {
-                    logDebug("VLC: Playback started successfully")
-                }
-            }
         }
     }
     

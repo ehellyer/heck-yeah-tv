@@ -40,7 +40,7 @@ struct ChannelBundlePredicate {
         
         // Combine conditions using '&&' (AND)
         if conditions.isEmpty {
-            return #Predicate { _ in true } // Return a predicate that always evaluates to true if no conditions
+            return #Predicate { _ in true } // Return a predicate that always evaluates to true if no predicate conditions exist.
         } else {
             let compoundPredicate = conditions.reduce(#Predicate { _ in true }) { current, next in
                 #Predicate { current.evaluate($0) && next.evaluate($0) }

@@ -13,7 +13,7 @@ struct HomeRunDevicePredicate {
     
     /// Initialize with predicate values that will be AND together in the final predicate.
     /// An array of device Ids are included as `AND deviceIds.contains(channel.deviceId)`.
-    init(isOffline: Bool = false,
+    init(isOffline: Bool? = nil,
          isEnabled: Bool? = nil,
          deviceIds: [HDHomeRunDeviceId]? = nil) {
         self.isOffline = isOffline
@@ -40,7 +40,7 @@ struct HomeRunDevicePredicate {
         
         var conditions: [Predicate<HomeRunDevice>] = []
         
-        if isOffline {
+        if let isOffline {
             conditions.append(#Predicate<HomeRunDevice> { $0.isOffline == isOffline })
         }
         
@@ -62,7 +62,7 @@ struct HomeRunDevicePredicate {
         
         // Combine conditions using '&&' (AND)
         if conditions.isEmpty {
-            return #Predicate { _ in true } // Return a predicate that always evaluates to true if no conditions
+            return #Predicate { _ in true } // Return a predicate that always evaluates to true if no predicate conditions exist.
         } else {
             let compoundPredicate = conditions.reduce(#Predicate { _ in true }) { current, next in
                 #Predicate { current.evaluate($0) && next.evaluate($0) }
@@ -73,7 +73,7 @@ struct HomeRunDevicePredicate {
     
     //MARK: - Private API
     
-    private var isOffline: Bool
+    private var isOffline: Bool?
     private var isEnabled: Bool?
     private var deviceIds: [HDHomeRunDeviceId]?
     
