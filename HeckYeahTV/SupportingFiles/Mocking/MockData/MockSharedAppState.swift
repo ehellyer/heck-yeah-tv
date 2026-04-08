@@ -11,7 +11,7 @@ import Observation
 
 @MainActor @Observable
 final class MockSharedAppState: AppStateProvider {
-
+    
     init() {
         self.isPlayerPaused = false
         self.showAppMenu = false
@@ -26,14 +26,13 @@ final class MockSharedAppState: AppStateProvider {
         self.selectedSubtitleTrackIndex = nil
         self.availableAudioTracks = []
         self.selectedAudioTrackIndex = nil
-        self.playerVolume = 120
-        self.isSeekable = true
+        self.playerVolume = 100
+        self.preMutedVolume = nil
         self.isReloadingIPTV = false
         self.isReloadingHomeRun = false
     }
 
-    var isReloadingIPTV: Bool
-    var isReloadingHomeRun: Bool
+
     var isPlayerPaused: Bool
     var showAppMenu: Bool
     var showProgramDetailCarousel: ChannelProgram?
@@ -48,5 +47,7 @@ final class MockSharedAppState: AppStateProvider {
     var availableAudioTracks: [TrackItem]
     var selectedAudioTrackIndex: Int32?
     var playerVolume: Int32
-    var isSeekable: Bool
+    var preMutedVolume: Int32?
+    var isReloadingIPTV: Bool
+    var isReloadingHomeRun: Bool
 }

@@ -131,7 +131,7 @@ final class SharedAppState: AppStateProvider {
         }
     }
     
-    var isSeekable: Bool = true
+    var preMutedVolume: Int32? = nil
     var isReloadingIPTV: Bool = false
     var isReloadingHomeRun: Bool = false
 }

@@ -39,17 +39,9 @@ actor IPTVImporter {
         let remove = Array(Dictionary(grouping: streams, by: \.id).filter({ $1.count > 1 }).keys)
         streams.removeAll(where: { remove.contains($0.id) })
         
-        //Delete all existing IPTV channels, faster than upsert.  (We preserve favorites).
-        let deviceId = IPTVImporter.iptvDeviceId
-        try modelContext.delete(model: Channel.self, where: #Predicate { channel in channel.deviceId == deviceId })
-        if modelContext.hasChanges {
-            try modelContext.save()
-        }
-        
         try await self.importIPChannels(ipFeeds: feeds,
                                         ipChannels: channels,
                                         ipStreams: streams)
-        
     }
     
     private func importIPChannels(ipFeeds: [IPFeed],
@@ -75,12 +67,13 @@ actor IPTVImporter {
             }
         }()
         
-        //let existingIDs = Set(existingChannels.map(\.id))
+        let existingIDs = Set(existingChannels.map(\.id))
         let incomingIDs = Set(ipStreams.map(\.idHint))
+        let removeIDs = existingIDs.subtracting(incomingIDs)
         
         // delete
-        logDebug("Existing IPTV channels to delete: \(existingChannels.count)")
-        for channel in existingChannels where !incomingIDs.contains(channel.id) {
+        logDebug("Existing IPTV channels to delete: \(removeIDs.count)")
+        for channel in existingChannels where removeIDs.contains(channel.id) {
             modelContext.delete(channel)
         }
         

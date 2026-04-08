@@ -139,13 +139,13 @@ protocol AppStateProvider {
     /// wants to manually adjust volume every time they watch something.
     var playerVolume: Int32 { get set }
     
-    /// Whether the current stream supports seeking (jumping forward/backward in time).
+    /// The volume level before the user hit the mute button.
     ///
-    /// When `true`, the stream allows you to skip around like you're in control of time itself.
-    /// When `false`, you're stuck watching linearly like some kind of broadcast television peasant.
-    /// Live streams typically aren't seekable, while VOD content usually is. This state is transient
-    /// and updates based on the currently playing stream's capabilities.
-    var isSeekable: Bool { get set }
+    /// When you tap mute, your volume gets stored here like a security deposit, ready to be returned
+    /// when you unmute. If `nil`, either you've never muted, or the universe has forgotten your
+    /// pre-muted volume preference (probably a fresh install). This setting persists because nobody
+    /// wants to guess what volume they had before muting across app restarts.
+    var preMutedVolume: Int32? { get set }
     
     /// Whether IPTV channels are currently being reloaded.
     ///

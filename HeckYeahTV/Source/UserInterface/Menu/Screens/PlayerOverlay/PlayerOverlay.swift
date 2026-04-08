@@ -57,6 +57,15 @@ struct PlayerOverlay: View {
                             .glassEffect()
                     }
                     .buttonStyle(.plain)
+                    
+                    Button(action: toggleMute) {
+                        Image(systemName: appState.playerVolume == 0 ? "speaker.slash.circle" : "speaker.circle")
+                            .font(.system(size: 24))
+                            .foregroundStyle(.white)
+                            .frame(width: 50, height: 50)
+                            .glassEffect()
+                    }
+                    .buttonStyle(.plain)
                 }
                 .padding(.leading, 30)
                 
@@ -138,15 +147,37 @@ struct PlayerOverlay: View {
     // MARK: - Actions
     
     private func volumeUp() {
-        let newVolume = min(appState.playerVolume + 10, 200)
-        appState.playerVolume = newVolume
-        showVolumeToast(newVolume)
+        // If currently muted, restore to pre-muted volume before increasing
+        if appState.playerVolume == 0, let preMutedVolume = appState.preMutedVolume {
+            appState.playerVolume = preMutedVolume
+            appState.preMutedVolume = nil
+            showVolumeToast(preMutedVolume)
+        } else {
+            let newVolume = min(appState.playerVolume + 10, 200)
+            appState.playerVolume = newVolume
+            showVolumeToast(newVolume)
+        }
     }
     
     private func volumeDown() {
         let newVolume = max(appState.playerVolume - 10, 0)
         appState.playerVolume = newVolume
         showVolumeToast(newVolume)
+    }
+    
+    private func toggleMute() {
+        if appState.playerVolume == 0 {
+            // Unmute: restore to pre-muted volume or default to 100
+            let restoredVolume = appState.preMutedVolume ?? 100
+            appState.playerVolume = restoredVolume
+            appState.preMutedVolume = nil
+            showVolumeToast(restoredVolume)
+        } else {
+            // Mute: save current volume and set to 0
+            appState.preMutedVolume = appState.playerVolume
+            appState.playerVolume = 0
+            showVolumeToast(0)
+        }
     }
     
     private func showVolumeToast(_ volume: Int32) {

@@ -64,20 +64,28 @@ actor SwiftDataBootTasks {
     ///
     /// - Throws: Any fetch or save error propagated from the actor's `ModelContext`.
     func mapOrphanedBundleEntryWithChannel() async throws {
-        let bundleEntryDescriptor = BundleEntryPredicate(hasChannel: false).fetchDescriptor()
         
-        var channelDescriptor = ChannelPredicate().fetchDescriptor()
+        let orphanedChannelDescriptor = BundleEntryPredicate(hasChannel: false).fetchDescriptor()
+        let bundleEntries: [BundleEntry] = try context.fetch(orphanedChannelDescriptor)
+        
+        guard bundleEntries.isEmpty == false else {
+            logDebug("\(bundleEntries.count) orphaned channels found in the store.  Orphaned channels is normal operation when IPTV channels get removed or tuners are not accessible.")
+            return
+        }
+        logDebug("Zero orphaned channels in the store.")
+        
+        var channelDescriptor = ChannelPredicate().fetchDescriptorNoSort()
         channelDescriptor.fetchLimit = 1
-        channelDescriptor.sortBy = []
-        
-        let bundleEntries: [BundleEntry] = try context.fetch(bundleEntryDescriptor)
         for bundleEntry in bundleEntries {
             
             let channelPredicate = #Predicate<Channel> { $0.id == bundleEntry.channelId }
             channelDescriptor.predicate = channelPredicate
             
             if let resolvedChannel = try? context.fetch(channelDescriptor).first  {
+                logDebug("Resolved orphaned channel: \(resolvedChannel.title)")
                 bundleEntry.channel = resolvedChannel
+            } else {
+                logDebug("Unable to resolve orphaned channel for bundle entry: \(bundleEntry.sortHint) (<- sort hint)")
             }
         }
         try context.saveChangesIfNeeded()

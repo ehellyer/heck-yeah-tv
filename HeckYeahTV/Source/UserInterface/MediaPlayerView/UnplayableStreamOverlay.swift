@@ -19,3 +19,7 @@ struct UnplayableStreamOverlay: View {
             .background(Color.black.opacity(0.3))
     }
 }
+
+#Preview {
+    UnplayableStreamOverlay()
+}

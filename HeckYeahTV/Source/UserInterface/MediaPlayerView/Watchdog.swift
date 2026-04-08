@@ -6,7 +6,6 @@
 //  Copyright © 2026 Hellyer Multimedia. All rights reserved.
 //
 
-
 import Foundation
 
 /// A loyal watchdog that keeps an eye on things and barks (calls your action) at regular intervals.
