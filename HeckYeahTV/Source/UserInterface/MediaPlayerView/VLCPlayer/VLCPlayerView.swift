@@ -43,5 +43,12 @@ struct VLCPlayerView: View {
                 StreamSwitchingActivity()
             }
         }
+        .onChange(of: scenePhase) { oldPhase, newPhase in
+            // Resets flags when resuming from BG.
+            if newPhase == .active {
+                isStreamUnplayable = false
+                isSwitchingStreams = false
+            }
+        }
     }
 }

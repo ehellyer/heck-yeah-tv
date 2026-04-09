@@ -46,16 +46,18 @@ struct VLCPlayerRepresentable: CrossPlatformRepresentable {
     }
     
     func updateView(_ view: PlatformView, context: Context) {
-        // Very course at the moment.  If the app is not active, stop the playback.
-        context.coordinator.scenePhaseHandler(scenePhase)
+        // Very course at the moment.  If the app is not active, stop the playback, return early.
+        if scenePhase != .active {
+            context.coordinator.stop()
+            return
+        }
         
         // Check if the channel has changed - if so, ignore the unplayable flag to allow retry.
         let mediaPlayerCurrentURL = context.coordinator.currentStreamURL
         let selectedChannelURL = selectedChannel?.url
         
-        // If stream is marked unplayable, don't try to play it, unless the channel is different, then ignore the unplayable flag.
-        // This prevents an infinite retry loop when the monitoring timer marks a stream as unplayable
-        guard (mediaPlayerCurrentURL != selectedChannelURL) || isStreamUnplayable == false else {
+        // If stream is marked unplayable for the current channel, then stop and exit.  (unless the channel is different, then ignore the unplayable flag).
+        if (mediaPlayerCurrentURL == selectedChannelURL && isStreamUnplayable) {
             context.coordinator.stop()
             return
         }
@@ -519,27 +521,6 @@ struct VLCPlayerRepresentable: CrossPlatformRepresentable {
             self.isSwitchingStreams = false
             Task {
                 await playerWatchdog.stop()
-            }
-        }
-        
-        //MARK: - Scene phase handler
-        
-        fileprivate func scenePhaseHandler(_ scenePhase: ScenePhase) {
-            
-            switch scenePhase {
-                case .active:
-                    logDebug("Player: App scene phase is active.")
-                case .inactive:
-                    logDebug("Player: App scene phase is inactive.")
-                case .background:
-                    logDebug("Player: App scene phase is in background.")
-                @unknown default:
-                    logDebug("Player: Unknown scene phase.")
-            }
-
-            if scenePhase != .active {
-                stop()
-                return
             }
         }
     }
