@@ -267,6 +267,9 @@ struct Heck_Yeah_TVApp: App {
         
         // If shown, determine default tab.
         appState.selectedTab = (hasNoChannels) ? .settings : .guide
+        
+        // Turn off closed captions if they were enabled.
+        appState.selectedSubtitleTrackIndex = -1
     }
 }
 

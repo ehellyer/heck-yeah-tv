@@ -222,21 +222,6 @@ extension UserDefaults {
             standard.set(rawValue, forKey: AppKeys.SharedAppState.lanAuthorizationStatusKey)
         }
     }
-
-    /// A boolean indicating whether closed captions/subtitles should be displayed during video playback.
-    ///
-    /// When enabled, subtitle tracks will be shown on-screen for accessibility or preference.
-    /// The value is persisted in `UserDefaults.standard` and defaults to `false`.
-    ///
-    /// - Returns: `true` if closed captions should be displayed, `false` otherwise.
-    static var closedCaptionsEnabled: Bool {
-        get {
-            standard.bool(forKey: AppKeys.SharedAppState.closedCaptionsEnabledKey)
-        }
-        set {
-            standard.set(newValue, forKey: AppKeys.SharedAppState.closedCaptionsEnabledKey)
-        }
-    }
     
     /// The current playback volume level (0-200).
     ///
@@ -250,7 +235,7 @@ extension UserDefaults {
                 let value = standard.integer(forKey: AppKeys.SharedAppState.playerVolumeKey)
                 return Int32(value)
             }
-            return Int32(120)
+            return Int32(100)
         }
         set {
             standard.set(Int(newValue), forKey: AppKeys.SharedAppState.playerVolumeKey)

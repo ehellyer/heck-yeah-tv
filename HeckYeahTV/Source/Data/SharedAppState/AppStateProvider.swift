@@ -95,13 +95,6 @@ protocol AppStateProvider {
     /// If `nil`, we either haven't fetched yet, or we're just winging it and hoping for the best.
     /// Set this after each successful fetch—your future self (and the API's rate limiter) will thank you.
     var dateLastIPTVChannelFetch: Date? { get set }
-
-    /// Whether closed captions are currently enabled for video playback.
-    ///
-    /// When `true`, subtitles will display on screen for those who prefer reading along or need accessibility support.
-    /// When `false`, subtitles take a coffee break and you're on your own.
-    /// This setting persists across app launches because nobody wants to re-enable captions every single time.
-    var closedCaptionsEnabled: Bool { get set }
     
     /// The list of subtitle tracks available in the currently playing stream.
     ///
@@ -110,12 +103,12 @@ protocol AppStateProvider {
     /// are available or no stream is playing. This state is transient and not persisted.
     var availableSubtitleTracks: [TrackItem] { get set }
     
-    /// The index of the currently selected subtitle track, or `nil` if CC is disabled.
+    /// The index of the currently selected subtitle track, or -1 if CC is disabled.
     ///
     /// This value corresponds to the VLC subtitle track index. When set, it triggers the player
-    /// to switch to that subtitle track. Set to `nil` or -1 when CC is disabled.
+    /// to switch to that subtitle track. Set to -1 when CC is disabled.
     /// This state is transient and not persisted since each stream has unique tracks.
-    var selectedSubtitleTrackIndex: Int32? { get set }
+    var selectedSubtitleTrackIndex: Int32 { get set }
     
     /// The list of audio tracks available in the currently playing stream.
     ///
@@ -124,12 +117,12 @@ protocol AppStateProvider {
     /// tracks are available or no stream is playing. This state is transient and not persisted.
     var availableAudioTracks: [TrackItem] { get set }
     
-    /// The index of the currently selected audio track, or `nil` if none selected.
+    /// The index of the currently selected audio track, or -1 if none selected.
     ///
     /// This value corresponds to the VLC audio track index. When set, it triggers the player
-    /// to switch to that audio track. Set to `nil` when no stream is playing or no track is selected.
+    /// to switch to that audio track. Set to -1 when no stream is playing or no track is selected.
     /// This state is transient and not persisted since each stream has unique tracks.
-    var selectedAudioTrackIndex: Int32? { get set }
+    var selectedAudioTrackIndex: Int32 { get set }
     
     /// The current playback volume level (0-200).
     ///

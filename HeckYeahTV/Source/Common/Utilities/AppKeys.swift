@@ -82,7 +82,6 @@ struct AppKeys {
         static let dateLastHomeRunChannelProgramFetchKey = "SharedAppState.dateLastHomeRunChannelProgramFetchKey"
         static let dateLastIPTVChannelFetchKey = "SharedAppState.dateLastIPTVChannelFetchKey"
         static let lanAuthorizationStatusKey = "SharedAppState.lanAuthorizationStatusKey"
-        static let closedCaptionsEnabledKey = "SharedAppState.closedCaptionsEnabledKey"
         static let playerVolumeKey = "SharedAppState.playerVolumeKey"
 
         // Search parameter keys

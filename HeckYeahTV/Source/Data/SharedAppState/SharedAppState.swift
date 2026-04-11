@@ -101,23 +101,11 @@ final class SharedAppState: AppStateProvider {
             }
         }
     }
-
-    var closedCaptionsEnabled: Bool {
-        get {
-            access(keyPath: \.closedCaptionsEnabled)
-            return UserDefaults.closedCaptionsEnabled
-        }
-        set {
-            withMutation(keyPath: \.closedCaptionsEnabled) {
-                UserDefaults.closedCaptionsEnabled = newValue
-            }
-        }
-    }
     
     var availableSubtitleTracks: [TrackItem] = []
-    var selectedSubtitleTrackIndex: Int32? = nil
+    var selectedSubtitleTrackIndex: Int32 = -1
     var availableAudioTracks: [TrackItem] = []
-    var selectedAudioTrackIndex: Int32? = nil
+    var selectedAudioTrackIndex: Int32 = -1
     
     var playerVolume: Int32 {
         get {

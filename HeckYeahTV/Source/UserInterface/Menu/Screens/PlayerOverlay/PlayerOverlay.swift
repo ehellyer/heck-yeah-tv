@@ -98,15 +98,15 @@ struct PlayerOverlay: View {
                 
                 // Closed caption selector button
                 if !appState.availableSubtitleTracks.isEmpty {
+                    let closedCaptionsEnabled: Bool = (appState.selectedSubtitleTrackIndex >= 0)
                     Menu {
                         // "Off" option
                         Button(action: {
-                            appState.closedCaptionsEnabled = false
-                            appState.selectedSubtitleTrackIndex = nil
+                            appState.selectedSubtitleTrackIndex = -1
                         }) {
                             HStack {
                                 Text("Off")
-                                if !appState.closedCaptionsEnabled {
+                                if not(closedCaptionsEnabled) {
                                     Image(systemName: "checkmark")
                                 }
                             }
@@ -117,21 +117,20 @@ struct PlayerOverlay: View {
                         // Available subtitle tracks
                         ForEach(appState.availableSubtitleTracks) { track in
                             Button(action: {
-                                appState.closedCaptionsEnabled = true
                                 appState.selectedSubtitleTrackIndex = track.index
                             }) {
                                 HStack {
                                     Text(track.name)
-                                    if appState.closedCaptionsEnabled && appState.selectedSubtitleTrackIndex == track.index {
+                                    if closedCaptionsEnabled && appState.selectedSubtitleTrackIndex == track.index {
                                         Image(systemName: "checkmark")
                                     }
                                 }
                             }
                         }
                     } label: {
-                        Image(systemName: appState.closedCaptionsEnabled ? "captions.bubble.fill" : "captions.bubble")
+                        Image(systemName: closedCaptionsEnabled ? "captions.bubble.fill" : "captions.bubble")
                             .font(.system(size: 24))
-                            .foregroundStyle(appState.closedCaptionsEnabled ? .blue : .white)
+                            .foregroundStyle(closedCaptionsEnabled ? .blue : .white)
                             .frame(width: 50, height: 50)
                             .glassEffect()
                     }

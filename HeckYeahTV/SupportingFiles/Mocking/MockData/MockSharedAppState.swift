@@ -21,11 +21,10 @@ final class MockSharedAppState: AppStateProvider {
         self.selectedChannelBundleId = "mock#1.guide"// AppKeys.Application.defaultChannelBundleId
         self.dateLastHomeRunChannelProgramFetch = nil
         self.dateLastIPTVChannelFetch = nil
-        self.closedCaptionsEnabled = false
         self.availableSubtitleTracks = []
-        self.selectedSubtitleTrackIndex = nil
+        self.selectedSubtitleTrackIndex = -1
         self.availableAudioTracks = []
-        self.selectedAudioTrackIndex = nil
+        self.selectedAudioTrackIndex = -1
         self.playerVolume = 100
         self.preMutedVolume = nil
         self.isReloadingIPTV = false
@@ -41,11 +40,10 @@ final class MockSharedAppState: AppStateProvider {
     var selectedChannelBundleId: ChannelBundleId
     var dateLastHomeRunChannelProgramFetch: Date?
     var dateLastIPTVChannelFetch: Date?
-    var closedCaptionsEnabled: Bool
     var availableSubtitleTracks: [TrackItem]
-    var selectedSubtitleTrackIndex: Int32?
+    var selectedSubtitleTrackIndex: Int32
     var availableAudioTracks: [TrackItem]
-    var selectedAudioTrackIndex: Int32?
+    var selectedAudioTrackIndex: Int32
     var playerVolume: Int32
     var preMutedVolume: Int32?
     var isReloadingIPTV: Bool
