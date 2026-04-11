@@ -41,9 +41,9 @@ final class MockSharedAppState: AppStateProvider {
     var dateLastHomeRunChannelProgramFetch: Date?
     var dateLastIPTVChannelFetch: Date?
     var availableSubtitleTracks: [TrackItem]
-    var selectedSubtitleTrackIndex: Int32
+    var selectedSubtitleTrackIndex: Int
     var availableAudioTracks: [TrackItem]
-    var selectedAudioTrackIndex: Int32
+    var selectedAudioTrackIndex: Int
     var playerVolume: Int32
     var preMutedVolume: Int32?
     var isReloadingIPTV: Bool

@@ -10,8 +10,8 @@ import Foundation
 
 /// Represents an audio track or subtitle track with its index and display name
 struct TrackItem: Identifiable, Hashable, Sendable {
-    let id: Int32
-    let index: Int32
+    let id: Int
+    let index: Int
     let name: String
     
     /// Extract language code from name if present (e.g., "English [en]" -> "en")
@@ -108,7 +108,7 @@ protocol AppStateProvider {
     /// This value corresponds to the VLC subtitle track index. When set, it triggers the player
     /// to switch to that subtitle track. Set to -1 when CC is disabled.
     /// This state is transient and not persisted since each stream has unique tracks.
-    var selectedSubtitleTrackIndex: Int32 { get set }
+    var selectedSubtitleTrackIndex: Int { get set }
     
     /// The list of audio tracks available in the currently playing stream.
     ///
@@ -122,7 +122,7 @@ protocol AppStateProvider {
     /// This value corresponds to the VLC audio track index. When set, it triggers the player
     /// to switch to that audio track. Set to -1 when no stream is playing or no track is selected.
     /// This state is transient and not persisted since each stream has unique tracks.
-    var selectedAudioTrackIndex: Int32 { get set }
+    var selectedAudioTrackIndex: Int { get set }
     
     /// The current playback volume level (0-200).
     ///

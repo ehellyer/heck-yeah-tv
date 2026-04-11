@@ -180,7 +180,7 @@ struct VLCPlayerRepresentable: CrossPlatformRepresentable {
                 // https://wiki.videolan.org/VLC_command-line_help/
                 
                 media.addOptions([
-                      "network-caching": 1000                    // Network resource caching in milliseconds. Increased to 15s to buffer through ad transitions.
+                      "network-caching": 1000                    // Network resource caching in milliseconds.
                     , "http-reconnect": ""                       // Auto-reconnect on sudden stream drop. Default disabled; critical for live IPTV streams with unstable connections.
                     , "no-lua": ""                               // Disable all lua plugins. Boolean flags use empty string, not true/false.
                     , "avcodec-hw": "none"                       // Disable hardware decoding, use software decoding only. Software decoder more flexible with format changes.
@@ -273,22 +273,20 @@ struct VLCPlayerRepresentable: CrossPlatformRepresentable {
 
         //MARK: - Update Audio and Subtitle tracks.
         
-        fileprivate func updateAudioTrack() {
-            guard mediaPlayer.currentAudioTrackIndex != appState.selectedAudioTrackIndex else {
-                return
-            }
-            
-            logDebug("VLC: Switching to audio track index: \(appState.selectedAudioTrackIndex)")
-            mediaPlayer.currentAudioTrackIndex = appState.selectedAudioTrackIndex
-        }
-        
         fileprivate func updateClosedCaptions() {
             guard mediaPlayer.currentVideoSubTitleIndex != appState.selectedSubtitleTrackIndex else {
                 return
             }
-            
-            logDebug("VLC: Enabling selected subtitle track (index: \(appState.selectedSubtitleTrackIndex))")
-            mediaPlayer.currentVideoSubTitleIndex = appState.selectedSubtitleTrackIndex
+            logDebug("VLC: Switching to subtitle track (index: \(appState.selectedSubtitleTrackIndex))")
+            mediaPlayer.currentVideoSubTitleIndex = Int32(appState.selectedSubtitleTrackIndex)
+        }
+
+        fileprivate func updateAudioTrack() {
+            guard mediaPlayer.currentAudioTrackIndex != appState.selectedAudioTrackIndex else {
+                return
+            }
+            logDebug("VLC: Switching to audio track index: \(appState.selectedAudioTrackIndex)")
+            mediaPlayer.currentAudioTrackIndex = Int32(appState.selectedAudioTrackIndex)
         }
         
         //MARK: - Update available audio and subtitle tracks after waiting for the stream to settle.
@@ -304,48 +302,34 @@ struct VLCPlayerRepresentable: CrossPlatformRepresentable {
                 self.updateAvailableSubtitleTracks()
                 self.updateAvailableAudioTracks()
                 
-                // Updates view and player to match the users settings.
+                // Update mediaPlayer to match the user selected state.
                 self.updateClosedCaptions()
                 self.updateAudioTrack()
             }
         }
         
         private func updateAvailableSubtitleTracks() {
-            
-            // Get available subtitle tracks from VLC
-            guard let subtitleIndexes = mediaPlayer.videoSubTitlesIndexes as? [Int32] else {
-                logDebug("VLC: videoSubTitlesIndexes is nil or wrong type")
-                appState.availableSubtitleTracks = []
-                appState.selectedSubtitleTrackIndex = -1
-                return
-            }
-            
-            // Try to get names if available, otherwise use generic names
-            let subtitleNames: [String]
-            if let names = mediaPlayer.videoSubTitlesNames as? [String] {
-                subtitleNames = names
-            } else {
-                subtitleNames = subtitleIndexes.map { index in
-                    if index == -1 {
-                        return "Subtitles Off"
-                    } else {
-                        return "Track \(index)"
-                    }
-                }
-            }
-            
-            // Filter out the "Disable" track (index -1) if present
-            let validTracks = zip(subtitleIndexes, subtitleNames)
-                .filter { $0.0 >= 0 }
-                .map { TrackItem(id: Int32($0.0), index: Int32($0.0), name: $0.1) }
 
-            // EJH: - Override - Just offer the first subtitle track.
-            let track: [TrackItem] = validTracks.first.map { [$0] } ?? []
-            
-            appState.availableSubtitleTracks = track
             appState.selectedSubtitleTrackIndex = -1
             
-            logDebug("VLC: Found subtitle track: \(validTracks)")
+            // Get available subtitle tracks from VLC
+            let subtitleIndexes = mediaPlayer.videoSubTitlesIndexes.compactMap { $0 as? Int }
+            
+            let validTracks = subtitleIndexes
+                .enumerated()
+                .map { (index, subtitleIndex) in
+                    let name: String = mediaPlayer.videoSubTitlesNames.indices.contains(index) ? mediaPlayer.videoSubTitlesNames[index] as! String : "Subtitle \(subtitleIndex)"
+                    let item = TrackItem(id: index,
+                                         index: subtitleIndex,
+                                         name: name)
+                    return item
+                }
+                .filter { $0.index >= 0 }  // Filter out the "Disable" track (index -1) if present
+            
+            // EJH: - Override - Just offer the first subtitle track.
+            appState.availableSubtitleTracks = validTracks.first.map { [$0] } ?? []  //validTracks
+            
+            logDebug("VLC: Found subtitle tracks: \(validTracks)")
         }
         
         private func updateAvailableAudioTracks() {
@@ -361,7 +345,11 @@ struct VLCPlayerRepresentable: CrossPlatformRepresentable {
             // Filter out the "Disable" track (index -1) if present
             let validTracks = zip(audioTrackIndexes, audioTrackNames)
                 .filter { $0.0 >= 0 }
-                .map { TrackItem(id: Int32($0.0), index: Int32($0.0), name: $0.1) }
+                .map {
+                    TrackItem(id: $0.0,
+                              index: $0.0,
+                              name: $0.1)
+                }
             
             appState.availableAudioTracks = validTracks
             appState.selectedAudioTrackIndex = validTracks.first?.index ?? -1

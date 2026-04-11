@@ -170,15 +170,13 @@ struct Heck_Yeah_TVApp: App {
             
             // Complete boot - UI can now be shown
             await MainActor.run {
-                swiftDataController.invalidateTunerLineUp()
-                swiftDataController.invalidateChannelBundleMap()
                 initializeUIState()
                 
                 // Update state variable that boot up processes are completed.
                 isBootComplete = true
             }
             
-            // Now launch background tasks that don't block UI
+            // Launch background tasks that don't block UI.
             logDebug("Launching background refresh tasks")
             await withTaskGroup(of: Void.self) { group in
                 let scanForTuners = await appState.scanForTuners ?? false
@@ -246,10 +244,10 @@ struct Heck_Yeah_TVApp: App {
     }
     
     private func initializeUIState() {
-
-        InjectedValues[\.swiftDataController].invalidateChannelBundleMap()
-
         let swiftDataController = InjectedValues[\.swiftDataController]
+        swiftDataController.invalidateTunerLineUp()
+        swiftDataController.invalidateChannelBundleMap()
+
         let hasNoChannels = swiftDataController.channelBundleMap.channelIds.isEmpty
         
         if HeckYeahSchema.versionIdentifier == Schema.Version(0, 0, 0) {
@@ -267,9 +265,6 @@ struct Heck_Yeah_TVApp: App {
         
         // If shown, determine default tab.
         appState.selectedTab = (hasNoChannels) ? .settings : .guide
-        
-        // Turn off closed captions if they were enabled.
-        appState.selectedSubtitleTrackIndex = -1
     }
 }
 

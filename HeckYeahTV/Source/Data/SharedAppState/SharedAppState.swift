@@ -103,9 +103,9 @@ final class SharedAppState: AppStateProvider {
     }
     
     var availableSubtitleTracks: [TrackItem] = []
-    var selectedSubtitleTrackIndex: Int32 = -1
+    var selectedSubtitleTrackIndex: Int = -1
     var availableAudioTracks: [TrackItem] = []
-    var selectedAudioTrackIndex: Int32 = -1
+    var selectedAudioTrackIndex: Int = -1
     
     var playerVolume: Int32 {
         get {
