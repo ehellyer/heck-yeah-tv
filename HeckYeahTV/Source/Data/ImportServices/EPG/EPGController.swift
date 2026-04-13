@@ -49,11 +49,7 @@ actor EPGController {
     /// - Parameters:
     ///   - urlString: The URL string for the EPG source
     /// - Returns: The raw XML data
-    private func downloadEPG(from urlString: String) async throws -> Data {
-        guard let url = URL(string: urlString) else {
-            throw EPGControllerError.invalidURL
-        }
-        
+    private func downloadEPG(from url: URL) async throws -> Data {
         let request = NetworkRequest(url: url,
                                      method: .get,
                                      timeoutInterval: 60.0,
@@ -95,27 +91,27 @@ actor EPGController {
         var summary = FetchSummary()
         
         guard let sourceURL = URL(string: source) else {
-            summary.failures[URL(string: "invalid")!] = EPGControllerError.invalidURL
+            summary.addFailure(forKey: .iptvGuides, value: EPGControllerError.invalidURL.errorDescription ?? "")
             summary.finishedAt = Date()
             return (nil, summary)
         }
         
         do {
-            logDebug("Downloading EPG data from: \(source)")
-            let xmlData = try await downloadEPG(from: source)
+            logDebug("Downloading EPG data from: \(sourceURL)")
+            let xmlData = try await downloadEPG(from: sourceURL)
             
             logDebug("Parsing EPG XML data (\(xmlData.count) bytes)...")
             let guide = try await parseXMLTV(xmlData)
             
-            logDebug("Successfully parsed EPG: \(guide.channels.count) channels, \(guide.programs.count) programmes")
-            summary.successes[sourceURL] = guide.programs.count
+            logDebug("Successfully parsed EPG: \(guide.channels.count) channels, \(guide.programs.count) programs")
+            summary.addSuccess(forKey: .iptvGuides, value: "Successfully parsed EPG: \(guide.channels.count) channels, \(guide.programs.count) programs")
             summary.finishedAt = Date()
             
             return (guide, summary)
             
         } catch {
             logError("Failed to fetch EPG: \(error)")
-            summary.failures[sourceURL] = error
+            summary.addFailure(forKey: .iptvGuides, value: "Failed to fetch EPG: \(error)")
             summary.finishedAt = Date()
             return (nil, summary)
         }

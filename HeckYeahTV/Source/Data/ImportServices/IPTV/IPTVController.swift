@@ -106,30 +106,30 @@ actor IPTVController {
             }
         ]
         
-        // Run everything concurrently; each task returns (endpoint, Result<count, error>)
-        await withTaskGroup(of: (URL, Result<Int, Error>).self) { group in
+        // Run everything concurrently; each task returns (ImportStage, Result<count, error>)
+        await withTaskGroup(of: (ImportStage, Result<Int, Error>).self) { group in
             for spec in specs {
                 group.addTask { [weak self] in
                     guard let self else {
-                        return (spec.endpoint.url, .failure(CancellationError()))
+                        return (spec.endpoint.importStage, .failure(CancellationError()))
                     }
                     
                     do {
                         let count = try await spec.load(into: self)
-                        return (spec.endpoint.url, .success(count))
+                        return (spec.endpoint.importStage, .success(count))
                     } catch {
-                        return (spec.endpoint.url, .failure(error))
+                        return (spec.endpoint.importStage, .failure(error))
                     }
                 }
             }
             
             // Aggregate results on the main actor (this method is @MainActor)
-            for await (endpoint, result) in group {
+            for await (importStage, result) in group {
                 switch result {
                     case .success(let count):
-                        source.summary.successes[endpoint] = count
+                        source.summary.addSuccess(forKey: importStage, value: "Success \(count)")
                     case .failure(let error):
-                        source.summary.failures[endpoint] = error
+                        source.summary.addFailure(forKey: importStage, value: "Failure \(error.localizedDescription)")
                 }
             }
         }
@@ -143,4 +143,3 @@ actor IPTVController {
         return source.summary
     }
 }
-

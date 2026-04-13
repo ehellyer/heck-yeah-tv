@@ -14,6 +14,7 @@ struct DeviceDetailView: View {
     
     let device: HomeRunDevice
     
+    @Environment(\.dismiss) private var dismiss
     @State private var isRefreshing = false
     @State private var showingDeleteConfirmation = false
     @State private var swiftDataController: BaseSwiftDataController = InjectedValues[\.swiftDataController]
@@ -25,12 +26,12 @@ struct DeviceDetailView: View {
                 
                 // MARK: - Settings Section
                 Section {
-                    VStack(alignment: .leading, spacing: 20) {
+                    VStack(alignment: .leading, spacing: 8) {
                         if device.isOffline {
                             Button(role: .destructive, action: {
                                 showingDeleteConfirmation = true
                             }) {
-                                HStack(spacing: 20) {
+                                HStack(spacing: 10) {
                                     Image(systemName: "trash")
                                         .foregroundStyle(.red)
                                     Text("Delete HomeRun Device")
@@ -43,26 +44,30 @@ struct DeviceDetailView: View {
                         Button(action: {
                             device.isEnabled.toggle()
                         }) {
-                            HStack(spacing: 20) {
-                                if device.isEnabled {
-                                    Text("Enabled for Heck Yeah TV")
-                                    Image(systemName: "antenna.radiowaves.left.and.right")
+                            
+                            if device.isEnabled {
+                                HStack(spacing: 10) {
+                                    Image(systemName: "power")
                                         .foregroundStyle(.blue)
-                                } else {
-                                    Text("Disabled for Heck Yeah TV")
-                                    Image(systemName: "antenna.radiowaves.left.and.right.slash")
+                                    Text("Disable")
+                                }
+                            } else {
+                                HStack(spacing: 10) {
+                                    Image(systemName: "power")
                                         .foregroundStyle(.gray)
+                                    Text("Enable")
                                 }
                             }
-                            .foregroundStyle(.primary)
                             
                         }
                         .buttonStyle(.glass)
                     }
+                    .foregroundStyle(.primary)
+
                 } header: {
                     SectionHeader("Settings")
                 } footer: {
-                    Text("When enabled channels from this device are available to include in a channel bundle.  Edit a channel bundle to include this devices channel line up.")
+                    Text("Enabled device channels are available to include in any channel bundle.  Edit channel bundle to include/exclude this tuners channels.")
                         .font(.caption)
                         .foregroundStyle(.white)
                 }
@@ -157,7 +162,13 @@ struct DeviceDetailView: View {
         isRefreshing = true
         // TODO: Implement device refresh logic
         Task {
-            try? await Task.sleep(for: .seconds(1))
+            let container = swiftDataController.container
+            let importer = HomeRunImporter(modelContainer: container)
+           
+            guard let target = device.homeRunDiscovery else { return }
+            
+            let _ = try? await importer.load(targetDevice: target, shouldFetchGuideData: true)
+            
             await MainActor.run {
                 isRefreshing = false
             }
@@ -165,7 +176,8 @@ struct DeviceDetailView: View {
     }
     
     private func deleteHomeRunDevice() {
-        
+        swiftDataController.viewContext.delete(device)
+        dismiss()
     }
 }
 
@@ -219,9 +231,8 @@ fileprivate struct StatusRow: View {
                 .font(.caption)
                 .foregroundStyle(.secondary)
             HStack(spacing: 8) {
-                Circle()
-                    .fill(isOffline ? Color.red : Color.green)
-                    .frame(width: 25, height: 25)
+                Image(systemName: isOffline ? "antenna.radiowaves.left.and.right.slash" : "antenna.radiowaves.left.and.right")
+                    .foregroundStyle(isOffline ? .red : .green)
                 Text(isOffline ? "Offline" : "Online")
                     .font(.body)
                     .foregroundStyle(isOffline ? .red : .green)

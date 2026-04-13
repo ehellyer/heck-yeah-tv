@@ -162,6 +162,7 @@ struct VLCPlayerRepresentable: CrossPlatformRepresentable {
                     self.isStreamUnplayable = false
                 }
                 
+                
                 // Always stop before switching media.
                 if isCurrentlyPlaying {
                     logDebug("VLC: Stopping current playback before switching")
@@ -418,6 +419,7 @@ extension VLCPlayerRepresentable.Coordinator: VLCMediaPlayerDelegate {
  
             case .opening:
                 logDebug("VLC State: Opening stream...")
+                logDebug("VLC: Media URL: \(player.media?.url?.absoluteString ?? "unknown")")
                 Task { @MainActor in
                     self.isSwitchingStreams = true
                     self.startPlaybackMonitoring()

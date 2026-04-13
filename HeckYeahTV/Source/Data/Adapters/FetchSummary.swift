@@ -10,8 +10,8 @@ import Foundation
 import SwiftUI
 
 struct FetchSummary {
-    var successes: [URL: Int] = [:]
-    var failures: [URL: Error] = [:]
+    var successes: [ImportStage: String] = [:]
+    var failures: [ImportStage: String] = [:]
     var startedAt = Date()
     var finishedAt: Date = .distantPast
     var duration: TimeInterval {
@@ -21,5 +21,13 @@ struct FetchSummary {
     mutating func mergeSummary(_ summary: FetchSummary) {
         self.successes.merge(summary.successes) { (_, new) in new }
         self.failures.merge(summary.failures) { (_, new) in new }
+    }
+    
+    mutating func addSuccess(forKey key: ImportStage, value: String) {
+        self.successes[key] = value
+    }
+    
+    mutating func addFailure(forKey key: ImportStage, value: String) {
+        self.successes[key] = value
     }
 }

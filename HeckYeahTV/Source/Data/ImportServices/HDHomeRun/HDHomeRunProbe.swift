@@ -33,7 +33,7 @@ actor HDHomeRunProbe {
     // HDHomeRun protocol constants
     private static let packetTypeDiscoveryRequest: UInt16 = 0x0002
     private static let packetTypeDiscoveryReply: UInt16 = 0x0003
-    private static let tagDeviceType: UInt8 = 0x01
+    private static let tagDeviceType: UInt8 = 0x01 // HDHOMERUN_DEVICE_TYPE_TUNER (0x00000001)
     private static let tagDeviceID: UInt8 = 0x02
     private static let tagBaseURL: UInt8 = 0x2A
     

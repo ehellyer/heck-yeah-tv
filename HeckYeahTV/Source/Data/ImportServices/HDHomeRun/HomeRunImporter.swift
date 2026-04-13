@@ -104,23 +104,29 @@ actor HomeRunImporter {
         logDebug("HomeRun channel insert process completed:  Total inserted: \(tunerChannels.count)... 🏁")
     }
     
-    private func importTunerDevices(_ discoveredDevices: [HDHomeRunDevice]) async throws {
-        if discoveredDevices.isEmpty {
-            logWarning("No devices to import. Updating local store to remove any devices.  Channels associated with removed devices will also be removed.")
+    private func importTunerDevices(_ homeRunDiscovery: HomeRunDiscoveryResult) async throws {
+        if homeRunDiscovery.discoveredDevices.isEmpty {
+            logWarning("No devices to import. Updating local store to mark devices offline.  Channels associated with offline devices will be removed from the channel catalog.")
         }
         
         logDebug("HomeRun Device import process starting... 🇺🇸")
         
         let existingDevices: [HomeRunDevice] = {
             do {
-                return try modelContext.fetch(HomeRunDevicePredicate().fetchDescriptor())
+                // If we have a target device then only return that from existing devices call.  This is so the set offline logic below works correctly when targeting a device.
+                if let deviceId = homeRunDiscovery.targetedDevice?.deviceId {
+                    return try modelContext.fetch(HomeRunDevicePredicate(deviceIds: [deviceId]).fetchDescriptor())
+                } else {
+                    return try modelContext.fetch(HomeRunDevicePredicate().fetchDescriptor())
+                }
             } catch {
                 logError("Unable to fetch existing `HomeRunDevice`. \(error)")
                 return []
             }
         }()
+
         
-        let discoveredDeviceIds = Set(discoveredDevices.map(\.deviceId))
+        let discoveredDeviceIds = Set(homeRunDiscovery.devices.map(\.deviceId))
         let offlineDevices = existingDevices.filter({ not(discoveredDeviceIds.contains($0.deviceId)) })
 
         // Mark devices as offline if they exist in the database but were not discovered on the network.
@@ -129,7 +135,7 @@ actor HomeRunImporter {
         }
         
         // DiscoveredDevices collection insert/update. (aka Upsert done by SwiftData on DeviceId)
-        for src in discoveredDevices {
+        for src in homeRunDiscovery.devices {
             modelContext.insert(
                 HomeRunDevice(deviceId: src.deviceId,
                               friendlyName: src.friendlyName,
@@ -150,7 +156,7 @@ actor HomeRunImporter {
             await Task.yield()
         }
         
-        logDebug("HomeRun Device import process completed. Total imported: \(discoveredDevices.count) 🏁")
+        logDebug("HomeRun Device import process completed. Total imported: \(homeRunDiscovery.devices.count) 🏁")
     }
     
     
@@ -289,23 +295,20 @@ actor HomeRunImporter {
         }
     }
     
-    func load(shouldFetchGuideData: Bool) async throws -> FetchSummary {
+    func load(targetDevice: HDHomeRunDiscovery?, shouldFetchGuideData: Bool) async throws -> FetchSummary {
         
-        // Guard against concurrent execution
+        // Guard against concurrent execution (aka race condition), by using a check and set MainActor pattern.
         let isAlreadyLoading = await MainActor.run {
-            let appState: AppStateProvider = InjectedValues[\.sharedAppState]
-            return appState.isReloadingHomeRun
+            if not(InjectedValues[\.sharedAppState].isReloadingHomeRun) {
+                InjectedValues[\.sharedAppState].isReloadingHomeRun = true
+                return false
+            }
+            return true
         }
         
         guard !isAlreadyLoading else {
             logWarning("HomeRun import already in progress, skipping concurrent execution")
             return FetchSummary()
-        }
-        
-        // Set loading state
-        await MainActor.run {
-            var appState: AppStateProvider = InjectedValues[\.sharedAppState]
-            appState.isReloadingHomeRun = true
         }
         
         defer {
@@ -318,40 +321,32 @@ actor HomeRunImporter {
         var summary = FetchSummary()
         
         let homeRunController: HomeRunController = HomeRunController()
-
-        let homeRunSummary = await homeRunController.fetchAll(includeGuideData: shouldFetchGuideData)
-        
-        summary.mergeSummary(homeRunSummary)
+        let homeRunDiscovery = await homeRunController.fetchAll(targetDevice: targetDevice, includeGuideData: shouldFetchGuideData)
+        summary.mergeSummary(homeRunDiscovery.summary)
         
         if not(summary.failures.isEmpty) {
             logError("\(summary.failures.count) failure(s) in HDHomeRun tuner fetch: \(summary.failures)")
         }
         
-        try await self.importTunerDevices(homeRunController.devices)
-        try await self.importHDHRChannels(homeRunController.channels)
+        try await self.importTunerDevices(homeRunDiscovery)
+        try await self.importHDHRChannels(homeRunDiscovery.channels)
         
         /// If after the imports there is only one device in the database and it is enabled for use in the app, it is automatically added to all ChannelBundles.
         await self.updateChannelBundleDevice()
 
-        if shouldFetchGuideData {
-            let guideToChannelMap: [GuideNumber : ChannelId] = await homeRunController.channels.reduce(into: [:]) { accumulator, channel in
+        if homeRunDiscovery.channelGuides.isEmpty == false {
+            let channelGuideIndex: [GuideNumber : ChannelId] = homeRunDiscovery.channels.reduce(into: [:]) { accumulator, channel in
                 accumulator[channel.guideNumber] = channel.id
             }
             
             do {
-                try await self.importChannelGuides(homeRunController.channelGuides,
-                                                   guideToChannelMap: guideToChannelMap)
-                
-                // Only update the timestamp if guide import was successful
-                if guideToChannelMap.count > 0 {
-                    await self.updateHomeRunChannelProgramFetchDate()
-                }                
+                try await self.importChannelGuides(homeRunDiscovery.channelGuides,
+                                                   guideToChannelMap: channelGuideIndex)
+                await self.updateHomeRunChannelProgramFetchDate()
             } catch {
                 logError("Failed to import channel guides: \(error)")
                 throw error
             }
-        } else {
-            logDebug("Skipping guide data fetch. Last fetch was recent enough.")
         }
 
         return summary

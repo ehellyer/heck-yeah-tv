@@ -174,37 +174,31 @@ struct SettingsView: View {
                             DeviceDetailView(device: device)
                         } label: {
                             HStack(spacing: 20) {
-                                if device.isEnabled {
-                                    Image(systemName: "antenna.radiowaves.left.and.right")
-                                        .foregroundStyle(.blue)
-                                } else {
+                                if device.isOffline {
                                     Image(systemName: "antenna.radiowaves.left.and.right.slash")
-                                        .foregroundStyle(.gray)
+                                        .foregroundStyle(.red)
+                                } else {
+                                    Image(systemName: "antenna.radiowaves.left.and.right")
+                                        .foregroundStyle(.green)
                                 }
                                 
                                 VStack(alignment: .leading, spacing: 4) {
                                     Text(device.friendlyName)
                                         .font(.body)
                                     
-                                    HStack {
+                                    HStack(spacing: 8) {
                                         Text("\(channelCount(for: device.deviceId)) channels")
-
-                                        if device.isEnabled {
-                                            Text("Enabled for Heck Yeah TV")
-                                        } else {
-                                            Text("Disabled for Heck Yeah TV")
-                                        }
+                                            .font(.caption)
+                                            .foregroundStyle(.secondary)
                                         
-                                        if device.isOffline {
-                                            Text("Offline")
-                                                .foregroundStyle(.red)
-                                        } else {
-                                            Text("Online")
-                                                .foregroundStyle(.green)
-                                        }
+                                        Text("•")
+                                            .font(.caption)
+                                            .foregroundStyle(.secondary)
+                                        
+                                        Text(device.isOffline ? "Offline" : "Online")
+                                            .font(.caption)
+                                            .foregroundStyle(device.isOffline ? .red : .green)
                                     }
-                                    .font(.caption)
-                                    .foregroundStyle(.secondary)
                                 }
                             }
                             .foregroundStyle(.primary)
@@ -307,7 +301,7 @@ struct SettingsView: View {
             let container = await swiftDataController.container
             let importer = HomeRunImporter(modelContainer: container)
             do {
-                _ = try await importer.load(shouldFetchGuideData: true)
+                _ = try await importer.load(targetDevice: nil, shouldFetchGuideData: true)
                 
                 await importer.deleteOrphanedTunerChannels()
 

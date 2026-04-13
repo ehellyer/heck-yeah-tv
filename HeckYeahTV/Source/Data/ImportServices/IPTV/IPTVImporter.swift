@@ -183,10 +183,13 @@ actor IPTVImporter {
     
     func load() async throws -> FetchSummary {
         
-        // Guard against concurrent execution
+        // Guard against concurrent execution (aka race condition), by using a check and set MainActor pattern.
         let isAlreadyLoading = await MainActor.run {
-            let appState: AppStateProvider = InjectedValues[\.sharedAppState]
-            return appState.isReloadingIPTV
+            if not(InjectedValues[\.sharedAppState].isReloadingIPTV) {
+                InjectedValues[\.sharedAppState].isReloadingIPTV = true
+                return false
+            }
+            return true
         }
         
         guard !isAlreadyLoading else {
@@ -194,11 +197,6 @@ actor IPTVImporter {
             return FetchSummary()
         }
         
-        // Set loading state
-        await MainActor.run {
-            var appState: AppStateProvider = InjectedValues[\.sharedAppState]
-            appState.isReloadingIPTV = true
-        }
         
         defer {
             Task { @MainActor in
@@ -216,7 +214,7 @@ actor IPTVImporter {
         summary.mergeSummary(iptvSummary)
         
         if summary.failures.isEmpty == false {
-            logError("\(summary.failures.count) failure(s) in bootstrap data fetch: \(summary.failures)")
+            logError("\(summary.failures.count) failure(s) in IPTVImporter data fetch: \(summary.failures)")
         }
         
         // These two can be inserted concurrently.  Categories must complete prior to the channels import.

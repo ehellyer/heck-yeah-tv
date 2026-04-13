@@ -54,4 +54,21 @@ extension IPTVDataSources.Endpoint {
         
         return URL(string: "\(hostPath)\(resource)")!
     }
+    
+    var importStage: ImportStage {
+        switch self {
+            case .blocklists: return ImportStage.iptvBlocklists
+            case .categories: return ImportStage.iptvCategories
+            case .channels: return ImportStage.iptvChannels
+            case .countries: return ImportStage.iptvCountries
+            case .feeds: return ImportStage.iptvFeeds
+            case .guides: return ImportStage.iptvGuides
+            case .languages: return ImportStage.iptvLanguages
+            case .logos: return ImportStage.iptvLogos
+            case .regions: return ImportStage.iptvRegions
+            case .streams: return ImportStage.iptvStreams
+            case .subdivisions: return ImportStage.iptvSubdivisions
+            case .timezones: return ImportStage.iptvTimezones
+        }
+    }
 }

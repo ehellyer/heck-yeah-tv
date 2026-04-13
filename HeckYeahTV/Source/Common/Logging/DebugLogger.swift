@@ -44,7 +44,7 @@ internal func logFatal<T>(_ object: @autoclosure () -> T, file: StaticString = #
 
 class DebugLogger {
     
-    nonisolated(unsafe) static let shared = DebugLogger()
+    static let shared = DebugLogger()
     
     /// Describes the level of the log event.
     enum Level: Int {
@@ -79,7 +79,7 @@ class DebugLogger {
     
     private init() { }
     
-    private lazy var dateFormatter: DateFormatter = {
+    private let dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd HH:mm:ss.SSS"
         return formatter

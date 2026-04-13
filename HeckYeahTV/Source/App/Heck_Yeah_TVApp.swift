@@ -203,7 +203,7 @@ struct Heck_Yeah_TVApp: App {
                         }()
                         
                         let hdTunerImporter = HomeRunImporter(modelContainer: container)
-                        let _ = try? await hdTunerImporter.load(shouldFetchGuideData: shouldFetchGuideData)
+                        let _ = try? await hdTunerImporter.load(targetDevice: nil, shouldFetchGuideData: shouldFetchGuideData)
                         
                         // After tuner imports or removals, run the channel cleanup.
                         await hdTunerImporter.deleteOrphanedTunerChannels()

@@ -57,7 +57,7 @@ actor Watchdog {
                 
                 // The watchdog has decided its work here is done. Time for a nap. 🐕💤
                 if !shouldContinue {
-                    logDebug("Playback watchdog 🐕 - monitoring stopped.")
+                    logDebug("Playback watchdog 🐕 - monitoring completed and exiting to stop.")
                     break
                 }
                 
@@ -70,7 +70,7 @@ actor Watchdog {
     /// Tells the watchdog to stop patrolling. Good dog! 🦴
     /// (Call this from outside the watchdog loop when you're ready to call it a day.)
     func stop() {
-        logDebug("Playback watchdog 🐕 - monitoring stopped.")
+        logDebug("Playback watchdog 🐕 - monitoring called to stop.")
         task?.cancel()
         task = nil
     }

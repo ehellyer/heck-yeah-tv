@@ -100,9 +100,19 @@ fileprivate struct DeviceRow: View {
                         .font(.body)
                         .foregroundStyle(.primary)
                     
-                    Text("\(channelCount) channels")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
+                    HStack(spacing: 8) {
+                        Text("\(channelCount) channels")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                        
+                        Text("•")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                        
+                        Text(device.isOffline ? "Offline" : "Online")
+                            .font(.caption)
+                            .foregroundStyle(device.isOffline ? .red : .green)
+                    }
                 }
                 
                 Spacer()
