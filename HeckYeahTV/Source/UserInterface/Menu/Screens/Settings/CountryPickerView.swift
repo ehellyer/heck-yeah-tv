@@ -13,34 +13,47 @@ struct CountryPickerView: View {
     let countries: [Country]
     
     @Environment(\.dismiss) private var dismiss
+    @FocusState private var focusedCountry: CountryCodeId?
     
     var body: some View {
-        List {
-            Section {
-                ForEach(countries, id: \.code) { country in
-                    Button {
-                        selectedCountry = country.code
-                        dismiss()
-                    } label: {
-                        HStack {
-                            Text("\(country.flag) \(country.name)")
-                            Spacer()
-                            if selectedCountry == country.code {
-                                Image(systemName: "checkmark")
-                                    .foregroundStyle(.blue)
+        ScrollViewReader { proxy in
+            List {
+                Section {
+                    ForEach(countries, id: \.code) { country in
+                        Button {
+                            selectedCountry = country.code
+                            dismiss()
+                        } label: {
+                            HStack {
+                                Text("\(country.flag) \(country.name)")
+                                Spacer()
+                                if selectedCountry == country.code {
+                                    Image(systemName: "checkmark")
+                                        .foregroundStyle(.blue)
+                                }
                             }
+                            .foregroundStyle(.primary)
+                            .contentShape(Rectangle())
                         }
-                        .foregroundStyle(.primary)
-                        .contentShape(Rectangle())
+                        .buttonStyle(.plain)
+                        .id(country.code)
+                        .focused($focusedCountry, equals: country.code)
                     }
-                    .buttonStyle(.plain)
+                } header: {
+                    Text("Select Country")
+                        .foregroundStyle(.white)
+                } footer: {
+                    Text("Choose a country to filter available channels.")
+                        .foregroundStyle(.white)
                 }
-            } header: {
-                Text("Select Country")
-                    .foregroundStyle(.white)
-            } footer: {
-                Text("Choose a country to filter available channels.")
-                    .foregroundStyle(.white)
+            }
+            .onAppear {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                    proxy.scrollTo(selectedCountry, anchor: .center)
+#if os(tvOS)
+                    focusedCountry = selectedCountry
+#endif
+                }
             }
         }
         .navigationTitle("Country")

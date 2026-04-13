@@ -13,36 +13,20 @@ struct CategoryPickerView: View {
     let categories: [ProgramCategory]
     
     @Environment(\.dismiss) private var dismiss
+    @FocusState private var focusedCategory: String?
     
     var body: some View {
-        List {
-            Section {
-                Button {
-                    selectedCategory = nil
-                    dismiss()
-                } label: {
-                    HStack {
-                        Text("All Categories")
-                        Spacer()
-                        if selectedCategory == nil {
-                            Image(systemName: "checkmark")
-                                .foregroundStyle(.blue)
-                        }
-                    }
-                    .foregroundStyle(.primary)
-                    .contentShape(Rectangle())
-                }
-                .buttonStyle(.plain)
-                
-                ForEach(categories, id: \.categoryId) { category in
+        ScrollViewReader { proxy in
+            List {
+                Section {
                     Button {
-                        selectedCategory = category.categoryId
+                        selectedCategory = nil
                         dismiss()
                     } label: {
                         HStack {
-                            Text(category.name)
+                            Text("All Categories")
                             Spacer()
-                            if selectedCategory == category.categoryId {
+                            if selectedCategory == nil {
                                 Image(systemName: "checkmark")
                                     .foregroundStyle(.blue)
                             }
@@ -51,13 +35,45 @@ struct CategoryPickerView: View {
                         .contentShape(Rectangle())
                     }
                     .buttonStyle(.plain)
+                    .id("all_categories")
+                    .focused($focusedCategory, equals: "all_categories")
+                    
+                    ForEach(categories, id: \.categoryId) { category in
+                        Button {
+                            selectedCategory = category.categoryId
+                            dismiss()
+                        } label: {
+                            HStack {
+                                Text(category.name)
+                                Spacer()
+                                if selectedCategory == category.categoryId {
+                                    Image(systemName: "checkmark")
+                                        .foregroundStyle(.blue)
+                                }
+                            }
+                            .foregroundStyle(.primary)
+                            .contentShape(Rectangle())
+                        }
+                        .buttonStyle(.plain)
+                        .id(category.categoryId)
+                        .focused($focusedCategory, equals: category.categoryId)
+                    }
+                } header: {
+                    Text("Select Category")
+                        .foregroundStyle(.white)
+                } footer: {
+                    Text("Choose a category to filter available channels, or select 'All Categories' to show all.")
+                        .foregroundStyle(.white)
                 }
-            } header: {
-                Text("Select Category")
-                    .foregroundStyle(.white)
-            } footer: {
-                Text("Choose a category to filter available channels, or select 'All Categories' to show all.")
-                    .foregroundStyle(.white)
+            }
+            .onAppear {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                    let targetId = selectedCategory ?? "all_categories"
+                    proxy.scrollTo(targetId, anchor: .center)
+#if os(tvOS)
+                    focusedCategory = targetId
+#endif
+                }
             }
         }
         .navigationTitle("Category")
