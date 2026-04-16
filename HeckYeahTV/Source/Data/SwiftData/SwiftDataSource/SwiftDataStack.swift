@@ -135,40 +135,35 @@ extension SwiftDataStack {
         
         guard FileManager.default.fileExists(atPath: dbPath) else {
             logWarning("Unable to check store version because the main DB file doesn't exist at URL \(dbPath).")
-            return false
+            return false    // Error state, unable to confirm is a legacy store.
         }
 
         guard FileManager.default.fileExists(atPath: shmPath) else {
             logWarning("Unable to check store version because the shared memory DB file doesn't exist at URL \(shmPath).")
-            return false
+            return false    // Error state, unable to confirm is a legacy store.
         }
         
         guard FileManager.default.fileExists(atPath: walPath) else {
             logWarning("Unable to check store version because the write-ahead lock DB file doesn't exist at URL \(walPath).")
-            return false
+            return false    // Error state, unable to confirm is a legacy store.
         }
-        
         
         guard sqlite3_open_v2(url.path, &db, SQLITE_OPEN_READONLY, nil) == SQLITE_OK else {
             logWarning("Could not open store to check version.")
-            return false // Can't check the version if we can't even open the door.
+            return false    // Error state, unable to confirm is a legacy store.
         }
         
         let query = "SELECT ZID, ZVERSION FROM ZSCHEMAVERSION LIMIT 1" // LIMIT 1 because there's only one schema version. If there's more than one, we've got bigger problems.
         
-        var isLegacyStore = false
-        
         guard sqlite3_prepare_v2(db, query, -1, &statement, nil) == SQLITE_OK else {
             let errorMessage = String(cString: sqlite3_errmsg(db))
             logWarning("Error preparing SwiftData schema version query.  Error: \(errorMessage)")
-            isLegacyStore = true
-            return isLegacyStore
+            return false    // Error state, unable to confirm is a legacy store.
         }
-        
+
         guard sqlite3_step(statement) == SQLITE_ROW else {
             logWarning("No data found in ZSCHEMAVERSION during SwiftData schema verification. Assuming legacy store.")
-            isLegacyStore = true
-            return isLegacyStore
+            return true     // Is a legacy store.
         }
         
         let blobPointer = sqlite3_column_blob(statement, 0)
@@ -177,9 +172,9 @@ extension SwiftDataStack {
         let dbSchemaVersion = String(cString: sqlite3_column_text(statement, 1))
 
         let verificationUUID = UUID(uuidString: "fe7046c4-c15d-4e78-ba5b-50378a50c0b1")! // Our secret handshake with the database.
-        let isDevBuildVersion = currentSchemaVersion < dbSchemaVersion //This logic is deleting DB when code schema is prior to DB schema.  (Don't ask questions)
+        let isDevBuildVersion = currentSchemaVersion < dbSchemaVersion //This logic is deleting DB when code schema is prior to DB schema.  (DB schema was rolled back in code, delete db. Don't ask questions)
 
-        isLegacyStore = (id != verificationUUID || isDevBuildVersion)
+        let isLegacyStore = (id != verificationUUID || isDevBuildVersion)
         
         return isLegacyStore
     }
@@ -215,7 +210,6 @@ extension SwiftDataStack {
         
         // Delete WAL file
         try deleteWALFile(at: url)
-        
         
         // Delete SHM file
         try deleteSHMFile(at: url)
