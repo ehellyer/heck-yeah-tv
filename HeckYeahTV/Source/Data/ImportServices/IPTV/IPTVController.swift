@@ -88,7 +88,7 @@ actor IPTVController {
                 //Clean up the streams, remove streams without channel and feed identifiers.  (We can't build the relational data on the stream for filtering without these)
                 let streams: [IPStream] = items.filter( { $0.channelId != nil && $0.feedId != nil })
                 
-                let _indexed: [String: IPStream] = streams.reduce(into: [:]) { result, item in
+                let _indexed: [ChannelId: IPStream] = streams.reduce(into: [:]) { result, item in
                     // Note: Can force unwrap channelId here because of the filtering above.
                     result[item.channelId!] = item
                 }

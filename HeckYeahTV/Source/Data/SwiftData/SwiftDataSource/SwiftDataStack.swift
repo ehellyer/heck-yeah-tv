@@ -129,13 +129,29 @@ extension SwiftDataStack {
             }
         }
         
-        guard FileManager.default.fileExists(atPath: url.path) else {
+        let dbPath = url.path(percentEncoded: false)
+        let shmPath = Self.shmPath(at: url).path(percentEncoded: false)
+        let walPath = Self.walPath(at: url).path(percentEncoded: false)
+        
+        guard FileManager.default.fileExists(atPath: dbPath) else {
+            logWarning("Unable to check store version because the main DB file doesn't exist at URL \(dbPath).")
+            return false
+        }
+
+        guard FileManager.default.fileExists(atPath: shmPath) else {
+            logWarning("Unable to check store version because the shared memory DB file doesn't exist at URL \(shmPath).")
             return false
         }
         
+        guard FileManager.default.fileExists(atPath: walPath) else {
+            logWarning("Unable to check store version because the write-ahead lock DB file doesn't exist at URL \(walPath).")
+            return false
+        }
+        
+        
         guard sqlite3_open_v2(url.path, &db, SQLITE_OPEN_READONLY, nil) == SQLITE_OK else {
             logWarning("Could not open store to check version.")
-            return true // Can't check the version if we can't even open the door.
+            return false // Can't check the version if we can't even open the door.
         }
         
         let query = "SELECT ZID, ZVERSION FROM ZSCHEMAVERSION LIMIT 1" // LIMIT 1 because there's only one schema version. If there's more than one, we've got bigger problems.
@@ -209,12 +225,21 @@ extension SwiftDataStack {
         UserDefaults.dateLastHomeRunChannelProgramFetch = nil
     }
     
+    
+    private static func walPath(at url: URL) -> URL {
+        return url.deletingPathExtension().appendingPathExtension("sqlite-wal")
+    }
+    
+    private static func shmPath(at url: URL) -> URL {
+        return url.deletingPathExtension().appendingPathExtension("sqlite-shm")
+    }
+    
     /// Deletes the WAL (Write-Ahead Log) file, a.k.a. SQLite’s “scratch pad.”
     /// Because sometimes you just have to take out the trash yourself.
     /// Caution:  Force commit WAL changes first if keeping the sqlite file, else data loss may occur.
     private static func deleteWALFile(at url: URL) throws {
         let fileManager = FileManager.default
-        let walURL = url.deletingPathExtension().appendingPathExtension("sqlite-wal")
+        let walURL = walPath(at: url)
         if fileManager.fileExists(atPath: walURL.path) {
             try fileManager.removeItem(at: walURL)
         }
@@ -224,7 +249,7 @@ extension SwiftDataStack {
     /// If it’s hanging around after the main file is gone, it’s just gossip at that point.
     private static func deleteSHMFile(at url: URL) throws {
         let fileManager = FileManager.default
-        let shmURL = url.deletingPathExtension().appendingPathExtension("sqlite-shm")
+        let shmURL = shmPath(at: url)
         if fileManager.fileExists(atPath: shmURL.path) {
             try fileManager.removeItem(at: shmURL)
         }
