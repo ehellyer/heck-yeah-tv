@@ -15,6 +15,8 @@ class BaseSwiftDataController: SwiftDataProvider {
     
     //MARK: - BaseSwiftDataController lifecycle
     
+    @ObservationIgnored @Injected(\.analytics) private var analytics
+    
     deinit {
         rebuildTask?.cancel()
         didSaveObserverTask?.cancel()
@@ -58,6 +60,10 @@ class BaseSwiftDataController: SwiftDataProvider {
                         let selectedChannel = SelectedChannel(channel: channel)
                         viewContext.insert(selectedChannel)
                         try viewContext.saveChangesIfNeeded()
+                        
+                        // Log analytics for channel viewing
+                        let source: ChannelSource = .guide // Default to guide, could be enhanced to track actual source
+                        analytics.log(.channelViewed(channelId: channel.id, channelName: channel.title, source: source))
                     }
                     cleanupOldSelectedChannels()
                 } catch {

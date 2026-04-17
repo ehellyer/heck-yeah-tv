@@ -15,6 +15,7 @@ struct AddBundleView: View {
 
     @Environment(\.dismiss) private var dismiss
     @State private var swiftDataController: BaseSwiftDataController = InjectedValues[\.swiftDataController]
+    @Injected(\.analytics) private var analytics
     @State private var bundleName = ""
     
 #if os(tvOS)
@@ -34,6 +35,7 @@ struct AddBundleView: View {
                             return
                         }
                         if let newBundle = swiftDataController.addChannelBundle(name: bundleName) {
+                            analytics.log(.bundleCreated(bundleName: newBundle.name, channelCount: newBundle.bundleChannelCount))
                             onAdd(newBundle)
                         }
                     }

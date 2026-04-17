@@ -53,6 +53,7 @@ struct RecentsView: View {
                 .contentMargins(.top, 5)
                 .contentMargins(.bottom, 5)
                 .scrollIndicators(.visible)
+                .trackScreen("Recents")
                 .onAppear() {
                     scrollToTopOfRecents(using: proxy)
                 }

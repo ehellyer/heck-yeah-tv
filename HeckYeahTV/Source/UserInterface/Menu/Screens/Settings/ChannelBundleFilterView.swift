@@ -15,6 +15,7 @@ struct ChannelBundleFilterView: View {
     
     @State private var appState: AppStateProvider = InjectedValues[\.sharedAppState]
     @State private var swiftDataController: BaseSwiftDataController = InjectedValues[\.swiftDataController]
+    @Injected(\.analytics) private var analytics
     
     @State private var showingDeleteConfirmation = false
     @State private var bundleNameBuffer: String = ""
@@ -294,6 +295,9 @@ struct ChannelBundleFilterView: View {
     
     private func deleteBundle() {
         guard canDelete else { return }
+        
+        // Log analytics before deleting
+        analytics.log(.bundleDeleted(bundleName: bundle.name, channelCount: bundle.bundleChannelCount))
         
         swiftDataController.viewContext.delete(bundle)
         let channelBundles = swiftDataController.channelBundles()

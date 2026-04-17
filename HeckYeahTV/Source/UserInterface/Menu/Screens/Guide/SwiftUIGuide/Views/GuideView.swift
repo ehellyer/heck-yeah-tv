@@ -76,6 +76,7 @@ struct GuideView: View {
 #if os(tvOS)
                     .focusSection()
 #endif
+                    .trackScreen("Guide")
                     .onAppear {
                         swiftDataController.deletePastChannelPrograms()
                         

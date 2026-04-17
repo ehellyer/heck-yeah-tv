@@ -13,6 +13,7 @@ struct CountryPickerView: View {
     let countries: [Country]
     
     @Environment(\.dismiss) private var dismiss
+    @Injected(\.analytics) private var analytics
     @FocusState private var focusedCountry: CountryCodeId?
     
     var body: some View {
@@ -22,6 +23,7 @@ struct CountryPickerView: View {
                     ForEach(countries, id: \.code) { country in
                         Button {
                             selectedCountry = country.code
+                            analytics.log(.countryFilterApplied(countryCode: country.code, countryName: country.name))
                             dismiss()
                         } label: {
                             HStack {

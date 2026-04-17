@@ -13,6 +13,7 @@ struct CategoryPickerView: View {
     let categories: [ProgramCategory]
     
     @Environment(\.dismiss) private var dismiss
+    @Injected(\.analytics) private var analytics
     @FocusState private var focusedCategory: String?
     
     var body: some View {
@@ -21,6 +22,7 @@ struct CategoryPickerView: View {
                 Section {
                     Button {
                         selectedCategory = nil
+                        analytics.log(.categoryFilterApplied(categoryId: "all", categoryName: "All Categories"))
                         dismiss()
                     } label: {
                         HStack {
@@ -41,6 +43,7 @@ struct CategoryPickerView: View {
                     ForEach(categories, id: \.categoryId) { category in
                         Button {
                             selectedCategory = category.categoryId
+                            analytics.log(.categoryFilterApplied(categoryId: category.categoryId, categoryName: category.name))
                             dismiss()
                         } label: {
                             HStack {

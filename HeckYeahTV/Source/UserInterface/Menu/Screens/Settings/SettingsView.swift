@@ -13,6 +13,7 @@ struct SettingsView: View {
     
     @State private var swiftDataController: BaseSwiftDataController = InjectedValues[\.swiftDataController]
     @State private var appState: AppStateProvider = InjectedValues[\.sharedAppState]
+    @Injected(\.analytics) private var analytics
     @Binding var navigationPath: [SettingsDestination]
     @State private var iptvChannelCount: Int = 0
     
@@ -43,6 +44,7 @@ struct SettingsView: View {
                         ForEach(channelBundles) { bundle in
                             Button {
                                 appState.selectedChannelBundleId = bundle.id
+                                analytics.log(.bundleSwitched(bundleName: bundle.name, channelCount: bundle.bundleChannelCount))
                             } label: {
                                 HStack {
                                     Text(bundle.name)
@@ -262,6 +264,7 @@ struct SettingsView: View {
             }
         }
                   
+        .trackScreen("Settings")
         .onAppear() {
             reloadIPTVChannelCount()
         }
@@ -285,10 +288,13 @@ struct SettingsView: View {
             let container = await swiftDataController.container
             let importer = IPTVImporter(modelContainer: container)
             do {
+                await analytics.log(.iptvRefreshRequested(channelCount: iptvChannelCount, success: true))
                 _ = try await importer.load()
-                
             } catch {
                 logError("Reload IPTV channels failed.  Error: \(error)")
+                await MainActor.run {
+                    analytics.log(.iptvRefreshRequested(channelCount: 0, success: false))
+                }
             }
             await MainActor.run {
                 reloadIPTVChannelCount()
@@ -308,10 +314,14 @@ struct SettingsView: View {
                 await MainActor.run {
                     swiftDataController.invalidateTunerLineUp()
                     swiftDataController.invalidateChannelBundleMap()
+                    analytics.log(.homeRunRefreshRequested(deviceCount: homeRunDevices.count, success: true))
                 }
                 
             } catch {
                 logError("Reload tuner devices failed.  Error: \(error)")
+                await MainActor.run {
+                    analytics.log(.homeRunRefreshRequested(deviceCount: 0, success: false))
+                }
             }
         }
     }

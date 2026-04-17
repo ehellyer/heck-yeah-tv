@@ -13,6 +13,8 @@ struct PlayerOverlay: View {
     // MARK: - State
     
     @State private var appState: AppStateProvider = InjectedValues[\.sharedAppState]
+    @State private var swiftDataController: BaseSwiftDataController = InjectedValues[\.swiftDataController]
+    @Injected(\.analytics) private var analytics
 
     // MARK: - Body
     
@@ -77,6 +79,9 @@ struct PlayerOverlay: View {
                         ForEach(appState.availableAudioTracks) { track in
                             Button(action: {
                                 appState.selectedAudioTrackIndex = track.index
+                                if let channelId = swiftDataController.selectedChannel?.id {
+                                    analytics.log(.audioTrackChanged(channelId: channelId, trackName: track.name))
+                                }
                             }) {
                                 HStack {
                                     Text(track.name)
@@ -103,6 +108,9 @@ struct PlayerOverlay: View {
                         // "Off" option
                         Button(action: {
                             appState.selectedSubtitleTrackIndex = -1
+                            if let channelId = swiftDataController.selectedChannel?.id {
+                                analytics.log(.subtitlesDisabled(channelId: channelId))
+                            }
                         }) {
                             HStack {
                                 Text("Off")
@@ -117,7 +125,15 @@ struct PlayerOverlay: View {
                         // Available subtitle tracks
                         ForEach(appState.availableSubtitleTracks) { track in
                             Button(action: {
+                                let wasDisabled = appState.selectedSubtitleTrackIndex < 0
                                 appState.selectedSubtitleTrackIndex = track.index
+                                if let channelId = swiftDataController.selectedChannel?.id {
+                                    if wasDisabled {
+                                        analytics.log(.subtitlesEnabled(channelId: channelId, trackName: track.name))
+                                    } else {
+                                        analytics.log(.subtitleTrackChanged(channelId: channelId, trackName: track.name))
+                                    }
+                                }
                             }) {
                                 HStack {
                                     Text(track.name)

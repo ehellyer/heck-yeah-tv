@@ -12,6 +12,7 @@ import SwiftData
 struct ShowFavorites: View {
     
     @State private var swiftDataController: BaseSwiftDataController = InjectedValues[\.swiftDataController]
+    @Injected(\.analytics) private var analytics
     
     let focusNamespace: Namespace.ID
     @FocusState.Binding var focusedField: ChannelsContainer.FocusField?
@@ -26,6 +27,7 @@ struct ShowFavorites: View {
             
             Button {
                 swiftDataController.showFavoritesOnly.toggle()
+                analytics.log(.favoritesFilterToggled(isEnabled: swiftDataController.showFavoritesOnly))
             } label: {
                 HStack {
                     Label(swiftDataController.showFavoritesOnly ? "On" : "Off",

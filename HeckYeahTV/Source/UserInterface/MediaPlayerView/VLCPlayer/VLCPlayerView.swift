@@ -40,6 +40,7 @@ struct VLCPlayerView: View {
                 StreamSwitchingActivity()
             }
         }
+        .trackScreen("Player")
         .onChange(of: scenePhase) { oldPhase, newPhase in
             // Resets flags when resuming from BG.
             if newPhase == .active {

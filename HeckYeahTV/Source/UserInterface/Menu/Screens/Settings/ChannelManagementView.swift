@@ -14,6 +14,7 @@ struct ChannelManagementView: View {
     @Bindable var bundle: ChannelBundle
     
     @State private var swiftDataController: BaseSwiftDataController = InjectedValues[\.swiftDataController]
+    @Injected(\.analytics) private var analytics
     @State private var filteredChannels: [Channel] = []
     @State private var isLoading = true
     
@@ -96,6 +97,11 @@ struct ChannelManagementView: View {
         if let removeBundleEntry = bundle.channelEntries.first(where: { $0.channel?.id == channel.id }) {
             // Remove from bundle
             swiftDataController.viewContext.delete(removeBundleEntry)
+            analytics.log(.channelRemovedFromBundle(
+                channelId: channel.id,
+                channelName: channel.title,
+                bundleName: bundle.name
+            ))
         } else {
             // Add to bundle
             let bundleEntry = BundleEntry(
@@ -105,6 +111,11 @@ struct ChannelManagementView: View {
                 isFavorite: false
             )
             swiftDataController.viewContext.insert(bundleEntry)
+            analytics.log(.channelAddedToBundle(
+                channelId: channel.id,
+                channelName: channel.title,
+                bundleName: bundle.name
+            ))
         }
         
         // Save changes

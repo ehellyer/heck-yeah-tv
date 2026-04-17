@@ -59,7 +59,7 @@ let secondsPerHour: TimeInterval = 3600
 @main
 struct Heck_Yeah_TVApp: App {
     
-    // register app delegate for Firebase setup
+    // Register the legacy app delegate for Firebase initialization.
     #if canImport(UIKit)
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
     #elseif canImport(AppKit)
