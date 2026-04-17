@@ -8,6 +8,7 @@
 
 import SwiftUI
 import SwiftData
+import FirebaseCore
 
 //------------------------------------------------------------------------------------------------------------------------
 //       __    __                      __              __      __                    __              ________  __     __
@@ -53,8 +54,18 @@ let settleTime: TimeInterval = TimeInterval(0.2)
 /// The number of seconds in one hour.
 let secondsPerHour: TimeInterval = 3600
 
+
+
 @main
 struct Heck_Yeah_TVApp: App {
+    
+    // register app delegate for Firebase setup
+    #if canImport(UIKit)
+    @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
+    #elseif canImport(AppKit)
+    @NSApplicationDelegateAdaptor(AppDelegate.self) var delegate
+    #endif
+    
     
     @Environment(\.scenePhase) private var scenePhase
     @State private var isBootComplete = false

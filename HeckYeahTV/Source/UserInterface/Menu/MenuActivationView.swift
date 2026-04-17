@@ -19,6 +19,7 @@ struct MenuActivationView: View {
             .focusable(true, interactions: .activate)
             .contentShape(Rectangle())
             .onTapGesture {
+                
                 withAnimation {
                     appState.showAppMenu = true
                 }

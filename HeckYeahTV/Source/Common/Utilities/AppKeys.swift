@@ -12,6 +12,8 @@ struct AppKeys {
     
     struct Application {
         
+        private static let bundleId: String = Bundle.main.bundleIdentifier ?? "wtf.where.is.the.bundleId."
+        
         static let appInstallIdentifierKey = "UserDefaults.appInstallIdentifierKey"
         
         /// Returns the application name
@@ -39,12 +41,15 @@ struct AppKeys {
 #else
             var searchPathDirectory: FileManager.SearchPathDirectory = .applicationSupportDirectory
 #endif
+            
+            
             guard var _rootURL = FileManager.default.urls(for: searchPathDirectory,
                                                           in: FileManager.SearchPathDomainMask.userDomainMask).first else {
                 fatalError("Failed to initialize persistence store: Could not build application support directory root URL.")
             }
             
-            _rootURL.append(component: "HeckYeahTV")
+            _rootURL.append(component: Self.bundleId, directoryHint: .isDirectory)
+            _rootURL.append(component: "HeckYeahTV", directoryHint: .isDirectory)
             return _rootURL
         }()
 
