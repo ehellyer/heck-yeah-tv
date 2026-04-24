@@ -32,7 +32,7 @@ struct HDHomeRunProbeTestView: View {
                         .frame(width: 200)
                 }
             }
-            .padding()
+            .padding(.horizontal)
 
             Button(action: runTest) {
                 HStack {
@@ -57,7 +57,6 @@ struct HDHomeRunProbeTestView: View {
             .cornerRadius(8)
             .padding()
         }
-        .frame(minWidth: 600, minHeight: 500)
         .padding()
     }
 

@@ -22,8 +22,7 @@ actor HomeRunImporter {
     private let batchSize: Int = 500
 
     private func fetchChannel(id: ChannelId) async throws -> Channel? {
-        var chDescriptor = ChannelPredicate(channelId: id).fetchDescriptor()
-        chDescriptor.fetchLimit = 1
+        let chDescriptor = ChannelPredicate(fetchLimit: 1, channelId: id).fetchDescriptor()
         let model = try modelContext.fetch(chDescriptor).first
         return model
     }
@@ -39,7 +38,7 @@ actor HomeRunImporter {
         
         let existingChannels: [Channel] = {
             do {
-                var descriptor = ChannelPredicate(deviceIds: deviceIds).fetchDescriptor()
+                var descriptor = ChannelPredicate(deviceIds: deviceIds).fetchDescriptorDefaultSort()
                 descriptor.propertiesToFetch = [\.id, \.logoURL]
                 return try modelContext.fetch(descriptor)
             } catch {
@@ -117,7 +116,7 @@ actor HomeRunImporter {
                 if let deviceId = homeRunDiscovery.targetedDevice?.deviceId {
                     return try modelContext.fetch(HomeRunDevicePredicate(deviceIds: [deviceId]).fetchDescriptor())
                 } else {
-                    return try modelContext.fetch(HomeRunDevicePredicate().fetchDescriptor())
+                    return try modelContext.fetch(HomeRunDevicePredicate().fetchDescriptorDefaultSort())
                 }
             } catch {
                 logError("Unable to fetch existing `HomeRunDevice`. \(error)")

@@ -12,6 +12,7 @@ import Hellfire
 
 extension SchemaV1 {
     
+    /// A `BundleEntry` represents a channel added to a channel bundle.
     @Model final class BundleEntry: JSONSerializable {
         #Unique<BundleEntry>([\.id])
         #Index<BundleEntry>([\.sortHint, \.id], [\.id])
@@ -31,17 +32,27 @@ extension SchemaV1 {
             self.isFavorite = isFavorite
         }
         
+        /// Unique identifier for a `BundleEntry`.  Another unique combination would be the compound key on ChannelBundle.id && Channel.id.
         var id: BundleEntryId
         
+        /// The `Channel` this `BundleEntry` represents in the `ChannelBundle`.
         @Relationship(deleteRule: .nullify)
         var channel: Channel?
         
+        /// The unique identifier of the `Channel` this `BundleEntry` represents in the `ChannelBundle`.
+        ///
+        /// This value is persisted when the `Channel` is removed from the channel catalog.
+        /// It is used to associate the orphaned `BundleEntry` to the original `Channel` when the channel is added back to the channel catalog.
         var channelId: ChannelId
         
+        /// The `ChannelBundle` this `BundleEntry` is a member of.
         @Relationship(deleteRule: .nullify)
         var channelBundle: ChannelBundle
         
+        /// A sort key used for display in a guide.
         var sortHint: String
+        
+        /// A flag that indicates this `BundleEntry` instance represents a favorite channel in the `ChannelBundle`.
         var isFavorite: Bool
 
         

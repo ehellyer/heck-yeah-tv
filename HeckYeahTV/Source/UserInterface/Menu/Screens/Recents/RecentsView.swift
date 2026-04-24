@@ -18,7 +18,7 @@ struct RecentsView: View {
     @FocusState private var focusedChannelId: String?
     
     init() {
-        let descriptor = swiftDataController.recentlyViewDescriptor(limit: 10)
+        let descriptor = RecentlyViewedChannelPredicate(fetchLimit: 10).fetchDescriptorDefaultSort()
         _recentlyViewed = Query(descriptor)
     }
     

@@ -15,9 +15,9 @@ struct DeviceDetailView: View {
     let device: HomeRunDevice
     
     @Environment(\.dismiss) private var dismiss
-    @State private var isRefreshing = false
     @State private var showingDeleteConfirmation = false
     @State private var swiftDataController: BaseSwiftDataController = InjectedValues[\.swiftDataController]
+    @State private var appState: AppStateProvider = InjectedValues[\.sharedAppState]
 
     var body: some View {
         ScrollView {
@@ -132,10 +132,17 @@ struct DeviceDetailView: View {
         .toolbar {
             ToolbarItem(placement: .automatic) {
                 Button(action: refreshDevice) {
-                    Image(systemName: "arrow.clockwise")
+                    if appState.isReloadingHomeRun {
+                        ProgressView()
+                            .frame(width: 20, height: 20)
+                            .foregroundStyle(Color.gray)
+                    } else {
+                        Image(systemName: "arrow.clockwise")
+                            .foregroundStyle(.blue)
+                    }
                 }
                 .buttonStyle(.glass)
-                .disabled(isRefreshing)
+                .disabled(appState.isReloadingHomeRun)
             }
         }
         .onChange(of: device.isEnabled) {
@@ -159,19 +166,13 @@ struct DeviceDetailView: View {
     // MARK: - Actions
     
     private func refreshDevice() {
-        isRefreshing = true
-        // TODO: Implement device refresh logic
+        guard not(appState.isReloadingHomeRun) else { return }
+        
         Task {
             let container = swiftDataController.container
             let importer = HomeRunImporter(modelContainer: container)
-           
             guard let target = device.homeRunDiscovery else { return }
-            
             let _ = try? await importer.load(targetDevice: target, shouldFetchGuideData: true)
-            
-            await MainActor.run {
-                isRefreshing = false
-            }
         }
     }
     

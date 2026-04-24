@@ -144,36 +144,6 @@ protocol ChannelManageable {
     ///                       to watch while scrolling social media).
     func addRecentlyViewedChannel(channel: Channel)
     
-    /// Builds a fetch descriptor for recently viewed channels without actually fetching them.
-    ///
-    /// This is the lazy person's approach to database queries—it constructs the instructions
-    /// for how to fetch your viewing history, but doesn't actually do the work yet. Think of it
-    /// as writing a detailed grocery list without leaving the couch.
-    ///
-    /// Perfect for SwiftUI's `@Query` macro, which prefers to be handed a descriptor instead of
-    /// pre-fetched data. Like a sous chef who insists on reading the recipe themselves.
-    ///
-    /// - Parameter limit: Maximum number of recently viewed entries to include in the descriptor.
-    ///
-    /// - Returns: A `FetchDescriptor` ready to retrieve your viewing history, sorted newest first.
-    func recentlyViewDescriptor(limit: Int) -> FetchDescriptor<RecentlyViewedChannel>
-    
-    /// Fetches the most recently viewed channels, ordered by viewing time (newest first).
-    ///
-    /// Returns your viewing history in reverse chronological order, so the channel you
-    /// just watched is at the front of the line. Perfect for building a "recently viewed"
-    /// UI section or answering the age-old question: "What was I watching before I got
-    /// distracted?"
-    ///
-    /// - Parameter limit: Maximum number of channels to return. Defaults to 10 because
-    ///                   nobody needs to see their entire viewing history stretching back
-    ///                   to last Tuesday.
-    ///
-    /// - Returns: An array of `RecentlyViewedChannel` objects, sorted by most recent first.
-    ///           Could be empty if you've never watched anything (or if your database
-    ///           is brand new and hasn't had time to collect your digital footprints yet).
-    func recentlyViewedChannels(limit: Int) -> [RecentlyViewedChannel]
-    
     /// Purges ancient selected channel history when your digital nostalgia gets out of hand.
     ///
     /// This is like `cleanupOldRecentlyViewedChannels`, but for the `SelectedChannel` table instead.

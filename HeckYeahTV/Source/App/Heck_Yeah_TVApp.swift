@@ -71,12 +71,12 @@ struct Heck_Yeah_TVApp: App {
     @State private var isBootComplete = false
     @State private var startupTask: Task<Void, Never>? = nil
     @State private var showTunerPrompt = false
+    @State private var appState: AppStateProvider = InjectedValues[\.sharedAppState]
+    @State private var swiftDataController: BaseSwiftDataController = InjectedValues[\.swiftDataController]
+
     // Holds the continuation while the tuner-scan alert is displayed.
     // Wrapped in a class so it can be mutated from within the SwiftUI struct.
     @State private var tunerPromptContinuationBox = TunerPromptContinuationBox()
-    
-    @State private var appState: AppStateProvider = InjectedValues[\.sharedAppState]
-    @State private var swiftDataController: BaseSwiftDataController = InjectedValues[\.swiftDataController]
     
     var body: some Scene {
 #if os(macOS)
@@ -292,15 +292,11 @@ extension Heck_Yeah_TVApp {
     //TODO: EJH - Comment out for release.
     //Rough code for developer only - Not production code.
     func writeMockFiles() {
-        let cpDescriptor: FetchDescriptor<ChannelProgram> = FetchDescriptor<ChannelProgram>(
-            sortBy: [
-                SortDescriptor(\.channelId),
-                SortDescriptor(\.startTime)
-            ]
-        )
-        
+        let cpDescriptor: FetchDescriptor<ChannelProgram> = ChannelProgramPredicate().fetchDescriptor(sortBy: [SortDescriptor(\.channelId),
+                                                                                                               SortDescriptor(\.startTime)])
+
         let deviceId = IPTVImporter.iptvDeviceId
-        let cDescriptor = ChannelPredicate(deviceIds: [deviceId]).fetchDescriptor()
+        let cDescriptor = ChannelPredicate(deviceIds: [deviceId]).fetchDescriptorDefaultSort()
         
         let viewContext = InjectedValues[\.swiftDataController].viewContext
         

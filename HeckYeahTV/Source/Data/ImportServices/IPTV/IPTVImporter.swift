@@ -58,7 +58,7 @@ actor IPTVImporter {
         let existingChannels: [Channel] = {
             do {
                 let deviceId = IPTVImporter.iptvDeviceId
-                var descriptor = ChannelPredicate(deviceIds: [deviceId]).fetchDescriptor()
+                var descriptor = ChannelPredicate(deviceIds: [deviceId]).fetchDescriptorDefaultSort()
                 descriptor.propertiesToFetch = [\.id]
                 return try modelContext.fetch(descriptor)
             } catch {

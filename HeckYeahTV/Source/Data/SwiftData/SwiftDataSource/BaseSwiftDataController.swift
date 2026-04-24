@@ -39,9 +39,7 @@ class BaseSwiftDataController: SwiftDataProvider {
             access(keyPath: \.selectedChannel)
             do {
                 guard _cachedSelectedChannel == nil else { return _cachedSelectedChannel }
-                let sortDescriptor = SortDescriptor<SelectedChannel>(\.dateAdded, order: .reverse)
-                var fetchDescriptor = FetchDescriptor<SelectedChannel>(sortBy: [sortDescriptor])
-                fetchDescriptor.fetchLimit = 1
+                let fetchDescriptor = SelectedChannelPredicate(fetchLimit: 1).fetchDescriptorDefaultSort()
                 let selectedChannel = try viewContext.fetch(fetchDescriptor).first
                 _cachedSelectedChannel = selectedChannel?.channel
                 return selectedChannel?.channel
@@ -78,7 +76,7 @@ class BaseSwiftDataController: SwiftDataProvider {
     func totalIPChannelCatalogCount() -> Int {
         do {
             let iptvDeviceId = IPTVImporter.iptvDeviceId
-            let fetchDescriptor = ChannelPredicate(deviceIds: [iptvDeviceId]).fetchDescriptorNoSort()
+            let fetchDescriptor = ChannelPredicate(deviceIds: [iptvDeviceId]).fetchDescriptor()
             let count: Int = try viewContext.fetchCount(fetchDescriptor)
             return count
         } catch {
@@ -90,7 +88,7 @@ class BaseSwiftDataController: SwiftDataProvider {
     func channelCountFor(bundleId: ChannelBundleId) -> Int {
         do {
             let deviceId = IPTVImporter.iptvDeviceId
-            let descriptor = BundleEntryPredicate(channelBundleId: bundleId, deviceId: deviceId).fetchDescriptorNoSort()
+            let descriptor = BundleEntryPredicate(channelBundleId: bundleId, deviceId: deviceId).fetchDescriptor()
             let count: Int = try viewContext.fetchCount(descriptor)
             return count
         } catch {
@@ -101,7 +99,7 @@ class BaseSwiftDataController: SwiftDataProvider {
     
     func channelCountFor(deviceId: HDHomeRunDeviceId) -> Int {
         do {
-            let fetchDescriptor = ChannelPredicate(deviceIds: [deviceId]).fetchDescriptorNoSort()
+            let fetchDescriptor = ChannelPredicate(deviceIds: [deviceId]).fetchDescriptor()
             let count: Int = try viewContext.fetchCount(fetchDescriptor)
             return count
         } catch {
@@ -112,7 +110,7 @@ class BaseSwiftDataController: SwiftDataProvider {
     
     func homeRunDevices() -> [HomeRunDevice] {
         do {
-            let fetchDescriptor = HomeRunDevicePredicate().fetchDescriptor()
+            let fetchDescriptor = HomeRunDevicePredicate().fetchDescriptorDefaultSort()
             let devices = try viewContext.fetch(fetchDescriptor)
             return devices
         } catch {
@@ -156,8 +154,7 @@ class BaseSwiftDataController: SwiftDataProvider {
     
     func channel(for channelId: ChannelId) -> Channel? {
         do {
-            var fetchDescriptor = ChannelPredicate(channelId: channelId).fetchDescriptor()
-            fetchDescriptor.fetchLimit = 1
+            let fetchDescriptor = ChannelPredicate(fetchLimit: 1, channelId: channelId).fetchDescriptor()
             guard let channel = try viewContext.fetch(fetchDescriptor).first else {
                 throw GuideStoreError.noChannelFoundForId(channelId)
             }
@@ -172,7 +169,7 @@ class BaseSwiftDataController: SwiftDataProvider {
         do {
             let fetchDescriptor = ChannelPredicate(searchTerm: self.searchTerm,
                                                    countryCode: self.selectedCountry,
-                                                   categoryId: self.selectedCategory).fetchDescriptor()
+                                                   categoryId: self.selectedCategory).fetchDescriptorDefaultSort()
             
             let _channels = try viewContext.fetch(fetchDescriptor)
             return _channels
@@ -184,7 +181,7 @@ class BaseSwiftDataController: SwiftDataProvider {
     
     func channelBundles() -> [ChannelBundle] {
         do {
-            let fetchDescriptor = ChannelBundlePredicate().fetchDescriptor()
+            let fetchDescriptor = ChannelBundlePredicate().fetchDescriptorDefaultSort()
             let models = try viewContext.fetch(fetchDescriptor)
             return models
         } catch {
@@ -210,8 +207,7 @@ class BaseSwiftDataController: SwiftDataProvider {
     
     func channelBundle(for bundleId: ChannelBundleId) -> ChannelBundle? {
         do {
-            var fetchDescriptor = ChannelBundlePredicate(bundleId: bundleId).fetchDescriptor()
-            fetchDescriptor.fetchLimit = 1
+            let fetchDescriptor = ChannelBundlePredicate(fetchLimit: 1, bundleId: bundleId).fetchDescriptor()
             guard let model = try viewContext.fetch(fetchDescriptor).first else {
                 throw GuideStoreError.noChannelBundleFoundForId(bundleId)
             }
@@ -225,8 +221,7 @@ class BaseSwiftDataController: SwiftDataProvider {
     func bundleEntry(for bundleEntryId: BundleEntryId?) -> BundleEntry? {
         guard let bundleEntryId else { return nil }
         do {
-            var fetchDescriptor = BundleEntryPredicate(bundleEntryIds: [bundleEntryId]).fetchDescriptor()
-            fetchDescriptor.fetchLimit = 1
+            let fetchDescriptor = BundleEntryPredicate(fetchLimit: 1, bundleEntryIds: [bundleEntryId]).fetchDescriptor()
             let bundleEntry: BundleEntry? = try viewContext.fetch(fetchDescriptor).first
             return bundleEntry
         } catch {
@@ -238,8 +233,7 @@ class BaseSwiftDataController: SwiftDataProvider {
     func bundleEntry(for channelId: ChannelId?, channelBundleId: ChannelBundleId) -> BundleEntry? {
         guard let channelId else { return nil }
         do {
-            var fetchDescriptor = BundleEntryPredicate(channelId: channelId, channelBundleId: channelBundleId).fetchDescriptor()
-            fetchDescriptor.fetchLimit = 1
+            let fetchDescriptor = BundleEntryPredicate(fetchLimit: 1, channelId: channelId, channelBundleId: channelBundleId).fetchDescriptor()
             let bundleEntry: BundleEntry? = try viewContext.fetch(fetchDescriptor).first
             return bundleEntry
         } catch {
@@ -282,9 +276,7 @@ class BaseSwiftDataController: SwiftDataProvider {
     
     func channelPrograms(for channelId: ChannelId) -> [ChannelProgram] {
         do {
-            let predicate = #Predicate<ChannelProgram> { $0.channelId == channelId }
-            let startTimeSort = SortDescriptor<ChannelProgram>(\.startTime, order: .forward)
-            let fetchDescriptor = FetchDescriptor<ChannelProgram>(predicate: predicate, sortBy: [startTimeSort])
+            let fetchDescriptor = ChannelProgramPredicate(channelId: channelId).fetchDescriptorDefaultSort()
             let _programs = try viewContext.fetch(fetchDescriptor)
             return _programs
         } catch {
@@ -298,25 +290,6 @@ class BaseSwiftDataController: SwiftDataProvider {
         viewContext.insert(recentlyViewed)
         // Cleanup old entries if we've exceeded the max count
         cleanupOldRecentlyViewedChannels(maxCount: 5000)
-    }
-    
-    
-    func recentlyViewDescriptor(limit: Int = 10) -> FetchDescriptor<RecentlyViewedChannel> {
-        let viewedAtSort = SortDescriptor<RecentlyViewedChannel>(\.viewedAt, order: .reverse)
-        var fetchDescriptor = FetchDescriptor<RecentlyViewedChannel>(sortBy: [viewedAtSort])
-        fetchDescriptor.fetchLimit = limit
-        return fetchDescriptor
-    }
-    
-    func recentlyViewedChannels(limit: Int = 10) -> [RecentlyViewedChannel] {
-        do {
-            let fetchDescriptor = recentlyViewDescriptor(limit: limit)
-            let recentChannels = try viewContext.fetch(fetchDescriptor)
-            return recentChannels
-        } catch {
-            logError("Failed to fetch recently viewed channels. Error: \(error)")
-            return []
-        }
     }
     
     // MARK: - Delete / clean up operations
@@ -338,16 +311,12 @@ class BaseSwiftDataController: SwiftDataProvider {
     
     func cleanupOldRecentlyViewedChannels(maxCount: Int = 5000) {
         do {
-            // Fetch all entries sorted by viewedAt (oldest first)
-            let viewedAtSort = SortDescriptor<RecentlyViewedChannel>(\.viewedAt, order: .reverse)
-            let fetchDescriptor = FetchDescriptor<RecentlyViewedChannel>(sortBy: [viewedAtSort])
+            // Fetch all entries sorted by viewedAt.
+            let fetchDescriptor = RecentlyViewedChannelPredicate().fetchDescriptor()
             let recentlyViewedChannels = try viewContext.fetch(fetchDescriptor)
-            
-            // Calculate how many to delete
             let entryCount = recentlyViewedChannels.count
-            let deleteCount = entryCount - maxCount
             
-            guard deleteCount > 0 else {
+            guard entryCount > maxCount else {
                 logDebug("There are \(entryCount) RecentlyViewedChannel entries.  We are not at max count, therefore nothing to delete.")
                 return
             }
@@ -357,6 +326,7 @@ class BaseSwiftDataController: SwiftDataProvider {
             }
             
             try viewContext.saveChangesIfNeeded()
+            let deleteCount = entryCount - maxCount
             logDebug("Cleaned up \(deleteCount) old RecentlyViewedChannel entries.")
         } catch {
             logError("Failed to cleanup old RecentlyViewedChannel entries. Error: \(error)")
@@ -630,7 +600,7 @@ class BaseSwiftDataController: SwiftDataProvider {
     
     private func offlineDeviceIds() -> [HDHomeRunDeviceId] {
         do {
-            var descriptor = HomeRunDevicePredicate(isOffline: true).fetchDescriptor()
+            var descriptor = HomeRunDevicePredicate(isOffline: true).fetchDescriptorDefaultSort()
             descriptor.propertiesToFetch = [\.deviceId]
             let devices = try viewContext.fetch(descriptor)
             let deviceIds = devices.map { $0.deviceId }
@@ -642,7 +612,7 @@ class BaseSwiftDataController: SwiftDataProvider {
     }
     
     private func devices(enabledState: Bool) throws -> [HDHomeRunDeviceId] {
-        var descriptor = HomeRunDevicePredicate(isEnabled: enabledState).fetchDescriptor()
+        var descriptor = HomeRunDevicePredicate(isEnabled: enabledState).fetchDescriptorDefaultSort()
         descriptor.propertiesToFetch = [\.deviceId]
         let devices = try viewContext.fetch(descriptor)
         let deviceIds = devices.map { $0.deviceId }
@@ -651,7 +621,7 @@ class BaseSwiftDataController: SwiftDataProvider {
     
     private func channelsFor(deviceIds: [HDHomeRunDeviceId]) throws -> [Channel] {
         guard not(deviceIds.isEmpty) else { return [] }
-        let fetchDescriptor = ChannelPredicate(deviceIds: deviceIds).fetchDescriptor()
+        let fetchDescriptor = ChannelPredicate(deviceIds: deviceIds).fetchDescriptorDefaultSort()
         do {
             let channels = try viewContext.fetch(fetchDescriptor)
             return channels
@@ -756,7 +726,7 @@ class BaseSwiftDataController: SwiftDataProvider {
         }
         
         // Fetch existing entries to delete
-        let removeEntryDescriptor = BundleEntryPredicate(bundleEntryIds: expectedRemoveIds).fetchDescriptor()
+        let removeEntryDescriptor = BundleEntryPredicate(bundleEntryIds: expectedRemoveIds).fetchDescriptorDefaultSort()
         let entriesToRemove = try viewContext.fetch(removeEntryDescriptor)
         
         // Delete them
@@ -783,7 +753,7 @@ class BaseSwiftDataController: SwiftDataProvider {
         
         let channelsDescriptor = BundleEntryPredicate(channelBundleId: channelBundleId,
                                                       hasChannel: true,
-                                                      showFavoritesOnly: showFavoritesOnly).fetchDescriptor()
+                                                      showFavoritesOnly: showFavoritesOnly).fetchDescriptorDefaultSort()
         let bundleEntries: [BundleEntry] = (try context.fetch(channelsDescriptor))
         
         // BundleEntries that are not part of any offline device.

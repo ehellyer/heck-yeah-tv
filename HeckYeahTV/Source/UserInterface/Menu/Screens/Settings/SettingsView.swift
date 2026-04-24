@@ -284,6 +284,8 @@ struct SettingsView: View {
     }
     
     private func reloadIPTVChannels() {
+        guard not(appState.isReloadingIPTV) else { return }
+        
         Task.detached(name: "HeckYeahTV.IPTVImporter") {
             let container = await swiftDataController.container
             let importer = IPTVImporter(modelContainer: container)
@@ -303,6 +305,8 @@ struct SettingsView: View {
     }
     
     private func reloadTunerDevices() {
+        guard not(appState.isReloadingHomeRun) else { return }
+        
         Task.detached(name: "HeckYeahTV.HomeRunImporter") {
             let container = await swiftDataController.container
             let importer = HomeRunImporter(modelContainer: container)

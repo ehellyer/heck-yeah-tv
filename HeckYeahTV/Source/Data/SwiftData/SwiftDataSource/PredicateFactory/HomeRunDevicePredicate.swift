@@ -9,10 +9,16 @@
 import SwiftData
 import Foundation
 
+/// Query builder for `HomeRunDevice` models — tracks down your HDHomeRun hardware like a bloodhound.
+///
+/// Non-nil filter criteria are AND-ed together; all must match.
 struct HomeRunDevicePredicate {
-    
-    /// Initialize with predicate values that will be AND together in the final predicate.
-    /// An array of device Ids are included as `AND deviceIds.contains(channel.deviceId)`.
+
+    /// Sets up optional filter criteria. Narrow down by connectivity, enabled state, or specific device IDs.
+    /// - Parameters:
+    ///   - isOffline: `true` for MIA devices, `false` for the ones actually doing their job.
+    ///   - isEnabled: `true` for enabled, `false` for benched. `nil` to skip this filter.
+    ///   - deviceIds: Only these specific devices. Like calling roll.
     init(isOffline: Bool? = nil,
          isEnabled: Bool? = nil,
          deviceIds: [HDHomeRunDeviceId]? = nil) {
@@ -20,34 +26,42 @@ struct HomeRunDevicePredicate {
         self.isEnabled = isEnabled
         self.deviceIds = deviceIds
     }
-    
-    /// Returns a fetch descriptor with all the supplied criteria.   A sort descriptor is included on `HomeRunDevice`.sortHint ordered forward.
-    func fetchDescriptor() -> FetchDescriptor<HomeRunDevice> {
+
+    /// Returns a fetch descriptor sorted by `friendlyName` ascending — the polite way to list devices.
+    func fetchDescriptorDefaultSort() -> FetchDescriptor<HomeRunDevice> {
         var descriptor = FetchDescriptor<HomeRunDevice>()
         descriptor.predicate = predicate()
         descriptor.sortBy = sortDescriptor()
         return descriptor
     }
-    
-    /// Returns a sort descriptor on `HomeRunDevice`.sortHint ordered forward.
+
+    /// Returns a fetch descriptor with custom sort — sort your devices however makes you happy.
+    /// - Parameter sortBy: Your preferred sort descriptors.
+    func fetchDescriptor(sortBy: [SortDescriptor<HomeRunDevice>] = []) -> FetchDescriptor<HomeRunDevice> {
+        var descriptor = FetchDescriptor<HomeRunDevice>()
+        descriptor.predicate = predicate()
+        descriptor.sortBy = sortBy
+        return descriptor
+    }
+
+    /// Default sort: `friendlyName` ascending. Names before numbers, always.
     func sortDescriptor() -> [SortDescriptor<HomeRunDevice>] {
         return [SortDescriptor<HomeRunDevice>(\.friendlyName, order: .forward)]
     }
-    
-    /// Returns the predicate with the criteria values AND together.
-    /// An array of device Ids are included as `AND deviceIds.contains(HomeRunDevice.deviceId)`.
+
+    /// AND-s all non-nil criteria into one predicate. No filters? Every device on the network shows up.
     func predicate() -> Predicate<HomeRunDevice> {
-        
+
         var conditions: [Predicate<HomeRunDevice>] = []
-        
+
         if let isOffline {
             conditions.append(#Predicate<HomeRunDevice> { $0.isOffline == isOffline })
         }
-        
+
         if let isEnabled {
             conditions.append(#Predicate<HomeRunDevice> { $0.isEnabled == isEnabled })
         }
-        
+
         if let deviceIds, not(deviceIds.isEmpty) {
             if deviceIds.count == 1 {
                 conditions.append(#Predicate<HomeRunDevice> { $0.deviceId == deviceIds.first! })
@@ -59,7 +73,7 @@ struct HomeRunDevicePredicate {
                 )
             }
         }
-        
+
         // Combine conditions using '&&' (AND)
         if conditions.isEmpty {
             return #Predicate { _ in true } // Return a predicate that always evaluates to true if no predicate conditions exist.
@@ -70,11 +84,11 @@ struct HomeRunDevicePredicate {
             return compoundPredicate
         }
     }
-    
+
     //MARK: - Private API
-    
+
     private var isOffline: Bool?
     private var isEnabled: Bool?
     private var deviceIds: [HDHomeRunDeviceId]?
-    
+
 }

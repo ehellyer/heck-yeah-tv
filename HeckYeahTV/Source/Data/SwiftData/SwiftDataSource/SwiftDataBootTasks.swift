@@ -74,14 +74,11 @@ actor SwiftDataBootTasks {
         }
         logDebug("Zero orphaned channels in the store.")
         
-        var channelDescriptor = ChannelPredicate().fetchDescriptorNoSort()
-        channelDescriptor.fetchLimit = 1
         for bundleEntry in bundleEntries {
+        
+            let channelFetchDescriptor = ChannelPredicate(fetchLimit: 1, channelId: bundleEntry.channelId).fetchDescriptor()
             
-            let channelPredicate = #Predicate<Channel> { $0.id == bundleEntry.channelId }
-            channelDescriptor.predicate = channelPredicate
-            
-            if let resolvedChannel = try? context.fetch(channelDescriptor).first  {
+            if let resolvedChannel = try? context.fetch(channelFetchDescriptor).first  {
                 logDebug("Resolved orphaned channel: \(resolvedChannel.title)")
                 bundleEntry.channel = resolvedChannel
             } else {
