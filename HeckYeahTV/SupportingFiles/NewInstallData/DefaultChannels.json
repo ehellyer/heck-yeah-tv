@@ -1,0 +1,3829 @@
+[
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Religious programming",
+        "categoryId" : "religious",
+        "name" : "Religious"
+      }
+    ],
+    "country" : "US",
+    "deviceId" : "IPTV",
+    "guideId" : "3ABNEnglish.us",
+    "hasDRM" : false,
+    "id" : "9779f7cd343d307b717badb612d94164afd33e851cf26f795f4f354f427f8baa",
+    "languages" : [
+      "eng"
+    ],
+    "logoURL" : "https:\/\/i.imgur.com\/bgJQIyW.png",
+    "number" : "3ABNEnglish.us",
+    "quality" : {
+      "sd" : {
+
+      }
+    },
+    "sortHint" : "3ABN English::3ABNEnglish.us",
+    "title" : "3ABN English",
+    "url" : "https:\/\/3abn.bozztv.com\/3abn2\/3abn_live\/smil:3abn_live.smil\/playlist.m3u8"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Programming is music or music related",
+        "categoryId" : "music",
+        "name" : "Music"
+      }
+    ],
+    "country" : "US",
+    "deviceId" : "IPTV",
+    "guideId" : "30AMusic.us",
+    "hasDRM" : false,
+    "id" : "a99c9542ec572235eb38bd87ae3523129c7decd9b5032b36b859d9f4a8fd7427",
+    "languages" : [
+      "eng"
+    ],
+    "logoURL" : "https:\/\/i.imgur.com\/gNWg9tl.png",
+    "number" : "30AMusic.us",
+    "quality" : {
+      "fhd" : {
+
+      }
+    },
+    "sortHint" : "30A Music Channel::30AMusic.us",
+    "title" : "30A Music Channel",
+    "url" : "https:\/\/30a-tv.com\/feeds\/ceftech\/30atvmusic.m3u8"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Programming is for shopping",
+        "categoryId" : "shop",
+        "name" : "Shop"
+      }
+    ],
+    "country" : "US",
+    "deviceId" : "IPTV",
+    "guideId" : "30ATheBeachShow.us",
+    "hasDRM" : false,
+    "id" : "fcc4a4c5cf98d3ae177d57e4c795836c2d53a148ec0e61b62ba11f231b417361",
+    "languages" : [
+      "eng"
+    ],
+    "logoURL" : "https:\/\/i.imgur.com\/0j5Aget.png",
+    "number" : "30ATheBeachShow.us",
+    "quality" : {
+      "fhd" : {
+
+      }
+    },
+    "sortHint" : "30A The Beach Show::30ATheBeachShow.us",
+    "title" : "30A The Beach Show",
+    "url" : "https:\/\/30a-tv.com\/beachy.m3u8"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Channels that only show movies",
+        "categoryId" : "movies",
+        "name" : "Movies"
+      }
+    ],
+    "country" : "US",
+    "deviceId" : "IPTV",
+    "guideId" : "70sCinema.us",
+    "hasDRM" : false,
+    "id" : "c7423049f58f929ccc12d85cb18b148036592e234a9a77c097c97dfe1a26b734",
+    "languages" : [
+      "eng"
+    ],
+    "logoURL" : "https:\/\/i.imgur.com\/mgXeEE4.png",
+    "number" : "70sCinema.us",
+    "quality" : {
+      "sd" : {
+
+      }
+    },
+    "sortHint" : "70s Cinema::70sCinema.us",
+    "title" : "70s Cinema",
+    "url" : "https:\/\/jmp2.uk\/plu-5f4d878d3d19b30007d2e782.m3u8"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Channels that only show movies",
+        "categoryId" : "movies",
+        "name" : "Movies"
+      }
+    ],
+    "country" : "US",
+    "deviceId" : "IPTV",
+    "guideId" : "80sRewind.us",
+    "hasDRM" : false,
+    "id" : "92a2e998c9ff3f126164008d31574bcdb49ea18b85de1e2ef905768cf4ebfb26",
+    "languages" : [
+      "eng"
+    ],
+    "logoURL" : "https:\/\/i.imgur.com\/nkEeYfI.png",
+    "number" : "80sRewind.us",
+    "quality" : {
+      "sd" : {
+
+      }
+    },
+    "sortHint" : "80s Rewind::80sRewind.us",
+    "title" : "80s Rewind",
+    "url" : "https:\/\/jmp2.uk\/plu-5ca525b650be2571e3943c63.m3u8"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Channels that only show movies",
+        "categoryId" : "movies",
+        "name" : "Movies"
+      }
+    ],
+    "country" : "US",
+    "deviceId" : "IPTV",
+    "guideId" : "90sThrowback.us",
+    "hasDRM" : false,
+    "id" : "60c6f511f4d141125d4e6a9f69dd26eb501b7e56370450e078f499e1e2f440f0",
+    "languages" : [
+      "eng"
+    ],
+    "logoURL" : "https:\/\/i.imgur.com\/KoGko6M.png",
+    "number" : "90sThrowback.us",
+    "quality" : {
+      "sd" : {
+
+      }
+    },
+    "sortHint" : "90s Throwback::90sThrowback.us",
+    "title" : "90s Throwback",
+    "url" : "https:\/\/jmp2.uk\/plu-5f4d86f519358a00072b978e.m3u8"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Channels with a variety of entertainment programs",
+        "categoryId" : "entertainment",
+        "name" : "Entertainment"
+      }
+    ],
+    "country" : "US",
+    "deviceId" : "IPTV",
+    "guideId" : "AE.us",
+    "hasDRM" : false,
+    "id" : "5a23bdef709a9565af239310e1e6d903bbe73c5588a1c21f48f203abe810cbc8",
+    "languages" : [
+      "eng"
+    ],
+    "logoURL" : "https:\/\/upload.wikimedia.org\/wikipedia\/commons\/thumb\/d\/df\/A%26E_Network_logo.svg\/960px-A%26E_Network_logo.svg.png",
+    "number" : "AE.us",
+    "quality" : {
+      "sd" : {
+
+      }
+    },
+    "sortHint" : "A&E East::AE.us",
+    "title" : "A&E East",
+    "url" : "https:\/\/tvpass.org\/live\/AEEast\/sd"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Provides a variety of different programming",
+        "categoryId" : "general",
+        "name" : "General"
+      }
+    ],
+    "country" : "US",
+    "deviceId" : "IPTV",
+    "guideId" : "AFTV.us",
+    "hasDRM" : false,
+    "id" : "46a86e931725a439a6c54c99bfbeab15f4b9fe3e4d917f5e61db9a5c8ce6a851",
+    "languages" : [
+      "eng"
+    ],
+    "logoURL" : "https:\/\/i.imgur.com\/UoiUwFj.png",
+    "number" : "AFTV.us",
+    "quality" : {
+      "fhd" : {
+
+      }
+    },
+    "sortHint" : "AFTV::AFTV.us",
+    "title" : "AFTV",
+    "url" : "https:\/\/livestream.telvue.com\/accframingham1\/f7b44cfafd5c52223d5498196c8a2e7b.sdp\/playlist.m3u8"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Channels that only show series",
+        "categoryId" : "series",
+        "name" : "Series"
+      }
+    ],
+    "country" : "US",
+    "deviceId" : "IPTV",
+    "guideId" : "AlwaysFunnyVideos.us",
+    "hasDRM" : false,
+    "id" : "f81afea3625c4eb269e8346dabb6a1ba89c668a851ba7d48fbfc4170b180560a",
+    "languages" : [
+      "eng"
+    ],
+    "logoURL" : "https:\/\/i.imgur.com\/vfdN5Xl.png",
+    "number" : "AlwaysFunnyVideos.us",
+    "quality" : {
+      "fhd" : {
+
+      }
+    },
+    "sortHint" : "Always Funny Videos::AlwaysFunnyVideos.us",
+    "title" : "Always Funny Videos",
+    "url" : "https:\/\/aegis-cloudfront-1.tubi.video\/a0713659-0883-4501-9aba-f7e651becae9\/playlist.m3u8"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Programming is mostly comedy",
+        "categoryId" : "comedy",
+        "name" : "Comedy"
+      }
+    ],
+    "country" : "US",
+    "deviceId" : "IPTV",
+    "guideId" : "AFV.us",
+    "hasDRM" : false,
+    "id" : "27b4d7cf351104958978b542d4f904bce6a3292e491bf079755d3db15cc53952",
+    "languages" : [
+      "eng"
+    ],
+    "logoURL" : "https:\/\/i.imgur.com\/TOB9vmW.png",
+    "number" : "AFV.us",
+    "quality" : {
+      "fhd" : {
+
+      }
+    },
+    "sortHint" : "America’s Funniest Home Videos::AFV.us",
+    "title" : "America’s Funniest Home Videos",
+    "url" : "https:\/\/d1mp1kdk5zi1ie.cloudfront.net\/playlist.m3u8"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Programs related to cooking or food in general",
+        "categoryId" : "cooking",
+        "name" : "Cooking"
+      }
+    ],
+    "country" : "US",
+    "deviceId" : "IPTV",
+    "guideId" : "AmericasTestKitchen.us",
+    "hasDRM" : false,
+    "id" : "ca50c7d3c0d52ee9e80f1712c0a22f51e7e87bef5905d0a06acd8fac940417dc",
+    "languages" : [
+      "eng"
+    ],
+    "logoURL" : "https:\/\/i.imgur.com\/prMkTsZ.png",
+    "number" : "AmericasTestKitchen.us",
+    "quality" : {
+      "fhd" : {
+
+      }
+    },
+    "sortHint" : "America's Test Kitchen::AmericasTestKitchen.us",
+    "title" : "America's Test Kitchen",
+    "url" : "https:\/\/amg01420-americastestkitchen-amg01420c1-xumo-us-878.playouts.now.amagi.tv\/playlist.m3u8"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Programming is mostly news",
+        "categoryId" : "news",
+        "name" : "News"
+      }
+    ],
+    "country" : "US",
+    "deviceId" : "IPTV",
+    "guideId" : "AmericasVoiceNews.us",
+    "hasDRM" : false,
+    "id" : "f7f54598c62bb538d0b7e007db94e8b9c89c4792ae634c8d6303fb27389e847a",
+    "languages" : [
+      "eng"
+    ],
+    "logoURL" : "https:\/\/i.imgur.com\/C4w0eYC.png",
+    "number" : "AmericasVoiceNews.us",
+    "quality" : {
+      "fhd" : {
+
+      }
+    },
+    "sortHint" : "America's Voice News::AmericasVoiceNews.us",
+    "title" : "America's Voice News",
+    "url" : "https:\/\/jmp2.uk\/plu-5e1f7da4bc7d740009831259.m3u8"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Programming is mostly 2D or 3D animation",
+        "categoryId" : "animation",
+        "name" : "Animation"
+      }
+    ],
+    "country" : "US",
+    "deviceId" : "IPTV",
+    "guideId" : "AnimationPlus.us",
+    "hasDRM" : false,
+    "id" : "c7da6bda5f576cc4369cf672f4429e476177d54acbc6398c635e4bc4b57ab27c",
+    "languages" : [
+      "eng"
+    ],
+    "logoURL" : "https:\/\/provider-static.plex.tv\/epg\/cms\/production\/d3f6d54b-64cf-44ed-a960-2feb1c4b05c7\/US_STVP_AnimationPlus_logo_Color_1500x1000_-_Kai_Schneider.png",
+    "number" : "AnimationPlus.us",
+    "quality" : {
+      "fhd" : {
+
+      }
+    },
+    "sortHint" : "Animation+::AnimationPlus.us",
+    "title" : "Animation+",
+    "url" : "https:\/\/pb-ioe9d0fpkd6pp.akamaized.net\/playlist.m3u8"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Programming is mostly 2D or 3D animation",
+        "categoryId" : "animation",
+        "name" : "Animation"
+      }
+    ],
+    "country" : "US",
+    "deviceId" : "IPTV",
+    "guideId" : "AnimexHIDIVE.us",
+    "hasDRM" : false,
+    "id" : "199a03d0e4f733da529a306a0a8b8beed2fa6b22dffd18ae60a22f259fe14554",
+    "languages" : [
+      "eng"
+    ],
+    "logoURL" : "https:\/\/i.imgur.com\/v0BlxCa.png",
+    "number" : "AnimexHIDIVE.us",
+    "quality" : {
+      "fhd" : {
+
+      }
+    },
+    "sortHint" : "ANIME x HIDIVE::AnimexHIDIVE.us",
+    "title" : "ANIME x HIDIVE",
+    "url" : "https:\/\/d3f088nnrrvkwf.cloudfront.net\/v1\/amc_anime_x_hidive_1\/samsungheadend_us\/latest\/main\/hls\/playlist.m3u8"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Programs related to health, fitness, leisure, fashion, decor, etc.",
+        "categoryId" : "lifestyle",
+        "name" : "Lifestyle"
+      }
+    ],
+    "country" : "US",
+    "deviceId" : "IPTV",
+    "guideId" : "AntiquesRoadTrip.us",
+    "hasDRM" : false,
+    "id" : "93323f1d540b19cfab72b4caaba1cd1ac2d509c4074a9ea31294ed58b8e2cbcd",
+    "languages" : [
+      "eng"
+    ],
+    "logoURL" : "https:\/\/i.imgur.com\/kkm7VqV.png",
+    "number" : "AntiquesRoadTrip.us",
+    "quality" : {
+      "fhd" : {
+
+      }
+    },
+    "sortHint" : "Antiques Road Trip::AntiquesRoadTrip.us",
+    "title" : "Antiques Road Trip",
+    "url" : "https:\/\/aegis-cloudfront-1.tubi.video\/b42ac280-5300-4db0-8a63-2ec2e52c5b5c\/playlist.m3u8"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Channels that only show series",
+        "categoryId" : "series",
+        "name" : "Series"
+      }
+    ],
+    "country" : "US",
+    "deviceId" : "IPTV",
+    "guideId" : "PBSAntiquesRoadshow.us",
+    "hasDRM" : false,
+    "id" : "d846983a0bfdb6706f6790b8ab84c3fdbcb3372674441a72e7e613c61372b3e4",
+    "languages" : [
+      "eng"
+    ],
+    "logoURL" : "https:\/\/i.imgur.com\/U9CYaok.png",
+    "number" : "PBSAntiquesRoadshow.us",
+    "quality" : {
+      "fhd" : {
+
+      }
+    },
+    "sortHint" : "Antiques Roadshow PBS::PBSAntiquesRoadshow.us",
+    "title" : "Antiques Roadshow PBS",
+    "url" : "https:\/\/amg00953-pbsusa-antiroadshow-xumo-x6ud5.amagi.tv\/playlist.m3u8"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Channels that only show series",
+        "categoryId" : "series",
+        "name" : "Series"
+      }
+    ],
+    "country" : "US",
+    "deviceId" : "IPTV",
+    "guideId" : "AntiquesRoadshowUK.us",
+    "hasDRM" : false,
+    "id" : "66dc916c137375158cd6974be896950acdf734bfd37978c8383c781fc64c1701",
+    "languages" : [
+      "eng"
+    ],
+    "logoURL" : "https:\/\/i.imgur.com\/rKWLv48.png",
+    "number" : "AntiquesRoadshowUK.us",
+    "quality" : {
+      "sd" : {
+
+      }
+    },
+    "sortHint" : "Antiques Roadshow UK::AntiquesRoadshowUK.us",
+    "title" : "Antiques Roadshow UK",
+    "url" : "https:\/\/bbc-antiquesroadshowuk-1-us.xumo.wurl.tv\/playlist.m3u8"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Channels that only show series",
+        "categoryId" : "series",
+        "name" : "Series"
+      }
+    ],
+    "country" : "US",
+    "deviceId" : "IPTV",
+    "guideId" : "AuctionHunters.us",
+    "hasDRM" : false,
+    "id" : "958744e2f42d9bf0ef29efb9699cacf0ed5c1110d62bdb39583140550d111b2c",
+    "languages" : [
+      "eng"
+    ],
+    "logoURL" : "https:\/\/i.imgur.com\/4SPOVN7.png",
+    "number" : "AuctionHunters.us",
+    "quality" : {
+      "sd" : {
+
+      }
+    },
+    "sortHint" : "Auction Hunters::AuctionHunters.us",
+    "title" : "Auction Hunters",
+    "url" : "https:\/\/jmp2.uk\/plu-62ac50e92c48f900071444c9.m3u8"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Provides a variety of different programming",
+        "categoryId" : "general",
+        "name" : "General"
+      }
+    ],
+    "country" : "US",
+    "deviceId" : "IPTV",
+    "guideId" : "AWEEncore.us",
+    "hasDRM" : false,
+    "id" : "f4c9c751508eac2bf893b271a860ed13994b6ae5ef3e8fc1370d606239c78ce1",
+    "languages" : [
+      "eng"
+    ],
+    "logoURL" : "https:\/\/i.imgur.com\/0utwZ63.png",
+    "number" : "AWEEncore.us",
+    "quality" : {
+      "fhd" : {
+
+      }
+    },
+    "sortHint" : "AWE Encore::AWEEncore.us",
+    "title" : "AWE Encore",
+    "url" : "https:\/\/aweencore-vizio.amagi.tv\/playlist.m3u8"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Provides a variety of different programming",
+        "categoryId" : "general",
+        "name" : "General"
+      }
+    ],
+    "country" : "US",
+    "deviceId" : "IPTV",
+    "guideId" : "AWEInternational.us",
+    "hasDRM" : false,
+    "id" : "323c2305320bb2d7bb47b28a49802bd229d45417775ada84befca72ba83f521e",
+    "languages" : [
+      "eng"
+    ],
+    "logoURL" : "https:\/\/i.imgur.com\/VhxtMUQ.png",
+    "number" : "AWEInternational.us",
+    "quality" : {
+      "fhd" : {
+
+      }
+    },
+    "sortHint" : "AWE International::AWEInternational.us",
+    "title" : "AWE International",
+    "url" : "https:\/\/a-cdn.klowdtv.com\/live1\/aweint\/playlist.m3u8"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Provides a variety of different programming",
+        "categoryId" : "general",
+        "name" : "General"
+      }
+    ],
+    "country" : "US",
+    "deviceId" : "IPTV",
+    "guideId" : "AWE.us",
+    "hasDRM" : false,
+    "id" : "1c9b99486ef6134b0f442ff2bdd69705e12d810d298f1f88c8b6f6298478108c",
+    "languages" : [
+      "eng"
+    ],
+    "logoURL" : "https:\/\/i.imgur.com\/OjpCtGj.png",
+    "number" : "AWE.us",
+    "quality" : {
+      "fhd" : {
+
+      }
+    },
+    "sortHint" : "AWE::AWE.us",
+    "title" : "AWE",
+    "url" : "https:\/\/a-cdn.klowdtv.com\/live1\/awe_720p\/playlist.m3u8"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Programming that depicts a person or real-world event",
+        "categoryId" : "documentary",
+        "name" : "Documentary"
+      }
+    ],
+    "country" : "US",
+    "deviceId" : "IPTV",
+    "guideId" : "Backstage.us",
+    "hasDRM" : false,
+    "id" : "cf9a59447ed75aa11df0e2ad07120dfa097d1c387c2f5fea2ce3571d32a0f6e8",
+    "languages" : [
+      "eng"
+    ],
+    "logoURL" : "https:\/\/i.imgur.com\/qcTNvNU.png",
+    "number" : "Backstage.us",
+    "quality" : {
+      "fhd" : {
+
+      }
+    },
+    "sortHint" : "Backstage::Backstage.us",
+    "title" : "Backstage",
+    "url" : "https:\/\/fuse-backstage-xumo.amagi.tv\/playlist.m3u8"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Channels that only show series",
+        "categoryId" : "series",
+        "name" : "Series"
+      }
+    ],
+    "country" : "US",
+    "deviceId" : "IPTV",
+    "guideId" : "BarRescue.us",
+    "hasDRM" : false,
+    "id" : "cb42ee5ce4ec535c929eee1287ac9eaa7b8b471d91acf7632d8193b7f9a894db",
+    "languages" : [
+      "eng"
+    ],
+    "logoURL" : "https:\/\/i.imgur.com\/WFgWGPb.png",
+    "number" : "BarRescue.us",
+    "quality" : {
+      "sd" : {
+
+      }
+    },
+    "sortHint" : "Bar Rescue::BarRescue.us",
+    "title" : "Bar Rescue",
+    "url" : "https:\/\/jmp2.uk\/plu-60a3d889a5b3690008dc7fe8.m3u8"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Channels that only show series",
+        "categoryId" : "series",
+        "name" : "Series"
+      }
+    ],
+    "country" : "US",
+    "deviceId" : "IPTV",
+    "guideId" : "Baywatch.us",
+    "hasDRM" : false,
+    "id" : "e9837a5a94b398fb340bece93cce5433866c05ce2164fbc6d1ce3fdd93d0644d",
+    "languages" : [
+      "eng"
+    ],
+    "logoURL" : "https:\/\/i.imgur.com\/c2esKHg.png",
+    "number" : "Baywatch.us",
+    "quality" : {
+      "fhd" : {
+
+      }
+    },
+    "sortHint" : "Baywatch::Baywatch.us",
+    "title" : "Baywatch",
+    "url" : "https:\/\/baywatch-xumo.amagi.tv\/playlist.m3u8"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Channels with a variety of entertainment programs",
+        "categoryId" : "entertainment",
+        "name" : "Entertainment"
+      }
+    ],
+    "country" : "US",
+    "deviceId" : "IPTV",
+    "guideId" : "BBCAmerica.us",
+    "hasDRM" : false,
+    "id" : "1f27fa89ea08d9c900ce1b713af90727b7b8a168b139e3d05732a22654471dad",
+    "languages" : [
+      "eng"
+    ],
+    "logoURL" : "https:\/\/i.imgur.com\/pTiiPz0.png",
+    "number" : "BBCAmerica.us",
+    "quality" : {
+      "fhd" : {
+
+      }
+    },
+    "sortHint" : "BBC America::BBCAmerica.us",
+    "title" : "BBC America",
+    "url" : "https:\/\/bcovlive-a.akamaihd.net\/7f5ec16d102f4b5d92e8e27bc95ff424\/us-east-1\/6240731308001\/playlist.m3u8"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Programming that depicts a person or real-world event",
+        "categoryId" : "documentary",
+        "name" : "Documentary"
+      }
+    ],
+    "country" : "UK",
+    "deviceId" : "IPTV",
+    "guideId" : "BBCEarth.uk",
+    "hasDRM" : false,
+    "id" : "3b5fab05db09aafeef2294d8d2e879ca6bd2e3c4d4b1879ce3881d4e23ac920f",
+    "languages" : [
+      "vie",
+      "eng"
+    ],
+    "logoURL" : "https:\/\/i.imgur.com\/nGSsUd4.png",
+    "number" : "BBCEarth.uk",
+    "quality" : {
+      "fhd" : {
+
+      }
+    },
+    "sortHint" : "BBC Earth::BBCEarth.uk",
+    "title" : "BBC Earth",
+    "url" : "https:\/\/amg00793-amg00793c6-xumo-us-2669.playouts.now.amagi.tv\/BBCStudios-BBCEarthA-hls\/playlist.m3u8"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Programs related to cooking or food in general",
+        "categoryId" : "cooking",
+        "name" : "Cooking"
+      }
+    ],
+    "country" : "US",
+    "deviceId" : "IPTV",
+    "guideId" : "BBCFood.us",
+    "hasDRM" : false,
+    "id" : "6ea6ec97a82fca62cb8f32a06537a8f9f86512e61aedd408722f3a2892be8634",
+    "languages" : [
+      "eng"
+    ],
+    "logoURL" : "https:\/\/i.imgur.com\/kcmHcSx.png",
+    "number" : "BBCFood.us",
+    "quality" : {
+      "fhd" : {
+
+      }
+    },
+    "sortHint" : "BBC Food::BBCFood.us",
+    "title" : "BBC Food",
+    "url" : "https:\/\/d1e9r0b71zfwk7.cloudfront.net\/playlist.m3u8"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Programming is mostly about art and culture",
+        "categoryId" : "culture",
+        "name" : "Culture"
+      },
+      {
+        "categoryDescription" : "Programming that depicts a person or real-world event",
+        "categoryId" : "documentary",
+        "name" : "Documentary"
+      }
+    ],
+    "country" : "UK",
+    "deviceId" : "IPTV",
+    "guideId" : "BBCFour.uk",
+    "hasDRM" : false,
+    "id" : "ab1eba7a144fb332f0fa05b213dcb56a1bc157750e084b12e8c97783294dc873",
+    "languages" : [
+      "eng"
+    ],
+    "logoURL" : "https:\/\/upload.wikimedia.org\/wikipedia\/commons\/thumb\/6\/6d\/BBC_Four_logo_2021.svg\/960px-BBC_Four_logo_2021.svg.png",
+    "number" : "BBCFour.uk",
+    "quality" : {
+      "fhd" : {
+
+      }
+    },
+    "sortHint" : "BBC Four UK HD::BBCFour.uk",
+    "title" : "BBC Four UK HD",
+    "url" : "https:\/\/streamer.nexyl.uk\/48559ccd-6400-457d-8acc-06b9e24c2ed8.m3u8"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Programs related to health, fitness, leisure, fashion, decor, etc.",
+        "categoryId" : "lifestyle",
+        "name" : "Lifestyle"
+      }
+    ],
+    "country" : "US",
+    "deviceId" : "IPTV",
+    "guideId" : "BBCHomeGarden.us",
+    "hasDRM" : false,
+    "id" : "0d1ec67c40fd2d6e186b1356d645d788a82095db7abf29b50b7a11e89e691ad3",
+    "languages" : [
+      "eng"
+    ],
+    "logoURL" : "https:\/\/i.imgur.com\/rC0pi1D.png",
+    "number" : "BBCHomeGarden.us",
+    "quality" : {
+      "fhd" : {
+
+      }
+    },
+    "sortHint" : "BBC Home & Garden::BBCHomeGarden.us",
+    "title" : "BBC Home & Garden",
+    "url" : "https:\/\/d11r33s5i066xh.cloudfront.net\/playlist.m3u8"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Programming is mostly news",
+        "categoryId" : "news",
+        "name" : "News"
+      }
+    ],
+    "country" : "UK",
+    "deviceId" : "IPTV",
+    "guideId" : "BBCNews.uk",
+    "hasDRM" : false,
+    "id" : "d4720d0c8713dec46737e9ad9a20613407986aa3b2c7304d4426e7c702f26554",
+    "languages" : [
+      "eng"
+    ],
+    "logoURL" : "https:\/\/xstreamcp-assets-msp.streamready.in\/assets\/LIVETV\/LIVECHANNEL\/LIVETV_LIVETVCHANNEL_BBC_NEWS\/images\/LOGO_HD\/image.png",
+    "number" : "BBCNews.uk",
+    "quality" : {
+      "fhd" : {
+
+      }
+    },
+    "sortHint" : "BBC News::BBCNews.uk",
+    "title" : "BBC News",
+    "url" : "https:\/\/pb-iiczlgfysam0q.akamaized.net\/v1\/amcnetworks_bbcnews_1\/samsungheadend_us\/latest\/main\/hls\/playlist.m3u8"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Programs related to health, fitness, leisure, fashion, decor, etc.",
+        "categoryId" : "lifestyle",
+        "name" : "Lifestyle"
+      }
+    ],
+    "country" : "US",
+    "deviceId" : "IPTV",
+    "guideId" : "BizTV.us",
+    "hasDRM" : false,
+    "id" : "4b01f1678f256285ea7a5f4a56ba359f2663d7177e5121dcc8a5f8091e9c9e79",
+    "languages" : [
+      "eng"
+    ],
+    "logoURL" : "https:\/\/i.imgur.com\/yaNXOnO.png",
+    "number" : "BizTV.us",
+    "quality" : {
+      "fhd" : {
+
+      }
+    },
+    "sortHint" : "Biz TV::BizTV.us",
+    "title" : "Biz TV",
+    "url" : "https:\/\/thegateway.app\/BizAndYou\/BizTV\/playlist.m3u8"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Channels with a variety of entertainment programs",
+        "categoryId" : "entertainment",
+        "name" : "Entertainment"
+      }
+    ],
+    "country" : "US",
+    "deviceId" : "IPTV",
+    "guideId" : "Buzzr.us",
+    "hasDRM" : false,
+    "id" : "33af183305724b9a232b3cc2be22e3b25840cba1e45409171c1a22401e119165",
+    "languages" : [
+      "eng"
+    ],
+    "logoURL" : "https:\/\/upload.wikimedia.org\/wikipedia\/commons\/thumb\/d\/d6\/Buzzr_logo.svg\/960px-Buzzr_logo.svg.png",
+    "number" : "Buzzr.us",
+    "quality" : {
+      "fhd" : {
+
+      }
+    },
+    "sortHint" : "BUZZR::Buzzr.us",
+    "title" : "BUZZR",
+    "url" : "https:\/\/aegis-cloudfront-1.tubi.video\/d4038326-a3e3-4aba-b1f1-f0526c912c74\/playlist.m3u8"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Religious programming",
+        "categoryId" : "religious",
+        "name" : "Religious"
+      }
+    ],
+    "country" : "US",
+    "deviceId" : "IPTV",
+    "guideId" : "CBNNews.us",
+    "hasDRM" : false,
+    "id" : "0a6f1c4ca044c97581af35d7d56de68afab4b99ac1630bb167fb93eef2fc349c",
+    "languages" : [
+      "eng"
+    ],
+    "logoURL" : "https:\/\/i.imgur.com\/gG2SWgG.png",
+    "number" : "CBNNews.us",
+    "quality" : {
+      "fhd" : {
+
+      }
+    },
+    "sortHint" : "CBN News Channel::CBNNews.us",
+    "title" : "CBN News Channel",
+    "url" : "https:\/\/fastly.live.brightcove.com\/6380396819112\/us-east-1\/734546207001\/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJob3N0IjoiczFpM3ZpLmVncmVzcy50N2M3emwiLCJhY2NvdW50X2lkIjoiNzM0NTQ2MjA3MDAxIiwiZWhuIjoiZmFzdGx5LmxpdmUuYnJpZ2h0Y292ZS5jb20iLCJpc3MiOiJibGl2ZS1wbGF5YmFjay1zb3VyY2UtYXBpIiwic3ViIjoicGF0aG1hcHRva2VuIiwiYXVkIjpbIjczNDU0NjIwNzAwMSJdLCJqdGkiOiI2MzgwMzk2ODE5MTEyIn0.GDYp4IWtzwPkupEWeeOavnioVknO-Ev3UGlHvM1rE6I\/playlist-hls.m3u8"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Programming is sports",
+        "categoryId" : "sports",
+        "name" : "Sports"
+      }
+    ],
+    "country" : "US",
+    "deviceId" : "IPTV",
+    "guideId" : "CBSSportsHQ.us",
+    "hasDRM" : false,
+    "id" : "b6cebe4108a1e9954a20f965393030ae995a39bfba6b85f472336bef43c3aec8",
+    "languages" : [
+      "eng"
+    ],
+    "logoURL" : "https:\/\/i.imgur.com\/q8BENJg.png",
+    "number" : "CBSSportsHQ.us",
+    "quality" : {
+      "fhd" : {
+
+      }
+    },
+    "sortHint" : "CBS Sports HQ::CBSSportsHQ.us",
+    "title" : "CBS Sports HQ",
+    "url" : "https:\/\/jmp2.uk\/plu-5e9f2c05172a0f0007db4786.m3u8"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Programming is mostly comedy",
+        "categoryId" : "comedy",
+        "name" : "Comedy"
+      }
+    ],
+    "country" : "US",
+    "deviceId" : "IPTV",
+    "guideId" : "ComedyCentralPlutoTV.us",
+    "hasDRM" : false,
+    "id" : "29b622e52f9ee20af52247b43099a278d4fe5649390575abd7ccf1fffcdfc9c4",
+    "languages" : [
+      "eng"
+    ],
+    "logoURL" : "https:\/\/i.imgur.com\/9y6TtjF.png",
+    "number" : "ComedyCentralPlutoTV.us",
+    "quality" : {
+      "fhd" : {
+
+      }
+    },
+    "sortHint" : "Comedy Central Pluto TV::ComedyCentralPlutoTV.us",
+    "title" : "Comedy Central Pluto TV",
+    "url" : "https:\/\/jmp2.uk\/plu-5ca671f215a62078d2ec0abf.m3u8"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Programming is mostly comedy",
+        "categoryId" : "comedy",
+        "name" : "Comedy"
+      }
+    ],
+    "country" : "US",
+    "deviceId" : "IPTV",
+    "guideId" : "ComedyCentral.us",
+    "hasDRM" : false,
+    "id" : "7fba78037a3a9473f0b0ce63bad8c9f03e3bfa71422ca21f1381831c83901617",
+    "languages" : [
+      "eng"
+    ],
+    "logoURL" : "https:\/\/upload.wikimedia.org\/wikipedia\/commons\/thumb\/a\/aa\/Comedy_Central_2018.svg\/960px-Comedy_Central_2018.svg.png",
+    "number" : "ComedyCentral.us",
+    "quality" : {
+      "fhd" : {
+
+      }
+    },
+    "sortHint" : "Comedy Central::ComedyCentral.us",
+    "title" : "Comedy Central",
+    "url" : "http:\/\/23.237.104.106:8080\/USA_COMEDY_CENTRAL\/index.m3u8"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Channels with a variety of entertainment programs",
+        "categoryId" : "entertainment",
+        "name" : "Entertainment"
+      }
+    ],
+    "country" : "US",
+    "deviceId" : "IPTV",
+    "guideId" : "Comet.us",
+    "hasDRM" : false,
+    "id" : "a06c93893f9fbcc7e076a3aa0c458817073576766e942e4d890367c2611f18f1",
+    "languages" : [
+      "eng"
+    ],
+    "logoURL" : "https:\/\/upload.wikimedia.org\/wikipedia\/commons\/thumb\/9\/97\/Comet_logo.svg\/960px-Comet_logo.svg.png",
+    "number" : "Comet.us",
+    "quality" : {
+      "fhd" : {
+
+      }
+    },
+    "sortHint" : "Comet::Comet.us",
+    "title" : "Comet",
+    "url" : "https:\/\/fast-channels.sinclairstoryline.com\/COMET\/index.m3u8"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Channels that only show series",
+        "categoryId" : "series",
+        "name" : "Series"
+      }
+    ],
+    "country" : "US",
+    "deviceId" : "IPTV",
+    "guideId" : "Cops.us",
+    "hasDRM" : false,
+    "id" : "8f588aa466481e53099c247993860d8f101d842f81106b606afc6c50f759452e",
+    "languages" : [
+      "eng"
+    ],
+    "logoURL" : "https:\/\/i.imgur.com\/J3XO6V2.png",
+    "number" : "Cops.us",
+    "quality" : {
+      "sd" : {
+
+      }
+    },
+    "sortHint" : "COPS::Cops.us",
+    "title" : "COPS",
+    "url" : "https:\/\/jmp2.uk\/plu-5e1f7e089f23700009d66303.m3u8"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Programming is intended to be educational",
+        "categoryId" : "education",
+        "name" : "Education"
+      }
+    ],
+    "country" : "US",
+    "deviceId" : "IPTV",
+    "guideId" : "Create.us",
+    "hasDRM" : false,
+    "id" : "a4548b4095f603b5f7488a45877abbaff2711d5acc414680fbb3e86d8cb4686b",
+    "languages" : [
+      "eng"
+    ],
+    "logoURL" : "https:\/\/i.imgur.com\/OIJTECP.png",
+    "number" : "Create.us",
+    "quality" : {
+      "fhd" : {
+
+      }
+    },
+    "sortHint" : "Create::Create.us",
+    "title" : "Create",
+    "url" : "https:\/\/create.lls.pbs.org\/index.m3u8"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Channels that only show series",
+        "categoryId" : "series",
+        "name" : "Series"
+      }
+    ],
+    "country" : "US",
+    "deviceId" : "IPTV",
+    "guideId" : "DarkMatterTV.us",
+    "hasDRM" : false,
+    "id" : "14a0599d62613c9e57fd03faf29f2137ff915aef95912143522d43569fbecfaa",
+    "languages" : [
+      "eng"
+    ],
+    "logoURL" : "https:\/\/i.imgur.com\/9K8T3ND.png",
+    "number" : "DarkMatterTV.us",
+    "quality" : {
+      "fhd" : {
+
+      }
+    },
+    "sortHint" : "Dark Matter TV::DarkMatterTV.us",
+    "title" : "Dark Matter TV",
+    "url" : "https:\/\/tricoast-tv-dark-matter-01-us.ono.wurl.tv\/playlist.m3u8"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Programming that depicts a person or real-world event",
+        "categoryId" : "documentary",
+        "name" : "Documentary"
+      }
+    ],
+    "country" : "US",
+    "deviceId" : "IPTV",
+    "guideId" : "Dateline247.us",
+    "hasDRM" : false,
+    "id" : "0082319464697f7e1afe31aff01bbd56bff52d95e7c9dd7b4c4fdc86e79b7409",
+    "languages" : [
+      "eng"
+    ],
+    "logoURL" : "https:\/\/i.imgur.com\/8mAJuut.png",
+    "number" : "Dateline247.us",
+    "quality" : {
+      "fhd" : {
+
+      }
+    },
+    "sortHint" : "Dateline 24\/7::Dateline247.us",
+    "title" : "Dateline 24\/7",
+    "url" : "https:\/\/aegis-cloudfront-1.tubi.video\/240e3917-5be6-4a26-a1a2-878c9d40b5cf\/master.m3u8"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Programming is sports",
+        "categoryId" : "sports",
+        "name" : "Sports"
+      }
+    ],
+    "country" : "UK",
+    "deviceId" : "IPTV",
+    "guideId" : "DAZNCombat.uk",
+    "hasDRM" : false,
+    "id" : "45e9b4be3cfe74986817c2e2219a60fe415e6c81a83727ce1c1acfbebb55fb3c",
+    "languages" : [
+      "eng"
+    ],
+    "logoURL" : "https:\/\/i.postimg.cc\/VsW3Jsrz\/logo-DAZN-Combat.png",
+    "number" : "DAZNCombat.uk",
+    "quality" : {
+      "fhd" : {
+
+      }
+    },
+    "sortHint" : "DAZN Combat::DAZNCombat.uk",
+    "title" : "DAZN Combat",
+    "url" : "https:\/\/dazn-combat-rakuten.amagi.tv\/hls\/amagi_hls_data_rakutenAA-dazn-combat-rakuten\/CDN\/master.m3u8"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Channels that only show series",
+        "categoryId" : "series",
+        "name" : "Series"
+      }
+    ],
+    "country" : "US",
+    "deviceId" : "IPTV",
+    "guideId" : "DealorNoDeal.us",
+    "hasDRM" : false,
+    "id" : "d6f5fb4005da0f903a8703b79cc2be1e0928ef5c9ad133a029d0bebbd6d193ab",
+    "languages" : [
+      "eng"
+    ],
+    "logoURL" : "https:\/\/i.imgur.com\/lZvNXA1.png",
+    "number" : "DealorNoDeal.us",
+    "quality" : {
+      "fhd" : {
+
+      }
+    },
+    "sortHint" : "Deal or No Deal::DealorNoDeal.us",
+    "title" : "Deal or No Deal",
+    "url" : "https:\/\/aegis-cloudfront-1.tubi.video\/65eef95b-7b52-42be-8b08-faa459153ed9\/playlist.m3u8"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Programming targeted to children",
+        "categoryId" : "kids",
+        "name" : "Kids"
+      }
+    ],
+    "country" : "US",
+    "deviceId" : "IPTV",
+    "guideId" : "DisneyXD.us",
+    "hasDRM" : false,
+    "id" : "da90f082f032fbf11aaf974b3a27f73a0b18ed8db733d39f49d0624178b21b26",
+    "languages" : [
+      "eng",
+      "spa"
+    ],
+    "logoURL" : "https:\/\/upload.wikimedia.org\/wikipedia\/commons\/a\/a8\/2015_Disney_XD_logo.svg",
+    "number" : "DisneyXD.us",
+    "quality" : {
+      "sd" : {
+
+      }
+    },
+    "sortHint" : "Disney XD East::DisneyXD.us",
+    "title" : "Disney XD East",
+    "url" : "https:\/\/tvpass.org\/live\/DisneyXDEast\/sd"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Channels that only show series",
+        "categoryId" : "series",
+        "name" : "Series"
+      }
+    ],
+    "country" : "US",
+    "deviceId" : "IPTV",
+    "guideId" : "DogWhisperer.us",
+    "hasDRM" : false,
+    "id" : "8948a074ccbe155e768a39982127cbe9d837e07940d3009326a79e336675b3e0",
+    "languages" : [
+      "eng"
+    ],
+    "logoURL" : "https:\/\/i.imgur.com\/tgWypVJ.png",
+    "number" : "DogWhisperer.us",
+    "quality" : {
+      "fhd" : {
+
+      }
+    },
+    "sortHint" : "Dog Whisperer::DogWhisperer.us",
+    "title" : "Dog Whisperer",
+    "url" : "https:\/\/pb-ffpxvjshv4rxx.akamaized.net\/Dog_Whisperer_with_Cesar_Millan.m3u8"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Programming is mostly comedy",
+        "categoryId" : "comedy",
+        "name" : "Comedy"
+      }
+    ],
+    "country" : "US",
+    "deviceId" : "IPTV",
+    "guideId" : "DryBarComedyPlus.us",
+    "hasDRM" : false,
+    "id" : "56b42d5bd3be8408d0e0635a4a33bbdae26e3a1c41db6ebd511d3c1baf6789c2",
+    "languages" : [
+      "eng"
+    ],
+    "logoURL" : "https:\/\/i.imgur.com\/3N2C60N.png",
+    "number" : "DryBarComedyPlus.us",
+    "quality" : {
+      "fhd" : {
+
+      }
+    },
+    "sortHint" : "Dry Bar Comedy::DryBarComedyPlus.us",
+    "title" : "Dry Bar Comedy",
+    "url" : "https:\/\/drybar-drybarcomedy-1-us.samsung.wurl.tv\/playlist.m3u8"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Programming is sports",
+        "categoryId" : "sports",
+        "name" : "Sports"
+      }
+    ],
+    "country" : "US",
+    "deviceId" : "IPTV",
+    "guideId" : "ESPN8TheOcho.us",
+    "hasDRM" : false,
+    "id" : "32c22fcf7ae4e23500899efc628330272115e0e752f8042e2342026df5dc7a74",
+    "languages" : [
+      "eng"
+    ],
+    "logoURL" : "https:\/\/images.fubo.tv\/channel-config-ui\/station-logos\/on-dark\/espn_8_the_ocho_bw.png",
+    "number" : "ESPN8TheOcho.us",
+    "quality" : {
+      "fhd" : {
+
+      }
+    },
+    "sortHint" : "ESPN8 The Ocho::ESPN8TheOcho.us",
+    "title" : "ESPN8 The Ocho",
+    "url" : "https:\/\/d3b6q2ou5kp8ke.cloudfront.net\/ESPNTheOcho.m3u8"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Channels with a variety of entertainment programs",
+        "categoryId" : "entertainment",
+        "name" : "Entertainment"
+      },
+      {
+        "categoryDescription" : "Programming is mostly news",
+        "categoryId" : "news",
+        "name" : "News"
+      }
+    ],
+    "country" : "US",
+    "deviceId" : "IPTV",
+    "guideId" : "EntertainmentTonight.us",
+    "hasDRM" : false,
+    "id" : "6435f687f1801a61b90ad087f1454e09875b5e4d1017b44bd85895a337f23c2d",
+    "languages" : [
+      "eng"
+    ],
+    "logoURL" : "https:\/\/upload.wikimedia.org\/wikipedia\/commons\/thumb\/3\/3f\/Entertainment_Tonight_2021.svg\/960px-Entertainment_Tonight_2021.svg.png",
+    "number" : "EntertainmentTonight.us",
+    "quality" : {
+      "fhd" : {
+
+      }
+    },
+    "sortHint" : "ET::EntertainmentTonight.us",
+    "title" : "ET",
+    "url" : "https:\/\/jmp2.uk\/plu-5dc0c78281eddb0009a02d5e.m3u8"
+  },
+  {
+    "categories" : [
+
+    ],
+    "country" : "US",
+    "deviceId" : "IPTV",
+    "guideId" : "ExtremaTV.us",
+    "hasDRM" : false,
+    "id" : "5590a2178fac542c0046c68ac3e1991ffbc05cdcfe6788cb3405abc3016b763c",
+    "languages" : [
+      "eng"
+    ],
+    "logoURL" : "https:\/\/i.imgur.com\/Z1QVkqu.png",
+    "number" : "ExtremaTV.us",
+    "quality" : {
+      "fhd" : {
+
+      }
+    },
+    "sortHint" : "Extrema TV::ExtremaTV.us",
+    "title" : "Extrema TV",
+    "url" : "http:\/\/livestreamcdn.net:1935\/ExtremaTV\/ExtremaTV\/playlist.m3u8"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Programming is mostly comedy",
+        "categoryId" : "comedy",
+        "name" : "Comedy"
+      }
+    ],
+    "country" : "US",
+    "deviceId" : "IPTV",
+    "guideId" : "FailArmy.us",
+    "hasDRM" : false,
+    "id" : "3965e27dd92ccc2c6184c29f1073dafb24d610879eea175e2260a899751bedd6",
+    "languages" : [
+      "eng"
+    ],
+    "logoURL" : "https:\/\/i.imgur.com\/VIpQJxL.png",
+    "number" : "FailArmy.us",
+    "quality" : {
+      "fhd" : {
+
+      }
+    },
+    "sortHint" : "FailArmy::FailArmy.us",
+    "title" : "FailArmy",
+    "url" : "https:\/\/pb-w5ixcojas1swl.akamaized.net\/playlist.m3u8"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Channels that only show series",
+        "categoryId" : "series",
+        "name" : "Series"
+      }
+    ],
+    "country" : "US",
+    "deviceId" : "IPTV",
+    "guideId" : "FearFactor.us",
+    "hasDRM" : false,
+    "id" : "f2b46e500f87e260e3bc1db35c06f749544ce4856225d374be176902e54304ce",
+    "languages" : [
+      "eng"
+    ],
+    "logoURL" : "https:\/\/i.imgur.com\/CIYnLWz.png",
+    "number" : "FearFactor.us",
+    "quality" : {
+      "fhd" : {
+
+      }
+    },
+    "sortHint" : "Fear Factor::FearFactor.us",
+    "title" : "Fear Factor",
+    "url" : "https:\/\/aegis-cloudfront-1.tubi.video\/2a9fb8e7-51c2-40d0-9cc0-6eb963199568\/playlist.m3u8"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Channels that only show movies",
+        "categoryId" : "movies",
+        "name" : "Movies"
+      }
+    ],
+    "country" : "US",
+    "deviceId" : "IPTV",
+    "guideId" : "FlicksofFury.us",
+    "hasDRM" : false,
+    "id" : "e58251509031cc219cfdee488461311cd489b3a3fa37014f9d6b66d045fa1864",
+    "languages" : [
+      "eng"
+    ],
+    "logoURL" : "https:\/\/i.imgur.com\/rtL5L81.png",
+    "number" : "FlicksofFury.us",
+    "quality" : {
+      "sd" : {
+
+      }
+    },
+    "sortHint" : "Flicks of Fury::FlicksofFury.us",
+    "title" : "Flicks of Fury",
+    "url" : "https:\/\/jmp2.uk\/plu-58e55b14ad8e9c364d55f717.m3u8"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Programming is mostly about art and culture",
+        "categoryId" : "culture",
+        "name" : "Culture"
+      }
+    ],
+    "country" : "US",
+    "deviceId" : "IPTV",
+    "guideId" : "FNX.us",
+    "hasDRM" : false,
+    "id" : "c1ff29174080b0dd2ba412cf138f90f2caacd1aeef2000a5454dd7973025067d",
+    "languages" : [
+      "eng"
+    ],
+    "logoURL" : "https:\/\/i.imgur.com\/wcVntg7.png",
+    "number" : "FNX.us",
+    "quality" : {
+      "fhd" : {
+
+      }
+    },
+    "sortHint" : "FNX::FNX.us",
+    "title" : "FNX",
+    "url" : "https:\/\/fnx.lls.pbs.org\/index.m3u8"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Programming is mostly about art and culture",
+        "categoryId" : "culture",
+        "name" : "Culture"
+      }
+    ],
+    "country" : "US",
+    "deviceId" : "IPTV",
+    "guideId" : "KVCRDT242.us",
+    "hasDRM" : false,
+    "id" : "02d9e72aa0b0858ba8a6bb94bca9cb59340b1bf37e7dc6bc06cc6d8e503502d4",
+    "languages" : [
+      "eng"
+    ],
+    "logoURL" : "https:\/\/upload.wikimedia.org\/wikipedia\/commons\/e\/e8\/FNX_Web_Logo.png",
+    "number" : "KVCRDT242.us",
+    "quality" : {
+      "sd" : {
+
+      }
+    },
+    "sortHint" : "FNX::KVCRDT242.us",
+    "title" : "FNX",
+    "url" : "https:\/\/castus-vod-dev.s3.amazonaws.com\/vod_clients\/kvcr\/live\/ch1\/video.m3u8"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Programming is mostly news",
+        "categoryId" : "news",
+        "name" : "News"
+      }
+    ],
+    "country" : "US",
+    "deviceId" : "IPTV",
+    "guideId" : "FoxNewsChannel.us",
+    "hasDRM" : false,
+    "id" : "94f48eef8d77af2cc4592a319468818870423ca8ff42234e3187919be5efedd3",
+    "languages" : [
+      "eng"
+    ],
+    "logoURL" : "https:\/\/upload.wikimedia.org\/wikipedia\/commons\/thumb\/6\/67\/Fox_News_Channel_logo.svg\/960px-Fox_News_Channel_logo.svg.png",
+    "number" : "FoxNewsChannel.us",
+    "quality" : {
+      "sd" : {
+
+      }
+    },
+    "sortHint" : "Fox News Channel::FoxNewsChannel.us",
+    "title" : "Fox News Channel",
+    "url" : "https:\/\/tvpass.org\/live\/FoxNewsChannel\/sd"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Programming is mostly news",
+        "categoryId" : "news",
+        "name" : "News"
+      }
+    ],
+    "country" : "US",
+    "deviceId" : "IPTV",
+    "guideId" : "FoxNewsRadio.us",
+    "hasDRM" : false,
+    "id" : "6659d8836fcf7e0a420237d57bb9ffa080adcb4cf47fe73e6890fb3519ecf357",
+    "languages" : [
+      "eng"
+    ],
+    "logoURL" : "https:\/\/radio.foxnews.com\/wp-content\/uploads\/2017\/10\/default_logo-150x150.png",
+    "number" : "FoxNewsRadio.us",
+    "quality" : {
+      "fhd" : {
+
+      }
+    },
+    "sortHint" : "Fox News Radio::FoxNewsRadio.us",
+    "title" : "Fox News Radio",
+    "url" : "https:\/\/radiovid.foxnews.com\/hls\/live\/661547\/RADIOVID\/index.m3u8"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Programming is sports",
+        "categoryId" : "sports",
+        "name" : "Sports"
+      }
+    ],
+    "country" : "US",
+    "deviceId" : "IPTV",
+    "guideId" : "FoxSports2.us",
+    "hasDRM" : false,
+    "id" : "10b537a6d6f0655bf0e747c21c93d6f839c758de5ca666d52202428af058092c",
+    "languages" : [
+      "eng"
+    ],
+    "logoURL" : "https:\/\/i.imgur.com\/LHtxKI8.png",
+    "number" : "FoxSports2.us",
+    "quality" : {
+      "sd" : {
+
+      }
+    },
+    "sortHint" : "Fox Sports 2::FoxSports2.us",
+    "title" : "Fox Sports 2",
+    "url" : "https:\/\/tvpass.org\/live\/FoxSports2\/sd"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Programming that is be suitable for all members of a family",
+        "categoryId" : "family",
+        "name" : "Family"
+      }
+    ],
+    "country" : "US",
+    "deviceId" : "IPTV",
+    "guideId" : "Freeform.us",
+    "hasDRM" : false,
+    "id" : "eab4f3054d5688c8038578df1dc2522888d0a04a2c8a10f93e43e3ff50f81140",
+    "languages" : [
+      "eng"
+    ],
+    "logoURL" : "https:\/\/i.imgur.com\/BGAGeIf.png",
+    "number" : "Freeform.us",
+    "quality" : {
+      "fhd" : {
+
+      }
+    },
+    "sortHint" : "Freeform::Freeform.us",
+    "title" : "Freeform",
+    "url" : "https:\/\/tvpass.org\/live\/FreeformEast\/hd"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Programming is mostly comedy",
+        "categoryId" : "comedy",
+        "name" : "Comedy"
+      }
+    ],
+    "country" : "US",
+    "deviceId" : "IPTV",
+    "guideId" : "FunnyAF.us",
+    "hasDRM" : false,
+    "id" : "3178eba3b01fff7f2f637336b5964c8c004eaa373af311ad89aa8c7a83932ea7",
+    "languages" : [
+      "eng"
+    ],
+    "logoURL" : "https:\/\/i.imgur.com\/UCwjdtQ.png",
+    "number" : "FunnyAF.us",
+    "quality" : {
+      "sd" : {
+
+      }
+    },
+    "sortHint" : "Funny AF::FunnyAF.us",
+    "title" : "Funny AF",
+    "url" : "https:\/\/jmp2.uk\/plu-580e87ff497c73ba2f321dd3.m3u8"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Channels that only show movies",
+        "categoryId" : "movies",
+        "name" : "Movies"
+      }
+    ],
+    "country" : "US",
+    "deviceId" : "IPTV",
+    "guideId" : "FXMovieChannel.us",
+    "hasDRM" : false,
+    "id" : "b04476c7a2f8feb01681552c592703fee60afe96b3ffc93452558e0d8cf31035",
+    "languages" : [
+      "spa",
+      "eng"
+    ],
+    "logoURL" : "https:\/\/upload.wikimedia.org\/wikipedia\/commons\/thumb\/e\/e7\/FXM_Logo.svg\/960px-FXM_Logo.svg.png",
+    "number" : "FXMovieChannel.us",
+    "quality" : {
+      "sd" : {
+
+      }
+    },
+    "sortHint" : "FX Movie Channel::FXMovieChannel.us",
+    "title" : "FX Movie Channel",
+    "url" : "https:\/\/tvpass.org\/live\/FXMovieChannel\/sd"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Channels with a variety of entertainment programs",
+        "categoryId" : "entertainment",
+        "name" : "Entertainment"
+      }
+    ],
+    "country" : "US",
+    "deviceId" : "IPTV",
+    "guideId" : "FXX.us",
+    "hasDRM" : false,
+    "id" : "f2a3eee0446694cc55028b78a943d2b9411920c0cadea881d9ddd14b82b965b1",
+    "languages" : [
+      "eng"
+    ],
+    "logoURL" : "https:\/\/upload.wikimedia.org\/wikipedia\/commons\/thumb\/3\/3e\/FXX_Logo.svg\/960px-FXX_Logo.svg.png",
+    "number" : "FXX.us",
+    "quality" : {
+      "sd" : {
+
+      }
+    },
+    "sortHint" : "FXX East::FXX.us",
+    "title" : "FXX East",
+    "url" : "https:\/\/tvpass.org\/live\/FXXEast\/sd"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Channels that only show series",
+        "categoryId" : "series",
+        "name" : "Series"
+      }
+    ],
+    "country" : "US",
+    "deviceId" : "IPTV",
+    "guideId" : "HallmarkDrama.us",
+    "hasDRM" : false,
+    "id" : "d86f08138d7ccc3e394736301d62eb3baa01e45d837f9b8f7bc9e0cead37636a",
+    "languages" : [
+      "eng"
+    ],
+    "number" : "HallmarkDrama.us",
+    "quality" : {
+      "sd" : {
+
+      }
+    },
+    "sortHint" : "Hallmark Drama::HallmarkDrama.us",
+    "title" : "Hallmark Drama",
+    "url" : "https:\/\/tvpass.org\/live\/HallmarkDrama\/sd"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Channels that only show movies",
+        "categoryId" : "movies",
+        "name" : "Movies"
+      }
+    ],
+    "country" : "US",
+    "deviceId" : "IPTV",
+    "guideId" : "HallmarkMoviesMore.us",
+    "hasDRM" : false,
+    "id" : "fd0f8ce498fbb7b0d85e5293c01c09b84962f8620ced260795964fd7c3aa3642",
+    "languages" : [
+      "eng"
+    ],
+    "number" : "HallmarkMoviesMore.us",
+    "quality" : {
+      "fhd" : {
+
+      }
+    },
+    "sortHint" : "Hallmark Movies & More::HallmarkMoviesMore.us",
+    "title" : "Hallmark Movies & More",
+    "url" : "https:\/\/pb-clwlfvkqpn19r.akamaized.net\/Hallmark_Movies_&_More.m3u8"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Channels that only show movies",
+        "categoryId" : "movies",
+        "name" : "Movies"
+      }
+    ],
+    "country" : "US",
+    "deviceId" : "IPTV",
+    "guideId" : "HallmarkMoviesMysteries.us",
+    "hasDRM" : false,
+    "id" : "b24cb3f7bad6b4115fbf9b2a47866897486ea187dd1fbd3de0f4a2b91bec21f2",
+    "languages" : [
+      "eng"
+    ],
+    "logoURL" : "https:\/\/i.imgur.com\/GPRGA9C.png",
+    "number" : "HallmarkMoviesMysteries.us",
+    "quality" : {
+      "sd" : {
+
+      }
+    },
+    "sortHint" : "Hallmark Movies & Mysteries East::HallmarkMoviesMysteries.us",
+    "title" : "Hallmark Movies & Mysteries East",
+    "url" : "https:\/\/tvpass.org\/live\/HallmarkMoviesMysteriesEast\/sd"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Channels that only show series",
+        "categoryId" : "series",
+        "name" : "Series"
+      }
+    ],
+    "country" : "US",
+    "deviceId" : "IPTV",
+    "guideId" : "HappyDays.us",
+    "hasDRM" : false,
+    "id" : "29d5e7b88c7ff25b3d0383b89273d08414a2e19280caba1b654fa96124589d5d",
+    "languages" : [
+      "eng"
+    ],
+    "logoURL" : "https:\/\/i.imgur.com\/LPjoORg.png",
+    "number" : "HappyDays.us",
+    "quality" : {
+      "sd" : {
+
+      }
+    },
+    "sortHint" : "Happy Days::HappyDays.us",
+    "title" : "Happy Days",
+    "url" : "https:\/\/jmp2.uk\/plu-5f7794162a4559000781fc12.m3u8"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Programming that depicts a person or real-world event",
+        "categoryId" : "documentary",
+        "name" : "Documentary"
+      }
+    ],
+    "country" : "UK",
+    "deviceId" : "IPTV",
+    "guideId" : "HistoryHit.uk",
+    "hasDRM" : false,
+    "id" : "d66ed9f543592e510104e0a3a705c1739b310458491d34214ea53b4f6cc45109",
+    "languages" : [
+      "eng"
+    ],
+    "logoURL" : "https:\/\/i.imgur.com\/ulHoqlP.png",
+    "number" : "HistoryHit.uk",
+    "quality" : {
+      "fhd" : {
+
+      }
+    },
+    "sortHint" : "History Hit::HistoryHit.uk",
+    "title" : "History Hit",
+    "url" : "https:\/\/lds-timeline-plex.amagi.tv\/playlist.m3u8"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Religious programming",
+        "categoryId" : "religious",
+        "name" : "Religious"
+      }
+    ],
+    "country" : "US",
+    "deviceId" : "IPTV",
+    "guideId" : "HopeChannelInternational.us",
+    "hasDRM" : false,
+    "id" : "3052af5ac5a30b0bede3e2c8a41f0d8f8ac849a58a6ef66416ea660026a6d892",
+    "languages" : [
+      "eng"
+    ],
+    "logoURL" : "https:\/\/i.imgur.com\/PNihgl2.png",
+    "number" : "HopeChannelInternational.us",
+    "quality" : {
+      "fhd" : {
+
+      }
+    },
+    "sortHint" : "Hope Channel International::HopeChannelInternational.us",
+    "title" : "Hope Channel International",
+    "url" : "https:\/\/jstre.am\/live\/jsl:cZXINbwrFj6.m3u8"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Programming related to outdoor activities like fishing, hunting, etc.",
+        "categoryId" : "outdoor",
+        "name" : "Outdoor"
+      }
+    ],
+    "country" : "UK",
+    "deviceId" : "IPTV",
+    "guideId" : "HorseCountryTV.uk",
+    "hasDRM" : false,
+    "id" : "a55cb36ff21d8550fafff6f2cc0923c20027dc52d49c442818747dde712b2c20",
+    "languages" : [
+      "eng"
+    ],
+    "logoURL" : "https:\/\/i.imgur.com\/1x6zYZr.png",
+    "number" : "HorseCountryTV.uk",
+    "quality" : {
+      "fhd" : {
+
+      }
+    },
+    "sortHint" : "Horse and Country::HorseCountryTV.uk",
+    "title" : "Horse and Country",
+    "url" : "https:\/\/hncfree-samsung-uk.amagi.tv\/playlist.m3u8"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Channels that only show series",
+        "categoryId" : "series",
+        "name" : "Series"
+      }
+    ],
+    "country" : "US",
+    "deviceId" : "IPTV",
+    "guideId" : "IcePilots.us",
+    "hasDRM" : false,
+    "id" : "ee780a350120296cbd8edba40c42f32e6d288ef92427ee68897ce68a53a80556",
+    "languages" : [
+      "eng"
+    ],
+    "logoURL" : "https:\/\/i.imgur.com\/F8GBYq3.png",
+    "number" : "IcePilots.us",
+    "quality" : {
+      "sd" : {
+
+      }
+    },
+    "sortHint" : "Ice Pilots::IcePilots.us",
+    "title" : "Ice Pilots",
+    "url" : "https:\/\/jmp2.uk\/plu-5ce40f42ba7f7f5ea9518fe1.m3u8"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Provides a variety of different programming",
+        "categoryId" : "general",
+        "name" : "General"
+      }
+    ],
+    "country" : "US",
+    "deviceId" : "IPTV",
+    "guideId" : "KDFW41.us",
+    "hasDRM" : false,
+    "id" : "a0a63d8f937827b41f38d1e4a908963ea9486570a5338ac54bc1c034b9d6474f",
+    "languages" : [
+      "eng"
+    ],
+    "logoURL" : "https:\/\/upload.wikimedia.org\/wikipedia\/commons\/thumb\/f\/f0\/Fox_Networks_Group_US_logo.svg\/960px-Fox_Networks_Group_US_logo.svg.png",
+    "number" : "KDFW41.us",
+    "quality" : {
+      "fhd" : {
+
+      }
+    },
+    "sortHint" : "KDFW-DT1::KDFW41.us",
+    "title" : "KDFW-DT1",
+    "url" : "https:\/\/cdn-uw2-prod.tsv2.amagi.tv\/linear\/amg00488-foxdigital-fox4dallaskdfw-vizious\/playlist.m3u8"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Religious programming",
+        "categoryId" : "religious",
+        "name" : "Religious"
+      }
+    ],
+    "country" : "US",
+    "deviceId" : "IPTV",
+    "guideId" : "KSCE381.us",
+    "hasDRM" : false,
+    "id" : "f39bb82ecb66002a398552c530de127c3d3d19a322b958c83d810a425eaa5cba",
+    "languages" : [
+      "eng",
+      "spa"
+    ],
+    "logoURL" : "https:\/\/i.imgur.com\/FioxUa3.png",
+    "number" : "KSCE381.us",
+    "quality" : {
+      "sd" : {
+
+      }
+    },
+    "sortHint" : "Life! Christian Broadcasting Network::KSCE381.us",
+    "title" : "Life! Christian Broadcasting Network",
+    "url" : "https:\/\/2-fss-2.streamhoster.com\/pl_138\/200226-1359204-1\/playlist.m3u8"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Channels that only show movies",
+        "categoryId" : "movies",
+        "name" : "Movies"
+      }
+    ],
+    "country" : "US",
+    "deviceId" : "IPTV",
+    "guideId" : "LifetimeMovies.us",
+    "hasDRM" : false,
+    "id" : "11834fb294ab501dae87fac4aedc698a3e44b48e25c3b767e0059999aea4c8b5",
+    "languages" : [
+      "eng"
+    ],
+    "logoURL" : "https:\/\/i.imgur.com\/BWmqYTO.png",
+    "number" : "LifetimeMovies.us",
+    "quality" : {
+      "sd" : {
+
+      }
+    },
+    "sortHint" : "Lifetime Movies East::LifetimeMovies.us",
+    "title" : "Lifetime Movies East",
+    "url" : "https:\/\/tvpass.org\/live\/LifetimeMoviesEast\/sd"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Programming is mostly news",
+        "categoryId" : "news",
+        "name" : "News"
+      }
+    ],
+    "country" : "US",
+    "deviceId" : "IPTV",
+    "guideId" : "LiveNOWfromFOX.us",
+    "hasDRM" : false,
+    "id" : "966d00c3a09cea9c297052edb7fb85f0f7a5ae6f47d0973639fe0c77093f64e9",
+    "languages" : [
+      "eng"
+    ],
+    "logoURL" : "https:\/\/i.imgur.com\/1JnyzHv.png",
+    "number" : "LiveNOWfromFOX.us",
+    "quality" : {
+      "fhd" : {
+
+      }
+    },
+    "sortHint" : "LiveNOW from FOX::LiveNOWfromFOX.us",
+    "title" : "LiveNOW from FOX",
+    "url" : "https:\/\/pb-k5p02dtnr2162.akamaized.net\/LiveNOW_from_FOX.m3u8"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Programming is sports",
+        "categoryId" : "sports",
+        "name" : "Sports"
+      }
+    ],
+    "country" : "US",
+    "deviceId" : "IPTV",
+    "guideId" : "MMATV.us",
+    "hasDRM" : false,
+    "id" : "16264dc4fa03c2def2f19e2370a87de637671ba9bd139ab2421be216a45a50ca",
+    "languages" : [
+      "eng"
+    ],
+    "logoURL" : "https:\/\/i.imgur.com\/Qxco1eW.png",
+    "number" : "MMATV.us",
+    "quality" : {
+      "sd" : {
+
+      }
+    },
+    "sortHint" : "MMA-TV::MMATV.us",
+    "title" : "MMA-TV",
+    "url" : "http:\/\/31.148.48.15\/M1_Global\/index.m3u8"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Channels with a variety of entertainment programs",
+        "categoryId" : "entertainment",
+        "name" : "Entertainment"
+      }
+    ],
+    "country" : "US",
+    "deviceId" : "IPTV",
+    "guideId" : "MoreTVDrama.us",
+    "hasDRM" : false,
+    "id" : "3ead6fa73611e74cd5f8e067f333eea3e6748c1cb77fdae18e828acfc250db83",
+    "languages" : [
+      "eng"
+    ],
+    "logoURL" : "https:\/\/i.imgur.com\/Tw3rTxP.png",
+    "number" : "MoreTVDrama.us",
+    "quality" : {
+      "sd" : {
+
+      }
+    },
+    "sortHint" : "More TV Drama::MoreTVDrama.us",
+    "title" : "More TV Drama",
+    "url" : "https:\/\/jmp2.uk\/plu-613260e4bdb71c00070d63fa.m3u8"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Programming is mostly comedy",
+        "categoryId" : "comedy",
+        "name" : "Comedy"
+      }
+    ],
+    "country" : "US",
+    "deviceId" : "IPTV",
+    "guideId" : "MoreTVSitcoms.us",
+    "hasDRM" : false,
+    "id" : "66d4ba798723684ca93925b76db4810b73a76def306484a4b7b5fa6a05a46e01",
+    "languages" : [
+      "eng"
+    ],
+    "logoURL" : "https:\/\/i.imgur.com\/4mbhOEo.png",
+    "number" : "MoreTVSitcoms.us",
+    "quality" : {
+      "sd" : {
+
+      }
+    },
+    "sortHint" : "More TV Sitcoms::MoreTVSitcoms.us",
+    "title" : "More TV Sitcoms",
+    "url" : "https:\/\/jmp2.uk\/plu-6132619f9ddaa50007e7dd86.m3u8"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Channels that only show movies",
+        "categoryId" : "movies",
+        "name" : "Movies"
+      }
+    ],
+    "country" : "US",
+    "deviceId" : "IPTV",
+    "guideId" : "Movies.us",
+    "hasDRM" : false,
+    "id" : "c6d52c9b52b0bb062ce110eacb8b11367bdb93edbe7061f182c4a0af681710fc",
+    "languages" : [
+      "eng"
+    ],
+    "logoURL" : "https:\/\/i.imgur.com\/gAGn3mK.png",
+    "number" : "Movies.us",
+    "quality" : {
+      "sd" : {
+
+      }
+    },
+    "sortHint" : "Movies!::Movies.us",
+    "title" : "Movies!",
+    "url" : "https:\/\/bozztv.com\/dvrfl03\/hdirect\/hdirect-ovair1-movies!\/index.m3u8"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Channels that only show movies",
+        "categoryId" : "movies",
+        "name" : "Movies"
+      }
+    ],
+    "country" : "US",
+    "deviceId" : "IPTV",
+    "guideId" : "MovieSphere.us",
+    "hasDRM" : false,
+    "id" : "e161daeb488a52d573ab8c5acc767d2cb0578290955c36d6a84e4da9c89c7c4c",
+    "languages" : [
+      "eng"
+    ],
+    "logoURL" : "https:\/\/i.imgur.com\/PHBgi3h.png",
+    "number" : "MovieSphere.us",
+    "quality" : {
+      "fhd" : {
+
+      }
+    },
+    "sortHint" : "MovieSphere::MovieSphere.us",
+    "title" : "MovieSphere",
+    "url" : "https:\/\/amg00353-lionsgatestudio-moviesphere-xumo-zh5u0.amagi.tv\/playlist.m3u8"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Channels with a variety of entertainment programs",
+        "categoryId" : "entertainment",
+        "name" : "Entertainment"
+      }
+    ],
+    "country" : "US",
+    "deviceId" : "IPTV",
+    "guideId" : "MTVPlutoTV.us",
+    "hasDRM" : false,
+    "id" : "75c6d053757d79bde095d21a311666d636a519da4b5339d9e6eeced265f9ef84",
+    "languages" : [
+      "eng"
+    ],
+    "logoURL" : "https:\/\/i.imgur.com\/WsQRCmZ.png",
+    "number" : "MTVPlutoTV.us",
+    "quality" : {
+      "sd" : {
+
+      }
+    },
+    "sortHint" : "MTV Pluto TV::MTVPlutoTV.us",
+    "title" : "MTV Pluto TV",
+    "url" : "https:\/\/jmp2.uk\/plu-5ca672f515a62078d2ec0ad2.m3u8"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Channels that only show series",
+        "categoryId" : "series",
+        "name" : "Series"
+      }
+    ],
+    "country" : "US",
+    "deviceId" : "IPTV",
+    "guideId" : "Mythbusters.us",
+    "hasDRM" : false,
+    "id" : "62a8e3a2079496450cfe124e53938056059cea5b68cb05e9117577d8f5f22b3d",
+    "languages" : [
+      "eng"
+    ],
+    "logoURL" : "https:\/\/i.imgur.com\/wzzjvcH.png",
+    "number" : "Mythbusters.us",
+    "quality" : {
+      "sd" : {
+
+      }
+    },
+    "sortHint" : "MythBusters::Mythbusters.us",
+    "title" : "MythBusters",
+    "url" : "https:\/\/jmp2.uk\/plu-66e0b4866ad04d0008fff4d8.m3u8"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Channels that only show series",
+        "categoryId" : "series",
+        "name" : "Series"
+      }
+    ],
+    "country" : "US",
+    "deviceId" : "IPTV",
+    "guideId" : "Nashville.us",
+    "hasDRM" : false,
+    "id" : "00bafb4a6890536f86db3f7f8d13c10d1d6b59c01037beaec8051fe95eab7174",
+    "languages" : [
+      "eng"
+    ],
+    "logoURL" : "https:\/\/images.pluto.tv\/channels\/65cf8d7428730900087c5907\/colorLogoPNG.png",
+    "number" : "Nashville.us",
+    "quality" : {
+      "fhd" : {
+
+      }
+    },
+    "sortHint" : "Nashville::Nashville.us",
+    "title" : "Nashville",
+    "url" : "https:\/\/jmp2.uk\/plu-65cf8d7428730900087c5907.m3u8"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Programming that depicts a person or real-world event",
+        "categoryId" : "documentary",
+        "name" : "Documentary"
+      }
+    ],
+    "country" : "US",
+    "deviceId" : "IPTV",
+    "guideId" : "NationalGeographic.us",
+    "hasDRM" : false,
+    "id" : "1255d69249eeaa9fe2755645cc7c52f24dc1949d75f187d603b1787c2a5909e5",
+    "languages" : [
+      "eng"
+    ],
+    "logoURL" : "https:\/\/upload.wikimedia.org\/wikipedia\/commons\/thumb\/f\/fc\/Natgeologo.svg\/960px-Natgeologo.svg.png",
+    "number" : "NationalGeographic.us",
+    "quality" : {
+      "sd" : {
+
+      }
+    },
+    "sortHint" : "National Geographic HD East::NationalGeographic.us",
+    "title" : "National Geographic HD East",
+    "url" : "https:\/\/tvpass.org\/live\/NationalGeographicEast\/sd"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Programming that depicts a person or real-world event",
+        "categoryId" : "documentary",
+        "name" : "Documentary"
+      }
+    ],
+    "country" : "US",
+    "deviceId" : "IPTV",
+    "guideId" : "NationalGeographicLatinAmerica.us",
+    "hasDRM" : false,
+    "id" : "093f4c3918177e789c1adf2a20faab7298cacbbcca2e5907741b32c9a2cd14e5",
+    "languages" : [
+      "spa"
+    ],
+    "logoURL" : "https:\/\/upload.wikimedia.org\/wikipedia\/commons\/thumb\/f\/fc\/Natgeologo.svg\/960px-Natgeologo.svg.png",
+    "number" : "NationalGeographicLatinAmerica.us",
+    "quality" : {
+      "fhd" : {
+
+      }
+    },
+    "sortHint" : "National Geographic Latin America South::NationalGeographicLatinAmerica.us",
+    "title" : "National Geographic Latin America South",
+    "url" : "http:\/\/201.217.246.42:44310\/Live\/3fcb6e26785fd8d415571b26dc3cf5d3\/local-46_720.m3u8"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Programming that depicts a person or real-world event",
+        "categoryId" : "documentary",
+        "name" : "Documentary"
+      }
+    ],
+    "country" : "US",
+    "deviceId" : "IPTV",
+    "guideId" : "NationalGeographicWild.us",
+    "hasDRM" : false,
+    "id" : "3aa70bb7b628e0ab2c0df083a110c119b7cb42fd944d8b40ca9c0d773fbecf79",
+    "languages" : [
+      "eng"
+    ],
+    "logoURL" : "https:\/\/upload.wikimedia.org\/wikipedia\/commons\/thumb\/2\/27\/National_Geographic_Wild_logo.svg\/960px-National_Geographic_Wild_logo.svg.png",
+    "number" : "NationalGeographicWild.us",
+    "quality" : {
+      "sd" : {
+
+      }
+    },
+    "sortHint" : "National Geographic Wild HD East::NationalGeographicWild.us",
+    "title" : "National Geographic Wild HD East",
+    "url" : "https:\/\/tvpass.org\/live\/NationalGeographicWildEast\/sd"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Programming is sports",
+        "categoryId" : "sports",
+        "name" : "Sports"
+      }
+    ],
+    "country" : "US",
+    "deviceId" : "IPTV",
+    "guideId" : "NFLChannel.us",
+    "hasDRM" : false,
+    "id" : "fe4ed7c44487b3fd307df75e6efc31c4e6f329ce35658a04fc6f7cb14b6a6a9f",
+    "languages" : [
+      "eng"
+    ],
+    "logoURL" : "https:\/\/i.imgur.com\/mPGtwAP.png",
+    "number" : "NFLChannel.us",
+    "quality" : {
+      "fhd" : {
+
+      }
+    },
+    "sortHint" : "NFL Channel::NFLChannel.us",
+    "title" : "NFL Channel",
+    "url" : "https:\/\/pb-we3ltka9xobj6.akamaized.net\/master.m3u8"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Programming is sports",
+        "categoryId" : "sports",
+        "name" : "Sports"
+      }
+    ],
+    "country" : "US",
+    "deviceId" : "IPTV",
+    "guideId" : "NFLRedZone.us",
+    "hasDRM" : false,
+    "id" : "0a270ce26a52da867a25344cc938a7be52d5ad9efcceafe730fb857a001dd2bd",
+    "languages" : [
+      "eng"
+    ],
+    "logoURL" : "https:\/\/i.imgur.com\/5lPqQj5.png",
+    "number" : "NFLRedZone.us",
+    "quality" : {
+      "sd" : {
+
+      }
+    },
+    "sortHint" : "NFL RedZone::NFLRedZone.us",
+    "title" : "NFL RedZone",
+    "url" : "https:\/\/tvpass.org\/live\/NFLRedZone\/sd"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Programming targeted to children",
+        "categoryId" : "kids",
+        "name" : "Kids"
+      }
+    ],
+    "country" : "US",
+    "deviceId" : "IPTV",
+    "guideId" : "NickPlutoTV.us",
+    "hasDRM" : false,
+    "id" : "54860cbaf2deffd0eed32d5f0a4cf9fab3d78231eea7d9cdb2202a86099e4ba3",
+    "languages" : [
+      "eng"
+    ],
+    "logoURL" : "https:\/\/i.imgur.com\/N7rQyzN.png",
+    "number" : "NickPlutoTV.us",
+    "quality" : {
+      "fhd" : {
+
+      }
+    },
+    "sortHint" : "Nickelodeon Pluto TV::NickPlutoTV.us",
+    "title" : "Nickelodeon Pluto TV",
+    "url" : "https:\/\/jmp2.uk\/plu-5ca673e0d0bd6c2689c94ce3.m3u8"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Programming targeted to children",
+        "categoryId" : "kids",
+        "name" : "Kids"
+      }
+    ],
+    "country" : "US",
+    "deviceId" : "IPTV",
+    "guideId" : "Nickelodeon.us",
+    "hasDRM" : false,
+    "id" : "a12e3a71e3e951b91cba8fa2627ccf9038f5e66a6230c1a4e6b6c9d4490e6be5",
+    "languages" : [
+      "eng"
+    ],
+    "logoURL" : "https:\/\/i.imgur.com\/E84jnP8.png",
+    "number" : "Nickelodeon.us",
+    "quality" : {
+      "sd" : {
+
+      }
+    },
+    "sortHint" : "Nickelodeon::Nickelodeon.us",
+    "title" : "Nickelodeon",
+    "url" : "http:\/\/79.127.207.193\/Nickelodeon\/playlist.m3u8"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Programming is music or music related",
+        "categoryId" : "music",
+        "name" : "Music"
+      }
+    ],
+    "country" : "UK",
+    "deviceId" : "IPTV",
+    "guideId" : "NOWRock.uk",
+    "hasDRM" : false,
+    "id" : "94f89554a9d36417743b01bd82d3fd0d81f2bd8db314c1bf2e0df9d70994eca8",
+    "languages" : [
+      "eng"
+    ],
+    "logoURL" : "https:\/\/i.imgur.com\/GuM4GnX.png",
+    "number" : "NOWRock.uk",
+    "quality" : {
+      "sd" : {
+
+      }
+    },
+    "sortHint" : "NOW Rock::NOWRock.uk",
+    "title" : "NOW Rock",
+    "url" : "https:\/\/lightning-now90s-rakuten.amagi.tv\/playlist.m3u8"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Programming related to outdoor activities like fishing, hunting, etc.",
+        "categoryId" : "outdoor",
+        "name" : "Outdoor"
+      }
+    ],
+    "country" : "US",
+    "deviceId" : "IPTV",
+    "guideId" : "OutdoorAmerica.us",
+    "hasDRM" : false,
+    "id" : "9521e295b1e8cc870db496205b71eea50b963073161ceeba6e1bbf1d17ae2271",
+    "languages" : [
+      "eng"
+    ],
+    "logoURL" : "https:\/\/i.imgur.com\/UKfimFD.png",
+    "number" : "OutdoorAmerica.us",
+    "quality" : {
+      "fhd" : {
+
+      }
+    },
+    "sortHint" : "Outdoor America::OutdoorAmerica.us",
+    "title" : "Outdoor America",
+    "url" : "https:\/\/linear-600.frequency.stream\/dist\/xumo\/600\/hls\/master\/playlist.m3u8"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Programming related to outdoor activities like fishing, hunting, etc.",
+        "categoryId" : "outdoor",
+        "name" : "Outdoor"
+      }
+    ],
+    "country" : "US",
+    "deviceId" : "IPTV",
+    "guideId" : "OutdoorChannel.us",
+    "hasDRM" : false,
+    "id" : "2d238779159d702d96a174f108197c0ab16124fad1ea11a8d94aca248c8ae97e",
+    "languages" : [
+      "eng",
+      "vie"
+    ],
+    "logoURL" : "https:\/\/i.imgur.com\/Kh4MWaY.png",
+    "number" : "OutdoorChannel.us",
+    "quality" : {
+      "fhd" : {
+
+      }
+    },
+    "sortHint" : "Outdoor Channel::OutdoorChannel.us",
+    "title" : "Outdoor Channel",
+    "url" : "https:\/\/cdn-apse1-prod.tsv2.amagi.tv\/linear\/amg00718-outdoorchannela-outdoortvnz-samsungnz\/playlist.m3u8"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Channels that only show movies",
+        "categoryId" : "movies",
+        "name" : "Movies"
+      },
+      {
+        "categoryDescription" : "Channels that only show series",
+        "categoryId" : "series",
+        "name" : "Series"
+      }
+    ],
+    "country" : "US",
+    "deviceId" : "IPTV",
+    "guideId" : "OuterSphere.us",
+    "hasDRM" : false,
+    "id" : "8bfdb33cdf55f97354a4f735b93bd41ab5af7699f800f452d7affa6e62909336",
+    "languages" : [
+      "eng"
+    ],
+    "logoURL" : "https:\/\/provider-static.plex.tv\/epg\/cms\/production\/f162df8b-6532-43fe-9202-83a658090651\/OuterSphere_1500x1000_Logo_Dark_-_Chris_Connors__1_.png",
+    "number" : "OuterSphere.us",
+    "quality" : {
+      "fhd" : {
+
+      }
+    },
+    "sortHint" : "OuterSphere::OuterSphere.us",
+    "title" : "OuterSphere",
+    "url" : "https:\/\/amg00353-amg00353c17-xumo-us-2554.playouts.now.amagi.tv\/lionsgate-otspr-xumo\/playlist.m3u8"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Channels that only show series",
+        "categoryId" : "series",
+        "name" : "Series"
+      }
+    ],
+    "country" : "US",
+    "deviceId" : "IPTV",
+    "guideId" : "PBSNature.us",
+    "hasDRM" : false,
+    "id" : "3809e517da452d2734f0cecd5db804666c163bf0d6538a3be1dfcbde63a79973",
+    "languages" : [
+      "eng"
+    ],
+    "logoURL" : "https:\/\/i.imgur.com\/Brry7cZ.png",
+    "number" : "PBSNature.us",
+    "quality" : {
+      "fhd" : {
+
+      }
+    },
+    "sortHint" : "PBS Nature::PBSNature.us",
+    "title" : "PBS Nature",
+    "url" : "https:\/\/amg01597-wnetnewyorkpubl-pbsnature-xumo-8xorq.amagi.tv\/playlist.m3u8"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Channels that only show movies",
+        "categoryId" : "movies",
+        "name" : "Movies"
+      }
+    ],
+    "country" : "US",
+    "deviceId" : "IPTV",
+    "guideId" : "PlutoTVAction.us",
+    "hasDRM" : false,
+    "id" : "6b05ab28986b72475bed2c2aaca898611dcae23b2b141a8d86130abb7b14b81a",
+    "languages" : [
+      "eng"
+    ],
+    "logoURL" : "https:\/\/i.imgur.com\/tDapGal.png",
+    "number" : "PlutoTVAction.us",
+    "quality" : {
+      "sd" : {
+
+      }
+    },
+    "sortHint" : "Pluto TV Action::PlutoTVAction.us",
+    "title" : "Pluto TV Action",
+    "url" : "https:\/\/jmp2.uk\/plu-561d7d484dc7c8770484914a.m3u8"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Programming that depicts a person or real-world event",
+        "categoryId" : "documentary",
+        "name" : "Documentary"
+      }
+    ],
+    "country" : "US",
+    "deviceId" : "IPTV",
+    "guideId" : "PlutoTVAnimals.us",
+    "hasDRM" : false,
+    "id" : "2cb71d16f83c1771291e20dfb93396b9fca4684895d74a85b94ed7d31e467968",
+    "languages" : [
+      "eng"
+    ],
+    "logoURL" : "https:\/\/i.imgur.com\/N00seOn.png",
+    "number" : "PlutoTVAnimals.us",
+    "quality" : {
+      "sd" : {
+
+      }
+    },
+    "sortHint" : "Pluto TV Animals::PlutoTVAnimals.us",
+    "title" : "Pluto TV Animals",
+    "url" : "https:\/\/jmp2.uk\/plu-5ddf8ea0d000120009bcad83.m3u8"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Programming related to cars, motorcycles, and other automobiles",
+        "categoryId" : "auto",
+        "name" : "Auto"
+      }
+    ],
+    "country" : "US",
+    "deviceId" : "IPTV",
+    "guideId" : "PlutoTVCars.us",
+    "hasDRM" : false,
+    "id" : "d2ad723615af9d3d267e6cfabc315aaf6c5c9ad2d66490adf44fc0c8da1792e1",
+    "languages" : [
+      "eng"
+    ],
+    "logoURL" : "https:\/\/i.imgur.com\/Tm3VFmq.png",
+    "number" : "PlutoTVCars.us",
+    "quality" : {
+      "sd" : {
+
+      }
+    },
+    "sortHint" : "Pluto TV Cars::PlutoTVCars.us",
+    "title" : "Pluto TV Cars",
+    "url" : "https:\/\/jmp2.uk\/plu-5812b3a4249444e05d09cc46.m3u8"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Programming is mostly comedy",
+        "categoryId" : "comedy",
+        "name" : "Comedy"
+      }
+    ],
+    "country" : "US",
+    "deviceId" : "IPTV",
+    "guideId" : "PlutoTVComedy.us",
+    "hasDRM" : false,
+    "id" : "e71dfe77dadd4db3312c71f7bd647d6224226007910bb49ec4bd399279f411ff",
+    "languages" : [
+      "eng"
+    ],
+    "logoURL" : "https:\/\/i.imgur.com\/MTVrbd5.png",
+    "number" : "PlutoTVComedy.us",
+    "quality" : {
+      "sd" : {
+
+      }
+    },
+    "sortHint" : "Pluto TV Comedy::PlutoTVComedy.us",
+    "title" : "Pluto TV Comedy",
+    "url" : "https:\/\/jmp2.uk\/plu-5a4d3a00ad95e4718ae8d8db.m3u8"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Channels that only show movies",
+        "categoryId" : "movies",
+        "name" : "Movies"
+      }
+    ],
+    "country" : "US",
+    "deviceId" : "IPTV",
+    "guideId" : "PlutoTVCultFilms.us",
+    "hasDRM" : false,
+    "id" : "e5b779feb8c373b503b2b308f93adc5e8c4a025bf377c7d3af3a1fd8b6f9811b",
+    "languages" : [
+      "eng"
+    ],
+    "logoURL" : "https:\/\/i.imgur.com\/xoaIAus.png",
+    "number" : "PlutoTVCultFilms.us",
+    "quality" : {
+      "sd" : {
+
+      }
+    },
+    "sortHint" : "Pluto TV Cult Films::PlutoTVCultFilms.us",
+    "title" : "Pluto TV Cult Films",
+    "url" : "https:\/\/jmp2.uk\/plu-5c665db3e6c01b72c4977bc2.m3u8"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Channels that only show series",
+        "categoryId" : "series",
+        "name" : "Series"
+      }
+    ],
+    "country" : "US",
+    "deviceId" : "IPTV",
+    "guideId" : "PlutoTVFantastic.us",
+    "hasDRM" : false,
+    "id" : "a50a0e406dfb1763b38badab460c50b5da3b3b8461c42ed44a1984686b1a4dda",
+    "languages" : [
+      "eng"
+    ],
+    "logoURL" : "https:\/\/i.imgur.com\/MCu7YTA.png",
+    "number" : "PlutoTVFantastic.us",
+    "quality" : {
+      "sd" : {
+
+      }
+    },
+    "sortHint" : "Pluto TV Fantastic::PlutoTVFantastic.us",
+    "title" : "Pluto TV Fantastic",
+    "url" : "https:\/\/jmp2.uk\/plu-5b64a245a202b3337f09e51d.m3u8"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Programs related to health, fitness, leisure, fashion, decor, etc.",
+        "categoryId" : "lifestyle",
+        "name" : "Lifestyle"
+      }
+    ],
+    "country" : "US",
+    "deviceId" : "IPTV",
+    "guideId" : "PlutoTVFood.us",
+    "hasDRM" : false,
+    "id" : "547b827910a4c9d9cded31e43f80dc34b12bc80e59f194ea2accefda9fe359d3",
+    "languages" : [
+      "eng"
+    ],
+    "logoURL" : "https:\/\/i.imgur.com\/HTLo1GG.png",
+    "number" : "PlutoTVFood.us",
+    "quality" : {
+      "sd" : {
+
+      }
+    },
+    "sortHint" : "Pluto TV Food::PlutoTVFood.us",
+    "title" : "Pluto TV Food",
+    "url" : "https:\/\/jmp2.uk\/plu-5ddf930548ff9b00090d5686.m3u8"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Programming that depicts a person or real-world event",
+        "categoryId" : "documentary",
+        "name" : "Documentary"
+      }
+    ],
+    "country" : "US",
+    "deviceId" : "IPTV",
+    "guideId" : "PlutoTVHistory.us",
+    "hasDRM" : false,
+    "id" : "94907b766b45a2454306c0d8b11642cb1a2dbf962e17c8581e1e38905e082588",
+    "languages" : [
+      "eng"
+    ],
+    "logoURL" : "https:\/\/i.imgur.com\/XkQD5kM.png",
+    "number" : "PlutoTVHistory.us",
+    "quality" : {
+      "sd" : {
+
+      }
+    },
+    "sortHint" : "Pluto TV History::PlutoTVHistory.us",
+    "title" : "Pluto TV History",
+    "url" : "https:\/\/jmp2.uk\/plu-5a4d35dfa5c02e717a234f86.m3u8"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Channels that only show movies",
+        "categoryId" : "movies",
+        "name" : "Movies"
+      }
+    ],
+    "country" : "US",
+    "deviceId" : "IPTV",
+    "guideId" : "PlutoTVHorror.us",
+    "hasDRM" : false,
+    "id" : "00e00ef3cb1337ca6afef2214a87d31ba0f1fad20d1296e3a49d61e43c2c63bd",
+    "languages" : [
+      "eng"
+    ],
+    "logoURL" : "https:\/\/images.pluto.tv\/channels\/569546031a619b8f07ce6e25\/colorLogoPNG.png",
+    "number" : "PlutoTVHorror.us",
+    "quality" : {
+      "sd" : {
+
+      }
+    },
+    "sortHint" : "Pluto TV Horror::PlutoTVHorror.us",
+    "title" : "Pluto TV Horror",
+    "url" : "https:\/\/jmp2.uk\/plu-569546031a619b8f07ce6e25.m3u8"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Science and Technology",
+        "categoryId" : "science",
+        "name" : "Science"
+      }
+    ],
+    "country" : "US",
+    "deviceId" : "IPTV",
+    "guideId" : "PlutoTVScience.us",
+    "hasDRM" : false,
+    "id" : "dde6f619f0101e67e454e007207061caaad80259a8140136371b575d84543acf",
+    "languages" : [
+      "eng"
+    ],
+    "logoURL" : "https:\/\/i.imgur.com\/uhunRoU.png",
+    "number" : "PlutoTVScience.us",
+    "quality" : {
+      "sd" : {
+
+      }
+    },
+    "sortHint" : "Pluto TV Science::PlutoTVScience.us",
+    "title" : "Pluto TV Science",
+    "url" : "https:\/\/jmp2.uk\/plu-563a970aa1a1f7fe7c9daad7.m3u8"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Science and Technology",
+        "categoryId" : "science",
+        "name" : "Science"
+      }
+    ],
+    "country" : "US",
+    "deviceId" : "IPTV",
+    "guideId" : "PlutoTVSpace.us",
+    "hasDRM" : false,
+    "id" : "58d5345fda5fadadfb2819bc07fd4ba14ce89fbb8fa2a40df7b5de0a8e37d2be",
+    "languages" : [
+      "eng"
+    ],
+    "logoURL" : "https:\/\/i.imgur.com\/hQwS3ui.png",
+    "number" : "PlutoTVSpace.us",
+    "quality" : {
+      "sd" : {
+
+      }
+    },
+    "sortHint" : "Pluto TV Space::PlutoTVSpace.us",
+    "title" : "Pluto TV Space",
+    "url" : "https:\/\/jmp2.uk\/plu-5dbc2f98777f2e0009934ae7.m3u8"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Channels with a variety of entertainment programs",
+        "categoryId" : "entertainment",
+        "name" : "Entertainment"
+      }
+    ],
+    "country" : "US",
+    "deviceId" : "IPTV",
+    "guideId" : "Roar.us",
+    "hasDRM" : false,
+    "id" : "976a174f75e17dbecffdaf3666e9f2109e2d0f508b7897f09c71d528f318ad8b",
+    "languages" : [
+      "eng"
+    ],
+    "logoURL" : "https:\/\/iili.io\/FxYNwOB.md.png",
+    "number" : "Roar.us",
+    "quality" : {
+      "fhd" : {
+
+      }
+    },
+    "sortHint" : "Roar::Roar.us",
+    "title" : "Roar",
+    "url" : "https:\/\/fast-channels.sinclairstoryline.com\/TBD\/index.m3u8"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Programming related to business",
+        "categoryId" : "business",
+        "name" : "Business"
+      }
+    ],
+    "country" : "US",
+    "deviceId" : "IPTV",
+    "guideId" : "SchwabNetwork.us",
+    "hasDRM" : false,
+    "id" : "e1115b5fcac557d81e44b9ab3002be3c3453e746a046e15f1d7b0a05fec3c928",
+    "languages" : [
+      "eng"
+    ],
+    "logoURL" : "https:\/\/i.imgur.com\/zmQnKV6.png",
+    "number" : "SchwabNetwork.us",
+    "quality" : {
+      "fhd" : {
+
+      }
+    },
+    "sortHint" : "Schwab Network::SchwabNetwork.us",
+    "title" : "Schwab Network",
+    "url" : "https:\/\/content.uplynk.com\/channel\/f9aafa1f132e40af9b9e7238bc18d128.m3u8"
+  },
+  {
+    "categories" : [
+
+    ],
+    "country" : "US",
+    "deviceId" : "IPTV",
+    "guideId" : "Showtime.us",
+    "hasDRM" : false,
+    "id" : "868160b1917fbe9273d371f448b94d89124bbe5973203a8a55fbbe002f057946",
+    "languages" : [
+      "eng",
+      "spa"
+    ],
+    "logoURL" : "https:\/\/i.imgur.com\/Or0LKsu.png",
+    "number" : "Showtime.us",
+    "quality" : {
+      "fhd" : {
+
+      }
+    },
+    "sortHint" : "Showtime::Showtime.us",
+    "title" : "Showtime",
+    "url" : "http:\/\/23.237.104.106:8080\/USA_SHOWTIME\/index.m3u8"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Programming is focused on weather",
+        "categoryId" : "weather",
+        "name" : "Weather"
+      }
+    ],
+    "country" : "UK",
+    "deviceId" : "IPTV",
+    "guideId" : "SkyNewsWeather.uk",
+    "hasDRM" : false,
+    "id" : "5419fcc324008a0f2dce830eb96bf2358261c8f1d790424dc04d2674fad99c2f",
+    "languages" : [
+      "eng"
+    ],
+    "logoURL" : "https:\/\/pbs.twimg.com\/profile_images\/1604994875459518464\/lGt2wEqM_400x400.jpg",
+    "number" : "SkyNewsWeather.uk",
+    "quality" : {
+      "fhd" : {
+
+      }
+    },
+    "sortHint" : "Sky News Weather::SkyNewsWeather.uk",
+    "title" : "Sky News Weather",
+    "url" : "https:\/\/distro001-gb-hls1-prd.delivery.skycdp.com\/easel_cdn\/ngrp:weather_loop.stream_all\/playlist.m3u8"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Programming is mostly comedy",
+        "categoryId" : "comedy",
+        "name" : "Comedy"
+      }
+    ],
+    "country" : "US",
+    "deviceId" : "IPTV",
+    "guideId" : "SNLVault.us",
+    "hasDRM" : false,
+    "id" : "1a960f44a816674c01c9a4b6dbb5ff3bd9deb19fb378db2e3f5f4a377e1a269c",
+    "languages" : [
+      "eng"
+    ],
+    "logoURL" : "https:\/\/provider-static.plex.tv\/epg\/cms\/production\/712dae9e-9111-4bbc-8ea4-242e891ab5b3\/snl-vault-fclogo-72-dpi-1500-x-1000-3-2-channel-logo-dark-plex-1.png",
+    "number" : "SNLVault.us",
+    "quality" : {
+      "fhd" : {
+
+      }
+    },
+    "sortHint" : "SNL Vault::SNLVault.us",
+    "title" : "SNL Vault",
+    "url" : "https:\/\/xumo-xumoent-vc-103-d3uqt.fast.nbcuni.com\/live\/master.m3u8"
+  },
+  {
+    "categories" : [
+
+    ],
+    "country" : "UK",
+    "deviceId" : "IPTV",
+    "guideId" : "SparkTV.uk",
+    "hasDRM" : false,
+    "id" : "349367af138715ffa04b2c9a19fe83cfacafaef8de0e737e733634d6d32e293f",
+    "languages" : [
+      "eng"
+    ],
+    "logoURL" : "https:\/\/i.imgur.com\/svc98Kg.png",
+    "number" : "SparkTV.uk",
+    "quality" : {
+      "fhd" : {
+
+      }
+    },
+    "sortHint" : "Spark TV::SparkTV.uk",
+    "title" : "Spark TV",
+    "url" : "https:\/\/candlelightmedia-sparklightlove-4-us.roku.wurl.tv\/playlist.m3u8"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Programming related to outdoor activities like fishing, hunting, etc.",
+        "categoryId" : "outdoor",
+        "name" : "Outdoor"
+      }
+    ],
+    "country" : "US",
+    "deviceId" : "IPTV",
+    "guideId" : "SpikeOutdoors.us",
+    "hasDRM" : false,
+    "id" : "4806ef8b1299ee3f34291794ee612371e253fb0294be7fd4421650bb8de56d20",
+    "languages" : [
+      "eng"
+    ],
+    "logoURL" : "https:\/\/i.imgur.com\/cdCD2A2.png",
+    "number" : "SpikeOutdoors.us",
+    "quality" : {
+      "sd" : {
+
+      }
+    },
+    "sortHint" : "Spike Outdoors::SpikeOutdoors.us",
+    "title" : "Spike Outdoors",
+    "url" : "https:\/\/jmp2.uk\/plu-5c393cad2de254456f7ef8c2.m3u8"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Programming that depicts a person or real-world event",
+        "categoryId" : "documentary",
+        "name" : "Documentary"
+      }
+    ],
+    "country" : "US",
+    "deviceId" : "IPTV",
+    "guideId" : "SpikePlutoTV.us",
+    "hasDRM" : false,
+    "id" : "53cb317c1aca98fdf653db9213a5b5bfc0cbb55b4fc3e73ee17381d7006c93db",
+    "languages" : [
+      "eng"
+    ],
+    "logoURL" : "https:\/\/i.imgur.com\/woY8Ecb.png",
+    "number" : "SpikePlutoTV.us",
+    "quality" : {
+      "sd" : {
+
+      }
+    },
+    "sortHint" : "Spike Pluto TV::SpikePlutoTV.us",
+    "title" : "Spike Pluto TV",
+    "url" : "https:\/\/jmp2.uk\/plu-5812bcc8237a6ff45d16c407.m3u8"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Channels that only show series",
+        "categoryId" : "series",
+        "name" : "Series"
+      }
+    ],
+    "country" : "US",
+    "deviceId" : "IPTV",
+    "guideId" : "StarTrek.us",
+    "hasDRM" : false,
+    "id" : "d2685f91e0132d254b6a456e01e14e2e06302bec90042f9825526c723f34e33c",
+    "languages" : [
+      "eng"
+    ],
+    "logoURL" : "https:\/\/i.imgur.com\/8cvXYiT.png",
+    "number" : "StarTrek.us",
+    "quality" : {
+      "sd" : {
+
+      }
+    },
+    "sortHint" : "Star Trek::StarTrek.us",
+    "title" : "Star Trek",
+    "url" : "https:\/\/jmp2.uk\/plu-5efbd39f8c4ce900075d7698.m3u8"
+  },
+  {
+    "categories" : [
+
+    ],
+    "country" : "US",
+    "deviceId" : "IPTV",
+    "guideId" : "Starz.us",
+    "hasDRM" : false,
+    "id" : "03845a2d1e0373a00ec8fcb0d1fdbc981156bae621e5f9d71e818a687e977555",
+    "languages" : [
+      "eng",
+      "spa"
+    ],
+    "logoURL" : "https:\/\/i.imgur.com\/N7oSm4d.png",
+    "number" : "Starz.us",
+    "quality" : {
+      "sd" : {
+
+      }
+    },
+    "sortHint" : "Starz East::Starz.us",
+    "title" : "Starz East",
+    "url" : "https:\/\/tvpass.org\/live\/StarzEast\/sd"
+  },
+  {
+    "categories" : [
+
+    ],
+    "country" : "US",
+    "deviceId" : "IPTV",
+    "guideId" : "TED.us",
+    "hasDRM" : false,
+    "id" : "6164005e89c754d56a96d9d8b06331148460e6349fb5f8c6cf83dc8802b6536c",
+    "languages" : [
+      "eng"
+    ],
+    "logoURL" : "https:\/\/i.imgur.com\/KeIhwNP.png",
+    "number" : "TED.us",
+    "quality" : {
+      "fhd" : {
+
+      }
+    },
+    "sortHint" : "TED::TED.us",
+    "title" : "TED",
+    "url" : "https:\/\/d1b16tvvxk3tnu.cloudfront.net\/TED.m3u8"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Channels with a variety of entertainment programs",
+        "categoryId" : "entertainment",
+        "name" : "Entertainment"
+      }
+    ],
+    "country" : "US",
+    "deviceId" : "IPTV",
+    "guideId" : "TMZ.us",
+    "hasDRM" : false,
+    "id" : "0b325c8dcb4f8d3144caf7f60ba1d43482a05950db11bc1de0543d3cd481ff47",
+    "languages" : [
+      "eng"
+    ],
+    "logoURL" : "https:\/\/i.imgur.com\/eLIe7Va.png",
+    "number" : "TMZ.us",
+    "quality" : {
+      "fhd" : {
+
+      }
+    },
+    "sortHint" : "TMZ::TMZ.us",
+    "title" : "TMZ",
+    "url" : "https:\/\/aegis-cloudfront-1.tubi.video\/57c1fa3c-566b-4998-b6de-d6de67031d99\/index.m3u8"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Programming is mostly news",
+        "categoryId" : "news",
+        "name" : "News"
+      }
+    ],
+    "country" : "US",
+    "deviceId" : "IPTV",
+    "guideId" : "TODAYAllDay.us",
+    "hasDRM" : false,
+    "id" : "aa380046396c4e4c91b511ea482d0b562f208533c386eedcd9cfd0cb8109b334",
+    "languages" : [
+      "eng"
+    ],
+    "logoURL" : "https:\/\/i.imgur.com\/LhbQ8Mr.png",
+    "number" : "TODAYAllDay.us",
+    "quality" : {
+      "fhd" : {
+
+      }
+    },
+    "sortHint" : "Today All Day::TODAYAllDay.us",
+    "title" : "Today All Day",
+    "url" : "https:\/\/aegis-cloudfront-1.tubi.video\/cb7f305d-049a-4feb-bc6e-028c43ad3c3e\/master.m3u8"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Channels with a variety of entertainment programs",
+        "categoryId" : "entertainment",
+        "name" : "Entertainment"
+      },
+      {
+        "categoryDescription" : "Programming related to cars, motorcycles, and other automobiles",
+        "categoryId" : "auto",
+        "name" : "Auto"
+      }
+    ],
+    "country" : "UK",
+    "deviceId" : "IPTV",
+    "guideId" : "TopGear.uk",
+    "hasDRM" : false,
+    "id" : "b5b2c0fd216811be40d9719bde21e6e49a19dc8da43220e813d38fde207398fd",
+    "languages" : [
+      "eng"
+    ],
+    "logoURL" : "https:\/\/i.imgur.com\/S6Su6QH.png",
+    "number" : "TopGear.uk",
+    "quality" : {
+      "fhd" : {
+
+      }
+    },
+    "sortHint" : "Top Gear::TopGear.uk",
+    "title" : "Top Gear",
+    "url" : "https:\/\/aegis-cloudfront-1.tubi.video\/33ccaca5-a666-4b28-8578-55a9ab9f06d5\/playlist.m3u8"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Programming is music or music related",
+        "categoryId" : "music",
+        "name" : "Music"
+      }
+    ],
+    "country" : "UK",
+    "deviceId" : "IPTV",
+    "guideId" : "Totalmusic80s.uk",
+    "hasDRM" : false,
+    "id" : "31637fbd766617696d4425c73132d316bec401a63f34d66e8a49a51fc35208ff",
+    "languages" : [
+      "spa"
+    ],
+    "logoURL" : "https:\/\/static.elektamedia.com\/ch\/tmc_80s.png",
+    "number" : "Totalmusic80s.uk",
+    "quality" : {
+      "fhd" : {
+
+      }
+    },
+    "sortHint" : "Totalmusic 80s::Totalmusic80s.uk",
+    "title" : "Totalmusic 80s",
+    "url" : "https:\/\/cdn.global.elektamedia.com\/live\/c7eds\/Totalmusic_80s\/SA_LIVE_hls_enc\/master.m3u8"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Programming is music or music related",
+        "categoryId" : "music",
+        "name" : "Music"
+      }
+    ],
+    "country" : "UK",
+    "deviceId" : "IPTV",
+    "guideId" : "Totalmusic2000s.uk",
+    "hasDRM" : false,
+    "id" : "8eadf0f7dc5d50a797e4d9b1a808bcfb21a64098a44b610fecd1a30b8c53f729",
+    "languages" : [
+      "spa"
+    ],
+    "logoURL" : "https:\/\/static.elektamedia.com\/ch\/tmc_00s.png",
+    "number" : "Totalmusic2000s.uk",
+    "quality" : {
+      "fhd" : {
+
+      }
+    },
+    "sortHint" : "Totalmusic 2000s::Totalmusic2000s.uk",
+    "title" : "Totalmusic 2000s",
+    "url" : "https:\/\/cdn.global.elektamedia.com\/live\/c7eds\/Totalmusic_00s\/SA_LIVE_hls_enc\/master.m3u8"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Programming is music or music related",
+        "categoryId" : "music",
+        "name" : "Music"
+      }
+    ],
+    "country" : "UK",
+    "deviceId" : "IPTV",
+    "guideId" : "TotalmusicConcerts.uk",
+    "hasDRM" : false,
+    "id" : "84cadfef0b5d4d4be40a07e521d8671f0b1c0cfd1d0038d5a986340e69094944",
+    "languages" : [
+      "spa"
+    ],
+    "logoURL" : "https:\/\/static.elektamedia.com\/ch\/tmc_concerts.png",
+    "number" : "TotalmusicConcerts.uk",
+    "quality" : {
+      "fhd" : {
+
+      }
+    },
+    "sortHint" : "Totalmusic Concerts::TotalmusicConcerts.uk",
+    "title" : "Totalmusic Concerts",
+    "url" : "https:\/\/cdn.global.elektamedia.com\/live\/c7eds\/Totalmusic_Concerts\/SA_LIVE_hls_enc\/master.m3u8"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Programming is music or music related",
+        "categoryId" : "music",
+        "name" : "Music"
+      }
+    ],
+    "country" : "UK",
+    "deviceId" : "IPTV",
+    "guideId" : "TotalmusicDance.uk",
+    "hasDRM" : false,
+    "id" : "ab9d68cb70ecb4b390126e4f8f0e7a0ca4104b64aa61411d255e807ea8bc8c81",
+    "languages" : [
+      "spa"
+    ],
+    "logoURL" : "https:\/\/static.elektamedia.com\/ch\/tmc_dance.png",
+    "number" : "TotalmusicDance.uk",
+    "quality" : {
+      "fhd" : {
+
+      }
+    },
+    "sortHint" : "Totalmusic Dance::TotalmusicDance.uk",
+    "title" : "Totalmusic Dance",
+    "url" : "https:\/\/cdn.global.elektamedia.com\/live\/c7eds\/Totalmusic_Dance\/SA_LIVE_hls_enc\/master.m3u8"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Programming is music or music related",
+        "categoryId" : "music",
+        "name" : "Music"
+      }
+    ],
+    "country" : "UK",
+    "deviceId" : "IPTV",
+    "guideId" : "Totalmusic.uk",
+    "hasDRM" : false,
+    "id" : "b4441be3f3a5fcc8b716b31ade78c376b45305500ced63caacc959c04bd61a18",
+    "languages" : [
+      "spa"
+    ],
+    "logoURL" : "https:\/\/static.elektamedia.com\/ch\/tmc_main.png",
+    "number" : "Totalmusic.uk",
+    "quality" : {
+      "fhd" : {
+
+      }
+    },
+    "sortHint" : "Totalmusic::Totalmusic.uk",
+    "title" : "Totalmusic",
+    "url" : "https:\/\/cdn.global.elektamedia.com\/live\/c7eds\/Totalmusic\/SA_LIVE_hls_enc\/master.m3u8"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Programming is mostly from earlier decades",
+        "categoryId" : "classic",
+        "name" : "Classic"
+      }
+    ],
+    "country" : "US",
+    "deviceId" : "IPTV",
+    "guideId" : "TVSTallyHo.us",
+    "hasDRM" : false,
+    "id" : "26bad6315efd0ff08a00243a67b898084be353cb7c5c3be0c65f87be7830a8d0",
+    "languages" : [
+      "eng"
+    ],
+    "logoURL" : "https:\/\/i.imgur.com\/JlFwnDD.png",
+    "number" : "TVSTallyHo.us",
+    "quality" : {
+      "sd" : {
+
+      }
+    },
+    "sortHint" : "TVS Tally Ho::TVSTallyHo.us",
+    "title" : "TVS Tally Ho",
+    "url" : "https:\/\/rpn.bozztv.com\/gusa\/gusa-tvstallyho\/index.m3u8"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Programming is sports",
+        "categoryId" : "sports",
+        "name" : "Sports"
+      }
+    ],
+    "country" : "US",
+    "deviceId" : "IPTV",
+    "guideId" : "Unbeaten.us",
+    "hasDRM" : false,
+    "id" : "4c98da6be8dffb76ce235bab31ec15b8686bd522578e32bfe3ea5b9b843dd0a7",
+    "languages" : [
+      "eng"
+    ],
+    "logoURL" : "https:\/\/i.imgur.com\/LmkNt3v.png",
+    "number" : "Unbeaten.us",
+    "quality" : {
+      "fhd" : {
+
+      }
+    },
+    "sortHint" : "Unbeaten::Unbeaten.us",
+    "title" : "Unbeaten",
+    "url" : "https:\/\/unbeaten-tcl.amagi.tv\/playlist.m3u8"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Channels with a variety of entertainment programs",
+        "categoryId" : "entertainment",
+        "name" : "Entertainment"
+      }
+    ],
+    "country" : "US",
+    "deviceId" : "IPTV",
+    "guideId" : "UndercoverBossGlobal.us",
+    "hasDRM" : false,
+    "id" : "6081980887e7444661c5faac44c1ea6ceb623d6a43fcab6292322e3abebec6f7",
+    "languages" : [
+      "eng"
+    ],
+    "logoURL" : "https:\/\/i.imgur.com\/O9lwu23.png",
+    "number" : "UndercoverBossGlobal.us",
+    "quality" : {
+      "fhd" : {
+
+      }
+    },
+    "sortHint" : "Undercover Boss::UndercoverBossGlobal.us",
+    "title" : "Undercover Boss",
+    "url" : "https:\/\/all3media-international-undercoverboss-1-nz.samsung.wurl.tv\/playlist.m3u8"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Programming that depicts a person or real-world event",
+        "categoryId" : "documentary",
+        "name" : "Documentary"
+      }
+    ],
+    "country" : "US",
+    "deviceId" : "IPTV",
+    "guideId" : "Unidentified.us",
+    "hasDRM" : false,
+    "id" : "b41a4d0d8ce6c106150c6d31430a36ad4cdc194fba4e341c35dfa7c9b3442096",
+    "languages" : [
+      "eng"
+    ],
+    "logoURL" : "https:\/\/i.imgur.com\/naYszow.jpg",
+    "number" : "Unidentified.us",
+    "quality" : {
+      "fhd" : {
+
+      }
+    },
+    "sortHint" : "Unidentified::Unidentified.us",
+    "title" : "Unidentified",
+    "url" : "https:\/\/d3ify425qsio2d.cloudfront.net\/playlist.m3u8"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Channels that only show series",
+        "categoryId" : "series",
+        "name" : "Series"
+      }
+    ],
+    "country" : "US",
+    "deviceId" : "IPTV",
+    "guideId" : "UniversalCrime.us",
+    "hasDRM" : false,
+    "id" : "12f950ab0eb39400e6d1d65ad45601f6cc042c0393fdf92c7b5f01bc8cb82798",
+    "languages" : [
+      "eng"
+    ],
+    "logoURL" : "https:\/\/i.imgur.com\/OwSlGMu.png",
+    "number" : "UniversalCrime.us",
+    "quality" : {
+      "fhd" : {
+
+      }
+    },
+    "sortHint" : "Universal Crime::UniversalCrime.us",
+    "title" : "Universal Crime",
+    "url" : "https:\/\/xumo-xumoent-vc-107-xmuvk.fast.nbcuni.com\/live\/master.m3u8"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Channels that only show movies",
+        "categoryId" : "movies",
+        "name" : "Movies"
+      },
+      {
+        "categoryDescription" : "Programming is mostly comedy",
+        "categoryId" : "comedy",
+        "name" : "Comedy"
+      },
+      {
+        "categoryDescription" : "Channels that only show series",
+        "categoryId" : "series",
+        "name" : "Series"
+      },
+      {
+        "categoryDescription" : "Programming is sports",
+        "categoryId" : "sports",
+        "name" : "Sports"
+      }
+    ],
+    "country" : "US",
+    "deviceId" : "IPTV",
+    "guideId" : "USANetwork.us",
+    "hasDRM" : false,
+    "id" : "1c6f6d72126d4d35043c3ecb3f128bb37dba08334bd42a62ef3ea77aedf5d3aa",
+    "languages" : [
+      "eng"
+    ],
+    "logoURL" : "https:\/\/upload.wikimedia.org\/wikipedia\/commons\/thumb\/d\/d7\/USA_Network_logo_%282016%29.svg\/960px-USA_Network_logo_%282016%29.svg.png",
+    "number" : "USANetwork.us",
+    "quality" : {
+      "sd" : {
+
+      }
+    },
+    "sortHint" : "USA Network East::USANetwork.us",
+    "title" : "USA Network East",
+    "url" : "https:\/\/tvpass.org\/live\/USANetworkEast\/sd"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Programming is mostly news",
+        "categoryId" : "news",
+        "name" : "News"
+      }
+    ],
+    "country" : "US",
+    "deviceId" : "IPTV",
+    "guideId" : "USATODAY.us",
+    "hasDRM" : false,
+    "id" : "f5a5ef3b422d53ed3f93b9f005d73c9f438a427b046b5c8b58a22b7a4562a045",
+    "languages" : [
+      "eng"
+    ],
+    "logoURL" : "https:\/\/i.imgur.com\/37K0AZX.png",
+    "number" : "USATODAY.us",
+    "quality" : {
+      "fhd" : {
+
+      }
+    },
+    "sortHint" : "USA Today News::USATODAY.us",
+    "title" : "USA Today News",
+    "url" : "https:\/\/usatodaynews-xumo.amagi.tv\/playlist.m3u8"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Programming is music or music related",
+        "categoryId" : "music",
+        "name" : "Music"
+      }
+    ],
+    "country" : "UK",
+    "deviceId" : "IPTV",
+    "guideId" : "V2BEATTV.uk",
+    "hasDRM" : false,
+    "id" : "0077da68d2faeaecb57c7cae5055631c3152282ac086b15b8f25e2cbca28a16c",
+    "languages" : [
+      "eng"
+    ],
+    "logoURL" : "https:\/\/i.imgur.com\/PXGqyLn.png",
+    "number" : "V2BEATTV.uk",
+    "quality" : {
+      "fhd" : {
+
+      }
+    },
+    "sortHint" : "V2BEAT::V2BEATTV.uk",
+    "title" : "V2BEAT",
+    "url" : "https:\/\/abr.de1se01.v2beat.live\/playlist.m3u8"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Programming is music or music related",
+        "categoryId" : "music",
+        "name" : "Music"
+      }
+    ],
+    "country" : "US",
+    "deviceId" : "IPTV",
+    "guideId" : "Vevo70s.us",
+    "hasDRM" : false,
+    "id" : "92b014d0d3aa55f8ff2fefc80878036303ab2e3cafad3fd95454004a9935be2a",
+    "languages" : [
+      "eng"
+    ],
+    "logoURL" : "https:\/\/images.pluto.tv\/channels\/5f32f26bcd8aea00071240e5\/featuredImage.jpg",
+    "number" : "Vevo70s.us",
+    "quality" : {
+      "fhd" : {
+
+      }
+    },
+    "sortHint" : "Vevo '70s::Vevo70s.us",
+    "title" : "Vevo '70s",
+    "url" : "https:\/\/d341pfs1smb2ef.cloudfront.net\/Vevo_70s.m3u8"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Programming is music or music related",
+        "categoryId" : "music",
+        "name" : "Music"
+      }
+    ],
+    "country" : "US",
+    "deviceId" : "IPTV",
+    "guideId" : "Vevo80s.us",
+    "hasDRM" : false,
+    "id" : "d084a94ae4113048b94986bb194106e6375d6d9bcd3d5df63ae96ba1820678f4",
+    "languages" : [
+      "eng"
+    ],
+    "logoURL" : "https:\/\/images.pluto.tv\/channels\/5fd7b8bf927e090007685853\/featuredImage.jpg",
+    "number" : "Vevo80s.us",
+    "quality" : {
+      "fhd" : {
+
+      }
+    },
+    "sortHint" : "Vevo '80s::Vevo80s.us",
+    "title" : "Vevo '80s",
+    "url" : "https:\/\/d3svsvgc81yfe1.cloudfront.net\/Vevo_80s.m3u8"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Programming is music or music related",
+        "categoryId" : "music",
+        "name" : "Music"
+      }
+    ],
+    "country" : "US",
+    "deviceId" : "IPTV",
+    "guideId" : "Vevo90s.us",
+    "hasDRM" : false,
+    "id" : "ee0f03ac80e8e63be4fb9317907d7ec24230ba370079526af4a16af613df1ef2",
+    "languages" : [
+      "eng"
+    ],
+    "logoURL" : "https:\/\/images.pluto.tv\/channels\/5fd7bb1f86d94a000796e2c2\/featuredImage.jpg",
+    "number" : "Vevo90s.us",
+    "quality" : {
+      "fhd" : {
+
+      }
+    },
+    "sortHint" : "Vevo '90s::Vevo90s.us",
+    "title" : "Vevo '90s",
+    "url" : "https:\/\/d29u7uq3k6xqk0.cloudfront.net\/Vevo_90s.m3u8"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Programming is music or music related",
+        "categoryId" : "music",
+        "name" : "Music"
+      }
+    ],
+    "country" : "US",
+    "deviceId" : "IPTV",
+    "guideId" : "Vevo2K.us",
+    "hasDRM" : false,
+    "id" : "a02802fd4092edefcc413ce92d572e01584ab27b7d435926cd3f20390d7fb7b1",
+    "languages" : [
+      "eng"
+    ],
+    "logoURL" : "https:\/\/images.pluto.tv\/channels\/5fd7bca3e0a4ee0007a38e8c\/featuredImage.jpg",
+    "number" : "Vevo2K.us",
+    "quality" : {
+      "fhd" : {
+
+      }
+    },
+    "sortHint" : "Vevo 2K::Vevo2K.us",
+    "title" : "Vevo 2K",
+    "url" : "https:\/\/d3150hggbcolbo.cloudfront.net\/Vevo_2K.m3u8"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Programming is music or music related",
+        "categoryId" : "music",
+        "name" : "Music"
+      }
+    ],
+    "country" : "US",
+    "deviceId" : "IPTV",
+    "guideId" : "VevoCountry.us",
+    "hasDRM" : false,
+    "id" : "e4683a0ffccdc9e041eb2f6770a6ffefa5b486510d8dd77778923403d9608f7b",
+    "languages" : [
+      "eng"
+    ],
+    "logoURL" : "https:\/\/images.pluto.tv\/channels\/5da0d75e84830900098a1ea0\/featuredImage.jpg",
+    "number" : "VevoCountry.us",
+    "quality" : {
+      "fhd" : {
+
+      }
+    },
+    "sortHint" : "Vevo Country::VevoCountry.us",
+    "title" : "Vevo Country",
+    "url" : "https:\/\/pb-xrdbj9zdgm6ez.akamaized.net\/Vevo_Country.m3u8"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Programming is music or music related",
+        "categoryId" : "music",
+        "name" : "Music"
+      }
+    ],
+    "country" : "US",
+    "deviceId" : "IPTV",
+    "guideId" : "VevoHipHop.us",
+    "hasDRM" : false,
+    "id" : "fbb15e646b0224960dda519b80056de354185ada32832fdc35f03f54dfef9bd6",
+    "languages" : [
+      "eng"
+    ],
+    "logoURL" : "https:\/\/i.imgur.com\/Lbc9cYw.png",
+    "number" : "VevoHipHop.us",
+    "quality" : {
+      "fhd" : {
+
+      }
+    },
+    "sortHint" : "Vevo Hip Hop::VevoHipHop.us",
+    "title" : "Vevo Hip Hop",
+    "url" : "https:\/\/d3vgs3ro3x6v8a.cloudfront.net\/Vevo_Hip_Hop.m3u8"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Programming is music or music related",
+        "categoryId" : "music",
+        "name" : "Music"
+      }
+    ],
+    "country" : "US",
+    "deviceId" : "IPTV",
+    "guideId" : "VevoLatino.us",
+    "hasDRM" : false,
+    "id" : "d147e04d06f794accc0a45bbdedfefc8d42ec23296edb710a8895d6c1ace1591",
+    "languages" : [
+      "eng"
+    ],
+    "logoURL" : "https:\/\/i.imgur.com\/D7SwmuB.png",
+    "number" : "VevoLatino.us",
+    "quality" : {
+      "fhd" : {
+
+      }
+    },
+    "sortHint" : "Vevo Latino::VevoLatino.us",
+    "title" : "Vevo Latino",
+    "url" : "https:\/\/d1vgg34wqvwdqj.cloudfront.net\/Vevo_Latino.m3u8"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Programming is music or music related",
+        "categoryId" : "music",
+        "name" : "Music"
+      }
+    ],
+    "country" : "US",
+    "deviceId" : "IPTV",
+    "guideId" : "VevoPop.us",
+    "hasDRM" : false,
+    "id" : "ca9bc1a4b573f912cc12d2d589e41f57d669620668a42917287c2a2d944c7db4",
+    "languages" : [
+      "eng"
+    ],
+    "logoURL" : "https:\/\/i.imgur.com\/dZHktKR.png",
+    "number" : "VevoPop.us",
+    "quality" : {
+      "fhd" : {
+
+      }
+    },
+    "sortHint" : "Vevo Pop::VevoPop.us",
+    "title" : "Vevo Pop",
+    "url" : "https:\/\/d2n5ee9u100agb.cloudfront.net\/Vevo_Pop.m3u8"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Programming is music or music related",
+        "categoryId" : "music",
+        "name" : "Music"
+      }
+    ],
+    "country" : "US",
+    "deviceId" : "IPTV",
+    "guideId" : "VevoRB.us",
+    "hasDRM" : false,
+    "id" : "1858cde0591baaddc657e822b62dae5ef651fe85dac8a2fba38ac01c23302acc",
+    "languages" : [
+      "eng"
+    ],
+    "logoURL" : "https:\/\/images.pluto.tv\/channels\/5da0d83f66c9700009b96d0e\/featuredImage.jpg",
+    "number" : "VevoRB.us",
+    "quality" : {
+      "fhd" : {
+
+      }
+    },
+    "sortHint" : "Vevo R&B::VevoRB.us",
+    "title" : "Vevo R&B",
+    "url" : "https:\/\/d1hf773q57zx9s.cloudfront.net\/Vevo_R_B.m3u8"
+  },
+  {
+    "categories" : [
+      {
+        "categoryDescription" : "Programming is music or music related",
+        "categoryId" : "music",
+        "name" : "Music"
+      }
+    ],
+    "country" : "US",
+    "deviceId" : "IPTV",
+    "guideId" : "VevoRetroRock.us",
+    "hasDRM" : false,
+    "id" : "a1b43d4422544d7de9eae1eedbc4881e0805da1735ed11538a7cacd40e6e5596",
+    "languages" : [
+      "eng"
+    ],
+    "logoURL" : "https:\/\/i.imgur.com\/H1Aap4E.png",
+    "number" : "VevoRetroRock.us",
+    "quality" : {
+      "fhd" : {
+
+      }
+    },
+    "sortHint" : "Vevo Retro Rock::VevoRetroRock.us",
+    "title" : "Vevo Retro Rock",
+    "url" : "https:\/\/d2hdqrshyzxswl.cloudfront.net\/Vevo_Retro_Rock.m3u8"
+  }
+]

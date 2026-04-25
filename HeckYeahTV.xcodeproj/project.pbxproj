@@ -279,6 +279,7 @@
 				SupportingFiles/Mocking/MockData/MockSwiftDataController.swift,
 				SupportingFiles/Mocking/MockData/MockSwiftDataStack.swift,
 				SupportingFiles/Mocking/MockPreviewView/TVPreviewView.swift,
+				SupportingFiles/NewInstallData/DefaultChannels.json,
 				"SupportingFiles/plist/Firebase/GoogleService-Info.plist",
 			);
 			target = EB2C2DB62E5E203A005CE685 /* macOS_HeckYeahTV */;
@@ -504,6 +505,7 @@
 				SupportingFiles/Mocking/MockData/MockSwiftDataController.swift,
 				SupportingFiles/Mocking/MockData/MockSwiftDataStack.swift,
 				SupportingFiles/Mocking/MockPreviewView/TVPreviewView.swift,
+				SupportingFiles/NewInstallData/DefaultChannels.json,
 				"SupportingFiles/plist/Firebase/GoogleService-Info.plist",
 			);
 			target = EBE03C162E53D8DE006B7747 /* tvOS_HeckYeahTV */;

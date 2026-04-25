@@ -313,5 +313,20 @@ extension Heck_Yeah_TVApp {
         try? jsonChanelsString?.write(to: channelsURL, atomically: true, encoding: .utf8)
         try? jsonChanelProgramsString?.write(to: channelProgramsURL, atomically: true, encoding: .utf8)
     }
+    
+    func generateDefaultIPTVData() {
+        let viewContext = InjectedValues[\.swiftDataController].viewContext
+        
+        let fetchDescriptor: FetchDescriptor<BundleEntry> = BundleEntryPredicate(hasChannel: true).fetchDescriptorDefaultSort()
+        let bundleEntries: [BundleEntry] = try! viewContext.fetch(fetchDescriptor)
+        let channels = bundleEntries.filter({ $0.channel?.deviceId == IPTVImporter.iptvDeviceId }).map { $0.channel! }
+        let jsonData = try! channels.toJSONData()
+        
+        let rootURL = AppKeys.Application.appFileStoreRootURL
+        let channelsURL = rootURL.appendingPathComponent("DefaultChannels", isDirectory: false).appendingPathExtension("json")
+        logDebug(channelsURL.path(percentEncoded: false))
+        
+        try? jsonData.write(to: channelsURL)
+    }
 #endif
 }
