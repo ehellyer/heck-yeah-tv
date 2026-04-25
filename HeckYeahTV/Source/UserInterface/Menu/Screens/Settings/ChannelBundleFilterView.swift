@@ -64,13 +64,13 @@ struct ChannelBundleFilterView: View {
                 
                 if canDelete {
                     HStack {
-                        Spacer()
                         Button(role: .destructive) {
                             showingDeleteConfirmation = true
                         } label: {
                             Label("Delete Bundle", systemImage: "trash")
                         }
                         .buttonStyle(.glass)
+                        Spacer()
                     }
                 }
                 
@@ -150,6 +150,23 @@ struct ChannelBundleFilterView: View {
             
             // MARK: - Manage Channels Section
             Section {
+                
+                NavigationLink {
+                    ChannelManagementView(bundle: bundle)
+                } label: {
+                    HStack {
+                        Text("Select IPTV Channels")
+                        Spacer()
+                        if matchingChannelCount > 0 {
+                            Text("\(matchingChannelCount) channels matching filter")
+                                .foregroundStyle(.secondary)
+                                .font(.caption)
+                        }
+                    }
+                    .foregroundStyle(.primary)
+                }
+
+                
                 if allDevices.isEmpty {
                     Text("There are no HDHomeRun devices available")
                         .foregroundStyle(.secondary)
@@ -161,7 +178,7 @@ struct ChannelBundleFilterView: View {
                         DeviceSelectionView(bundle: bundle)
                     } label: {
                         HStack {
-                            Text("Select HDHomeRun device to include channels")
+                            Text("Select HDHomeRun device")
                             Spacer()
                             Text("\(associatedDeviceCount) device(s) selected")
                                 .foregroundStyle(.secondary)
@@ -169,21 +186,6 @@ struct ChannelBundleFilterView: View {
                         }
                         .foregroundStyle(.primary)
                     }
-                }
-                
-                NavigationLink {
-                    ChannelManagementView(bundle: bundle)
-                } label: {
-                    HStack {
-                        Text("Select IPTV Channels matching filter")
-                        Spacer()
-                        if matchingChannelCount > 0 {
-                            Text("\(matchingChannelCount) channels matching filter")
-                                .foregroundStyle(.secondary)
-                                .font(.caption)
-                        }
-                    }
-                    .foregroundStyle(.primary)
                 }
                 
             } header: {
