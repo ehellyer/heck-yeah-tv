@@ -75,10 +75,6 @@ extension SchemaV1 {
         @Relationship(deleteRule: .cascade, inverse: \RecentlyViewedChannel.channel)
         var recentlyViewedEntries: [RecentlyViewedChannel] = []
         
-        // Delete rule cascade, when channel is deleted, delete corresponding SelectedChannel entry.
-        @Relationship(deleteRule: .cascade, inverse: \SelectedChannel.channel)
-        var selectedChannelEntries: [SelectedChannel] = []
-        
         // MARK: - JSONSerializable Implementation (added for mock data)
         //
         // JSONSerializable implementation not automatically synthesized due to a conflict with SwiftData @Model automatic synthesis of certain behaviors.

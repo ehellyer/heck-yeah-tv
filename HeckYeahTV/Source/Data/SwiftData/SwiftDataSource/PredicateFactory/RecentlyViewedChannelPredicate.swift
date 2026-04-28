@@ -29,8 +29,8 @@ struct RecentlyViewedChannelPredicate {
         return descriptor
     }
 
-    /// Returns a fetch descriptor with custom sort — rewrite history however you like.
-    /// - Parameter sortBy: Your preferred sort descriptors.
+    /// Returns a fetch descriptor with optional sorting — unsorted by default, because your viewing history is already random enough.
+    /// - Parameter sortBy: Sort descriptors to apply. Defaults to none — no judgment on watch order.
     func fetchDescriptor(sortBy: [SortDescriptor<RecentlyViewedChannel>] = []) -> FetchDescriptor<RecentlyViewedChannel> {
         var descriptor = FetchDescriptor<RecentlyViewedChannel>()
         descriptor.predicate = predicate()

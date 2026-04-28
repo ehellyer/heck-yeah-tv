@@ -19,7 +19,6 @@ extension SchemaV1 {
         
         init(channel: Channel,
              channelBundle: ChannelBundle,
-             sortHint: String,
              isFavorite: Bool = false) {
             
             let bundleEntryId = BundleEntry.newBundleEntryId(channelBundleId: channelBundle.id, channelId: channel.id)
@@ -28,7 +27,7 @@ extension SchemaV1 {
             self.channel = channel
             self.channelId = channel.id
             self.channelBundle = channelBundle
-            self.sortHint = sortHint
+            self.sortHint = channel.sortHint
             self.isFavorite = isFavorite
         }
         

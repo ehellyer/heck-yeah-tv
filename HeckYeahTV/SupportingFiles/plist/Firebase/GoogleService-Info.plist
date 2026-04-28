@@ -9,7 +9,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.hellyermultimedia.heckyeahtv</string>
+	<string>com.hellyermedia.heckyeahtv.app</string>
 	<key>PROJECT_ID</key>
 	<string>heckyeahtv</string>
 	<key>STORAGE_BUCKET</key>
@@ -25,6 +25,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:26907077188:ios:4c6c79e54bd6502d23ea11</string>
+	<string>1:26907077188:ios:c88fd94abcef35e023ea11</string>
 </dict>
 </plist>

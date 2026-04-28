@@ -430,7 +430,7 @@ extension VLCPlayerRepresentable.Coordinator: VLCMediaPlayerDelegate {
                 logDebug("VLC State: Elementary Stream Added")
                 
             case .buffering:
-                logDebug("VLC State: Buffering")
+                // logDebug("VLC State: Buffering")
                 Task { @MainActor in
                     self.lastTimeUpdate = Date()
                 }

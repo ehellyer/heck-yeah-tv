@@ -106,7 +106,6 @@ final class MockSwiftDataStack: SwiftDataStackProvider {
                 
                 let bundleEntry = BundleEntry(channel: channel,
                                               channelBundle: channelBundle,
-                                              sortHint: channel.sortHint,
                                               isFavorite: favorites.contains(channelId))
                 viewContext.insert(bundleEntry)
             }

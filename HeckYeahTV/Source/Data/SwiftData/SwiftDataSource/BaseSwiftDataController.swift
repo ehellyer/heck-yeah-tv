@@ -39,10 +39,10 @@ class BaseSwiftDataController: SwiftDataProvider {
             access(keyPath: \.selectedChannel)
             do {
                 guard _cachedSelectedChannel == nil else { return _cachedSelectedChannel }
-                let fetchDescriptor = SelectedChannelPredicate(fetchLimit: 1).fetchDescriptorDefaultSort()
-                let selectedChannel = try viewContext.fetch(fetchDescriptor).first
-                _cachedSelectedChannel = selectedChannel?.channel
-                return selectedChannel?.channel
+                let fetchDescriptor = RecentlyViewedChannelPredicate(fetchLimit: 1).fetchDescriptorDefaultSort()
+                let recentlyViewed = try viewContext.fetch(fetchDescriptor).first
+                _cachedSelectedChannel = recentlyViewed?.channel
+                return recentlyViewed?.channel
             } catch {
                 logError("Failed to fetch selectedChannel: \(error)")
             }
@@ -51,19 +51,15 @@ class BaseSwiftDataController: SwiftDataProvider {
         set {
             withMutation(keyPath: \.selectedChannel) {
                 do {
-                    //Cache the selected channel to prevent repeated reads on get {}
                     _cachedSelectedChannel = newValue
                     if let channel = newValue {
                         addRecentlyViewedChannel(channel: channel)
-                        let selectedChannel = SelectedChannel(channel: channel)
-                        viewContext.insert(selectedChannel)
                         try viewContext.saveChangesIfNeeded()
-                        
+
                         // Log analytics for channel viewing
                         let source: ChannelSource = .guide // Default to guide, could be enhanced to track actual source
                         analytics.log(.channelViewed(channelId: channel.id, channelName: channel.title, source: source))
                     }
-                    cleanupOldSelectedChannels()
                 } catch {
                     logError("Failed to save selectedChannel: \(error)")
                 }
@@ -72,6 +68,18 @@ class BaseSwiftDataController: SwiftDataProvider {
     }
     
     private(set) var channelBundleMap: ChannelBundleMap = ChannelBundleMap(channelBundleId: "", map: [:], channelIds: [])
+    
+    var hasIPTVChannelsInStore: Bool {
+        do {
+            let iptvDeviceId = IPTVImporter.iptvDeviceId
+            let fetchDescriptor = ChannelPredicate(fetchLimit: 1, deviceIds: [iptvDeviceId]).fetchDescriptor()
+            let count: Int = try viewContext.fetchCount(fetchDescriptor)
+            return count > 0
+        } catch {
+            logError("Unable to determine total channel count (IPTV channels + HDHomeRun channels. Error: \(error)")
+            return false
+        }
+    }
     
     func totalIPChannelCatalogCount() -> Int {
         do {
@@ -333,33 +341,6 @@ class BaseSwiftDataController: SwiftDataProvider {
         }
     }
     
-    func cleanupOldSelectedChannels(maxCount: Int = 5000) {
-        do {
-            // Fetch all entries sorted by viewedAt (oldest first)
-            let sortDescriptor = SortDescriptor<SelectedChannel>(\.dateAdded, order: .reverse)
-            let fetchDescriptor = FetchDescriptor<SelectedChannel>(sortBy: [sortDescriptor])
-            let selectedChannels = try viewContext.fetch(fetchDescriptor)
-            
-            // Calculate how many to delete
-            let entryCount = selectedChannels.count
-            let deleteCount = entryCount - maxCount
-            
-            guard deleteCount > 0 else {
-                logDebug("There are \(entryCount) SelectedChannel entries.  We are not at max count, therefore nothing to delete.")
-                return
-            }
-            
-            for selectedChannel in selectedChannels.suffix(from: maxCount) {
-                viewContext.delete(selectedChannel)
-            }
-            
-            try viewContext.saveChangesIfNeeded()
-            logDebug("Cleaned up \(deleteCount) old SelectedChannel entries.")
-        } catch {
-            logError("Failed to cleanup old SelectedChannel entries. Error: \(error)")
-        }
-    }
-    
     //MARK: - Internal API - ChannelFilterable protocol implementation Properties
     
     /// Only show the good channels. Life's too short for the rest.
@@ -457,6 +438,14 @@ class BaseSwiftDataController: SwiftDataProvider {
         }
     }
     
+    func rebuildChannelBundleMapImmediately() {
+        do {
+            try rebuildChannelBundleMap()
+        } catch {
+            logError("Failed to build initial channel map: \(error)")
+        }
+    }
+    
     //MARK: - Internal API - SwiftDataProvider protocol Implementation
     
     @ObservationIgnored
@@ -521,8 +510,7 @@ class BaseSwiftDataController: SwiftDataProvider {
     /// - `HomeRunDevice`: enabled/disabled state changes
     ///
     /// Changes to these models are ignored:
-    /// - `SelectedChannel`: tracks current playback only
-    /// - `RecentlyViewedChannel`: view history only
+    /// - `RecentlyViewedChannel`: view history and current playback tracking
     /// - `ChannelProgram`: guide data, doesn't affect channel list
     ///
     /// - Parameter notification: The `ModelContext.didSave` notification
@@ -710,7 +698,6 @@ class BaseSwiftDataController: SwiftDataProvider {
             
             let bundleEntry = BundleEntry(channel: channel,
                                           channelBundle: bundle,
-                                          sortHint: channel.sortHint,
                                           isFavorite: existingBundleEntry?.isFavorite ?? false)
             viewContext.insert(bundleEntry)
         }

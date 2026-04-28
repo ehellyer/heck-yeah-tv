@@ -42,11 +42,12 @@ actor SwiftDataBootTasks {
         let fetchDescriptor = ChannelBundlePredicate().fetchDescriptor()
         let savedBundles = try context.fetch(fetchDescriptor)
         
-        if not(savedBundles.contains(where: { $0.id == channelBundleId })) {
+        if not(savedBundles.isEmpty),
+           not(savedBundles.contains(where: { $0.id == channelBundleId })) {
+            
             let newBundleId = savedBundles.first!.id
             await MainActor.run {
-                var appState = InjectedValues[\.sharedAppState]
-                appState.selectedChannelBundleId = newBundleId
+                InjectedValues[\.sharedAppState].selectedChannelBundleId = newBundleId
             }
         }
     }
@@ -69,15 +70,14 @@ actor SwiftDataBootTasks {
         let bundleEntries: [BundleEntry] = try context.fetch(orphanedChannelDescriptor)
         
         guard bundleEntries.isEmpty == false else {
-            logDebug("\(bundleEntries.count) orphaned channels found in the store.  Orphaned channels is normal operation when IPTV channels get removed or tuners are not accessible.")
+            logDebug("Zero orphaned channels in the store.")
             return
         }
-        logDebug("Zero orphaned channels in the store.")
+        
+        logDebug("\(bundleEntries.count) orphaned channels found in the store.  Orphaned channels is normal operation when IPTV channels get removed or tuners are not accessible.")
         
         for bundleEntry in bundleEntries {
-        
             let channelFetchDescriptor = ChannelPredicate(fetchLimit: 1, channelId: bundleEntry.channelId).fetchDescriptor()
-            
             if let resolvedChannel = try? context.fetch(channelFetchDescriptor).first  {
                 logDebug("Resolved orphaned channel: \(resolvedChannel.title)")
                 bundleEntry.channel = resolvedChannel
@@ -85,6 +85,49 @@ actor SwiftDataBootTasks {
                 logDebug("Unable to resolve orphaned channel for bundle entry: \(bundleEntry.sortHint) (<- sort hint)")
             }
         }
+        
+        try context.saveChangesIfNeeded()
+    }
+    
+    // There must be at least one channel bundle, if one does not yet exist, we add the default.
+    func checkDefaultChannelBundle() async throws -> Bool {
+        let descriptor = ChannelBundlePredicate().fetchDescriptor()
+        let channelBundles = try context.fetch(descriptor)
+        let needsDefaultChannels: Bool = channelBundles.isEmpty
+        
+        if needsDefaultChannels {
+            let channelBundle = ChannelBundle(id: AppKeys.Application.defaultChannelBundleId,
+                                              name: "My Channel Bundle",
+                                              channels: [])
+            context.insert(channelBundle)
+            try context.saveChangesIfNeeded()
+        }
+        
+        return needsDefaultChannels
+    }
+    
+    func addDefaultChanels() async throws {
+        let descriptor = ChannelBundlePredicate(bundleId: AppKeys.Application.defaultChannelBundleId).fetchDescriptor()
+        let channelBundles = try context.fetch(descriptor)
+        guard let channelBundle = channelBundles.first else {
+            logError("Default ChannelBundle not found.  Unable to add default channels.")
+            return
+        }
+        
+        if  let url = Bundle.main.url(forResource: "DefaultChannels", withExtension: "json"),
+            let data = try? Data(contentsOf: url),
+            let channelIds: [ChannelId] = try? JSONDecoder().decode([ChannelId] .self, from: data) {
+            
+            for channelId in channelIds {
+                let channelDescriptor = ChannelPredicate(channelId: channelId).fetchDescriptor()
+                let channel: Channel? = try context.fetch(channelDescriptor).first
+                if let channel = channel {
+                    let bundleEntry = BundleEntry(channel: channel, channelBundle: channelBundle)
+                    context.insert(bundleEntry)
+                }
+            }
+        }
+        
         try context.saveChangesIfNeeded()
     }
 }

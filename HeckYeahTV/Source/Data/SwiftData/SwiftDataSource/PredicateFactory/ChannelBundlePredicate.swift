@@ -33,8 +33,8 @@ struct ChannelBundlePredicate {
         return descriptor
     }
 
-    /// Returns a fetch descriptor with custom sort — go wild, we won't judge.
-    /// - Parameter sortBy: Your preferred sort descriptors.
+    /// Returns a fetch descriptor with optional sorting — unsorted by default, like a deck of cards fresh off the table.
+    /// - Parameter sortBy: Sort descriptors to apply. Defaults to none — alphabetical is just a suggestion.
     func fetchDescriptor(sortBy: [SortDescriptor<ChannelBundle>] = []) -> FetchDescriptor<ChannelBundle> {
         var descriptor = FetchDescriptor<ChannelBundle>()
         descriptor.predicate = predicate()

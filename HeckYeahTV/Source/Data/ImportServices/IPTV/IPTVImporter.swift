@@ -239,6 +239,10 @@ actor IPTVImporter {
                                       channels: channels,
                                       streams: streams)
         
+        await MainActor.run {
+            InjectedValues[\.sharedAppState].dateLastIPTVChannelFetch = Date()
+        }
+        
         return summary
     }
 }

@@ -35,8 +35,8 @@ struct HomeRunDevicePredicate {
         return descriptor
     }
 
-    /// Returns a fetch descriptor with custom sort — sort your devices however makes you happy.
-    /// - Parameter sortBy: Your preferred sort descriptors.
+    /// Returns a fetch descriptor with optional sorting — unsorted by default, let the devices fend for themselves.
+    /// - Parameter sortBy: Sort descriptors to apply. Defaults to none — survival of the fittest.
     func fetchDescriptor(sortBy: [SortDescriptor<HomeRunDevice>] = []) -> FetchDescriptor<HomeRunDevice> {
         var descriptor = FetchDescriptor<HomeRunDevice>()
         descriptor.predicate = predicate()
@@ -63,8 +63,8 @@ struct HomeRunDevicePredicate {
         }
 
         if let deviceIds, not(deviceIds.isEmpty) {
-            if deviceIds.count == 1 {
-                conditions.append(#Predicate<HomeRunDevice> { $0.deviceId == deviceIds.first! })
+            if deviceIds.count == 1, let deviceId = deviceIds.first {
+                conditions.append(#Predicate<HomeRunDevice> { $0.deviceId == deviceId })
             } else {
                 conditions.append(
                     #Predicate<HomeRunDevice> { device in

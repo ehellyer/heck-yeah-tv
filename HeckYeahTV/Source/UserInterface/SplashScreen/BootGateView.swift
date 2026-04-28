@@ -21,7 +21,7 @@ struct BootGateView<T: View>: View {
         } else {
             BootSplashView()
                 .task {
-                    try? await Task.sleep(nanoseconds: 4_500_000_000)
+                    try? await Task.sleep(nanoseconds: 3_000_000_000)
                     minimumDelayElapsed = true
                 }
                 .transition(.opacity.combined(with: .scale))

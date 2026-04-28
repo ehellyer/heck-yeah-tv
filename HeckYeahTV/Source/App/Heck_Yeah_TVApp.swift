@@ -60,11 +60,11 @@ let secondsPerHour: TimeInterval = 3600
 struct Heck_Yeah_TVApp: App {
     
     // Register the legacy app delegate for Firebase initialization.
-    #if canImport(UIKit)
+#if canImport(UIKit)
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
-    #elseif canImport(AppKit)
+#elseif canImport(AppKit)
     @NSApplicationDelegateAdaptor(AppDelegate.self) var delegate
-    #endif
+#endif
     
     
     @Environment(\.scenePhase) private var scenePhase
@@ -73,10 +73,12 @@ struct Heck_Yeah_TVApp: App {
     @State private var showTunerPrompt = false
     @State private var appState: AppStateProvider = InjectedValues[\.sharedAppState]
     @State private var swiftDataController: BaseSwiftDataController = InjectedValues[\.swiftDataController]
-
+    
     // Holds the continuation while the tuner-scan alert is displayed.
     // Wrapped in a class so it can be mutated from within the SwiftUI struct.
     @State private var tunerPromptContinuationBox = TunerPromptContinuationBox()
+    
+    @State private var needsDefaultChannels: Bool = false
     
     var body: some Scene {
 #if os(macOS)
@@ -98,7 +100,7 @@ struct Heck_Yeah_TVApp: App {
     
     private func content() -> some View {
         RootView(isBootComplete: $isBootComplete)
-            .preferredColorScheme(.dark)
+            .preferredColorScheme(.dark) // Using transparency with transparent black requires us to lock into dark theme else text will not be contrasted enough to read.
             .task {
                 await startBootstrap()
             }
@@ -109,19 +111,33 @@ struct Heck_Yeah_TVApp: App {
             }
             .alert("Scan for HDHomeRun Tuners?", isPresented: $showTunerPrompt) {
                 Button("Yes, Scan for Tuners") {
-                    tunerPromptContinuationBox.continuation?.resume(returning: true)
-                    tunerPromptContinuationBox.continuation = nil
+                    resumeTunerPromptContinuation(returning: true)
                 }
                 Button("No Thanks", role: .cancel) {
-                    tunerPromptContinuationBox.continuation?.resume(returning: false)
-                    tunerPromptContinuationBox.continuation = nil
+                    resumeTunerPromptContinuation(returning: false)
                 }
             } message: {
-                Text("Heck Yeah TV can scan your local network for HDHomeRun tuner devices and include their live TV channels in your guide.\n\nIf you don't know what an HDHomeRun is, or you're sure you don't have one, tap No Thanks — you can always enable this later in Settings.")
+                Text("Heck Yeah TV can scan your local network for HDHomeRun tuner devices and include their live TV channels in your guide.\n\nIf you don't know what an HDHomeRun is, or you're sure you don't have one, tap No Thanks - you can always enable this later in Settings.")
             }
     }
     
     private func startBootstrap() async {
+        logDebug("Ask to scan for tuners, which may prompt for network access.")
+        await askToRequestNetworkProbePermission()
+        
+        if appState.scanForTuners == true {
+            logDebug("User has chosen to scan for tuners. Requesting local network access.")
+            let lanAuth = LocalNetworkAuthorization()
+            let result = await lanAuth.requestAuthorization()
+            UserDefaults.lastLANAuthorizationStatus = result
+        } else {
+            logDebug("User has chosen not to scan for tuners.")
+        }
+        
+        await startBootTasks()
+    }
+    
+    private func askToRequestNetworkProbePermission() async {
 #if !os(tvOS)
         if appState.scanForTuners == nil {
             let wantsToScan = await withCheckedContinuation { continuation in
@@ -134,131 +150,124 @@ struct Heck_Yeah_TVApp: App {
         // tvOS does not support local network privacy.
         appState.scanForTuners = true
 #endif
-        
-        if appState.scanForTuners == true {
-            let lanAuth = LocalNetworkAuthorization()
-            let result = await lanAuth.requestAuthorization()
-            UserDefaults.lastLANAuthorizationStatus = result
-        }
-        
-        await startBootTasks()
+    }
+    
+    private func resumeTunerPromptContinuation(returning: Bool) {
+        tunerPromptContinuationBox.continuation?.resume(returning: returning)
+        tunerPromptContinuationBox.continuation = nil
     }
     
     private func startBootTasks() async {
+        logDebug("Starting boot tasks on detached thread...")
         startupTask?.cancel()
         startupTask = Task.detached(name: "HYTV-background-bootstrap-tasks", priority: .high) {
-            let appState: AppStateProvider = InjectedValues[\.sharedAppState]
-            let swiftDataController: SwiftDataProvider = InjectedValues[\.swiftDataController]
-            let container = await swiftDataController.container
-            let iptvChannelCount = await swiftDataController.totalIPChannelCatalogCount()
-            logDebug("Current IPTV channel catalog count: \(iptvChannelCount)")
+            await preImportBootTasks()
             
-            // Determine if we need to block on IPTV fetch
-            let hasExistingIPTVChannels = iptvChannelCount > 0
-            let date = await appState.dateLastIPTVChannelFetch
-            let needsIPTVRefresh = date.map({ $0 < Date().addingTimeInterval(-secondsPerHour * 6) }) ?? true
-            
-            // If we have no channels at all, we MUST wait for IPTV import to complete
-            // Otherwise, we can proceed immediately and refresh in the background
-            let shouldBlockOnIPTV = !hasExistingIPTVChannels && needsIPTVRefresh
-            
-            if shouldBlockOnIPTV {
-                logDebug("No existing IPTV channels - blocking boot to fetch initial catalog")
-                let iptvImporter = IPTVImporter(modelContainer: container)
-                let _ = try? await iptvImporter.load()
-                
-                await MainActor.run {
-                    var appState = appState
-                    appState.dateLastIPTVChannelFetch = Date()
-                }
-            }
-            
-            // Run essential boot tasks that must complete before showing UI
-            logDebug("Performing essential boot tasks")
-            let otherBootTasks = SwiftDataBootTasks(container: container)
-            try? await otherBootTasks.alignSelectedChannelBundleId()
-            try? await otherBootTasks.mapOrphanedBundleEntryWithChannel()
-            
-            // Complete boot - UI can now be shown
-            await MainActor.run {
-                initializeUIState()
-                
-                // Update state variable that boot up processes are completed.
-                isBootComplete = true
-            }
-            
-            // Launch background tasks that don't block UI.
-            logDebug("Launching background refresh tasks")
             await withTaskGroup(of: Void.self) { group in
-                let scanForTuners = await appState.scanForTuners ?? false
                 
-                // HDHomeRun Task - always runs in background
-                if scanForTuners && UserDefaults.lastLANAuthorizationStatus == .granted {
+                // Determine if we need to block on IPTV fetch
+                // If we have no channels at all, we MUST wait for IPTV import to complete
+                // Otherwise, we can proceed immediately and refresh in the background
+                let hasExistingIPTVChannels = await swiftDataController.hasIPTVChannelsInStore
+                if not(hasExistingIPTVChannels) {
+                    logDebug("No existing IPTV channels - blocking boot to fetch initial catalog")
                     group.addTask {
-                        logDebug("Background: Starting HDHomeRun tuner scan")
-                        
-                        let lastGuideFetchDate: Date? = await appState.dateLastHomeRunChannelProgramFetch
-                        
-                        let shouldFetchGuideData: Bool = {
-                            guard let lastFetchDate = lastGuideFetchDate else {
-                                // Never fetched before, should fetch now
-                                return true
-                            }
-                            
-                            // Random interval between 3 and 6 hours
-                            let randomHours = Double.random(in: 3...6)
-                            let intervalSinceLastFetch = Date().timeIntervalSince(lastFetchDate)
-                            let hoursElapsed = intervalSinceLastFetch / 3600 // Convert seconds to hours
-                            
-                            return hoursElapsed >= randomHours
-                        }()
-                        
-                        let hdTunerImporter = HomeRunImporter(modelContainer: container)
-                        let _ = try? await hdTunerImporter.load(targetDevice: nil, shouldFetchGuideData: shouldFetchGuideData)
-                        
-                        // After tuner imports or removals, run the channel cleanup.
-                        await hdTunerImporter.deleteOrphanedTunerChannels()
-                        
-                        // Update UI after tuner channels are imported
-                        await MainActor.run {
-                            swiftDataController.invalidateTunerLineUp()
-                            swiftDataController.invalidateChannelBundleMap()
-                        }
-                        
-                        logDebug("Background: HDHomeRun tuner scan completed")
+                        await importIPTV()
+                    }
+                } else {
+                    logDebug("Loading IPTV channels in the background, without blocking the boot sequence.")
+                    Task {
+                        await importIPTV()
                     }
                 }
                 
-                // IPTV refresh task - only if we didn't already block on it
-                if !shouldBlockOnIPTV && needsIPTVRefresh {
-                    group.addTask {
-                        logDebug("Background: Starting IPTV catalog refresh")
-                        let iptvImporter = IPTVImporter(modelContainer: container)
-                        let _ = try? await iptvImporter.load()
-                        
-                        await MainActor.run {
-                            var appState = appState
-                            appState.dateLastIPTVChannelFetch = Date()
-                            swiftDataController.invalidateChannelBundleMap()
-                        }
-                        
-                        logDebug("Background: IPTV catalog refresh completed")
-                    }
+                group.addTask {
+                    await importHDHomeRun()
                 }
                 
                 // Wait for all background tasks to complete
                 await group.waitForAll()
             }
-            
-            logDebug("All bootstrap tasks completed")
+
+            // Run essential boot tasks that must complete before showing UI
+            await postImportBootTasks()
+
+            await MainActor.run {
+                // Complete boot - UI can now be shown
+                initializeUIState()
+                
+                // Update state variable that boot up processes are completed.
+                isBootComplete = true
+            }
         }
+    }
+    
+    private func importIPTV() async {
+        logDebug("Import IPTV: Starting IPTV catalog refresh.")
+        let container = InjectedValues[\.swiftDataController].container
+        let iptvImporter = IPTVImporter(modelContainer: container)
+        let _ = try? await iptvImporter.load()
+        logDebug("🏁 Import IPTV: Completed IPTV catalog refresh.")
+    }
+    
+    private func importHDHomeRun() async {
+        let appState: AppStateProvider = InjectedValues[\.sharedAppState]
+        let scanForTuners = appState.scanForTuners ?? false
+        
+        if scanForTuners && UserDefaults.lastLANAuthorizationStatus == .granted {
+            logDebug("Import HDHomeRun: Starting HDHomeRun tuner scan and import.")
+            
+            let lastGuideFetchDate: Date? = appState.dateLastHomeRunChannelProgramFetch
+            
+            let shouldFetchGuideData: Bool = {
+                guard let lastFetchDate = lastGuideFetchDate else {
+                    // Never fetched before, should fetch now
+                    return true
+                }
+                
+                // Random interval between 3 and 6 hours
+                let randomHours = Double.random(in: 3...6)
+                let intervalSinceLastFetch = Date().timeIntervalSince(lastFetchDate)
+                let hoursElapsed = intervalSinceLastFetch / 3600 // Convert seconds to hours
+                
+                return hoursElapsed >= randomHours
+            }()
+            
+            let container = InjectedValues[\.swiftDataController].container
+            let hdTunerImporter = HomeRunImporter(modelContainer: container)
+            let _ = try? await hdTunerImporter.load(targetDevice: nil, shouldFetchGuideData: shouldFetchGuideData)
+            
+            // After tuner imports or removals, run the channel cleanup.
+            await hdTunerImporter.deleteOrphanedTunerChannels()
+            
+            logDebug("🏁 Import HDHomeRun: Completed HDHomeRun tuner scan and import.")
+        }
+    }
+
+    private func preImportBootTasks() async {
+        logDebug("Pre Import Task: Starting pre import boot tasks")
+        let container = InjectedValues[\.swiftDataController].container
+        let bootTasks = SwiftDataBootTasks(container: container)
+        self.needsDefaultChannels = (try? await bootTasks.checkDefaultChannelBundle()) ?? false
+    }
+    
+    private func postImportBootTasks() async {
+        logDebug("Post Import Task: Starting post import boot tasks")
+        let container = InjectedValues[\.swiftDataController].container
+        let otherBootTasks = SwiftDataBootTasks(container: container)
+        try? await otherBootTasks.alignSelectedChannelBundleId()
+        try? await otherBootTasks.mapOrphanedBundleEntryWithChannel()
+        if self.needsDefaultChannels {
+            try? await otherBootTasks.addDefaultChanels()
+        }
+        logDebug("🏁 Post Import Task: Completed post import boot tasks")
     }
     
     private func initializeUIState() {
         let swiftDataController = InjectedValues[\.swiftDataController]
         swiftDataController.invalidateTunerLineUp()
-        swiftDataController.invalidateChannelBundleMap()
-
+        swiftDataController.rebuildChannelBundleMapImmediately()
+        
         let hasNoChannels = swiftDataController.channelBundleMap.channelIds.isEmpty
         
         if HeckYeahSchema.versionIdentifier == Schema.Version(0, 0, 0) {
@@ -272,10 +281,17 @@ struct Heck_Yeah_TVApp: App {
         appState.showProgramDetailCarousel = nil
         
         // Determine if should show menu.
-        appState.showAppMenu = (swiftDataController.selectedChannel == nil) || hasNoChannels
+        appState.showAppMenu = hasNoChannels
         
         // If shown, determine default tab.
         appState.selectedTab = (hasNoChannels) ? .settings : .guide
+        
+        // If there is no current channel selected (as would be for first launch), select the first available channel.
+        if swiftDataController.selectedChannel == nil, let channelId = swiftDataController.channelBundleMap.channelIds.first, let channel = swiftDataController.channel(for: channelId) {
+            swiftDataController.selectedChannel = channel
+        }
+        
+        logDebug("All bootstrap tasks completed, starting up main UI... ✅")
     }
 }
 
@@ -289,12 +305,12 @@ final class TunerPromptContinuationBox {
 extension Heck_Yeah_TVApp {
     
 #if DEBUG
-    //TODO: EJH - Comment out for release.
-    //Rough code for developer only - Not production code.
+    //EJH - Do not include in release compilation.
+    //EJH - Rough code for developer only - Not production code.
     func writeMockFiles() {
         let cpDescriptor: FetchDescriptor<ChannelProgram> = ChannelProgramPredicate().fetchDescriptor(sortBy: [SortDescriptor(\.channelId),
                                                                                                                SortDescriptor(\.startTime)])
-
+        
         let deviceId = IPTVImporter.iptvDeviceId
         let cDescriptor = ChannelPredicate(deviceIds: [deviceId]).fetchDescriptorDefaultSort()
         
@@ -316,11 +332,11 @@ extension Heck_Yeah_TVApp {
     
     func generateDefaultIPTVData() {
         let viewContext = InjectedValues[\.swiftDataController].viewContext
-        
+        //Note to future Ed: Assumes only one ChannelBundle of BundleEntries.
         let fetchDescriptor: FetchDescriptor<BundleEntry> = BundleEntryPredicate(hasChannel: true).fetchDescriptorDefaultSort()
         let bundleEntries: [BundleEntry] = try! viewContext.fetch(fetchDescriptor)
-        let channels = bundleEntries.filter({ $0.channel?.deviceId == IPTVImporter.iptvDeviceId }).map { $0.channel! }
-        let jsonData = try! channels.toJSONData()
+        let channels = bundleEntries.filter({ $0.channel?.deviceId == IPTVImporter.iptvDeviceId }).map { $0.channel!.id }
+        let jsonData = try! JSONEncoder().encode(channels)
         
         let rootURL = AppKeys.Application.appFileStoreRootURL
         let channelsURL = rootURL.appendingPathComponent("DefaultChannels", isDirectory: false).appendingPathExtension("json")

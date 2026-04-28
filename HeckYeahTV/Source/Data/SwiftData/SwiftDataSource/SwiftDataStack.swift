@@ -57,7 +57,6 @@ final class SwiftDataStack: SwiftDataStackProvider {
             viewContext.autosaveEnabled = true
             
             try Self.updateSchemaVersionTable(context: viewContext)
-            try Self.checkDefaultChannelBundle(context: viewContext)
         } catch {
             logFatal("Failed to initialize GuideStore: \(error)")
         }
@@ -68,19 +67,6 @@ final class SwiftDataStack: SwiftDataStackProvider {
         // Causes an insert or update because the SchemaVersion model has an ID property that is pre-determined in the models initializer.
         context.insert(SchemaVersion())
         try context.saveChangesIfNeeded()
-    }
-    
-    // There must be at least one channel bundle, if one does not yet exist, we add the default.
-    private static func checkDefaultChannelBundle(context: ModelContext) throws {
-        let appState: AppStateProvider = InjectedValues[\.sharedAppState]
-        let descriptor = ChannelBundlePredicate().fetchDescriptor()
-        let count = try context.fetchCount(descriptor)
-        if count == 0 {
-            context.insert(ChannelBundle(id: appState.selectedChannelBundleId,
-                                         name: "My Channel Bundle",
-                                         channels: []))
-            try context.saveChangesIfNeeded()
-        }
     }
     
     /// MainActor singleton instance.
@@ -214,11 +200,12 @@ extension SwiftDataStack {
         // Delete SHM file
         try deleteSHMFile(at: url)
         
-        //Side effect code I noticed was needed during development.  If we kill the DB, we will also need to kill the last did stuff dates in UserDefaults.
+        // I noticed side effect code was needed during development.  If we kill the DB, we will also need to kill the last did stuff dates in UserDefaults.
+        // Consider moving to a KeyValue structure in SwiftData, but REACTIVE implementation will be difficult as we will have to filter observations in
+        // SwiftData we need to react to.
         UserDefaults.dateLastIPTVChannelFetch = nil
         UserDefaults.dateLastHomeRunChannelProgramFetch = nil
     }
-    
     
     private static func walPath(at url: URL) -> URL {
         return url.deletingPathExtension().appendingPathExtension("sqlite-wal")

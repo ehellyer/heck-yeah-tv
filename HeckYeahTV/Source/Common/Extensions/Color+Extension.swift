@@ -10,6 +10,7 @@ import SwiftUI
 
 extension Color {
     
+#if DEBUG
     /// Used for debug and previews.
     static var random: Color {
         Color(
@@ -18,4 +19,5 @@ extension Color {
             blue: .random(in: 0...1)
         )
     }
+#endif
 }

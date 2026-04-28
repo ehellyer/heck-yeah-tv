@@ -28,8 +28,8 @@ struct ChannelProgramPredicate {
         return descriptor
     }
 
-    /// Returns a fetch descriptor with custom sort — live dangerously.
-    /// - Parameter sortBy: Your preferred sort descriptors.
+    /// Returns a fetch descriptor with optional sorting — unsorted by default, like TV before the program guide existed.
+    /// - Parameter sortBy: Sort descriptors to apply. Defaults to none — time is an illusion anyway.
     func fetchDescriptor(sortBy: [SortDescriptor<ChannelProgram>] = []) -> FetchDescriptor<ChannelProgram> {
         var descriptor = FetchDescriptor<ChannelProgram>()
         descriptor.predicate = predicate()

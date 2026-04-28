@@ -48,8 +48,8 @@ struct BundleEntryPredicate {
         return descriptor
     }
 
-    /// Returns a fetch descriptor with custom sort — for when `sortHint` just isn't your vibe.
-    /// - Parameter sortBy: Your preferred sort descriptors.
+    /// Returns a fetch descriptor with optional sorting — unsorted by default, for the spontaneous types.
+    /// - Parameter sortBy: Sort descriptors to apply. Defaults to none — order is overrated.
     func fetchDescriptor(sortBy: [SortDescriptor<BundleEntry>] = []) -> FetchDescriptor<BundleEntry> {
         var descriptor = FetchDescriptor<BundleEntry>()
         descriptor.predicate = predicate()
@@ -69,8 +69,8 @@ struct BundleEntryPredicate {
         var conditions: [Predicate<BundleEntry>] = []
 
         if let bundleEntryIds, not(bundleEntryIds.isEmpty) {
-            if bundleEntryIds.count == 1 {
-                conditions.append(#Predicate<BundleEntry> { $0.id == bundleEntryIds.first! })
+            if bundleEntryIds.count == 1, let bundleEntryId = bundleEntryIds.first {
+                conditions.append(#Predicate<BundleEntry> { $0.id == bundleEntryId })
             } else {
                 conditions.append(
                     #Predicate<BundleEntry> { device in
@@ -92,11 +92,6 @@ struct BundleEntryPredicate {
             conditions.append( #Predicate<BundleEntry> { $0.channel?.deviceId == deviceId })
         }
 
-        // if hasChannel == nil, then skip this predicate.
-        // If hasChannel == true, then it means the BundleEntry is associated to a known Channel in the catalog.
-        // If hasChannel == false then it means the BundleEntry channel in the catalog has been temporarily (or possibly permanently) removed.
-        // Keeping the BundleEntry preserves the isFavorite state of the Channel.  Disappearing/reappearing channels will happen mostly with
-        // TV Tuner channels as the user on an iPhone, iPad, Mac physically moves locations and changes network connection.
         if let hasChannel {
             if hasChannel {
                 conditions.append(#Predicate<BundleEntry> { $0.channel != nil })

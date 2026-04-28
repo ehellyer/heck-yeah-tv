@@ -30,6 +30,9 @@ protocol ChannelManageable {
     /// The currently selected channel that should be played on app launch.
     var selectedChannel: Channel? { get set }
     
+    /// A no non-sense flag that returns true if even only one IPTV channel is in the catalog.
+    var hasIPTVChannelsInStore: Bool { get }
+    
     /// Returns the total number of IPTV channels in the catalog. Yes, all of them. Every. Single. One.
     func totalIPChannelCatalogCount() -> Int
     
@@ -144,20 +147,6 @@ protocol ChannelManageable {
     ///                       to watch while scrolling social media).
     func addRecentlyViewedChannel(channel: Channel)
     
-    /// Purges ancient selected channel history when your digital nostalgia gets out of hand.
-    ///
-    /// This is like `cleanupOldRecentlyViewedChannels`, but for the `SelectedChannel` table instead.
-    /// It keeps only the most recent `maxCount` entries and ruthlessly deletes the rest, because
-    /// nobody needs a permanent record of every channel decision they've ever made.
-    ///
-    /// Your database will thank you. Your storage quota will thank you. Future archaeologists
-    /// trying to piece together your viewing habits from ancient database records will be mildly
-    /// disappointed, but they'll get over it.
-    ///
-    /// - Parameter maxCount: How many selected channel entries to preserve. Everything older
-    ///                       gets shown the exit. Set responsibly—this is permanent.
-    func cleanupOldSelectedChannels(maxCount: Int)
-
     /// Trims the recently viewed list down to size when it gets too long.
     ///
     /// This function keeps your viewing history from becoming a digital hoarder's paradise.

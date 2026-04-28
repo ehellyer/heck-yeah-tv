@@ -48,8 +48,8 @@ struct ChannelPredicate {
         return descriptor
     }
 
-    /// Returns a fetch descriptor with custom sort — dealer's choice.
-    /// - Parameter sortBy: Your preferred sort descriptors.
+    /// Returns a fetch descriptor with optional sorting — unsorted by default, because chaos is a valid lifestyle.
+    /// - Parameter sortBy: Sort descriptors to apply. Defaults to none — you get what you get.
     func fetchDescriptor(sortBy: [SortDescriptor<Channel>] = []) -> FetchDescriptor<Channel> {
         var descriptor = FetchDescriptor<Channel>()
         descriptor.predicate = predicate()
@@ -87,8 +87,8 @@ struct ChannelPredicate {
         }
 
         if let deviceIds, not(deviceIds.isEmpty) {
-            if deviceIds.count == 1 {
-                conditions.append(#Predicate<Channel> { $0.deviceId == deviceIds.first! })
+            if deviceIds.count == 1, let deviceId = deviceIds.first {
+                conditions.append(#Predicate<Channel> { $0.deviceId == deviceId })
             } else {
                 conditions.append(
                     #Predicate<Channel> { channel in

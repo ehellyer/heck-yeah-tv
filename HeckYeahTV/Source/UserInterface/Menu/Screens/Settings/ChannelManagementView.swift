@@ -107,7 +107,6 @@ struct ChannelManagementView: View {
             let bundleEntry = BundleEntry(
                 channel: channel,
                 channelBundle: bundle,
-                sortHint: channel.sortHint,
                 isFavorite: false
             )
             swiftDataController.viewContext.insert(bundleEntry)

@@ -24,7 +24,6 @@ typealias Country = HeckYeahSchema.Country
 typealias HomeRunDevice = HeckYeahSchema.HomeRunDevice
 typealias ProgramCategory = HeckYeahSchema.ProgramCategory
 typealias RecentlyViewedChannel = HeckYeahSchema.RecentlyViewedChannel
-typealias SelectedChannel = HeckYeahSchema.SelectedChannel
 typealias SchemaVersion = HeckYeahSchema.SchemaVersion
 typealias StreamQuality = HeckYeahSchema.StreamQuality
 

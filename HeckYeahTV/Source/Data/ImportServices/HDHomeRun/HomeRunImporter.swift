@@ -158,7 +158,6 @@ actor HomeRunImporter {
         logDebug("HomeRun Device import process completed. Total imported: \(homeRunDiscovery.devices.count) 🏁")
     }
     
-    
     private func updateChannelBundleDevice() async {
         do {
             let devices: [HomeRunDevice] = try modelContext.fetch(HomeRunDevicePredicate().fetchDescriptor())
