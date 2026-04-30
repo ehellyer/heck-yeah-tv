@@ -185,7 +185,6 @@ class GuideViewController: UIViewController {
         withObservationTracking({
             // Access the property we care about. This registers the dependency.
             _ = swiftDataController.channelBundleMap.map
-            _ = swiftDataController.showFavoritesOnly
         }, onChange: { [weak self] in
             // Called when any accessed observed property in the tracking block changes.
             Task { @MainActor [weak self] in
