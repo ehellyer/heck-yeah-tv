@@ -20,10 +20,13 @@ struct BootSplashView: View {
     private var soundName: String
     private var soundExt: String
     
+    @Injected(\.sharedAppState) private var appState: AppStateProvider
+    
     @State private var didPlay = false
     @State private var gradientStart = UnitPoint(x: 0, y: 0)
     @State private var gradientEnd = UnitPoint(x: 2, y: 2)
     @State private var dotCount = 0
+    @State private var showFirstLaunchTip = false
     
     init(title: String = "Heck\(nbsp)Yeah\(nbsp)TV",
          subtitle: String = "Discovering channels",
@@ -78,6 +81,18 @@ struct BootSplashView: View {
                             .foregroundStyle(Color.white.opacity(0.6))
                             .frame(width: subtitleFontSize * 1.5, alignment: .leading)
                     }
+                    
+                    if showFirstLaunchTip {
+                        Text("First time here? Grab a snack — this may take up to a minute.")
+                            .font(.system(size: subtitleFontSize,
+                                          weight: .heavy,
+                                          design: .rounded))
+                            .foregroundStyle(Color.white.opacity(0.6))
+                            .multilineTextAlignment(.center)
+                            .padding(.horizontal, 40)
+                            .padding(.top, 40)
+                            .transition(.opacity)
+                    }
                 }
             }
             
@@ -86,6 +101,13 @@ struct BootSplashView: View {
             .onAppear {
                 playBootChimeIfNeeded()
                 startDotAnimation(dots: 3)
+                if appState.isFirstLaunch {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+                        withAnimation(.easeIn(duration: 0.8)) {
+                            showFirstLaunchTip = true
+                        }
+                    }
+                }
             }
         }
     }
@@ -175,7 +197,7 @@ final class BootSoundPlayer: NSObject, @unchecked Sendable {
                     .foregroundStyle(.white)
             }
             .task {
-                try? await Task.sleep(nanoseconds: 1_500_000_000)
+                try? await Task.sleep(nanoseconds: 4_500_000_000)
                 ready = true
             }
         }

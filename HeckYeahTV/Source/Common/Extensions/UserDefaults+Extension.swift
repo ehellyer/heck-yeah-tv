@@ -242,6 +242,25 @@ extension UserDefaults {
         }
     }
 
+    /// A boolean indicating whether this is the app's first launch on this device.
+    ///
+    /// Returns `true` if the key has never been written to `UserDefaults.standard`, meaning the app
+    /// has not yet completed its initial setup. Once first-launch setup is complete, set this to `false`
+    /// so subsequent launches skip the onboarding path. The value is persisted in `UserDefaults.standard`.
+    ///
+    /// - Returns: `true` on a fresh install (or after a reinstall), `false` after first-launch setup completes.
+    static var isFirstLaunch: Bool {
+        get {
+            if isKeyPresentInUserDefaults(key: AppKeys.SharedAppState.isFirstLaunchKey) {
+                return standard.bool(forKey: AppKeys.SharedAppState.isFirstLaunchKey)
+            }
+            return true
+        }
+        set {
+            standard.set(newValue, forKey: AppKeys.SharedAppState.isFirstLaunchKey)
+        }
+    }
+    
     /// Checks to see if the key exists in `UserDefaults`, returns true if exists, false if not exists.
     ///
     /// Use the function to determine if the value for key needs to be a default value or the value for the key returned from `UserDefaults`.

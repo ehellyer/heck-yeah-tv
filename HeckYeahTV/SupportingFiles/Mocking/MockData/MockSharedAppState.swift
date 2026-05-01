@@ -29,6 +29,7 @@ final class MockSharedAppState: AppStateProvider {
         self.preMutedVolume = nil
         self.isReloadingIPTV = false
         self.isReloadingHomeRun = false
+        self.isFirstLaunch = true
     }
 
 
@@ -48,4 +49,5 @@ final class MockSharedAppState: AppStateProvider {
     var preMutedVolume: Int32?
     var isReloadingIPTV: Bool
     var isReloadingHomeRun: Bool
+    var isFirstLaunch: Bool
 }

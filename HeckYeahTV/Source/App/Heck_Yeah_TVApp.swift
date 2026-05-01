@@ -249,6 +249,7 @@ struct Heck_Yeah_TVApp: App {
         let container = InjectedValues[\.swiftDataController].container
         let bootTasks = SwiftDataBootTasks(container: container)
         self.needsDefaultChannels = (try? await bootTasks.checkDefaultChannelBundle()) ?? false
+        logDebug("Needs default channels?  \(self.needsDefaultChannels ? "Yes" : "No")")
     }
     
     private func postImportBootTasks() async {
@@ -257,6 +258,7 @@ struct Heck_Yeah_TVApp: App {
         let otherBootTasks = SwiftDataBootTasks(container: container)
         try? await otherBootTasks.alignSelectedChannelBundleId()
         try? await otherBootTasks.mapOrphanedBundleEntryWithChannel()
+        logDebug("Adding default channels?  \(self.needsDefaultChannels ? "Yes" : "No")")
         if self.needsDefaultChannels {
             try? await otherBootTasks.addDefaultChanels()
         }
@@ -276,6 +278,8 @@ struct Heck_Yeah_TVApp: App {
             appState.isPlayerPaused = false
             swiftDataController.cleanupOldRecentlyViewedChannels(maxCount: 0)
         }
+        
+        appState.isFirstLaunch = false
         
         // Always dismiss channel programs carousel
         appState.showProgramDetailCarousel = nil

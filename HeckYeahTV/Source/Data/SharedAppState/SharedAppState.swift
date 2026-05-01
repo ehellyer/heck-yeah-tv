@@ -122,4 +122,16 @@ final class SharedAppState: AppStateProvider {
     var preMutedVolume: Int32? = nil
     var isReloadingIPTV: Bool = false
     var isReloadingHomeRun: Bool = false
+    
+    var isFirstLaunch: Bool {
+        get {
+            access(keyPath: \.isFirstLaunch)
+            return UserDefaults.isFirstLaunch
+        }
+        set {
+            withMutation(keyPath: \.isFirstLaunch) {
+                UserDefaults.isFirstLaunch = newValue
+            }
+        }
+    }
 }

@@ -151,4 +151,10 @@ protocol AppStateProvider {
     /// When `true`, the app is probing the network for tuner devices and fetching their channel lineups.
     /// This state is managed by HomeRunImporter and observed by UI to show loading indicators.
     var isReloadingHomeRun: Bool { get set }
+    
+    /// Whether this is the app's first rodeo.
+    ///
+    /// Spoiler alert: the app has no idea what it's doing yet.
+    /// It's like a newborn deer — all legs, no coordination.
+    var isFirstLaunch: Bool { get set }
 }
