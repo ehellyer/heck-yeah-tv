@@ -88,7 +88,14 @@ class DebugLogger {
     //MARK: - FilePrivate API - The glue between app scoped logging functions and instance logging function.
     
     fileprivate func log<T>(_ level: DebugLogger.Level, _ object: @autoclosure () -> T, _ file: StaticString, _ function: StaticString, _ line: UInt) {
-        
+
+#if DEBUG
+        // Continue to log.
+#else
+        //Return early for non-debug version
+        return
+#endif
+
         let value = object()
         let queue = Thread.isMainThread ? "M" : "B"
         
@@ -97,10 +104,8 @@ class DebugLogger {
         let message = String(reflecting: value)
         let emoji = level.emoji
 
-#if DEBUG
         let consoleLogString = "\(timeStr) l:\(emoji) q:\(queue) s:\(fileName) \(function) \(line) m:\(message)"
         print(consoleLogString)
-#endif
         //TODO: Log to cycling offline local file for post crash analytics package.
     }
 }

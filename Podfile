@@ -2,14 +2,14 @@ use_frameworks!
 
 target 'iOS_HeckYeahTV' do
   
-  platform :ios, '18.0'
+  platform :ios, '26.0'
   pod 'MobileVLCKit'
 
 end
 
 target 'tvOS_HeckYeahTV' do
 
-  platform :tvos, '18.0'
+  platform :tvos, '26.0'
   pod 'TVVLCKit'
 
 end
@@ -17,7 +17,7 @@ end
 
 target 'macOS_HeckYeahTV' do
 
-  platform :macos, '15.0'
+  platform :macos, '26.0'
   pod 'VLCKit'
     
 end

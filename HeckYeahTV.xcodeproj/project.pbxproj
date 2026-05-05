@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		089D175416ADEF60C0354B23 /* Pods_iOS_HeckYeahTV.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76A34A69F5505812676277A2 /* Pods_iOS_HeckYeahTV.framework */; };
+		725CAC041768D7BEA67009AF /* Pods_macOS_HeckYeahTV.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB3785972F2141770086BB1F /* Pods_macOS_HeckYeahTV.framework */; };
+		C53364DDA7B0B93053748803 /* Pods_iOS_HeckYeahTV.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB35E30D2F0077B500D31894 /* Pods_iOS_HeckYeahTV.framework */; };
 		EB35E3122F00781200D31894 /* MobileVLCKit.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB35E3112F00781200D31894 /* MobileVLCKit.xcframework */; };
 		EB37859B2F21417F0086BB1F /* Pods_macOS_HeckYeahTV.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB33342D2EC8273700CFAC43 /* Pods_macOS_HeckYeahTV.framework */; };
 		EB37859F2F2142480086BB1F /* Pods_tvOS_HeckYeahTV.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB37859E2F2142480086BB1F /* Pods_tvOS_HeckYeahTV.framework */; };
@@ -521,11 +523,15 @@
 		};
 		EBE03BC72E53D423006B7747 /* HeckYeahTVTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+			);
 			path = HeckYeahTVTests;
 			sourceTree = "<group>";
 		};
 		EBE03BD12E53D423006B7747 /* HeckYeahTVUITests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+			);
 			path = HeckYeahTVUITests;
 			sourceTree = "<group>";
 		};
@@ -540,6 +546,7 @@
 				EBFFBD182F21A7AB0022F6A5 /* FirebaseCrashlytics in Frameworks */,
 				EBFFBD162F21A7AB0022F6A5 /* FirebaseAnalytics in Frameworks */,
 				EB37859B2F21417F0086BB1F /* Pods_macOS_HeckYeahTV.framework in Frameworks */,
+				725CAC041768D7BEA67009AF /* Pods_macOS_HeckYeahTV.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -565,6 +572,7 @@
 				089D175416ADEF60C0354B23 /* Pods_iOS_HeckYeahTV.framework in Frameworks */,
 				EBDD3AF72ECE9C160050D08D /* FirebaseAnalytics in Frameworks */,
 				EBB5B3292ED8B9D6004251CB /* Hellfire in Frameworks */,
+				C53364DDA7B0B93053748803 /* Pods_iOS_HeckYeahTV.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1039,13 +1047,9 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-tvOS_HeckYeahTV/Pods-tvOS_HeckYeahTV-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
-			inputPaths = (
-			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-tvOS_HeckYeahTV/Pods-tvOS_HeckYeahTV-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -1082,13 +1086,9 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-iOS_HeckYeahTV/Pods-iOS_HeckYeahTV-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
-			inputPaths = (
-			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-iOS_HeckYeahTV/Pods-iOS_HeckYeahTV-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -1200,13 +1200,9 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-macOS_HeckYeahTV/Pods-macOS_HeckYeahTV-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
-			inputPaths = (
-			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-macOS_HeckYeahTV/Pods-macOS_HeckYeahTV-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
