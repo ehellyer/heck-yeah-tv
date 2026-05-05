@@ -16,6 +16,7 @@ final class SwiftDataStack: SwiftDataStackProvider {
     /// Private init due to shared singleton instance.
     private init() {
         do {
+            let appState: AppStateProvider = InjectedValues[\.sharedAppState]
             var _rootURL = AppKeys.Application.appFileStoreRootURL
             _rootURL.append(component: "ChannelData")
             try FileManager.default.createDirectory(atPath: _rootURL.path, withIntermediateDirectories: true)
@@ -35,7 +36,9 @@ final class SwiftDataStack: SwiftDataStackProvider {
             // Dev mode: Nuke the store if it's from "yesterday's schema."
             // Because writing migration code for every little tweak during v1.0 development is nobody's idea of fun.
             // Once we ship, we'll play by the rules. Until then? Scorched earth policy. 🔥
-            if Self.isLegacyStore(at: _storeURL) {
+            // -----
+            // For dev time app reset purposes, we will delete the DB if the app isFirstLaunch == true.
+            if appState.isFirstLaunch || Self.isLegacyStore(at: _storeURL) {
                 logWarning("Detected legacy store. Deleting and recreating with versioned schema...")
                 try Self.deletePersistentStore(at: _storeURL)
                 logWarning("Legacy store deleted successfully.")
@@ -187,12 +190,9 @@ extension SwiftDataStack {
     /// Deletes the main .sqlite file and its clingy friends (.sqlite-shm, .sqlite-wal).
     /// Because apparently one file wasn't enough - SQLite brought the whole squad.
     private static func deletePersistentStore(at url: URL) throws {
-        let fileManager = FileManager.default
         
         // Delete main store file
-        if fileManager.fileExists(atPath: url.path) {
-            try fileManager.removeItem(at: url)
-        }
+        try delete(at: url)
         
         // Delete WAL file
         try deleteWALFile(at: url)
@@ -219,20 +219,21 @@ extension SwiftDataStack {
     /// Because sometimes you just have to take out the trash yourself.
     /// Caution:  Force commit WAL changes first if keeping the sqlite file, else data loss may occur.
     private static func deleteWALFile(at url: URL) throws {
-        let fileManager = FileManager.default
         let walURL = walPath(at: url)
-        if fileManager.fileExists(atPath: walURL.path) {
-            try fileManager.removeItem(at: walURL)
-        }
+        try delete(at: walURL)
     }
     
     /// Deletes the SHM (shared memory) file, which is basically SQLite’s group chat history.
     /// If it’s hanging around after the main file is gone, it’s just gossip at that point.
     private static func deleteSHMFile(at url: URL) throws {
-        let fileManager = FileManager.default
         let shmURL = shmPath(at: url)
-        if fileManager.fileExists(atPath: shmURL.path) {
-            try fileManager.removeItem(at: shmURL)
+        try delete(at: shmURL)
+    }
+    
+    private static func delete(at url: URL) throws {
+        let fileManager = FileManager.default
+        if fileManager.fileExists(atPath: url.path) {
+            try fileManager.removeItem(at: url)
         }
     }
 }

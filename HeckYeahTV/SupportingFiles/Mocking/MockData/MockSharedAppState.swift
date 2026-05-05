@@ -18,7 +18,7 @@ final class MockSharedAppState: AppStateProvider {
         self.showProgramDetailCarousel = nil
         self.selectedTab = .guide
         self.scanForTuners = true
-        self.selectedChannelBundleId = "mock#1.guide"// AppKeys.Application.defaultChannelBundleId
+        self.selectedChannelBundleId = "mock#1.guide"
         self.dateLastHomeRunChannelProgramFetch = nil
         self.dateLastIPTVChannelFetch = nil
         self.availableSubtitleTracks = []

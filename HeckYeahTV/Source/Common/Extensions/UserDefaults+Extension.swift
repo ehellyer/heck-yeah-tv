@@ -11,7 +11,8 @@ import Hellfire
 
 extension UserDefaults {
     
-    nonisolated(unsafe) fileprivate static var __appInstallIdentifier: String?
+    private static var __appInstallIdentifier: String?
+    private static var __appInstallDate: Date?
     
     /// A unique identifier for the current app installation.
     ///
@@ -242,22 +243,48 @@ extension UserDefaults {
         }
     }
 
-    /// A boolean indicating whether this is the app's first launch on this device.
+    /// A boolean indicating whether this is the app's first launch after a fresh install or reinstall.
     ///
-    /// Returns `true` if the key has never been written to `UserDefaults.standard`, meaning the app
-    /// has not yet completed its initial setup. Once first-launch setup is complete, set this to `false`
-    /// so subsequent launches skip the onboarding path. The value is persisted in `UserDefaults.standard`.
+    /// The getter compares the app's bundle install date against a previously stored date in
+    /// `UserDefaults.standard`. Returns `true` when no install date can be determined, or when the
+    /// stored date does not match the current install date (indicating a fresh install or reinstall).
+    /// The install date is cached in `__appInstallDate` to avoid repeated disk reads.
     ///
-    /// - Returns: `true` on a fresh install (or after a reinstall), `false` after first-launch setup completes.
+    /// The setter only acts when set to `false`, persisting the current bundle install date to
+    /// `UserDefaults.standard` via `previousBundleInstallDate` so that subsequent launches
+    /// recognize the install as no longer new.
+    ///
+    /// - Returns: `true` on a fresh install or reinstall, `false` once the install date has been persisted.
     static var isFirstLaunch: Bool {
         get {
-            if isKeyPresentInUserDefaults(key: AppKeys.SharedAppState.isFirstLaunchKey) {
-                return standard.bool(forKey: AppKeys.SharedAppState.isFirstLaunchKey)
+            guard let installDate = Self.__appInstallDate ?? AppKeys.Application.appInstallDate else {
+                return true
             }
-            return true
+            // If our cached date was nil, set it.  This ensures we only hit the disk one time.
+            if Self.__appInstallDate == nil {
+                Self.__appInstallDate = installDate
+            }
+            return UserDefaults.previousBundleInstallDate != installDate
         }
         set {
-            standard.set(newValue, forKey: AppKeys.SharedAppState.isFirstLaunchKey)
+            guard newValue == false else { return }
+            UserDefaults.previousBundleInstallDate = AppKeys.Application.appInstallDate
+        }
+    }
+    
+    /// The bundle install date that was persisted during a previous first-launch setup.
+    ///
+    /// This date is compared against the current bundle install date from `AppKeys.Application.appInstallDate`
+    /// to determine whether the app has been reinstalled. A `nil` value indicates that first-launch setup
+    /// has never completed. The value is persisted in `UserDefaults.standard`.
+    ///
+    /// - Returns: The previously stored install date, or `nil` if no date has been persisted.
+    static var previousBundleInstallDate: Date? {
+        get {
+            return standard.object(forKey: AppKeys.Application.bundleInstallDateKey) as? Date
+        }
+        set {
+            standard.set(newValue, forKey: AppKeys.Application.bundleInstallDateKey)
         }
     }
     
