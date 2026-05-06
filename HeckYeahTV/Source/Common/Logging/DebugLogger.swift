@@ -90,12 +90,6 @@ class DebugLogger {
     fileprivate func log<T>(_ level: DebugLogger.Level, _ object: @autoclosure () -> T, _ file: StaticString, _ function: StaticString, _ line: UInt) {
 
 #if DEBUG
-        // Continue to log.
-#else
-        //Return early for non-debug version
-        return
-#endif
-
         let value = object()
         let queue = Thread.isMainThread ? "M" : "B"
         
@@ -103,9 +97,13 @@ class DebugLogger {
         let timeStr = self.dateFormatter.string(from: Date())
         let message = String(reflecting: value)
         let emoji = level.emoji
-
+        
         let consoleLogString = "\(timeStr) l:\(emoji) q:\(queue) s:\(fileName) \(function) \(line) m:\(message)"
         print(consoleLogString)
         //TODO: Log to cycling offline local file for post crash analytics package.
+#else
+        return
+#endif
+
     }
 }
