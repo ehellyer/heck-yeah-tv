@@ -329,8 +329,9 @@ struct VLCPlayerRepresentable: CrossPlatformRepresentable {
             
             // EJH: - Override - Just offer the first subtitle track.
             appState.availableSubtitleTracks = validTracks.first.map { [$0] } ?? []  //validTracks
-            
-            logDebug("VLC: Found subtitle tracks: \(validTracks)")
+            let tracks: NSString = validTracks.map { "Name: \($0.name)    Index: \($0.index)" }.joined(separator: "\n") as NSString
+            let messageText: NSString = "VLC: Found subtitle tracks: \n\(tracks)" as NSString
+            logDebug(messageText)
         }
         
         private func updateAvailableAudioTracks() {

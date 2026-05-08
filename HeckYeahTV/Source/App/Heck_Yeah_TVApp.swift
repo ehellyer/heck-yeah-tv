@@ -122,16 +122,43 @@ struct Heck_Yeah_TVApp: App {
     }
     
     private func startBootstrap() async {
-        logDebug("Ask to scan for tuners, which may prompt for network access.")
+        
+        // Reset if first launch because the UserDefaults are not sandboxed on MacOS. (This code is inert for other platforms).
+        if appState.isFirstLaunch {
+            let multilineMessage: NSString = """
+            ⚠️ Resetting some appState values on first launch...
+            
+            appState.isPlayerPaused = false
+            appState.showAppMenu = false
+            appState.showProgramDetailCarousel = nil
+            appState.scanForTuners = nil
+            appState.dateLastHomeRunChannelProgramFetch = nil
+            appState.dateLastIPTVChannelFetch = nil
+            UserDefaults.lastLANAuthorizationStatus = .notDetermined
+            """
+            
+            appState.isPlayerPaused = false
+            appState.showAppMenu = false
+            appState.showProgramDetailCarousel = nil
+            appState.scanForTuners = nil
+            appState.dateLastHomeRunChannelProgramFetch = nil
+            appState.dateLastIPTVChannelFetch = nil
+            UserDefaults.lastLANAuthorizationStatus = .notDetermined
+            
+            logDebug(multilineMessage)
+        }
+        
+        
+        logDebug("🔔 Ask to scan for tuners, which may prompt for network access.")
         await askToRequestNetworkProbePermission()
         
         if appState.scanForTuners == true {
-            logDebug("User has chosen to scan for tuners. Requesting local network access.")
+            logDebug("🔔 User has chosen to scan for tuners. Requesting local network access.")
             let lanAuth = LocalNetworkAuthorization()
             let result = await lanAuth.requestAuthorization()
             UserDefaults.lastLANAuthorizationStatus = result
         } else {
-            logDebug("User has chosen not to scan for tuners.")
+            logDebug("🔔 User has chosen not to scan for tuners.")
         }
         
         await startBootTasks()

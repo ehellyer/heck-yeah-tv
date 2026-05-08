@@ -102,7 +102,7 @@ struct BootSplashView: View {
                 playBootChimeIfNeeded()
                 startDotAnimation(dots: 3)
                 if appState.isFirstLaunch {
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
                         withAnimation(.easeIn(duration: 0.8)) {
                             showFirstLaunchTip = true
                         }

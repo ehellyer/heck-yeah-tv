@@ -9,6 +9,18 @@
 import Foundation
 import Network
 
+/*
+ macOS Sandbox Note:
+ The build settings must enable BOTH outgoing AND incoming network connections.
+   - ENABLE_OUTGOING_NETWORK_CONNECTIONS = YES
+   - ENABLE_INCOMING_NETWORK_CONNECTIONS = YES
+ NWListener needs incoming to advertise the Bonjour service; NWBrowser needs
+ outgoing to discover it. Miss either one and the browser silently ghosts you —
+ no error, no callback, just an app that goes out to lunch and never comes back.
+ */
+
+
+
 /// The current Local Network permission status for this app.
 enum LocalNetworkAuthorizationStatus: Int {
     /// The user has not yet been asked for permission.

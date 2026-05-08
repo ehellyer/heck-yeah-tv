@@ -32,6 +32,7 @@ class AppDelegate: NSObject, AppDelegateAlias {
 
 #if canImport(AppKit)
     func applicationDidFinishLaunching(_ notification: Notification) {
+        UserDefaults.standard.register(defaults: ["NSApplicationCrashOnExceptions": true]) //Dev Note:  This is set in the plist, but Firebase is still throwing a warning without this code here.  🤷🏻‍♂️
         initializeFirebase()
     }
 #elseif canImport(UIKit)

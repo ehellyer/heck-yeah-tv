@@ -79,6 +79,7 @@
 		BF880B52CE3CE94EDE426A6F /* Pods-macOS_HeckYeahTV_Preview.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-macOS_HeckYeahTV_Preview.release.xcconfig"; path = "Target Support Files/Pods-macOS_HeckYeahTV_Preview/Pods-macOS_HeckYeahTV_Preview.release.xcconfig"; sourceTree = "<group>"; };
 		CDA873085F86494E5C574856 /* Pods_macOS_HeckYeahTV.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_macOS_HeckYeahTV.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D5966DBF9EE2DB5BAF1B34F6 /* Pods-iOS_HeckYeahTV.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-iOS_HeckYeahTV.debug.xcconfig"; path = "Target Support Files/Pods-iOS_HeckYeahTV/Pods-iOS_HeckYeahTV.debug.xcconfig"; sourceTree = "<group>"; };
+		EB16A3802FAD051D001F6857 /* macOS_HeckYeahTV.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = macOS_HeckYeahTV.entitlements; sourceTree = "<group>"; };
 		EB2C2DB72E5E203A005CE685 /* HeckYeahTV.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HeckYeahTV.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EB2C2DC42E5E203C005CE685 /* macOS_HeckYeahTVTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = macOS_HeckYeahTVTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		EB2C2DCE2E5E203C005CE685 /* macOS_HeckYeahTVUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = macOS_HeckYeahTVUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -618,6 +619,7 @@
 		EBE03BAE2E53D421006B7747 = {
 			isa = PBXGroup;
 			children = (
+				EB16A3802FAD051D001F6857 /* macOS_HeckYeahTV.entitlements */,
 				EBE03BB92E53D421006B7747 /* HeckYeahTV */,
 				EBE03BC72E53D423006B7747 /* HeckYeahTVTests */,
 				EBE03BD12E53D423006B7747 /* HeckYeahTVUITests */,
@@ -1325,19 +1327,20 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
-				CODE_SIGN_ENTITLEMENTS = "";
+				CODE_SIGN_ENTITLEMENTS = macOS_HeckYeahTV.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 202605.06.001;
+				CURRENT_PROJECT_VERSION = 202605.7.2;
 				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 84CS8BE5EQ;
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_DEBUG_DYLIB = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
-				ENABLE_OUTGOING_NETWORK_CONNECTIONS = NO;
+				ENABLE_INCOMING_NETWORK_CONNECTIONS = YES;
+				ENABLE_OUTGOING_NETWORK_CONNECTIONS = YES;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -1358,6 +1361,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.hellyermedia.heckyeahtv.app;
 				PRODUCT_NAME = HeckYeahTV;
 				REGISTER_APP_GROUPS = YES;
+				RUNTIME_EXCEPTION_DEBUGGING_TOOL = YES;
 				SDKROOT = macosx;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -1372,18 +1376,19 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
-				CODE_SIGN_ENTITLEMENTS = "";
+				CODE_SIGN_ENTITLEMENTS = macOS_HeckYeahTV.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 202605.06.001;
+				CURRENT_PROJECT_VERSION = 202605.7.2;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = 84CS8BE5EQ;
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_DEBUG_DYLIB = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
-				ENABLE_OUTGOING_NETWORK_CONNECTIONS = NO;
+				ENABLE_INCOMING_NETWORK_CONNECTIONS = YES;
+				ENABLE_OUTGOING_NETWORK_CONNECTIONS = YES;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -1640,7 +1645,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 202605.06.001;
+				CURRENT_PROJECT_VERSION = 202605.6.1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 84CS8BE5EQ;
 				ENABLE_APP_SANDBOX = NO;
@@ -1683,7 +1688,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 202605.06.001;
+				CURRENT_PROJECT_VERSION = 202605.6.1;
 				DEVELOPMENT_TEAM = 84CS8BE5EQ;
 				ENABLE_APP_SANDBOX = NO;
 				ENABLE_DEBUG_DYLIB = YES;
@@ -1819,7 +1824,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 202605.06.001;
+				CURRENT_PROJECT_VERSION = 202605.6.1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 84CS8BE5EQ;
 				ENABLE_APP_SANDBOX = NO;
@@ -1858,7 +1863,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 202605.06.001;
+				CURRENT_PROJECT_VERSION = 202605.6.1;
 				DEVELOPMENT_TEAM = 84CS8BE5EQ;
 				ENABLE_APP_SANDBOX = NO;
 				ENABLE_DEBUG_DYLIB = YES;
