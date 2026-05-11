@@ -29,11 +29,6 @@ let not = (!)
 /// Non-breakable space
 let nbsp = "\u{00a0}"
 
-/// Returns the name of the object as a string.
-func stringName<T>(_ object: T) -> String {
-    return String(describing: type(of: object))
-}
-
 /// A value in nanoseconds representing 0.01s or 10ms.
 ///
 /// This is the time to sleep before executing a task, providing a small delay for
@@ -44,16 +39,9 @@ let codeDebounceNS: UInt64 = 10_000_000 //0.01 seconds
 /// A value in nanoseconds representing 0.2s or 200ms.
 ///
 /// This is the time to sleep before executing a task, providing a small delay for
-/// the the task to be cancelled because it was replaced by a similar subsequent
+/// the task to be cancelled because it was replaced by a similar subsequent
 /// human triggered task. (Such as time between keystrokes when typing, double tapping, etc)
 let humanDebounceNS: UInt64 = 200_000_000 //0.2 seconds
-
-/// A TimeInterval of 0.2 seconds
-let settleTime: TimeInterval = TimeInterval(0.2)
-
-/// The number of seconds in one hour.
-let secondsPerHour: TimeInterval = 3600
-
 
 
 @main

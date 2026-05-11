@@ -29,6 +29,7 @@ struct RecentsView: View {
     
     private func scrollToTopOfRecents(using proxy: ScrollViewProxy) {
         if let firstChannelId = recentChannelIds.first {
+            let settleTime: TimeInterval = TimeInterval(0.2) // 0.2 seconds
             focusedChannelId = firstChannelId
             DispatchQueue.main.asyncAfter(deadline: .now() + settleTime) {
                 proxy.scrollTo(firstChannelId)
