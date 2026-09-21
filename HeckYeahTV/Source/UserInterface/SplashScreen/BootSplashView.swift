@@ -162,19 +162,22 @@ final class BootSoundPlayer: NSObject, @unchecked Sendable {
             return
         }
         
+        // Session activation and player setup are blocking calls, so run them off the main thread.
+        Task.detached(priority: .userInitiated) { [weak self] in
 #if !os(macOS)
-        let session = AVAudioSession.sharedInstance()
-        try? session.setCategory(.ambient, mode: .default, options: [.duckOthers])
-        try? session.setActive(true, options: [])
+            let session = AVAudioSession.sharedInstance()
+            try? session.setCategory(.ambient, mode: .default, options: [.duckOthers])
+            try? session.setActive(true, options: [])
 #endif
-        do {
-            let audio = try AVAudioPlayer(data: audioDataAsset.data)
-            audio.volume = 1.0
-            audio.prepareToPlay()
-            audio.play()
-            self.player = audio
-        } catch {
-            // Ignore: boot chime is optional
+            do {
+                let audio = try AVAudioPlayer(data: audioDataAsset.data)
+                audio.volume = 1.0
+                audio.prepareToPlay()
+                audio.play()
+                self?.player = audio
+            } catch {
+                // Ignore: boot chime is optional
+            }
         }
     }
 }
