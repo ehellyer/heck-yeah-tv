@@ -365,8 +365,9 @@ struct VLCPlayerRepresentable: CrossPlatformRepresentable {
         
         private func startPlaybackMonitoring() {
             self.lastTimeUpdate = Date()
-            Task {
-                await playerWatchdog.start { @MainActor [weak self] in
+            Task { [weak self] in
+                guard let self else { return }
+                await self.playerWatchdog.start { @MainActor [weak self] in
                     
                     guard let self, let lastUpdate = self.lastTimeUpdate else {
                         //Invalid state - stop watchdog.
@@ -481,11 +482,9 @@ extension VLCPlayerRepresentable.Coordinator: VLCMediaPlayerDelegate {
                         logError("VLC: Retry attempt \(self.errorRetryCount) of \(self.maxErrorRetries)")
                         
                         // Attempt reconnect - restart monitoring for this retry
-                        Task { @MainActor [weak player] in
-                            player?.stop()
-                            try? await Task.sleep(for: .seconds(0.5))
-                            player?.play()
-                        }
+                        player.stop()
+                        try? await Task.sleep(for: .seconds(0.5))
+                        player.play()
                     } else {
                         logError("VLC: Max retry attempts (\(self.maxErrorRetries)) reached - stream is unplayable")
                         logError("VLC: Stopping further retry attempts to prevent infinite loop")
