@@ -292,6 +292,9 @@ struct SettingsView: View {
             do {
                 await analytics.log(.iptvRefreshRequested(channelCount: iptvChannelCount, success: true))
                 _ = try await importer.load()
+
+                // Re-link orphaned bundle entries to channels that have returned to the catalog.
+                try? await SwiftDataBootTasks(container: container).mapOrphanedBundleEntryWithChannel()
             } catch {
                 logError("Reload IPTV channels failed.  Error: \(error)")
                 await MainActor.run {
@@ -300,6 +303,9 @@ struct SettingsView: View {
             }
             await MainActor.run {
                 reloadIPTVChannelCount()
+
+                // Importer saves on a background context, which the view context save observer ignores, so rebuild the guide map explicitly.
+                swiftDataController.invalidateChannelBundleMap()
             }
         }
     }
