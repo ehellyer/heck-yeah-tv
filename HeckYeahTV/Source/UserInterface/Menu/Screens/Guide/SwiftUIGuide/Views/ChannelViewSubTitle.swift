@@ -73,7 +73,7 @@ struct ChannelViewSubTitle: View {
             // If there is no subtext, we want a nbsp to size the label vertically so it
             // does not collapse to zero, but still remains responsive to dynamic text size.
             if noSubText {
-                Text(nbsp)
+                Text(nonBreakingSpace)
                     .font(AppStyle.Fonts.gridRowFont)
                     .lineLimit(1)
             }

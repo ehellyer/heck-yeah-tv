@@ -234,7 +234,7 @@ class ChannelNameView: UIView {
         updateLogoImage(for: channel)
         
         // 1st line - Set title label
-        titleLabel.text = channel?.title ?? nbsp  // the nbsp is to maintain label height for layout when title is nil.
+        titleLabel.text = channel?.title ?? nonBreakingSpace  // the nbsp is to maintain label height for layout when title is nil.
         
         // 2nd line - Channel Number
         if channel?.deviceId != IPTVImporter.iptvDeviceId, let channelNumber = channel?.number {
@@ -250,7 +250,7 @@ class ChannelNameView: UIView {
         qualityImageView.image = channel?.quality.image
         
         // 2nd line - Stream Audio Language / NBSP to maintain label height on 2nd line.
-        languageLabel.text = channel?.languages.first?.uppercased() ?? nbsp
+        languageLabel.text = channel?.languages.first?.uppercased() ?? nonBreakingSpace
         
         // 2nd line - Stream country flag
         if let countryFlag = channel?.countryFlag {

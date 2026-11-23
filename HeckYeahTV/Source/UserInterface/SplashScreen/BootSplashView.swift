@@ -28,7 +28,7 @@ struct BootSplashView: View {
     @State private var dotCount = 0
     @State private var showFirstLaunchTip = false
     
-    init(title: String = "Heck\(nbsp)Yeah\(nbsp)TV",
+    init(title: String = "Heck\(nonBreakingSpace)Yeah\(nonBreakingSpace)TV",
          subtitle: String = "Discovering channels",
          autoPlaySound: Bool = true,
          soundName: String = "soft-startup-sound",

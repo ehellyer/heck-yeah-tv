@@ -574,7 +574,7 @@ class BaseSwiftDataController: SwiftDataProvider {
         // Schedule a new rebuild after debounce delay
         rebuildTask = Task { @MainActor in
             // Wait for debounce period
-            try? await Task.sleep(nanoseconds: codeDebounceNS)
+            try? await Task.sleep(nanoseconds: codeDebounceNanoseconds)
             guard !Task.isCancelled else { return }
             do {
                 try rebuildChannelBundleMap()

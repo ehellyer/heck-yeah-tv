@@ -294,7 +294,7 @@ struct SettingsView: View {
                 _ = try await importer.load()
 
                 // Re-link orphaned bundle entries to channels that have returned to the catalog.
-                try? await SwiftDataBootTasks(container: container).mapOrphanedBundleEntryWithChannel()
+                try? await SwiftDataBootTasks(container: container).reconnectOrphanedBundleEntries()
             } catch {
                 logError("Reload IPTV channels failed.  Error: \(error)")
                 await MainActor.run {

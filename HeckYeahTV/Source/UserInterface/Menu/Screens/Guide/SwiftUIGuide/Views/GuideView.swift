@@ -110,7 +110,7 @@ private extension GuideView {
         // Avoid multiple consecutive calls by cancelling the previous task.
         scrollToSelectedTask?.cancel()
         scrollToSelectedTask = Task { @MainActor in
-            try? await Task.sleep(nanoseconds: codeDebounceNS)
+            try? await Task.sleep(nanoseconds: codeDebounceNanoseconds)
             guard !Task.isCancelled else { return }
             
             if let channelId = swiftDataController.selectedChannel?.id {

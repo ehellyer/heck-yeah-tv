@@ -34,8 +34,8 @@ actor SwiftDataBootTasks {
     /// `AppStateProvider` in sync with the source of truth in SwiftData.
     ///
     /// - Throws: Any fetch error propagated from the actor's `ModelContext`.
-    func alignSelectedChannelBundleId() async throws {
-        let channelBundleId = await MainActor.run {
+    func resetSelectedChannelBundleIdIfMissing() async throws {
+        let selectedBundleId = await MainActor.run {
             InjectedValues[\.sharedAppState].selectedChannelBundleId
         }
         
@@ -43,7 +43,7 @@ actor SwiftDataBootTasks {
         let savedBundles = try context.fetch(fetchDescriptor)
         
         if not(savedBundles.isEmpty),
-           not(savedBundles.contains(where: { $0.id == channelBundleId })) {
+           not(savedBundles.contains(where: { $0.id == selectedBundleId })) {
             
             let newBundleId = savedBundles.first!.id
             await MainActor.run {
@@ -64,19 +64,19 @@ actor SwiftDataBootTasks {
     /// relationships were restored.
     ///
     /// - Throws: Any fetch or save error propagated from the actor's `ModelContext`.
-    func mapOrphanedBundleEntryWithChannel() async throws {
+    func reconnectOrphanedBundleEntries() async throws {
         
-        let orphanedChannelDescriptor = BundleEntryPredicate(hasChannel: false).fetchDescriptor()
-        let bundleEntries: [BundleEntry] = try context.fetch(orphanedChannelDescriptor)
+        let orphanedEntriesDescriptor = BundleEntryPredicate(hasChannel: false).fetchDescriptor()
+        let orphanedEntries: [BundleEntry] = try context.fetch(orphanedEntriesDescriptor)
         
-        guard bundleEntries.isEmpty == false else {
+        guard orphanedEntries.isEmpty == false else {
             logDebug("Zero orphaned channels in the store.")
             return
         }
         
-        logDebug("\(bundleEntries.count) orphaned channels found in the store.  Orphaned channels is normal operation when IPTV channels get removed or tuners are not accessible.")
+        logDebug("\(orphanedEntries.count) orphaned channels found in the store.  Orphaned channels is normal operation when IPTV channels get removed or tuners are not accessible.")
         
-        for bundleEntry in bundleEntries {
+        for bundleEntry in orphanedEntries {
             let channelFetchDescriptor = ChannelPredicate(fetchLimit: 1, channelId: bundleEntry.channelId).fetchDescriptor()
             if let resolvedChannel = try? context.fetch(channelFetchDescriptor).first  {
                 logDebug("Resolved orphaned channel: \(resolvedChannel.title)")
@@ -89,13 +89,18 @@ actor SwiftDataBootTasks {
         try context.saveChangesIfNeeded()
     }
     
-    // There must be at least one channel bundle, if one does not yet exist, we add the default.
-    func checkDefaultChannelBundle() async throws -> Bool {
+    /// Creates the default `ChannelBundle` if no channel bundles exist yet.
+    ///
+    /// There must always be at least one channel bundle. On first launch after install none exist,
+    /// so a default bundle is inserted and saved to improve the first-run experience.
+    ///
+    /// - Returns: `true` if the default channel bundle was created, `false` if one or more bundles already existed.
+    func createDefaultChannelBundleIfNeeded() async throws -> Bool {
         let descriptor = ChannelBundlePredicate().fetchDescriptor()
         let channelBundles = try context.fetch(descriptor)
-        let needsDefaultChannels: Bool = channelBundles.isEmpty
+        let didCreateDefaultBundle: Bool = channelBundles.isEmpty
         
-        if needsDefaultChannels {
+        if didCreateDefaultBundle {
             let channelBundle = ChannelBundle(id: AppKeys.Application.defaultChannelBundleId,
                                               name: "My Channel Bundle",
                                               channels: [])
@@ -103,13 +108,19 @@ actor SwiftDataBootTasks {
             try context.saveChangesIfNeeded()
         }
         
-        return needsDefaultChannels
+        return didCreateDefaultBundle
     }
     
-    func addDefaultChanels() async throws {
+    /// Adds the channels listed in the bundled `DefaultChannels.json` file to the default `ChannelBundle`.
+    ///
+    /// Channel IDs that are not present in the store are skipped. If the default bundle cannot be
+    /// found, an error is logged and no channels are added.
+    ///
+    /// - Throws: Any fetch or save error propagated from the actor's `ModelContext`.
+    func addDefaultChannelsToDefaultBundle() async throws {
         let descriptor = ChannelBundlePredicate(bundleId: AppKeys.Application.defaultChannelBundleId).fetchDescriptor()
-        let channelBundles = try context.fetch(descriptor)
-        guard let channelBundle = channelBundles.first else {
+        let defaultBundles = try context.fetch(descriptor)
+        guard let defaultBundle = defaultBundles.first else {
             logError("Default ChannelBundle not found.  Unable to add default channels.")
             return
         }
@@ -122,7 +133,7 @@ actor SwiftDataBootTasks {
                 let channelDescriptor = ChannelPredicate(channelId: channelId).fetchDescriptor()
                 let channel: Channel? = try context.fetch(channelDescriptor).first
                 if let channel = channel {
-                    let bundleEntry = BundleEntry(channel: channel, channelBundle: channelBundle)
+                    let bundleEntry = BundleEntry(channel: channel, channelBundle: defaultBundle)
                     context.insert(bundleEntry)
                 }
             }

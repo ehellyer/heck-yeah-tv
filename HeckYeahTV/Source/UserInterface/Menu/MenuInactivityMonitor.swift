@@ -16,7 +16,7 @@ import AppKit
 
 /// Automatically dismisses the app menu (and any screen it is hosting) after a period of user inactivity.
 ///
-/// The idle delay is `menuAutoDismissNS`.  User activity is reported by `MenuActivityHook`, which watches
+/// The idle delay is `menuAutoDismissNanoseconds`.  User activity is reported by `MenuActivityHook`, which watches
 /// for input app-wide, so no per-screen code is needed.
 ///
 /// Auto-dismiss is suspended (the countdown is re-armed instead) while:
@@ -62,7 +62,7 @@ final class MenuInactivityMonitor {
     private var isInputHeld: Bool = false
     private var lastActivity: ContinuousClock.Instant = .now
     private var timerTask: Task<Void, Never>?
-    private let delay: Duration = .nanoseconds(Int64(menuAutoDismissNS))
+    private let delay: Duration = .nanoseconds(Int64(menuAutoDismissNanoseconds))
 
     private func runCountdown() async {
         while not(Task.isCancelled) {

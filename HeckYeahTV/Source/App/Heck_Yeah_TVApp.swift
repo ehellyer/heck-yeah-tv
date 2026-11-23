@@ -27,21 +27,21 @@ import FirebaseCore
 let not = (!)
 
 /// Non-breakable space
-let nbsp = "\u{00a0}"
+let nonBreakingSpace = "\u{00a0}"
 
 /// A value in nanoseconds representing 0.01s or 10ms.
 ///
 /// This is the time to sleep before executing a task, providing a small delay for
 /// the the task to be cancelled because it was replaced by a similar subsequent
 /// programmatically triggered task.
-let codeDebounceNS: UInt64 = 10_000_000 //0.01 seconds
+let codeDebounceNanoseconds: UInt64 = 10_000_000 //0.01 seconds
 
 /// A value in nanoseconds representing 0.2s or 200ms.
 ///
 /// This is the time to sleep before executing a task, providing a small delay for
 /// the task to be cancelled because it was replaced by a similar subsequent
 /// human triggered task. (Such as time between keystrokes when typing, double tapping, etc)
-let humanDebounceNS: UInt64 = 200_000_000 //0.2 seconds
+let humanDebounceNanoseconds: UInt64 = 200_000_000 //0.2 seconds
 
 /// A value in nanoseconds representing 15s.
 ///
@@ -49,7 +49,7 @@ let humanDebounceNS: UInt64 = 200_000_000 //0.2 seconds
 /// automatically dismissed.  (See `MenuInactivityMonitor`)
 ///
 /// Dev note: Keep this above ~4s.  After fast scrolling the guide, focus takes over 1s to return to the visible rows.
-let menuAutoDismissNS: UInt64 = 15_000_000_000 //15 seconds
+let menuAutoDismissNanoseconds: UInt64 = 15_000_000_000 //15 seconds
 
 
 @main
@@ -57,16 +57,16 @@ struct Heck_Yeah_TVApp: App {
     
     // Register the legacy app delegate for Firebase initialization.
 #if canImport(UIKit)
-    @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
+    @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
 #elseif canImport(AppKit)
-    @NSApplicationDelegateAdaptor(AppDelegate.self) var delegate
+    @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
 #endif
     
     
     @Environment(\.scenePhase) private var scenePhase
     @State private var isBootComplete = false
-    @State private var startupTask: Task<Void, Never>? = nil
-    @State private var showTunerPrompt = false
+    @State private var bootTask: Task<Void, Never>? = nil
+    @State private var isTunerPromptPresented = false
     @State private var appState: AppStateProvider = InjectedValues[\.sharedAppState]
     @State private var swiftDataController: BaseSwiftDataController = InjectedValues[\.swiftDataController]
     
@@ -98,14 +98,14 @@ struct Heck_Yeah_TVApp: App {
         RootView(isBootComplete: $isBootComplete)
             .preferredColorScheme(.dark) // Using transparency with transparent black requires us to lock into dark theme else text will not be contrasted enough to read.
             .task {
-                await startBootstrap()
+                await performBootSequence()
             }
             .onChange(of: scenePhase) { _, phase in
                 if phase != .active {
-                    startupTask?.cancel()
+                    bootTask?.cancel()
                 }
             }
-            .alert("Scan for HDHomeRun Tuners?", isPresented: $showTunerPrompt) {
+            .alert("Scan for HDHomeRun Tuners?", isPresented: $isTunerPromptPresented) {
                 Button("Yes, Scan for Tuners") {
                     resumeTunerPromptContinuation(returning: true)
                 }
@@ -117,7 +117,7 @@ struct Heck_Yeah_TVApp: App {
             }
     }
     
-    private func startBootstrap() async {
+    private func performBootSequence() async {
         
         // Reset if first launch because the UserDefaults are not sandboxed on MacOS. (This code is inert for other platforms).
         if appState.isFirstLaunch {
@@ -146,26 +146,26 @@ struct Heck_Yeah_TVApp: App {
         
         
         logDebug("🔔 Ask to scan for tuners, which may prompt for network access.")
-        await askToRequestNetworkProbePermission()
+        await promptToScanForTunersIfNeeded()
         
         if appState.scanForTuners == true {
             logDebug("🔔 User has chosen to scan for tuners. Requesting local network access.")
-            let lanAuth = LocalNetworkAuthorization()
-            let result = await lanAuth.requestAuthorization()
-            UserDefaults.lastLANAuthorizationStatus = result
+            let localNetworkAuthorization = LocalNetworkAuthorization()
+            let authorizationStatus = await localNetworkAuthorization.requestAuthorization()
+            UserDefaults.lastLANAuthorizationStatus = authorizationStatus
         } else {
             logDebug("🔔 User has chosen not to scan for tuners.")
         }
         
-        await startBootTasks()
+        await startBackgroundBootTasks()
     }
     
-    private func askToRequestNetworkProbePermission() async {
+    private func promptToScanForTunersIfNeeded() async {
 #if !os(tvOS)
         if appState.scanForTuners == nil {
             let wantsToScan = await withCheckedContinuation { continuation in
                 tunerPromptContinuationBox.continuation = continuation
-                showTunerPrompt = true
+                isTunerPromptPresented = true
             }
             appState.scanForTuners = wantsToScan
         }
@@ -180,11 +180,11 @@ struct Heck_Yeah_TVApp: App {
         tunerPromptContinuationBox.continuation = nil
     }
     
-    private func startBootTasks() async {
+    private func startBackgroundBootTasks() async {
         logDebug("Starting boot tasks on detached thread...")
-        startupTask?.cancel()
-        startupTask = Task.detached(name: "HYTV-background-bootstrap-tasks", priority: .high) {
-            await preImportBootTasks()
+        bootTask?.cancel()
+        bootTask = Task.detached(name: "HYTV-background-bootstrap-tasks", priority: .high) {
+            await runPreImportBootTasks()
             
             await withTaskGroup(of: Void.self) { group in
                 
@@ -213,7 +213,7 @@ struct Heck_Yeah_TVApp: App {
             }
 
             // Run essential boot tasks that must complete before showing UI
-            await postImportBootTasks()
+            await runPostImportBootTasks()
 
             await MainActor.run {
                 // Complete boot - UI can now be shown
@@ -249,41 +249,42 @@ struct Heck_Yeah_TVApp: App {
                 }
                 
                 // Random interval between 3 and 6 hours
-                let randomHours = Double.random(in: 3...6)
+                let refreshIntervalHours = Double.random(in: 3...6)
                 let intervalSinceLastFetch = Date().timeIntervalSince(lastFetchDate)
                 let hoursElapsed = intervalSinceLastFetch / 3600 // Convert seconds to hours
                 
-                return hoursElapsed >= randomHours
+                return hoursElapsed >= refreshIntervalHours
             }()
             
             let container = InjectedValues[\.swiftDataController].container
-            let hdTunerImporter = HomeRunImporter(modelContainer: container)
-            let _ = try? await hdTunerImporter.load(targetDevice: nil, shouldFetchGuideData: shouldFetchGuideData)
+            let homeRunImporter = HomeRunImporter(modelContainer: container)
+            let _ = try? await homeRunImporter.load(targetDevice: nil, shouldFetchGuideData: shouldFetchGuideData)
             
             // After tuner imports or removals, run the channel cleanup.
-            await hdTunerImporter.deleteOrphanedTunerChannels()
+            await homeRunImporter.deleteOrphanedTunerChannels()
             
             logDebug("🏁 Import HDHomeRun: Completed HDHomeRun tuner scan and import.")
         }
     }
 
-    private func preImportBootTasks() async {
+    private func runPreImportBootTasks() async {
         logDebug("Pre Import Task: Starting pre import boot tasks")
         let container = InjectedValues[\.swiftDataController].container
         let bootTasks = SwiftDataBootTasks(container: container)
-        self.needsDefaultChannels = (try? await bootTasks.checkDefaultChannelBundle()) ?? false
+        let didCreateDefaultBundle = (try? await bootTasks.createDefaultChannelBundleIfNeeded()) ?? false
+        self.needsDefaultChannels = didCreateDefaultBundle
         logDebug("Needs default channels?  \(self.needsDefaultChannels ? "Yes" : "No")")
     }
-    
-    private func postImportBootTasks() async {
+
+    private func runPostImportBootTasks() async {
         logDebug("Post Import Task: Starting post import boot tasks")
         let container = InjectedValues[\.swiftDataController].container
-        let otherBootTasks = SwiftDataBootTasks(container: container)
-        try? await otherBootTasks.alignSelectedChannelBundleId()
-        try? await otherBootTasks.mapOrphanedBundleEntryWithChannel()
+        let bootTasks = SwiftDataBootTasks(container: container)
+        try? await bootTasks.resetSelectedChannelBundleIdIfMissing()
+        try? await bootTasks.reconnectOrphanedBundleEntries()
         logDebug("Adding default channels?  \(self.needsDefaultChannels ? "Yes" : "No")")
         if self.needsDefaultChannels {
-            try? await otherBootTasks.addDefaultChanels()
+            try? await bootTasks.addDefaultChannelsToDefaultBundle()
         }
         logDebug("🏁 Post Import Task: Completed post import boot tasks")
     }
@@ -325,7 +326,7 @@ struct Heck_Yeah_TVApp: App {
 /// Reference-type box for a `CheckedContinuation`, allowing it to be held in a SwiftUI `@State`
 /// property and mutated from within an immutable struct. Only ever accessed on the main actor.
 @MainActor
-final class TunerPromptContinuationBox {
+private final class TunerPromptContinuationBox {
     var continuation: CheckedContinuation<Bool, Never>?
 }
 
@@ -335,35 +336,35 @@ extension Heck_Yeah_TVApp {
     //EJH - Do not include in release compilation.
     //EJH - Rough code for developer only - Not production code.
     func writeMockFiles() {
-        let cpDescriptor: FetchDescriptor<ChannelProgram> = ChannelProgramPredicate().fetchDescriptor(sortBy: [SortDescriptor(\.channelId),
-                                                                                                               SortDescriptor(\.startTime)])
+        let programsDescriptor: FetchDescriptor<ChannelProgram> = ChannelProgramPredicate().fetchDescriptor(sortBy: [SortDescriptor(\.channelId),
+                                                                                                                     SortDescriptor(\.startTime)])
         
         let deviceId = IPTVImporter.iptvDeviceId
-        let cDescriptor = ChannelPredicate(deviceIds: [deviceId]).fetchDescriptorDefaultSort()
+        let channelsDescriptor = ChannelPredicate(deviceIds: [deviceId]).fetchDescriptorDefaultSort()
         
         let viewContext = InjectedValues[\.swiftDataController].viewContext
         
-        let fetchedChannels: [Channel]? = try? viewContext.fetch(cDescriptor)
-        let fetchedPrograms: [ChannelProgram]? = try? viewContext.fetch(cpDescriptor)
+        let fetchedChannels: [Channel]? = try? viewContext.fetch(channelsDescriptor)
+        let fetchedPrograms: [ChannelProgram]? = try? viewContext.fetch(programsDescriptor)
         
-        let jsonChanelsString = try? fetchedChannels?.toJSONString()
-        let jsonChanelProgramsString = try? fetchedPrograms?.toJSONString()
+        let channelsJSON = try? fetchedChannels?.toJSONString()
+        let programsJSON = try? fetchedPrograms?.toJSONString()
         
         let rootURL = AppKeys.Application.appFileStoreRootURL
         let channelsURL = rootURL.appendingPathComponent("MockChannels", isDirectory: false).appendingPathExtension("json")
         let channelProgramsURL = rootURL.appendingPathComponent("MockChannelPrograms", isDirectory: false).appendingPathExtension("json")
         
-        try? jsonChanelsString?.write(to: channelsURL, atomically: true, encoding: .utf8)
-        try? jsonChanelProgramsString?.write(to: channelProgramsURL, atomically: true, encoding: .utf8)
+        try? channelsJSON?.write(to: channelsURL, atomically: true, encoding: .utf8)
+        try? programsJSON?.write(to: channelProgramsURL, atomically: true, encoding: .utf8)
     }
     
-    func generateDefaultIPTVData() {
+    func writeDefaultChannelsFile() {
         let viewContext = InjectedValues[\.swiftDataController].viewContext
         //Note to future Ed: Assumes only one ChannelBundle of BundleEntries.
         let fetchDescriptor: FetchDescriptor<BundleEntry> = BundleEntryPredicate(hasChannel: true).fetchDescriptorDefaultSort()
         let bundleEntries: [BundleEntry] = try! viewContext.fetch(fetchDescriptor)
-        let channels = bundleEntries.filter({ $0.channel?.deviceId == IPTVImporter.iptvDeviceId }).map { $0.channel!.id }
-        let jsonData = try! JSONEncoder().encode(channels)
+        let channelIds = bundleEntries.filter({ $0.channel?.deviceId == IPTVImporter.iptvDeviceId }).map { $0.channel!.id }
+        let jsonData = try! JSONEncoder().encode(channelIds)
         
         let rootURL = AppKeys.Application.appFileStoreRootURL
         let channelsURL = rootURL.appendingPathComponent("DefaultChannels", isDirectory: false).appendingPathExtension("json")
