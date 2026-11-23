@@ -15,6 +15,7 @@ struct MainAppContentView: View {
     @State private var fadeTask: Task<Void, Never>?
     @State private var showPlayPauseButton = false
     @State private var swiftDataController: BaseSwiftDataController = InjectedValues[\.swiftDataController]
+    @State private var inactivityMonitor = MenuInactivityMonitor()
     @Environment(\.scenePhase) private var scenePhase
     
     // Focus states
@@ -86,6 +87,13 @@ struct MainAppContentView: View {
                     }
             }
         }
+        // Reports user input app-wide to the inactivity monitor, which auto-dismisses the app menu.
+        .background(
+            MenuActivityHook(monitor: inactivityMonitor)
+                .accessibilityHidden(true)
+                .allowsHitTesting(false)
+                .focusable(false)
+        )
 #if os(iOS)
         .fullScreenCover(isPresented: $appState.showAppMenu) {
             AppMenuView()
@@ -136,8 +144,20 @@ struct MainAppContentView: View {
             }
         })
         
+        .onChange(of: appState.showAppMenu, { _, newValue in
+            // Auto-dismiss the app menu after a period of inactivity.
+            if newValue {
+                inactivityMonitor.start()
+            } else {
+                inactivityMonitor.stop()
+            }
+        })
+
         .onAppear {
             showPlayPauseButton = appState.isPlayerPaused
+            if appState.showAppMenu {
+                inactivityMonitor.start()
+            }
         }
     }
 }

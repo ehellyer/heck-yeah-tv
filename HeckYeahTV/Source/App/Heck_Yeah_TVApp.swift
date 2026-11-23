@@ -43,6 +43,14 @@ let codeDebounceNS: UInt64 = 10_000_000 //0.01 seconds
 /// human triggered task. (Such as time between keystrokes when typing, double tapping, etc)
 let humanDebounceNS: UInt64 = 200_000_000 //0.2 seconds
 
+/// A value in nanoseconds representing 15s.
+///
+/// This is the time without user activity before the app menu (and any screen it is hosting) is
+/// automatically dismissed.  (See `MenuInactivityMonitor`)
+///
+/// Dev note: Keep this above ~4s.  After fast scrolling the guide, focus takes over 1s to return to the visible rows.
+let menuAutoDismissNS: UInt64 = 15_000_000_000 //15 seconds
+
 
 @main
 struct Heck_Yeah_TVApp: App {
