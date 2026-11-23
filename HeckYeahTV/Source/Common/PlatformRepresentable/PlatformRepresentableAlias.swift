@@ -10,21 +10,7 @@ import SwiftUI
 
 //MARK: - Cross platform aliases
 
-#if canImport(AppKit) //&& !targetEnvironment(macCatalyst)
-
-import AppKit
-
-typealias PlatformViewControllerRepresentable = NSViewControllerRepresentable
-typealias PlatformViewRepresentable = NSViewRepresentable
-typealias PlatformView = NSView
-typealias PlatformViewController = NSViewController
-typealias PlatformFont = NSFont
-typealias PlatformColor = NSColor
-typealias PlatformImage = NSImage
-typealias PlatformLabel = NSTextField
-
-#elseif canImport(UIKit)
-
+#if canImport(UIKit)
 import UIKit
 
 typealias PlatformViewControllerRepresentable = UIViewControllerRepresentable
@@ -35,6 +21,16 @@ typealias PlatformFont = UIFont
 typealias PlatformColor = UIColor
 typealias PlatformImage = UIImage
 typealias PlatformLabel = UILabel
+#elseif canImport(AppKit)
+import AppKit
 
+typealias PlatformViewControllerRepresentable = NSViewControllerRepresentable
+typealias PlatformViewRepresentable = NSViewRepresentable
+typealias PlatformView = NSView
+typealias PlatformViewController = NSViewController
+typealias PlatformFont = NSFont
+typealias PlatformColor = NSColor
+typealias PlatformImage = NSImage
+typealias PlatformLabel = NSTextField
 #endif
 

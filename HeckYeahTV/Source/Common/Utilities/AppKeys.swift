@@ -75,7 +75,7 @@ struct AppKeys {
         /// the bundle identifier and an `HeckYeahTV` subdirectory.
         static let appFileStoreRootURL: URL = {
 #if os(tvOS)
-            //tvOS has restrictions on where we can write store files to.  Thanks Apple.
+            //tvOS has restrictions on where we can write store files to.  The design of tvOS is that content is cloud backed.  Thanks Apple.
             var searchPathDirectory: FileManager.SearchPathDirectory = .cachesDirectory
 #else
             var searchPathDirectory: FileManager.SearchPathDirectory = .applicationSupportDirectory

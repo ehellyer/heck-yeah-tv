@@ -58,9 +58,7 @@ extension CrossPlatformRepresentable where PlatformView == UIView {
         sizeThatFits(proposal, view: uiView, context: context)
     }
 }
-#endif
-
-#if canImport(AppKit) //&& !targetEnvironment(macCatalyst)
+#elseif canImport(AppKit)
 //MARK: - AppKit forwarding
 extension CrossPlatformRepresentable where PlatformView == NSView {
     
@@ -82,3 +80,4 @@ extension CrossPlatformRepresentable where PlatformView == NSView {
     }
 }
 #endif
+//targetEnvironment(macCatalyst)

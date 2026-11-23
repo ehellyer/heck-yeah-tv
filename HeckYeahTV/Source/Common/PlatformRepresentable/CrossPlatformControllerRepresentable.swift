@@ -35,9 +35,7 @@ extension CrossPlatformControllerRepresentable where PlatformViewController == U
         dismantleViewController(uiViewController, coordinator: coordinator)
     }
 }
-#endif
-
-#if canImport(AppKit)
+#elseif canImport(AppKit)
 //MARK: - AppKit forwarding
 extension CrossPlatformControllerRepresentable where PlatformViewController == NSViewController {
     

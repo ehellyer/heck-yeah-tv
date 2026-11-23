@@ -42,8 +42,8 @@ extension UserDefaults {
 
     /// A boolean indicating whether the app menu UI should be visible.
     ///
-    /// This property controls the visibility of the main manu interface, such as tab bars
-    /// or guide views. When disabled, the manu UI is hidden, typically for full-screen
+    /// This property controls the visibility of the main menu interface, such as tab bars
+    /// or guide views. When disabled, the menu UI is hidden, typically for full-screen
     /// playback experiences. The value is persisted in `UserDefaults.standard`.
     ///
     /// - Returns: `true` if menu should be shown, `false` to hide it.

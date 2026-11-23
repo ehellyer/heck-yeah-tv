@@ -102,22 +102,15 @@ struct AppStyle {
         static let channelNameBottomPadding: CGFloat = 20
 #endif
     }
-
-    
     
     struct GuideView {
 #if os(tvOS)
         static let programSpacing: CGFloat = 35
-#else
-        static let programSpacing: CGFloat = 15
-#endif
-        
-#if os(tvOS)
         static let rowSpacing: CGFloat = 15
 #else
+        static let programSpacing: CGFloat = 15
         static let rowSpacing: CGFloat = 10
 #endif
-        
         
         private static let focusGrowth: CGFloat = 5 // Fixed pixel growth
         
@@ -149,23 +142,23 @@ struct AppStyle {
     
     struct Fonts {
         
-        static var programViewFont: Font {
+        static var programViewFont: Font = {
 #if os(tvOS)
             .subheadline
 #else
             .subheadline
 #endif
-        }
+        }()
         
-        static var gridRowFont: Font {
+        static var gridRowFont: Font = {
 #if os(tvOS)
             .subheadline
 #else
             .body
 #endif
-        }
+        }()
         
-        static var titleFont: PlatformFont {
+        static var titleFont: PlatformFont = {
 #if os(tvOS)
             .systemFont(ofSize: 28, weight: .semibold)
 #elseif os(iOS)
@@ -173,9 +166,9 @@ struct AppStyle {
 #else
             .systemFont(ofSize: 17, weight: .semibold)
 #endif
-        }
+        }()
         
-        static var subtitleFont: PlatformFont {
+        static var subtitleFont: PlatformFont = {
 #if os(tvOS)
             .systemFont(ofSize: 24)
 #elseif os(iOS)
@@ -183,9 +176,9 @@ struct AppStyle {
 #else
             .systemFont(ofSize: 13)
 #endif
-        }
+        }()
         
-        static var programTimeSlotFont: PlatformFont {
+        static var programTimeSlotFont: PlatformFont = {
 #if os(tvOS)
             .systemFont(ofSize: 23, weight: .bold)
 #elseif os(iOS)
@@ -193,9 +186,9 @@ struct AppStyle {
 #else
             .systemFont(ofSize: 17, weight: .bold)
 #endif
-        }
+        }()
         
-        static var programTitleFont: PlatformFont {
+        static var programTitleFont: PlatformFont = {
 #if os(tvOS)
             .systemFont(ofSize: 23, weight: .regular)
 #elseif os(iOS)
@@ -203,9 +196,9 @@ struct AppStyle {
 #else
             .systemFont(ofSize: 17, weight: .regular)
 #endif
-        }
+        }()
         
-        static var streamQualityFont: PlatformFont {
+        static var streamQualityFont: PlatformFont = {
 #if os(tvOS)
             .systemFont(ofSize: 15, weight: .regular)
 #elseif os(iOS)
@@ -213,7 +206,6 @@ struct AppStyle {
 #else
             .systemFont(ofSize: 8, weight: .regular)
 #endif
-        }
+        }()
     }
 }
-
