@@ -83,13 +83,13 @@ struct AppStyle {
 #if os(tvOS)
         static let internalHorizontalPadding: CGFloat = 15
         static let internalVerticalPadding: CGFloat = 15
-        static var width: CGFloat = 320
+        static let width: CGFloat = 320
         static let height : CGFloat = AppStyle.rowHeight
         static let programSpacing: CGFloat = 15
 #else
         static let internalHorizontalPadding: CGFloat = 15
         static let internalVerticalPadding: CGFloat = 15
-        static var width: CGFloat = 260
+        static let width: CGFloat = 260
         static let height : CGFloat = AppStyle.rowHeight
         static let programSpacing: CGFloat = 15
 #endif
@@ -142,7 +142,7 @@ struct AppStyle {
     
     struct Fonts {
         
-        static var programViewFont: Font = {
+        static let programViewFont: Font = {
 #if os(tvOS)
             .subheadline
 #else
@@ -150,7 +150,7 @@ struct AppStyle {
 #endif
         }()
         
-        static var gridRowFont: Font = {
+        static let gridRowFont: Font = {
 #if os(tvOS)
             .subheadline
 #else
@@ -158,7 +158,7 @@ struct AppStyle {
 #endif
         }()
         
-        static var titleFont: PlatformFont = {
+        static let titleFont: PlatformFont = {
 #if os(tvOS)
             .systemFont(ofSize: 28, weight: .semibold)
 #elseif os(iOS)
@@ -168,7 +168,7 @@ struct AppStyle {
 #endif
         }()
         
-        static var subtitleFont: PlatformFont = {
+        static let subtitleFont: PlatformFont = {
 #if os(tvOS)
             .systemFont(ofSize: 24)
 #elseif os(iOS)
@@ -178,7 +178,7 @@ struct AppStyle {
 #endif
         }()
         
-        static var programTimeSlotFont: PlatformFont = {
+        static let programTimeSlotFont: PlatformFont = {
 #if os(tvOS)
             .systemFont(ofSize: 23, weight: .bold)
 #elseif os(iOS)
@@ -188,7 +188,7 @@ struct AppStyle {
 #endif
         }()
         
-        static var programTitleFont: PlatformFont = {
+        static let programTitleFont: PlatformFont = {
 #if os(tvOS)
             .systemFont(ofSize: 23, weight: .regular)
 #elseif os(iOS)
@@ -198,7 +198,7 @@ struct AppStyle {
 #endif
         }()
         
-        static var streamQualityFont: PlatformFont = {
+        static let streamQualityFont: PlatformFont = {
 #if os(tvOS)
             .systemFont(ofSize: 15, weight: .regular)
 #elseif os(iOS)

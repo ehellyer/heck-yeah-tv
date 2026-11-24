@@ -39,12 +39,14 @@ Project status: Under active development. Core features implemented, additional 
 - Channel bundle switching with active bundle indicator
 
 **Playback**
-- VLC-based video player for robust HLS/TS stream support
+- Unified player: IPTV plays in AVPlayer first, with automatic fallback to libVLC 4 (SwiftVLC) for streams AVPlayer can't play
+- HDHomeRun channels play in libVLC 4 for robust MPEG-TS support
+- Recovery from playback stalls at HLS ad-break discontinuities
 - Audio track selection
 - Closed caption/subtitle support with track selection
 - Volume controls with mute functionality (iOS/macOS/tvOS)
 - Stream quality indicators
-- Playback watchdog for detecting unplayable streams
+- Playback watchdogs for detecting stalled and unplayable streams, with automatic reloads
 - Graceful error handling with retry capability
 
 **User Interface**
@@ -52,6 +54,8 @@ Project status: Under active development. Core features implemented, additional 
 - Guide view with lazy loading for performance
 - Channel selection with visual feedback
 - Player overlay with transport controls (tvOS)
+- App menu auto-dismisses after a period of user inactivity
+- Splash screen with first-launch messaging
 - Settings screens for managing bundles, devices, and filters
 - Dark mode support
 - Dynamic Type support
@@ -63,7 +67,8 @@ Project status: Under active development. Core features implemented, additional 
 - EPG (Electronic Program Guide) data from HDHomeRun and XMLTV sources
 - Recently viewed channel history (5000 entry limit)
 - Selected channel persistence across launches
-- Automatic migration system for schema updates
+- Default channel bundle seeded with default channels on fresh installs
+- Automatic migration system for schema updates (see [Docs/SwiftDataSchema.md](Docs/SwiftDataSchema.md))
 
 **Analytics & Monitoring**
 - Firebase Analytics integration (toggleable)
@@ -99,7 +104,7 @@ Project status: Under active development. Core features implemented, additional 
 - Behavior settings (channel selection, watchdog timing)
 - Mini guide overlay
 - Enhanced diagnostics and logging
-- Default IPTV channel bundle for fresh installs
+- ~~Default IPTV channel bundle for fresh installs~~ ✅
 
 ---
 
@@ -116,6 +121,7 @@ If empty → Bootstrap (Gated UI)
     • Fetch IPTV stream metadata
     • Import channels to SwiftData
     • Create default channel bundle
+    • Add default channels to the bundle
     ↓
 If channels exist → Background refresh
     • Update channel catalogs
@@ -142,11 +148,12 @@ Present main UI
 - Reusable channel filtering logic
 
 **Playback**
-- Cross-platform VLC integration
-- Stream health monitoring
+- AVPlayer for IPTV with libVLC 4 (SwiftVLC) fallback; libVLC 4 for HDHomeRun
+- Stream health monitoring (separate AVPlayer and VLC watchdogs)
 - Playback state management
 - Audio/subtitle track management
 - Volume and mute control
+- Details in [Docs/MediaPlayback.md](Docs/MediaPlayback.md)
 
 **Analytics**
 - Protocol-based analytics abstraction
@@ -175,11 +182,11 @@ Note: libVLC provides excellent compatibility with diverse HLS/TS streams common
 
 ## Platform Requirements
 
-- **Xcode**: 16.0 or later
+- **Xcode**: 26.0 or later
 - **Platform Minimums**:
-  - iOS 18+
-  - tvOS 18+
-  - macOS 15+
+  - iOS 26+
+  - tvOS 26+
+  - macOS 26+
 - **Dependencies**:
   - SwiftVLC (Swift package, libVLC 4)
   - Firebase Analytics SDK (optional)
@@ -245,6 +252,7 @@ This app aggregates publicly accessible streams. Availability, stability, and ri
 ## Project Structure
 
 ```
+Docs/                                       # Design docs (media playback, SwiftData schema)
 HeckYeahTV/
 ├── Source/
 │   ├── App/
@@ -263,17 +271,21 @@ HeckYeahTV/
 │   │   ├── SharedAppState/                # Observable app state
 │   │   └── SwiftData/                     # Persistence layer
 │   └── UserInterface/
-│       ├── MediaPlayerView/               # VLC player
+│       ├── DebugViews/                    # Developer diagnostics views
+│       ├── MediaPlayerView/               # Unified AVPlayer/VLC player, watchdogs
+│       │   └── VLCPlayer/                 # SwiftVLC (libVLC 4) player
 │       ├── Menu/
 │       │   └── Screens/
 │       │       ├── Guide/                 # Channel guide
 │       │       ├── Recents/               # Recently viewed
 │       │       ├── Settings/              # App settings
 │       │       └── PlayerOverlay/         # Playback controls
-│       └── Root/                          # Root navigation
+│       ├── Root/                          # Root navigation
+│       └── SplashScreen/                  # Launch / first-run splash
 └── SupportingFiles/
-    ├── Assets/                            # Images, colors
-    └── Mocking/                           # Test data & mocks
+    ├── *.xcassets                         # App icons, images, colors
+    ├── Mocking/                           # Test data & mocks
+    └── NewInstallData/                    # Default channels for fresh installs
 ```
 
 ---
@@ -289,6 +301,9 @@ HeckYeahTV/
 - Remove offline tuners and cleanup orphaned channels
 - Crashlytics and log file support infrastructure
 - Comprehensive analytics implementation with Firebase integration
+- AVPlayer-first IPTV playback with VLC fallback and ad-break stall recovery
+- Migrated from VLCKit 3 (CocoaPods) to SwiftVLC (libVLC 4, Swift Package Manager)
+- Auto-dismiss of the app menu after user inactivity
 
 ### Planned 📋
 - Show clock on guide screen for program schedule matching
@@ -302,13 +317,13 @@ HeckYeahTV/
 - Direct channel removal from bundle without filters
 - Auto-add new devices to all bundles
 - Bundle copy functionality
-- Default channel bundle for new installs
+- ~~Default channel bundle for new installs~~ ✅
 - Select all/unselect all in channel picker
 - DVR with AI commercial removal
 - Behavior settings (dismissal, watchdog timing, player config)
 - Mini guide overlay with swipe/arrow navigation
 - Enhanced settings with diagnostics and logging
-- Default IPTV channel set for fresh installs
+- ~~Default IPTV channel set for fresh installs~~ ✅
 
 ---
 
@@ -439,4 +454,4 @@ For issues, questions, or feature requests, please file an issue on the project 
 
 ---
 
-**Last Updated**: April 2026
+**Last Updated**: November 2026
