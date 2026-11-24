@@ -60,7 +60,7 @@ Reloading the stream (a fresh `VLCMedia`) always recovers, because it starts a n
 | Separate audio/subtitle renditions | Native media selection | Supported, but fragile at discontinuities |
 | Raw MPEG-TS over HTTP (HDHomeRun) | Not supported | Supported |
 | Format/codec coverage | HLS and Apple-supported codecs only | Very broad |
-| Decoding | Hardware (VideoToolbox) | Software (when `forceSoftwareDecode` is on) |
+| Decoding | Hardware (VideoToolbox) | Hardware (VideoToolbox) by default; software if `forceSoftwareDecode` is turned on |
 | Volume range | 0–100% | 0–200% (amplification) |
 
 AVPlayer earlier had stall problems with some IPTV streams, which is why VLC had been the only player. The AVPlayer watchdog now catches those cases and hands the stream to VLC instead of leaving it stuck.
@@ -188,7 +188,7 @@ libVLC's own logging is enabled in DEBUG builds at `.error`. To investigate VLC 
 
 ## Known Limitations & Future Work
 
-- **`forceSoftwareDecode` is on.** It did not fix the stalls and costs CPU (notably for 4K on Apple TV). It's a candidate to turn off now that IPTV plays in AVPlayer.
+- **`forceSoftwareDecode` is off.** It did not fix the stalls and costs CPU (notably for 4K on Apple TV), so VLC uses hardware decoding. VideoToolbox may log `VT-DS err=-12906` at stream format changes; the VLC watchdog reload covers any resulting stall. Turn it back on only to test decoder-related issues.
 - **The fallback lasts only one session.** A stream that fails in AVPlayer goes back to AVPlayer on the next launch.
 - **AVPlayer volume is capped.** App volume settings above 100 play at normal level, because AVPlayer can't amplify.
 - **The Simulator differs from devices.** The tvOS Simulator can't decode video for some streams in AVPlayer (BBC Top Gear), and the iOS device plays them fine. Fallback covers it, but test on devices.

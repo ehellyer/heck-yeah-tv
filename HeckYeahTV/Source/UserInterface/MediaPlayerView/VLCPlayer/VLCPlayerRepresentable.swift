@@ -131,8 +131,10 @@ struct VLCPlayerRepresentable: CrossPlatformRepresentable {
 
         // When true, forces VLC to use the avcodec (software) decoder ahead of its VideoToolbox decoder module.
         // Note: "avcodec-hw: none" alone does not do this - VLC's separate videotoolbox module has higher priority.
-        // Set to false if CPU/thermal load is too high (e.g. 4K on Apple TV).
-        private let forceSoftwareDecode = true
+        // Off: software decoding did not fix the HLS ad-break stalls (the stall is in VLC's demuxer, not the decoder)
+        // and costs CPU/thermal headroom (e.g. 4K on Apple TV). VLC uses hardware (VideoToolbox) decoding when available.
+        // VideoToolbox may log "VT-DS err=-12906" at stream format changes; the watchdog reload covers any resulting stall.
+        private let forceSoftwareDecode = false
         
         private lazy var mediaPlayer: VLCMediaPlayer = {
             let _player = VLCMediaPlayer()
