@@ -51,16 +51,17 @@ Reloading the stream (a fresh `VLCMedia`) always recovers, because it starts a n
 - **IPTV plays in AVPlayer first.** AVFoundation handles HLS discontinuities and separate renditions natively; PlutoTV ad breaks play seamlessly.
 - **VLC stays as the fallback** for IPTV streams AVPlayer can't play, and for all HDHomeRun channels.
 - **The VLC watchdog** detects a frozen stream within about 3 seconds and reloads it, so streams that do end up in VLC recover automatically.
+- **VLC moved to libVLC 4.** VLCKit 3 (TVVLCKit / MobileVLCKit via CocoaPods) was replaced by the `SwiftVLC` Swift package (libVLC 4), which rewrote HLS adaptive streaming and discontinuity handling. The watchdog rules were kept unchanged.
 
 ## Why Two Players
 
-| | AVPlayer | VLC (TVVLCKit / MobileVLCKit / VLCKit 3.0.x) |
+| | AVPlayer | VLC (SwiftVLC / libVLC 4) |
 |---|---|---|
-| HLS ad insertion / discontinuities | Seamless | Freezes; needs a reload |
+| HLS ad insertion / discontinuities | Seamless | VLC 3 froze; libVLC 4 handles them better, and the watchdog reloads any stall |
 | Separate audio/subtitle renditions | Native media selection | Supported, but fragile at discontinuities |
 | Raw MPEG-TS over HTTP (HDHomeRun) | Not supported | Supported |
 | Format/codec coverage | HLS and Apple-supported codecs only | Very broad |
-| Decoding | Hardware (VideoToolbox) | Hardware (VideoToolbox) by default; software if `forceSoftwareDecode` is turned on |
+| Decoding | Hardware (VideoToolbox) | libVLC 4 defaults (hardware where available) |
 | Volume range | 0–100% | 0–200% (amplification) |
 
 AVPlayer earlier had stall problems with some IPTV streams, which is why VLC had been the only player. The AVPlayer watchdog now catches those cases and hands the stream to VLC instead of leaving it stuck.
@@ -106,16 +107,16 @@ Notes:
 - **Polling instead of KVO:** this keeps all state on the main actor.
 - **Overlay:** AVPlayer never shows the unplayable overlay itself. VLC gets the stream and its watchdog makes the final call.
 
-## VLC Watchdog (`VLCPlayerRepresentable.Coordinator`)
+## VLC Watchdog (`SwiftVLCPlaybackController`)
 
 ```mermaid
 stateDiagram-v2
-    [*] --> Startup: .opening / resume / reload
+    [*] --> Startup: load / resume / reload
     Startup --> Playing: playback time advances
     Startup --> Unplayable: no progress for 7s and never played
     Startup --> Reloading: no progress for 7s after a previous play
     Playing --> Reloading: no progress for 3s
-    Reloading --> Startup: stop, fresh VLCMedia, play
+    Reloading --> Startup: fresh Media, play
     Reloading --> Unplayable: 3 reloads without 20s of healthy playback
     Playing --> Playing: 20s healthy after a reload resets the reload budget
     Unplayable --> [*]: user selects another channel
@@ -123,34 +124,28 @@ stateDiagram-v2
 
 | Item | Value | Why |
 |---|---|---|
-| Progress signal | `mediaPlayer.time` actually changes | VLC keeps firing `mediaPlayerTimeChanged` while frozen |
+| Progress signal | `player.currentTime` actually changes while `.playing` | VLC 3 stayed in `.playing` while frozen |
 | `startupStallThreshold` | 7s | Opening, reloading and resuming take a few seconds |
 | `midStreamStallThreshold` | 3s | Once playing, a 3s freeze is treated as a stuck demuxer |
 | `maxStallRecoveries` | 3 | Prevents endless reload loops on a broken stream |
 | `stallRecoveryResetInterval` | 20s | Ad breaks put a discontinuity every 30–60s, so each break needs a fresh budget |
-| `isReloadingStream` | flag | Stops the transient `.stopped` event during a reload from shutting the watchdog down |
 
 How it works:
 
 - **Startup vs mid-stream:** `lastPlaybackTime == nil` marks startup. It is reset whenever monitoring (re)starts.
-- **Unplayable:** sets `isStreamUnplayable`. `VLCPlayerView` shows `UnplayableStreamOverlay` and `updateView()` stops the player. Selecting a different channel clears the flag.
-- **VLC errors:** VLC's own `.error` state is handled separately: up to `maxErrorRetries` (3) stop/play retries in `mediaPlayerStateChanged(_:)`.
+- **Unplayable:** sets `isStreamUnplayable`. `VLCPlayerView` shows `UnplayableStreamOverlay` and the controller stops the player. Selecting a different channel clears the flag.
+- **VLC errors:** libVLC's own error state/event is handled separately: up to `maxErrorRetries` (3) retries in `handleError()`.
 
 ## Related Fix: VLC Audio Track Selection
 
-VLC audio track "indexes" are elementary stream (ES) ids that belong to one `VLCMedia` instance. Two bugs caused wrong-track or silent audio after reloads and channel changes:
+With VLCKit 3, track "indexes" were elementary stream (ES) ids tied to one media instance. Stale ids after reloads selected the wrong rendition, and a late-arriving audio rendition led to a `-1` selection, which VLC treats as **Disable** (silent audio).
 
-1. **Stale ids.** The previous media's track id was applied to the new media. That selected the wrong rendition (e.g. Audio-Description) or a track that didn't exist.
-2. **Late audio.** Streams with a separate audio rendition expose their audio a few seconds after `.playing`. A single lookup found 0 tracks and set the selection to `-1`, which VLC treats as **Disable**, turning the audio off.
+The SwiftVLC player avoids both:
 
-The fix:
-
-- **Reset on new media:** track state is cleared whenever new media loads.
-- **Poll for late audio:** the lookup retries up to 5 times, 1.5s apart.
-- **Keep VLC's default:** the selection starts as the track VLC already chose.
-- **Validate before applying:** only a track that exists in the current media is applied, so `-1` or a stale id can't disable or misselect audio.
-
-Details are in the "Audio track bug" Dev Note in `VLCPlayerRepresentable.swift`.
+- **Reset on new media:** track state is cleared whenever new media loads or reloads.
+- **Republish on `.tracksChanged`:** late audio renditions appear in the menu when libVLC reports them; no polling.
+- **Keep VLC's default:** the selection starts as the track libVLC already chose; `-1` means "no selection", never "disable".
+- **Validate before applying:** `TrackItem.index` is a position in the current track list and is range-checked, so a stale index can't disable or misselect audio.
 
 ## Audio & Subtitle Menus
 
@@ -158,8 +153,8 @@ Details are in the "Audio track bug" Dev Note in `VLCPlayerRepresentable.swift`.
 
 | | VLC | AVPlayer |
 |---|---|---|
-| Track source | VLC ES ids | HLS media selection groups (`.audible`, `.legible`) |
-| `TrackItem.index` | VLC ES id | Position in the option list |
+| Track source | `player.audioTracks` / `subtitleTracks` | HLS media selection groups (`.audible`, `.legible`) |
+| `TrackItem.index` | Position in the track list | Position in the option list |
 | Subtitles offered | First subtitle track only (intentional) | All non-forced subtitle/caption options |
 | "Off" | `-1` | `-1` (`select(nil, in: legibleGroup)`) |
 
@@ -174,13 +169,13 @@ Useful console lines:
 | `AVPlayer: Playback started for …` | AVPlayer is progressing |
 | `AVPlayer: Video rendering confirmed …` | First video frame displayed |
 | `AVPlayer: Unable to play … (reason) - falling back to VLC` | AVPlayer watchdog gave up; VLC takes over |
-| `VLC: No playback progress for Xs (threshold Ys) …` | VLC watchdog detected a freeze |
-| `VLC: Playback stalled mid-stream … reloading attempt n of 3` | VLC reload in progress |
-| `VLC: Playback healthy since last stall recovery - resetting recovery count` | Reload budget restored |
-| `VLC: ERROR - No playback progress … marking stream as unplayable` | Final failure; overlay shown |
-| `VLC: Detected N audio tracks (selected: X)` / `AVPlayer: Detected N audio tracks and M subtitle tracks …` | Track menus populated |
+| `SwiftVLC: No playback progress for Xs (threshold Ys) …` | VLC watchdog detected a freeze |
+| `SwiftVLC: Playback stalled mid-stream … reloading attempt n of 3` | VLC reload in progress |
+| `SwiftVLC: Playback healthy since last stall recovery - resetting recovery count` | Reload budget restored |
+| `SwiftVLC: Marking stream as unplayable: …` | Final failure; overlay shown |
+| `AVPlayer: Detected N audio tracks and M subtitle tracks …` | Track menus populated |
 
-libVLC's own logging is enabled in DEBUG builds at `.error`. To investigate VLC stalls, temporarily switch `logger.level` to `.debug` in `VLCPlayerRepresentable.swift` and look for:
+libVLC's own log is forwarded to the app log in DEBUG builds at `.error` (`libVLC [module] message`). To investigate VLC stalls, temporarily lower `minimumLevel` in `startLibVLCLoggingIfNeeded()` in `SwiftVLCPlayerView.swift` and look for:
 
 - `Ending demuxer stream. [discontinuity]` at the ad boundary.
 - A `cur` value in `cached.i_time … cur …` lines that stops changing.
@@ -188,11 +183,10 @@ libVLC's own logging is enabled in DEBUG builds at `.error`. To investigate VLC 
 
 ## Known Limitations & Future Work
 
-- **`forceSoftwareDecode` is off.** It did not fix the stalls and costs CPU (notably for 4K on Apple TV), so VLC uses hardware decoding. VideoToolbox may log `VT-DS err=-12906` at stream format changes; the VLC watchdog reload covers any resulting stall. Turn it back on only to test decoder-related issues.
+- **VLC media options are minimal.** libVLC 4 runs with its defaults plus `network-caching=1000` and `http-reconnect`. The VLC 3 tuning options (and `forceSoftwareDecode`) were not carried over; add them back only if a need is shown.
 - **The fallback lasts only one session.** A stream that fails in AVPlayer goes back to AVPlayer on the next launch.
 - **AVPlayer volume is capped.** App volume settings above 100 play at normal level, because AVPlayer can't amplify.
 - **The Simulator differs from devices.** The tvOS Simulator can't decode video for some streams in AVPlayer (BBC Top Gear), and the iOS device plays them fine. Fallback covers it, but test on devices.
-- **SwiftVLC / libVLC 4 is untested.** libVLC 4 rewrote HLS discontinuity handling and may avoid the VLC freeze. The `SwiftVLC` package is in the project but believed not to work; the test is deferred.
 
 ## Source Files
 
@@ -201,6 +195,6 @@ libVLC's own logging is enabled in DEBUG builds at `.error`. To investigate VLC 
 | `UnifiedPlayerView.swift` | Chooses AVPlayer or VLC per channel; tracks AVPlayer-failed URLs |
 | `AVPlayerView.swift` | `AVPlayerView`, `AVPlaybackController` (watchdog, track selection), `AVPlayerLayer` view |
 | `VLCPlayer/VLCPlayerView.swift` | VLC host view; unplayable overlay and switching indicator |
-| `VLCPlayer/VLCPlayerRepresentable.swift` | VLC player, media options, VLC watchdog and reload, audio track handling |
+| `VLCPlayer/SwiftVLCPlayerView.swift` | `SwiftVLCPlayerView`, `SwiftVLCPlaybackController` (libVLC 4 player, media options, watchdog and reload, track handling) |
 | `Watchdog.swift` | Shared once-per-second polling actor used by both players |
 | `Menu/Screens/PlayerOverlay/PlayerOverlay.swift` | Audio track and closed caption menus |

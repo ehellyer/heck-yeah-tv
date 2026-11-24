@@ -21,17 +21,16 @@ struct VLCPlayerView: View {
     
     var body: some View {
         ZStack {
-            VLCPlayerRepresentable(
+            SwiftVLCPlayerView(
                 selectedChannel: selectedChannel,
                 shouldPause: appState.isPlayerPaused,
                 scenePhase: scenePhase,
                 playerVolume: appState.playerVolume,
                 isStreamUnplayable: $isStreamUnplayable,
-                isSwitchingStreams: $isSwitchingStreams,
-                appState: appState
+                isSwitchingStreams: $isSwitchingStreams
             )
             .opacity(isStreamUnplayable ? 0 : 1)
-            
+
             if isStreamUnplayable {
                 UnplayableStreamOverlay()
             }

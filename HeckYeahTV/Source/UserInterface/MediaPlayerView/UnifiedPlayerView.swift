@@ -11,7 +11,7 @@ import SwiftUI
 
 /// Unified player view that automatically switches between VLC and AVPlayer based on channel type.
 /// - IPTV channels (deviceId == IPTVImporter.iptvDeviceId) try AVPlayer first; it handles HLS ad-insertion
-///   discontinuities that make VLC 3 freeze (e.g. PlutoTV).
+///   discontinuities natively (e.g. PlutoTV).
 /// - If AVPlayer cannot play an IPTV stream (fails, never starts, or stalls), that stream falls back to VLC
 ///   for the rest of the session.
 /// - HDHomeRun channels (deviceId != IPTVImporter.iptvDeviceId) always use VLC for MPEG-TS streams.
@@ -20,9 +20,9 @@ import SwiftUI
 /// - HDHomeRun tuners serve raw MPEG-TS over HTTP. AVPlayer cannot play that (it only plays HLS/progressive
 ///   containers), so HDHomeRun is VLC-only.
 /// - IPTV is mostly HLS. AVPlayer is Apple's native HLS player: hardware decoding, low CPU, and it handles server-side
-///   ad insertion (#EXT-X-DISCONTINUITY, separate audio/subtitle renditions) seamlessly. VLC 3 freezes at those
-///   discontinuities (PlutoTV ad breaks) and can only recover by reloading - see the VLC watchdog Dev Note in
-///   VLCPlayerRepresentable.
+///   ad insertion (#EXT-X-DISCONTINUITY, separate audio/subtitle renditions) seamlessly. VLC 3 froze at those
+///   discontinuities (PlutoTV ad breaks); VLC now runs libVLC 4 with a watchdog that reloads stalls - see the
+///   VLC watchdog Dev Note in SwiftVLCPlayerView.
 /// - Some IPTV streams are not AVPlayer-friendly (odd containers/codecs, MPEG-TS links in M3U lists, streams that
 ///   stall, or video AVPlayer cannot decode - e.g. some streams on the tvOS Simulator play audio with no video).
 ///   VLC plays far more formats, so it is the fallback.

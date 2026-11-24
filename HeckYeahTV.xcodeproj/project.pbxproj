@@ -7,11 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0795B5BB3A23FABAA7C66407 /* Pods_macOS_HeckYeahTV.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AEBB422EE6980D36530D5AC7 /* Pods_macOS_HeckYeahTV.framework */; };
-		43CAFCF8D99EA5A3377CCAAF /* Pods_tvOS_HeckYeahTV.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1AE384D8447401DC8F59D6C1 /* Pods_tvOS_HeckYeahTV.framework */; };
-		9B61C0ADEDF6044BB158CB48 /* Pods_iOS_HeckYeahTV.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E78367F19BB4BF70E192649B /* Pods_iOS_HeckYeahTV.framework */; };
 		EB29642E3061757C001B9AB9 /* SwiftVLC in Frameworks */ = {isa = PBXBuildFile; productRef = EB29642D3061757C001B9AB9 /* SwiftVLC */; };
-		EB35E3122F00781200D31894 /* MobileVLCKit.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB35E3112F00781200D31894 /* MobileVLCKit.xcframework */; };
+		EB77535230B5E2240005745E /* SwiftVLC in Frameworks */ = {isa = PBXBuildFile; productRef = EB77535130B5E2240005745E /* SwiftVLC */; };
+		EB77535430B5E2300005745E /* SwiftVLC in Frameworks */ = {isa = PBXBuildFile; productRef = EB77535330B5E2300005745E /* SwiftVLC */; };
 		EBB5B3292ED8B9D6004251CB /* Hellfire in Frameworks */ = {isa = PBXBuildFile; productRef = EBB5B3282ED8B9D6004251CB /* Hellfire */; };
 		EBB5B51F2EDD46C4004251CB /* Hellfire in Frameworks */ = {isa = PBXBuildFile; productRef = EBB5B51E2EDD46C4004251CB /* Hellfire */; };
 		EBB5B5212EDD46DC004251CB /* Hellfire in Frameworks */ = {isa = PBXBuildFile; productRef = EBB5B5202EDD46DC004251CB /* Hellfire */; };
@@ -69,21 +67,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		155C18FCBBF8F825F01698DD /* Pods-tvOS_HeckYeahTV.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-tvOS_HeckYeahTV.debug.xcconfig"; path = "Target Support Files/Pods-tvOS_HeckYeahTV/Pods-tvOS_HeckYeahTV.debug.xcconfig"; sourceTree = "<group>"; };
-		1AE384D8447401DC8F59D6C1 /* Pods_tvOS_HeckYeahTV.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_tvOS_HeckYeahTV.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		2A73CC3EF40FDFBA0576608E /* Pods-macOS_HeckYeahTV.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-macOS_HeckYeahTV.debug.xcconfig"; path = "Target Support Files/Pods-macOS_HeckYeahTV/Pods-macOS_HeckYeahTV.debug.xcconfig"; sourceTree = "<group>"; };
-		33A5FCDA8C3183228742AE7B /* Pods-iOS_HeckYeahTV.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-iOS_HeckYeahTV.debug.xcconfig"; path = "Target Support Files/Pods-iOS_HeckYeahTV/Pods-iOS_HeckYeahTV.debug.xcconfig"; sourceTree = "<group>"; };
-		3645521383283653A08C4BEC /* Pods-macOS_HeckYeahTV.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-macOS_HeckYeahTV.release.xcconfig"; path = "Target Support Files/Pods-macOS_HeckYeahTV/Pods-macOS_HeckYeahTV.release.xcconfig"; sourceTree = "<group>"; };
-		6AF4BBCEBC11ADBD0229329E /* Pods-tvOS_HeckYeahTV.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-tvOS_HeckYeahTV.release.xcconfig"; path = "Target Support Files/Pods-tvOS_HeckYeahTV/Pods-tvOS_HeckYeahTV.release.xcconfig"; sourceTree = "<group>"; };
-		AEBB422EE6980D36530D5AC7 /* Pods_macOS_HeckYeahTV.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_macOS_HeckYeahTV.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		CF80A0568B822BEA5660EBE2 /* Pods-iOS_HeckYeahTV.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-iOS_HeckYeahTV.release.xcconfig"; path = "Target Support Files/Pods-iOS_HeckYeahTV/Pods-iOS_HeckYeahTV.release.xcconfig"; sourceTree = "<group>"; };
-		E78367F19BB4BF70E192649B /* Pods_iOS_HeckYeahTV.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_iOS_HeckYeahTV.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		EB16A3802FAD051D001F6857 /* macOS_HeckYeahTV.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = macOS_HeckYeahTV.entitlements; sourceTree = "<group>"; };
 		EB2C2DB72E5E203A005CE685 /* HeckYeahTV.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HeckYeahTV.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EB2C2DC42E5E203C005CE685 /* macOS_HeckYeahTVTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = macOS_HeckYeahTVTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		EB2C2DCE2E5E203C005CE685 /* macOS_HeckYeahTVUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = macOS_HeckYeahTVUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		EB3334292EC826E500CFAC43 /* VLCKit.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = VLCKit.xcframework; path = Pods/VLCKit/VLCKit.xcframework; sourceTree = "<group>"; };
-		EB35E3112F00781200D31894 /* MobileVLCKit.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = MobileVLCKit.xcframework; path = Pods/MobileVLCKit/MobileVLCKit.xcframework; sourceTree = "<group>"; };
 		EB774FED30B4A81F0005745E /* SwiftDataSchema.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = SwiftDataSchema.md; sourceTree = "<group>"; };
 		EB774FEF30B5D3310005745E /* MediaPlayback.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = MediaPlayback.md; sourceTree = "<group>"; };
 		EBC92B4A2E9D5FFA00FF62BC /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
@@ -203,7 +190,7 @@
 				Source/UserInterface/MediaPlayerView/StreamSwitchingActivity.swift,
 				Source/UserInterface/MediaPlayerView/UnifiedPlayerView.swift,
 				Source/UserInterface/MediaPlayerView/UnplayableStreamOverlay.swift,
-				Source/UserInterface/MediaPlayerView/VLCPlayer/VLCPlayerRepresentable.swift,
+				Source/UserInterface/MediaPlayerView/VLCPlayer/SwiftVLCPlayerView.swift,
 				Source/UserInterface/MediaPlayerView/VLCPlayer/VLCPlayerView.swift,
 				Source/UserInterface/MediaPlayerView/Watchdog.swift,
 				Source/UserInterface/Menu/Container/Enum/AppSection.swift,
@@ -415,7 +402,7 @@
 				Source/UserInterface/MediaPlayerView/StreamSwitchingActivity.swift,
 				Source/UserInterface/MediaPlayerView/UnifiedPlayerView.swift,
 				Source/UserInterface/MediaPlayerView/UnplayableStreamOverlay.swift,
-				Source/UserInterface/MediaPlayerView/VLCPlayer/VLCPlayerRepresentable.swift,
+				Source/UserInterface/MediaPlayerView/VLCPlayer/SwiftVLCPlayerView.swift,
 				Source/UserInterface/MediaPlayerView/VLCPlayer/VLCPlayerView.swift,
 				Source/UserInterface/MediaPlayerView/Watchdog.swift,
 				Source/UserInterface/Menu/Container/Enum/AppSection.swift,
@@ -538,8 +525,8 @@
 			files = (
 				EBB5B5212EDD46DC004251CB /* Hellfire in Frameworks */,
 				EBFFBD182F21A7AB0022F6A5 /* FirebaseCrashlytics in Frameworks */,
+				EB77535430B5E2300005745E /* SwiftVLC in Frameworks */,
 				EBFFBD162F21A7AB0022F6A5 /* FirebaseAnalytics in Frameworks */,
-				0795B5BB3A23FABAA7C66407 /* Pods_macOS_HeckYeahTV.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -565,7 +552,6 @@
 				EBDD3AF72ECE9C160050D08D /* FirebaseAnalytics in Frameworks */,
 				EB29642E3061757C001B9AB9 /* SwiftVLC in Frameworks */,
 				EBB5B3292ED8B9D6004251CB /* Hellfire in Frameworks */,
-				9B61C0ADEDF6044BB158CB48 /* Pods_iOS_HeckYeahTV.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -573,7 +559,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				EB35E3122F00781200D31894 /* MobileVLCKit.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -590,8 +575,8 @@
 			files = (
 				EBB5B51F2EDD46C4004251CB /* Hellfire in Frameworks */,
 				EBFFBD142F21A79E0022F6A5 /* FirebaseCrashlytics in Frameworks */,
+				EB77535230B5E2240005745E /* SwiftVLC in Frameworks */,
 				EBFFBD122F21A79E0022F6A5 /* FirebaseAnalytics in Frameworks */,
-				43CAFCF8D99EA5A3377CCAAF /* Pods_tvOS_HeckYeahTV.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -631,7 +616,6 @@
 				EBE03BD12E53D423006B7747 /* HeckYeahTVUITests */,
 				EBE03C812E53E5DC006B7747 /* Frameworks */,
 				EBE03BB82E53D421006B7747 /* Products */,
-				F2EEC27609FB015357E64343 /* Pods */,
 				EBC92B4A2E9D5FFA00FF62BC /* README.md */,
 			);
 			sourceTree = "<group>";
@@ -655,26 +639,8 @@
 		EBE03C812E53E5DC006B7747 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				EB35E3112F00781200D31894 /* MobileVLCKit.xcframework */,
-				EB3334292EC826E500CFAC43 /* VLCKit.xcframework */,
-				E78367F19BB4BF70E192649B /* Pods_iOS_HeckYeahTV.framework */,
-				AEBB422EE6980D36530D5AC7 /* Pods_macOS_HeckYeahTV.framework */,
-				1AE384D8447401DC8F59D6C1 /* Pods_tvOS_HeckYeahTV.framework */,
 			);
 			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		F2EEC27609FB015357E64343 /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				33A5FCDA8C3183228742AE7B /* Pods-iOS_HeckYeahTV.debug.xcconfig */,
-				CF80A0568B822BEA5660EBE2 /* Pods-iOS_HeckYeahTV.release.xcconfig */,
-				2A73CC3EF40FDFBA0576608E /* Pods-macOS_HeckYeahTV.debug.xcconfig */,
-				3645521383283653A08C4BEC /* Pods-macOS_HeckYeahTV.release.xcconfig */,
-				155C18FCBBF8F825F01698DD /* Pods-tvOS_HeckYeahTV.debug.xcconfig */,
-				6AF4BBCEBC11ADBD0229329E /* Pods-tvOS_HeckYeahTV.release.xcconfig */,
-			);
-			path = Pods;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -684,12 +650,10 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = EB2C2DD62E5E203C005CE685 /* Build configuration list for PBXNativeTarget "macOS_HeckYeahTV" */;
 			buildPhases = (
-				B25557EB9EA52FF346340C0B /* [CP] Check Pods Manifest.lock */,
 				EB2C2DB32E5E203A005CE685 /* Sources */,
 				EB2C2DB42E5E203A005CE685 /* Frameworks */,
 				EB2C2DB52E5E203A005CE685 /* Resources */,
 				EB60FA3A2F9284AB0024DD93 /* Crashlytics Run Script */,
-				91852F28275966476211F7EA /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -700,6 +664,7 @@
 				EBB5B5202EDD46DC004251CB /* Hellfire */,
 				EBFFBD152F21A7AB0022F6A5 /* FirebaseAnalytics */,
 				EBFFBD172F21A7AB0022F6A5 /* FirebaseCrashlytics */,
+				EB77535330B5E2300005745E /* SwiftVLC */,
 			);
 			productName = macOSHeckYeahTV;
 			productReference = EB2C2DB72E5E203A005CE685 /* HeckYeahTV.app */;
@@ -745,12 +710,10 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = EBE03BD82E53D423006B7747 /* Build configuration list for PBXNativeTarget "iOS_HeckYeahTV" */;
 			buildPhases = (
-				B7BCC5A4144B9D3A06A74207 /* [CP] Check Pods Manifest.lock */,
 				EBE03BB32E53D421006B7747 /* Sources */,
 				EBE03BB42E53D421006B7747 /* Frameworks */,
 				EBE03BB52E53D421006B7747 /* Resources */,
 				EB60FA382F92700E0024DD93 /* Crashlytics Run Script */,
-				66CE61E9401ABFA64B392324 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -816,12 +779,10 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = EBE03C352E53D8DF006B7747 /* Build configuration list for PBXNativeTarget "tvOS_HeckYeahTV" */;
 			buildPhases = (
-				2CF53C4552D986346AE25D26 /* [CP] Check Pods Manifest.lock */,
 				EBE03C132E53D8DE006B7747 /* Sources */,
 				EBE03C142E53D8DE006B7747 /* Frameworks */,
 				EBE03C152E53D8DE006B7747 /* Resources */,
 				EB60FA392F92843A0024DD93 /* Crashlytics Run Script */,
-				DB41C0B4C2AEEE2D438431BF /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -832,6 +793,7 @@
 				EBB5B51E2EDD46C4004251CB /* Hellfire */,
 				EBFFBD112F21A79E0022F6A5 /* FirebaseAnalytics */,
 				EBFFBD132F21A79E0022F6A5 /* FirebaseCrashlytics */,
+				EB77535130B5E2240005745E /* SwiftVLC */,
 			);
 			productName = "Heck Yeah TV";
 			productReference = EBE03C172E53D8DE006B7747 /* HeckYeahTV.app */;
@@ -1017,135 +979,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		2CF53C4552D986346AE25D26 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-tvOS_HeckYeahTV-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		66CE61E9401ABFA64B392324 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-iOS_HeckYeahTV/Pods-iOS_HeckYeahTV-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			inputPaths = (
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-iOS_HeckYeahTV/Pods-iOS_HeckYeahTV-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-iOS_HeckYeahTV/Pods-iOS_HeckYeahTV-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		91852F28275966476211F7EA /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-macOS_HeckYeahTV/Pods-macOS_HeckYeahTV-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			inputPaths = (
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-macOS_HeckYeahTV/Pods-macOS_HeckYeahTV-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-macOS_HeckYeahTV/Pods-macOS_HeckYeahTV-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		B25557EB9EA52FF346340C0B /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-macOS_HeckYeahTV-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		B7BCC5A4144B9D3A06A74207 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-iOS_HeckYeahTV-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		DB41C0B4C2AEEE2D438431BF /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-tvOS_HeckYeahTV/Pods-tvOS_HeckYeahTV-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			inputPaths = (
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-tvOS_HeckYeahTV/Pods-tvOS_HeckYeahTV-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-tvOS_HeckYeahTV/Pods-tvOS_HeckYeahTV-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		EB60FA382F92700E0024DD93 /* Crashlytics Run Script */ = {
 			isa = PBXShellScriptBuildPhase;
 			alwaysOutOfDate = 1;
@@ -1325,7 +1158,6 @@
 /* Begin XCBuildConfiguration section */
 		EB2C2DD72E5E203C005CE685 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2A73CC3EF40FDFBA0576608E /* Pods-macOS_HeckYeahTV.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -1377,7 +1209,6 @@
 		};
 		EB2C2DD82E5E203C005CE685 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 3645521383283653A08C4BEC /* Pods-macOS_HeckYeahTV.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -1660,7 +1491,6 @@
 		};
 		EBE03BD92E53D423006B7747 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 33A5FCDA8C3183228742AE7B /* Pods-iOS_HeckYeahTV.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -1707,7 +1537,6 @@
 		};
 		EBE03BDA2E53D423006B7747 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = CF80A0568B822BEA5660EBE2 /* Pods-iOS_HeckYeahTV.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -1859,7 +1688,6 @@
 		};
 		EBE03C362E53D8DF006B7747 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 155C18FCBBF8F825F01698DD /* Pods-tvOS_HeckYeahTV.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -1901,7 +1729,6 @@
 		};
 		EBE03C372E53D8DF006B7747 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 6AF4BBCEBC11ADBD0229329E /* Pods-tvOS_HeckYeahTV.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -2162,6 +1989,16 @@
 
 /* Begin XCSwiftPackageProductDependency section */
 		EB29642D3061757C001B9AB9 /* SwiftVLC */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = EB29642C3061757C001B9AB9 /* XCRemoteSwiftPackageReference "SwiftVLC" */;
+			productName = SwiftVLC;
+		};
+		EB77535130B5E2240005745E /* SwiftVLC */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = EB29642C3061757C001B9AB9 /* XCRemoteSwiftPackageReference "SwiftVLC" */;
+			productName = SwiftVLC;
+		};
+		EB77535330B5E2300005745E /* SwiftVLC */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = EB29642C3061757C001B9AB9 /* XCRemoteSwiftPackageReference "SwiftVLC" */;
 			productName = SwiftVLC;

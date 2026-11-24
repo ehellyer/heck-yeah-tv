@@ -162,12 +162,12 @@ Present main UI
 - **Language**: Swift 6
 - **UI Framework**: SwiftUI
 - **Persistence**: SwiftData with custom migration
-- **Playback**: libVLC via MobileVLCKit (iOS/macOS) and TVVLCKit (tvOS)
+- **Playback**: AVPlayer for IPTV (HLS), libVLC 4 via the SwiftVLC package for HDHomeRun and as the IPTV fallback
 - **Concurrency**: Swift structured concurrency (async/await, Task, actors)
 - **Networking**: Hellfire package
 - **Analytics**: Firebase Analytics (optional)
 - **Utilities**: Hellfire package (JSONSerializable)
-- **Dependency Management**: Swift Package Manager and CocoaPods for VLC frameworks
+- **Dependency Management**: Swift Package Manager
 
 Note: libVLC provides excellent compatibility with diverse HLS/TS streams commonly used by IPTV sources.
 
@@ -181,23 +181,20 @@ Note: libVLC provides excellent compatibility with diverse HLS/TS streams common
   - tvOS 18+
   - macOS 15+
 - **Dependencies**:
-  - CocoaPods for VLC frameworks
+  - SwiftVLC (Swift package, libVLC 4)
   - Firebase Analytics SDK (optional)
 
 ---
 
 ## Building the Project
 
-1. **Install Dependencies**
+1. **Open Project**
    ```bash
-   gem install cocoapods  # if needed
-   pod install
+   open HeckYeahTV.xcodeproj
    ```
 
-2. **Open Workspace**
-   ```bash
-   open HeckYeahTV.xcworkspace
-   ```
+2. **Resolve Packages**
+   - Xcode resolves the Swift packages (SwiftVLC, Hellfire, Firebase) automatically on first open
 
 3. **Configure Signing**
    - Select a platform target (iOS, tvOS, or macOS)
