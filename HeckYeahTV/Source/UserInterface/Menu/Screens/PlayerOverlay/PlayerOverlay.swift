@@ -76,21 +76,15 @@ struct PlayerOverlay: View {
                 // Audio track selector button
                 if !appState.availableAudioTracks.isEmpty {
                     Menu {
-                        ForEach(appState.availableAudioTracks) { track in
-                            Button(action: {
-                                appState.selectedAudioTrackIndex = track.index
-                                if let channelId = swiftDataController.selectedChannel?.id {
-                                    analytics.log(.audioTrackChanged(channelId: channelId, trackName: track.name))
-                                }
-                            }) {
-                                HStack {
-                                    Text(track.name)
-                                    if appState.selectedAudioTrackIndex == track.index {
-                                        Image(systemName: "checkmark")
-                                    }
-                                }
+                        // Inline Picker gives native selection checkmarks on iOS, tvOS and macOS.
+                        // (A trailing checkmark Image in a Button label is not shown as a checkmark in macOS menus.)
+                        Picker("Audio Track", selection: audioTrackSelection) {
+                            ForEach(appState.availableAudioTracks) { track in
+                                Text(track.name)
+                                    .tag(track.index)
                             }
                         }
+                        .pickerStyle(.inline)
                     } label: {
                         Image(systemName: "waveform.circle")
                             .font(.system(size: 24))
@@ -98,51 +92,30 @@ struct PlayerOverlay: View {
                             .frame(width: 50, height: 50)
                             .glassEffect()
                     }
-                    
+                    .menuIndicator(.hidden) // macOS otherwise draws a dropdown chevron beside the icon
+#if os(macOS)
+                    // macOS otherwise renders the menu as a bordered button (a rect behind the round icon).
+                    .menuStyle(.button)
+                    .buttonStyle(.plain)
+#endif
+
                 }
                 
                 // Closed caption selector button
                 if !appState.availableSubtitleTracks.isEmpty {
                     let closedCaptionsEnabled: Bool = (appState.selectedSubtitleTrackIndex >= 0)
                     Menu {
-                        // "Off" option
-                        Button(action: {
-                            appState.selectedSubtitleTrackIndex = -1
-                            if let channelId = swiftDataController.selectedChannel?.id {
-                                analytics.log(.subtitlesDisabled(channelId: channelId))
-                            }
-                        }) {
-                            HStack {
-                                Text("Off")
-                                if not(closedCaptionsEnabled) {
-                                    Image(systemName: "checkmark")
-                                }
+                        // Inline Picker gives native selection checkmarks on iOS, tvOS and macOS.
+                        // "Off" is tag -1, matching selectedSubtitleTrackIndex when subtitles are disabled.
+                        Picker("Subtitles", selection: subtitleTrackSelection) {
+                            Text("Off")
+                                .tag(-1)
+                            ForEach(appState.availableSubtitleTracks) { track in
+                                Text(track.name)
+                                    .tag(track.index)
                             }
                         }
-                        
-                        Divider()
-                        
-                        // Available subtitle tracks
-                        ForEach(appState.availableSubtitleTracks) { track in
-                            Button(action: {
-                                let wasDisabled = appState.selectedSubtitleTrackIndex < 0
-                                appState.selectedSubtitleTrackIndex = track.index
-                                if let channelId = swiftDataController.selectedChannel?.id {
-                                    if wasDisabled {
-                                        analytics.log(.subtitlesEnabled(channelId: channelId, trackName: track.name))
-                                    } else {
-                                        analytics.log(.subtitleTrackChanged(channelId: channelId, trackName: track.name))
-                                    }
-                                }
-                            }) {
-                                HStack {
-                                    Text(track.name)
-                                    if closedCaptionsEnabled && appState.selectedSubtitleTrackIndex == track.index {
-                                        Image(systemName: "checkmark")
-                                    }
-                                }
-                            }
-                        }
+                        .pickerStyle(.inline)
                     } label: {
                         Image(systemName: closedCaptionsEnabled ? "captions.bubble.fill" : "captions.bubble")
                             .font(.system(size: 24))
@@ -150,6 +123,12 @@ struct PlayerOverlay: View {
                             .frame(width: 50, height: 50)
                             .glassEffect()
                     }
+                    .menuIndicator(.hidden) // macOS otherwise draws a dropdown chevron beside the icon
+#if os(macOS)
+                    // macOS otherwise renders the menu as a bordered button (a rect behind the round icon).
+                    .menuStyle(.button)
+                    .buttonStyle(.plain)
+#endif
                 }
             }
             .padding(.trailing, 30)
@@ -159,8 +138,47 @@ struct PlayerOverlay: View {
         .toastContainer()
     }
     
+    // MARK: - Track selection bindings
+
+    /// Audio track Picker selection. Logs analytics when the user picks a different track.
+    private var audioTrackSelection: Binding<Int> {
+        Binding(
+            get: { appState.selectedAudioTrackIndex },
+            set: { newIndex in
+                guard newIndex != appState.selectedAudioTrackIndex else { return }
+                appState.selectedAudioTrackIndex = newIndex
+                if let channelId = swiftDataController.selectedChannel?.id,
+                   let track = appState.availableAudioTracks.first(where: { $0.index == newIndex }) {
+                    analytics.log(.audioTrackChanged(channelId: channelId, trackName: track.name))
+                }
+            }
+        )
+    }
+
+    /// Subtitle Picker selection (-1 = Off). Logs enabled/changed/disabled analytics like the previous menu buttons.
+    private var subtitleTrackSelection: Binding<Int> {
+        Binding(
+            get: { appState.selectedSubtitleTrackIndex },
+            set: { newIndex in
+                let previousIndex = appState.selectedSubtitleTrackIndex
+                guard newIndex != previousIndex else { return }
+                appState.selectedSubtitleTrackIndex = newIndex
+                guard let channelId = swiftDataController.selectedChannel?.id else { return }
+                if newIndex < 0 {
+                    analytics.log(.subtitlesDisabled(channelId: channelId))
+                } else if let track = appState.availableSubtitleTracks.first(where: { $0.index == newIndex }) {
+                    if previousIndex < 0 {
+                        analytics.log(.subtitlesEnabled(channelId: channelId, trackName: track.name))
+                    } else {
+                        analytics.log(.subtitleTrackChanged(channelId: channelId, trackName: track.name))
+                    }
+                }
+            }
+        )
+    }
+
     // MARK: - Actions
-    
+
     private func volumeUp() {
         // If currently muted, restore to pre-muted volume before increasing
         if appState.playerVolume == 0, let preMutedVolume = appState.preMutedVolume {

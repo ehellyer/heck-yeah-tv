@@ -14,6 +14,11 @@ import Foundation
 ///
 /// Perfect for monitoring tasks that might take too long, like waiting for VLC to decide
 /// whether it feels like playing a stream today or not.
+///
+/// Used by both players (one Watchdog per player instance):
+/// - VLCPlayerRepresentable.Coordinator - stall detection, stream reload, and marking a stream unplayable.
+/// - AVPlaybackController (AVPlayerView) - failure/stall/no-video detection that triggers the fallback to VLC.
+/// See the "Dev Note" sections in those files for the rules each one applies.
 actor Watchdog {
 
     deinit {
